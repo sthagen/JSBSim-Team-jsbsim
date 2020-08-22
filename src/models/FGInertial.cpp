@@ -50,7 +50,7 @@ CLASS IMPLEMENTATION
 FGInertial::FGInertial(FGFDMExec* fgex)
   : FGModel(fgex)
 {
-  Name = "FGInertial";
+  Name = "Earth";
 
   // Earth defaults
   double RotationRate    = 0.00007292115;
@@ -90,6 +90,8 @@ bool FGInertial::Load(Element* el)
 {
   if (!Upload(el, true)) return false;
 
+  Name = el->GetAttributeValue("name");
+
   if (el->FindElement("semimajor_axis"))
     a = el->FindElementValueAsNumberConvertTo("semimajor_axis", "FT");
   if (el->FindElement("semiminor_axis"))
@@ -104,6 +106,8 @@ bool FGInertial::Load(Element* el)
     J2 = el->FindElementValueAsNumber("J2"); // Dimensionless
 
   GroundCallback->SetEllipse(a, b);
+
+  Debug(2);
 
   return true;
 }
@@ -130,6 +134,31 @@ bool FGInertial::Run(bool Holding)
   }
 
   return false;
+}
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+FGMatrix33 FGInertial::GetTl2ec(FGLocation& location) const
+{
+  FGColumnVector3 North, Down, East{-location.GetSinLongitude(),
+                                    location.GetCosLongitude(), 0.};
+
+  switch (gravType) {
+  case gtStandard:
+    {
+      Down = location;
+      Down *= -1.0;
+    }
+    break;
+  case gtWGS84:
+    Down = GetGravityJ2(location);
+  }
+  Down.Normalize();
+  North = East*Down;
+
+  return FGMatrix33{North(eX), East(eX), Down(eX),
+                    North(eY), East(eY), Down(eY),
+                    North(eZ), 0.0,      Down(eZ)};
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -214,8 +243,14 @@ void FGInertial::Debug(int from)
   if (debug_lvl <= 0) return;
 
   if (debug_lvl & 1) { // Standard console startup message output
-    if (from == 0) { // Constructor
-
+    if (from == 0) {} // Constructor
+    if (from == 2) { // Loading
+      cout << endl << "  Planet " << Name << endl;
+      cout << "    Semi major axis: " << a << endl;
+      cout << "    Semi minor axis: " << b << endl;
+      cout << "    Rotation rate  : " << scientific << vOmegaPlanet(eZ) << endl;
+      cout << "    GM             : " << GM << endl;
+      cout << "    J2             : " << J2 << endl << defaultfloat;
     }
   }
   if (debug_lvl & 2 ) { // Instantiation/Destruction notification
