@@ -1,0 +1,9 @@
+<map id="SetVgroundFpsIC" name="SetVgroundFpsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="448,31,499,57"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a6f3cf9777dfc1bbd1bf43925c8e617d7" title="Set ground speed initial condition in knots. " alt="" coords="202,60,326,87"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a95028164e2ebca34c926e022ceace8f1" title="Gets the initial Earth position angle. " alt="" coords="180,111,348,137"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a4824f36ca8f38ef52be1bcaa785c404f" title="Gets the target normal load factor set from IC. " alt="" coords="660,5,771,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInput.html#a8204557b6f2865b7e6e29b3a3a9d524d" title="Adds a new input instance to the Input Manager. " alt="" coords="599,56,832,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="615,107,815,133"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGPropagate.html#a9729191af164b5db0c9f72cd182939d2" title="Initializes the FGPropagate class after instantiation and prior to first execution. " alt="" coords="396,103,551,145"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="FGAuxiliary" name="FGAuxiliary">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGModel.html" title="Base class for all scheduled JSBSim models. " alt="" coords="296,107,371,133"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGModelFunctions.html" title="The model functions class provides the capability for loading, storing, and executing arbitrary funct..." alt="" coords="9,5,141,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGPropertyManager.html" title="FGPropertyManager" alt="" coords="5,56,144,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html" title="Encapsulates the JSBSim simulation executive. " alt="" coords="25,107,124,133"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="47,157,102,184"/>
+<area shape="rect" id="node7" href="$structJSBSim_1_1FGAuxiliary_1_1Inputs.html" title="Inputs" alt="" coords="304,369,363,396"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGColumnVector3.html" title="This class implements a 3 element column vector. " alt="" coords="9,345,140,372"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGLocation.html" title="FGLocation holds an arbitrary location in the Earth centered Earth fixed reference frame (ECEF)..." alt="" coords="30,396,119,423"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGMatrix33.html" title="Handles matrix math operations. " alt="" coords="29,453,120,480"/>
+</map>

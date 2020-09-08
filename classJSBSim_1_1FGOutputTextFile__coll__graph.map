@@ -1,0 +1,5 @@
+<map id="FGOutputTextFile" name="FGOutputTextFile">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutputFile.html" title="Abstract class that provide functions that are generic to all the outputs that are directed to a file..." alt="" coords="9,81,109,108"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGOutputType.html" title="Abstract class to provide functions generic to all the output directives. " alt="" coords="5,5,113,32"/>
+<area shape="rect" id="node4" title="STL class. " alt="" coords="133,81,188,108"/>
+</map>

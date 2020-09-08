@@ -1,0 +1,7 @@
+<map id="GetPitchTrimCmd" name="GetPitchTrimCmd">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#aae4680454468e1f7bf3ee7a18b2c5a0c" title="Retrieves all component outputs for inclusion in output stream. " alt="" coords="191,59,342,85"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGOutputFG.html#ac139d3edf9cdfcdd83a3eba596995817" title="Evaluate the output directives from an XML file. " alt="" coords="190,110,343,151"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="180,176,353,203"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFCS.html#ac192d89471561942c0cfc3b1585c7f48" title="Gets the prop feather position. " alt="" coords="432,29,547,56"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGOutputSocket.html#a0d7143a7146c3401f1c71e68d68097d6" title="Generates the output. " alt="" coords="401,81,577,122"/>
+</map>

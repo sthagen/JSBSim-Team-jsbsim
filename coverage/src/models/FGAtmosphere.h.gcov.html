@@ -1,0 +1,358 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGAtmosphere.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGAtmosphere.h<span style="font-size: 80%;"> (source / <a href="FGAtmosphere.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryMed">78.9 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryMed">78.9 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGAtmosphere.h
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       5 </span>            :  Date started: 6/2011
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2011  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 5/2011   JSB   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGATMOSPHERE_H
+<span class="lineNum">      35 </span>            : #define FGATMOSPHERE_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &quot;models/FGModel.h&quot;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      44 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      45 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : namespace JSBSim {
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      50 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      51 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : /** Models an empty, abstract base atmosphere class.
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            :   &lt;h2&gt; Properties &lt;/h2&gt;
+<span class="lineNum">      56 </span>            :   @property atmosphere/T-R The current modeled temperature in degrees Rankine.
+<span class="lineNum">      57 </span>            :   @property atmosphere/rho-slugs_ft3
+<span class="lineNum">      58 </span>            :   @property atmosphere/P-psf
+<span class="lineNum">      59 </span>            :   @property atmosphere/a-fps
+<span class="lineNum">      60 </span>            :   @property atmosphere/T-sl-R
+<span class="lineNum">      61 </span>            :   @property atmosphere/rho-sl-slugs_ft3
+<span class="lineNum">      62 </span>            :   @property atmosphere/P-sl-psf
+<span class="lineNum">      63 </span>            :   @property atmosphere/a-sl-fps
+<span class="lineNum">      64 </span>            :   @property atmosphere/theta
+<span class="lineNum">      65 </span>            :   @property atmosphere/sigma
+<span class="lineNum">      66 </span>            :   @property atmosphere/delta
+<span class="lineNum">      67 </span>            :   @property atmosphere/a-ratio
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            :   @author Jon Berndt
+<span class="lineNum">      70 </span>            : */
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      73 </span>            : CLASS DECLARATION
+<span class="lineNum">      74 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            : class FGAtmosphere : public FGModel {
+<span class="lineNum">      77 </span>            : public:
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            :   /// Enums for specifying temperature units.
+<span class="lineNum">      80 </span>            :   enum eTemperature {eNoTempUnit=0, eFahrenheit, eCelsius, eRankine, eKelvin};
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :   /// Enums for specifying pressure units.
+<span class="lineNum">      83 </span>            :   enum ePressure {eNoPressUnit=0, ePSF, eMillibars, ePascals, eInchesHg};
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :   /// Constructor
+<span class="lineNum">      86 </span>            :   FGAtmosphere(FGFDMExec*);
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            :   /// Destructor
+<span class="lineNum">      89 </span>            :   virtual ~FGAtmosphere();
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            :   /** Runs the atmosphere forces model; called by the Executive.
+<span class="lineNum">      92 </span>            :       Can pass in a value indicating if the executive is directing the simulation to Hold.
+<span class="lineNum">      93 </span>            :       @param Holding if true, the executive has been directed to hold the sim from 
+<span class="lineNum">      94 </span>            :                      advancing time. Some models may ignore this flag, such as the Input
+<span class="lineNum">      95 </span>            :                      model, which may need to be active to listen on a socket for the
+<span class="lineNum">      96 </span>            :                      &quot;Resume&quot; command to be given.
+<span class="lineNum">      97 </span>            :       @return false if no error */
+<span class="lineNum">      98 </span>            :   bool Run(bool Holding) override;
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :   bool InitModel(void) override;
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :   //  *************************************************************************
+<span class="lineNum">     103 </span>            :   /// @name Temperature access functions.
+<span class="lineNum">     104 </span>            :   /// There are several ways to get the temperature, and several modeled temperature
+<span class="lineNum">     105 </span>            :   /// values that can be retrieved.
+<span class="lineNum">     106 </span>            :   // @{
+<a name="107"><span class="lineNum">     107 </span>            :   /// Returns the actual, modeled temperature at the current altitude in degrees Rankine.</a>
+<span class="lineNum">     108 </span>            :   /// @return Modeled temperature in degrees Rankine.
+<span class="lineNum">     109 </span><span class="lineCov">         48 :   virtual double GetTemperature() const {return Temperature;}</span>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            :   /// Returns the actual modeled temperature in degrees Rankine at a specified altitude.
+<span class="lineNum">     112 </span>            :   /// @param altitude The altitude above sea level (ASL) in feet.
+<span class="lineNum">     113 </span>            :   /// @return Modeled temperature in degrees Rankine at the specified altitude.
+<span class="lineNum">     114 </span>            :   virtual double GetTemperature(double altitude) const = 0; 
+<span class="lineNum">     115 </span>            : 
+<a name="116"><span class="lineNum">     116 </span>            :   /// Returns the actual, modeled sea level temperature in degrees Rankine.</a>
+<span class="lineNum">     117 </span>            :   /// @return The modeled temperature in degrees Rankine at sea level.
+<span class="lineNum">     118 </span><span class="lineCov">          8 :   virtual double GetTemperatureSL() const { return SLtemperature; }</span>
+<span class="lineNum">     119 </span>            : 
+<a name="120"><span class="lineNum">     120 </span>            :   /// Returns the ratio of the at-current-altitude temperature as modeled</a>
+<span class="lineNum">     121 </span>            :   /// over the sea level value.
+<span class="lineNum">     122 </span><span class="lineCov">          8 :   virtual double GetTemperatureRatio() const { return GetTemperature()/SLtemperature; }</span>
+<span class="lineNum">     123 </span>            : 
+<a name="124"><span class="lineNum">     124 </span>            :   /// Returns the ratio of the temperature as modeled at the supplied altitude</a>
+<span class="lineNum">     125 </span>            :   /// over the sea level value.
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :   virtual double GetTemperatureRatio(double h) const { return GetTemperature(h)/SLtemperature; }</span>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            :   /// Sets the Sea Level temperature.
+<span class="lineNum">     129 </span>            :   /// @param t the temperature value in the unit provided.
+<span class="lineNum">     130 </span>            :   /// @param unit the unit of the temperature.
+<span class="lineNum">     131 </span>            :   virtual void SetTemperatureSL(double t, eTemperature unit=eFahrenheit);
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            :   /// Sets the temperature at the supplied altitude.
+<span class="lineNum">     134 </span>            :   /// @param t The temperature value in the unit provided.
+<span class="lineNum">     135 </span>            :   /// @param h The altitude in feet above sea level.
+<span class="lineNum">     136 </span>            :   /// @param unit The unit of the temperature.
+<span class="lineNum">     137 </span>            :   virtual void SetTemperature(double t, double h, eTemperature unit=eFahrenheit) = 0;
+<span class="lineNum">     138 </span>            :   //@}
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            :   //  *************************************************************************
+<span class="lineNum">     141 </span>            :   /// @name Pressure access functions.
+<a name="142"><span class="lineNum">     142 </span>            :   //@{</a>
+<span class="lineNum">     143 </span>            :   /// Returns the pressure in psf.
+<span class="lineNum">     144 </span><span class="lineCov">         32 :   virtual double GetPressure(void) const {return Pressure;}</span>
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            :   /// Returns the pressure at a specified altitude in psf.
+<span class="lineNum">     147 </span>            :   virtual double GetPressure(double altitude) const = 0;
+<a name="148"><span class="lineNum">     148 </span>            : </a>
+<span class="lineNum">     149 </span>            :   // Returns the sea level pressure in target units, default in psf.
+<span class="lineNum">     150 </span><span class="lineCov">         16 :   virtual double GetPressureSL(ePressure to=ePSF) const { return ConvertFromPSF(SLpressure, to);  }</span>
+<a name="151"><span class="lineNum">     151 </span>            : </a>
+<span class="lineNum">     152 </span>            :   /// Returns the ratio of at-altitude pressure over the sea level value.
+<span class="lineNum">     153 </span><span class="lineCov">         16 :   virtual double GetPressureRatio(void) const { return Pressure/SLpressure; }</span>
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span>            :   /** Sets the sea level pressure for modeling.
+<span class="lineNum">     156 </span>            :       @param pressure The pressure in the units specified.
+<span class="lineNum">     157 </span>            :       @param unit the unit of measure that the specified pressure is
+<span class="lineNum">     158 </span>            :                   supplied in.*/
+<span class="lineNum">     159 </span>            :   virtual void SetPressureSL(ePressure unit, double pressure);
+<span class="lineNum">     160 </span>            :   //@}
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span>            :   //  *************************************************************************
+<span class="lineNum">     163 </span>            :   /// @name Density access functions.
+<span class="lineNum">     164 </span>            :   //@{
+<a name="165"><span class="lineNum">     165 </span>            :   /** Returns the density in slugs/ft^3.</a>
+<span class="lineNum">     166 </span>            :       This function may only be used if Run() is called first. */
+<span class="lineNum">     167 </span><span class="lineCov">         32 :   virtual double GetDensity(void)  const {return Density;}</span>
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            :   /** Returns the density in slugs/ft^3 at a given altitude in ft. */
+<span class="lineNum">     170 </span>            :   virtual double GetDensity(double altitude) const;
+<a name="171"><span class="lineNum">     171 </span>            : </a>
+<span class="lineNum">     172 </span>            :   /// Returns the sea level density in slugs/ft^3
+<span class="lineNum">     173 </span><span class="lineCov">     206931 :   virtual double GetDensitySL(void)  const { return SLdensity; }</span>
+<a name="174"><span class="lineNum">     174 </span>            : </a>
+<span class="lineNum">     175 </span>            :   /// Returns the ratio of at-altitude density over the sea level value.
+<span class="lineNum">     176 </span><span class="lineCov">         16 :   virtual double GetDensityRatio(void) const { return Density/SLdensity; }</span>
+<span class="lineNum">     177 </span>            :   //@}
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span>            :   //  *************************************************************************
+<span class="lineNum">     180 </span>            :   /// @name Speed of sound access functions.
+<a name="181"><span class="lineNum">     181 </span>            :   //@{</a>
+<span class="lineNum">     182 </span>            :   /// Returns the speed of sound in ft/sec.
+<span class="lineNum">     183 </span><span class="lineCov">         24 :   virtual double GetSoundSpeed(void) const {return Soundspeed;}</span>
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span>            :   /// Returns the speed of sound in ft/sec at a given altitude in ft.
+<span class="lineNum">     186 </span>            :   virtual double GetSoundSpeed(double altitude) const;
+<a name="187"><span class="lineNum">     187 </span>            :   </a>
+<span class="lineNum">     188 </span>            :   /// Returns the sea level speed of sound in ft/sec.
+<span class="lineNum">     189 </span><span class="lineCov">          8 :   virtual double GetSoundSpeedSL(void) const { return SLsoundspeed; }</span>
+<a name="190"><span class="lineNum">     190 </span>            : </a>
+<span class="lineNum">     191 </span>            :   /// Returns the ratio of at-altitude sound speed over the sea level value.
+<span class="lineNum">     192 </span><span class="lineCov">          8 :   virtual double GetSoundSpeedRatio(void) const { return Soundspeed/SLsoundspeed; }</span>
+<span class="lineNum">     193 </span>            :   //@}
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            :   //  *************************************************************************
+<span class="lineNum">     196 </span>            :   /// @name Viscosity access functions.
+<a name="197"><span class="lineNum">     197 </span>            :   //@{</a>
+<span class="lineNum">     198 </span>            :   /// Returns the absolute viscosity.
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :   virtual double GetAbsoluteViscosity(void) const {return Viscosity;}</span>
+<a name="200"><span class="lineNum">     200 </span>            : </a>
+<span class="lineNum">     201 </span>            :   /// Returns the kinematic viscosity.
+<span class="lineNum">     202 </span><span class="lineCov">          8 :   virtual double GetKinematicViscosity(void) const {return KinematicViscosity;}</span>
+<a name="203"><span class="lineNum">     203 </span>            :   //@}</a>
+<span class="lineNum">     204 </span>            : 
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">          8 :   virtual double GetDensityAltitude() const {return DensityAltitude;}</span></a>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span><span class="lineCov">          8 :   virtual double GetPressureAltitude() const {return PressureAltitude;}</span>
+<span class="lineNum">     208 </span>            : 
+<span class="lineNum">     209 </span>            :   struct Inputs {
+<span class="lineNum">     210 </span>            :     double altitudeASL;
+<span class="lineNum">     211 </span>            :   } in;
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span>            :   static constexpr double StdDaySLtemperature = 518.67;
+<span class="lineNum">     214 </span>            :   static constexpr double StdDaySLpressure = 2116.228;
+<span class="lineNum">     215 </span>            :   static const double StdDaySLsoundspeed;
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            : protected:
+<span class="lineNum">     218 </span>            :   double    SLtemperature,    SLdensity,    SLpressure,    SLsoundspeed; // Sea level conditions
+<span class="lineNum">     219 </span>            :   double      Temperature,      Density,      Pressure,      Soundspeed; // Current actual conditions at altitude
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span>            :   double PressureAltitude;
+<span class="lineNum">     222 </span>            :   double DensityAltitude;
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span>            :   static constexpr double SutherlandConstant = 198.72;  // deg Rankine
+<span class="lineNum">     225 </span>            :   static constexpr double Beta = 2.269690E-08; // slug/(sec ft R^0.5)
+<span class="lineNum">     226 </span>            :   double Viscosity, KinematicViscosity;
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span>            :   /// Calculate the atmosphere for the given altitude.
+<span class="lineNum">     229 </span>            :   virtual void Calculate(double altitude);
+<span class="lineNum">     230 </span>            : 
+<span class="lineNum">     231 </span>            :   /// Calculates the density altitude given any temperature or pressure bias.
+<span class="lineNum">     232 </span>            :   /// Calculated density for the specified geometric altitude given any temperature
+<span class="lineNum">     233 </span>            :   /// or pressure biases is passed in.
+<a name="234"><span class="lineNum">     234 </span>            :   /// @param density</a>
+<span class="lineNum">     235 </span>            :   /// @param geometricAlt
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :   virtual double CalculateDensityAltitude(double density, double geometricAlt) { return geometricAlt; }</span>
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            :   /// Calculates the pressure altitude given any temperature or pressure bias.
+<span class="lineNum">     239 </span>            :   /// Calculated pressure for the specified geometric altitude given any temperature
+<span class="lineNum">     240 </span>            :   /// or pressure biases is passed in.
+<a name="241"><span class="lineNum">     241 </span>            :   /// @param pressure</a>
+<span class="lineNum">     242 </span>            :   /// @param geometricAlt
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :   virtual double CalculatePressureAltitude(double pressure, double geometricAlt) { return geometricAlt; }</span>
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            :   /// Converts to Rankine from one of several unit systems.
+<span class="lineNum">     246 </span>            :   double ConvertToRankine(double t, eTemperature unit) const;
+<span class="lineNum">     247 </span>            :   
+<span class="lineNum">     248 </span>            :   /// Converts from Rankine to one of several unit systems.
+<span class="lineNum">     249 </span>            :   double ConvertFromRankine(double t, eTemperature unit) const;
+<span class="lineNum">     250 </span>            : 
+<span class="lineNum">     251 </span>            :   /// Converts to PSF (pounds per square foot) from one of several unit systems.
+<span class="lineNum">     252 </span>            :   double ConvertToPSF(double t, ePressure unit=ePSF) const;
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span>            :   /// Converts from PSF (pounds per square foot) to one of several unit systems.
+<span class="lineNum">     255 </span>            :   double ConvertFromPSF(double t, ePressure unit=ePSF) const;
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span>            :   /// @name ISA constants
+<span class="lineNum">     258 </span>            :   //@{
+<span class="lineNum">     259 </span>            :   /// Universal gas constant - ft*lbf/R/mol
+<span class="lineNum">     260 </span>            :   static constexpr double Rstar = 8.31432 * kgtoslug / KelvinToRankine(fttom * fttom);
+<span class="lineNum">     261 </span>            :   /// Mean molecular weight for air - slug/mol
+<span class="lineNum">     262 </span>            :   static constexpr double Mair = 28.9645 * kgtoslug / 1000.0;
+<span class="lineNum">     263 </span>            :   /** Sea-level acceleration of gravity - ft/s^2.
+<span class="lineNum">     264 </span>            :       This constant is defined to compute the International Standard Atmosphere.
+<span class="lineNum">     265 </span>            :       It is by definition the sea level gravity at a latitude of 45deg. This
+<span class="lineNum">     266 </span>            :       value is fixed whichever gravity model is used by FGInertial.
+<span class="lineNum">     267 </span>            :   */
+<span class="lineNum">     268 </span>            :   static constexpr double g0 = 9.80665 / fttom;
+<span class="lineNum">     269 </span>            :   /// Specific gas constant for air - ft*lbf/slug/R
+<span class="lineNum">     270 </span>            :   static double Reng;
+<span class="lineNum">     271 </span>            :   //@}
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span>            :   static constexpr double SHRatio = 1.4;
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            :   virtual void bind(void);
+<span class="lineNum">     276 </span>            :   void Debug(int from) override;
+<span class="lineNum">     277 </span>            : };
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            : } // namespace JSBSim
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     282 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

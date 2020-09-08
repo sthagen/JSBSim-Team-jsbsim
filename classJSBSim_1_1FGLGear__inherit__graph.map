@@ -1,0 +1,5 @@
+<map id="FGLGear" name="FGLGear">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGSurface.html" title="Base class for all surface properties. " alt="" coords="5,80,91,107"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGForce.html" title="Utility class that aids in the conversion of forces between coordinate systems and calculation of mom..." alt="" coords="115,80,189,107"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGJSBBase.html" title="JSBSim Base class. " alt="" coords="105,5,199,32"/>
+</map>

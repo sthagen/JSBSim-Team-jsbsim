@@ -1,0 +1,843 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGXMLElement.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGXMLElement.cpp<span style="font-size: 80%;"> (source / <a href="FGXMLElement.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">445</td>
+            <td class="headerCovTableEntryLo">0.4 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntryLo">7.7 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       4 </span>            :  Date started: 09/28/2004
+<span class="lineNum">       5 </span>            :  Purpose:      XML element class
+<span class="lineNum">       6 </span>            :  Called by:    FGXMLParse
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------------- Copyright (C) 2001  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      12 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      13 </span>            :  later version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      21 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      22 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      25 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      28 </span>            : INCLUDES
+<span class="lineNum">      29 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : #include &lt;sstream&gt;  // for assembling the error messages / what of exceptions.
+<span class="lineNum">      32 </span>            : #include &lt;stdexcept&gt;  // using domain_error, invalid_argument, and length_error.
+<span class="lineNum">      33 </span>            : #include &quot;FGXMLElement.h&quot;
+<span class="lineNum">      34 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : using namespace std;
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      39 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      40 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : namespace JSBSim {
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : bool Element::converterIsInitialized = false;
+<span class="lineNum">      45 </span><span class="lineCov">          4 : map &lt;string, map &lt;string, double&gt; &gt; Element::convert;</span>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      48 </span>            : CLASS IMPLEMENTATION
+<a name="49"><span class="lineNum">      49 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 : Element::Element(const string&amp; nm)</span>
+<span class="lineNum">      52 </span>            : {
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :   name   = nm;</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :   parent = 0L;</span>
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :   element_index = 0;</span>
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 :   line_number = -1;</span>
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :   if (!converterIsInitialized) {</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :     converterIsInitialized = true;</span>
+<span class="lineNum">      60 </span>            :     // convert [&quot;from&quot;][&quot;to&quot;] = factor, so: from * factor = to
+<span class="lineNum">      61 </span>            :     // Length
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :     convert[&quot;M&quot;][&quot;FT&quot;] = 3.2808399;</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :     convert[&quot;FT&quot;][&quot;M&quot;] = 1.0/convert[&quot;M&quot;][&quot;FT&quot;];</span>
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :     convert[&quot;CM&quot;][&quot;FT&quot;] = 0.032808399;</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :     convert[&quot;FT&quot;][&quot;CM&quot;] = 1.0/convert[&quot;CM&quot;][&quot;FT&quot;];</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :     convert[&quot;KM&quot;][&quot;FT&quot;] = 3280.8399;</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :     convert[&quot;FT&quot;][&quot;KM&quot;] = 1.0/convert[&quot;KM&quot;][&quot;FT&quot;];</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :     convert[&quot;FT&quot;][&quot;IN&quot;] = 12.0;</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :     convert[&quot;IN&quot;][&quot;FT&quot;] = 1.0/convert[&quot;FT&quot;][&quot;IN&quot;];</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :     convert[&quot;IN&quot;][&quot;M&quot;] = convert[&quot;IN&quot;][&quot;FT&quot;] * convert[&quot;FT&quot;][&quot;M&quot;];</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :     convert[&quot;M&quot;][&quot;IN&quot;] = convert[&quot;M&quot;][&quot;FT&quot;] * convert[&quot;FT&quot;][&quot;IN&quot;];</span>
+<span class="lineNum">      72 </span>            :     // Area
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :     convert[&quot;M2&quot;][&quot;FT2&quot;] = convert[&quot;M&quot;][&quot;FT&quot;]*convert[&quot;M&quot;][&quot;FT&quot;];</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :     convert[&quot;FT2&quot;][&quot;M2&quot;] = 1.0/convert[&quot;M2&quot;][&quot;FT2&quot;];</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :     convert[&quot;CM2&quot;][&quot;FT2&quot;] = convert[&quot;CM&quot;][&quot;FT&quot;]*convert[&quot;CM&quot;][&quot;FT&quot;];</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :     convert[&quot;FT2&quot;][&quot;CM2&quot;] = 1.0/convert[&quot;CM2&quot;][&quot;FT2&quot;];</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :     convert[&quot;M2&quot;][&quot;IN2&quot;] = convert[&quot;M&quot;][&quot;IN&quot;]*convert[&quot;M&quot;][&quot;IN&quot;];</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :     convert[&quot;IN2&quot;][&quot;M2&quot;] = 1.0/convert[&quot;M2&quot;][&quot;IN2&quot;];</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :     convert[&quot;FT2&quot;][&quot;IN2&quot;] = 144.0;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :     convert[&quot;IN2&quot;][&quot;FT2&quot;] = 1.0/convert[&quot;FT2&quot;][&quot;IN2&quot;];</span>
+<span class="lineNum">      81 </span>            :     // Volume
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :     convert[&quot;IN3&quot;][&quot;CC&quot;] = 16.387064;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :     convert[&quot;CC&quot;][&quot;IN3&quot;] = 1.0/convert[&quot;IN3&quot;][&quot;CC&quot;];</span>
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :     convert[&quot;FT3&quot;][&quot;IN3&quot;] = 1728.0;</span>
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :     convert[&quot;IN3&quot;][&quot;FT3&quot;] = 1.0/convert[&quot;FT3&quot;][&quot;IN3&quot;];</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :     convert[&quot;M3&quot;][&quot;FT3&quot;] = 35.3146667;</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :     convert[&quot;FT3&quot;][&quot;M3&quot;] = 1.0/convert[&quot;M3&quot;][&quot;FT3&quot;];</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :     convert[&quot;LTR&quot;][&quot;IN3&quot;] = 61.0237441;</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :     convert[&quot;IN3&quot;][&quot;LTR&quot;] = 1.0/convert[&quot;LTR&quot;][&quot;IN3&quot;];</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :     convert[&quot;GAL&quot;][&quot;FT3&quot;] = 0.133681;</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :     convert[&quot;FT3&quot;][&quot;GAL&quot;] = 1.0/convert[&quot;GAL&quot;][&quot;FT3&quot;];</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :     convert[&quot;IN3&quot;][&quot;GAL&quot;] = convert[&quot;IN3&quot;][&quot;FT3&quot;]*convert[&quot;FT3&quot;][&quot;GAL&quot;];</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :     convert[&quot;LTR&quot;][&quot;GAL&quot;] = convert[&quot;LTR&quot;][&quot;IN3&quot;]*convert[&quot;IN3&quot;][&quot;GAL&quot;];</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :     convert[&quot;M3&quot;][&quot;GAL&quot;] = 1000.*convert[&quot;LTR&quot;][&quot;GAL&quot;];</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :     convert[&quot;CC&quot;][&quot;GAL&quot;] = convert[&quot;CC&quot;][&quot;IN3&quot;]*convert[&quot;IN3&quot;][&quot;GAL&quot;];</span>
+<span class="lineNum">      96 </span>            :     // Mass &amp; Weight
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :     convert[&quot;LBS&quot;][&quot;KG&quot;] = 0.45359237;</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :     convert[&quot;KG&quot;][&quot;LBS&quot;] = 1.0/convert[&quot;LBS&quot;][&quot;KG&quot;];</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :     convert[&quot;SLUG&quot;][&quot;KG&quot;] = 14.59390;</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :     convert[&quot;KG&quot;][&quot;SLUG&quot;] = 1.0/convert[&quot;SLUG&quot;][&quot;KG&quot;];</span>
+<span class="lineNum">     101 </span>            :     // Moments of Inertia
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :     convert[&quot;SLUG*FT2&quot;][&quot;KG*M2&quot;] = 1.35594;</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :     convert[&quot;KG*M2&quot;][&quot;SLUG*FT2&quot;] = 1.0/convert[&quot;SLUG*FT2&quot;][&quot;KG*M2&quot;];</span>
+<span class="lineNum">     104 </span>            :     // Angles
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :     convert[&quot;RAD&quot;][&quot;DEG&quot;] = 180.0/M_PI;</span>
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :     convert[&quot;DEG&quot;][&quot;RAD&quot;] = 1.0/convert[&quot;RAD&quot;][&quot;DEG&quot;];</span>
+<span class="lineNum">     107 </span>            :     // Angular rates
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :     convert[&quot;RAD/SEC&quot;][&quot;DEG/SEC&quot;] = convert[&quot;RAD&quot;][&quot;DEG&quot;];</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :     convert[&quot;DEG/SEC&quot;][&quot;RAD/SEC&quot;] = 1.0/convert[&quot;RAD/SEC&quot;][&quot;DEG/SEC&quot;];</span>
+<span class="lineNum">     110 </span>            :     // Spring force
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT&quot;][&quot;N/M&quot;] = 14.5939;</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :     convert[&quot;N/M&quot;][&quot;LBS/FT&quot;] = 1.0/convert[&quot;LBS/FT&quot;][&quot;N/M&quot;];</span>
+<span class="lineNum">     113 </span>            :     // Damping force
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT/SEC&quot;][&quot;N/M/SEC&quot;] = 14.5939;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :     convert[&quot;N/M/SEC&quot;][&quot;LBS/FT/SEC&quot;] = 1.0/convert[&quot;LBS/FT/SEC&quot;][&quot;N/M/SEC&quot;];</span>
+<span class="lineNum">     116 </span>            :     // Damping force (Square Law)
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT2/SEC2&quot;][&quot;N/M2/SEC2&quot;] = 47.880259;</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :     convert[&quot;N/M2/SEC2&quot;][&quot;LBS/FT2/SEC2&quot;] = 1.0/convert[&quot;LBS/FT2/SEC2&quot;][&quot;N/M2/SEC2&quot;];</span>
+<span class="lineNum">     119 </span>            :     // Power
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :     convert[&quot;WATTS&quot;][&quot;HP&quot;] = 0.001341022;</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :     convert[&quot;HP&quot;][&quot;WATTS&quot;] = 1.0/convert[&quot;WATTS&quot;][&quot;HP&quot;];</span>
+<span class="lineNum">     122 </span>            :     // Force
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :     convert[&quot;N&quot;][&quot;LBS&quot;] = 0.22482;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :     convert[&quot;LBS&quot;][&quot;N&quot;] = 1.0/convert[&quot;N&quot;][&quot;LBS&quot;];</span>
+<span class="lineNum">     125 </span>            :     // Velocity
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :     convert[&quot;KTS&quot;][&quot;FT/SEC&quot;] = 1.68781;</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :     convert[&quot;FT/SEC&quot;][&quot;KTS&quot;] = 1.0/convert[&quot;KTS&quot;][&quot;FT/SEC&quot;];</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :     convert[&quot;M/S&quot;][&quot;FT/S&quot;] = 3.2808399;</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :     convert[&quot;M/S&quot;][&quot;KTS&quot;] = convert[&quot;M/S&quot;][&quot;FT/S&quot;]/convert[&quot;KTS&quot;][&quot;FT/SEC&quot;];</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :     convert[&quot;M/SEC&quot;][&quot;FT/SEC&quot;] = 3.2808399;</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :     convert[&quot;FT/S&quot;][&quot;M/S&quot;] = 1.0/convert[&quot;M/S&quot;][&quot;FT/S&quot;];</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :     convert[&quot;M/SEC&quot;][&quot;FT/SEC&quot;] = 3.2808399;</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :     convert[&quot;FT/SEC&quot;][&quot;M/SEC&quot;] = 1.0/convert[&quot;M/SEC&quot;][&quot;FT/SEC&quot;];</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :     convert[&quot;KM/SEC&quot;][&quot;FT/SEC&quot;] = 3280.8399;</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :     convert[&quot;FT/SEC&quot;][&quot;KM/SEC&quot;] = 1.0/convert[&quot;KM/SEC&quot;][&quot;FT/SEC&quot;];</span>
+<span class="lineNum">     136 </span>            :     // Torque
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :     convert[&quot;FT*LBS&quot;][&quot;N*M&quot;] = 1.35581795;</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :     convert[&quot;N*M&quot;][&quot;FT*LBS&quot;] = 1/convert[&quot;FT*LBS&quot;][&quot;N*M&quot;];</span>
+<span class="lineNum">     139 </span>            :     // Valve
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :     convert[&quot;M4*SEC/KG&quot;][&quot;FT4*SEC/SLUG&quot;] = convert[&quot;M&quot;][&quot;FT&quot;]*convert[&quot;M&quot;][&quot;FT&quot;]*</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :       convert[&quot;M&quot;][&quot;FT&quot;]*convert[&quot;M&quot;][&quot;FT&quot;]/convert[&quot;KG&quot;][&quot;SLUG&quot;];</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :     convert[&quot;FT4*SEC/SLUG&quot;][&quot;M4*SEC/KG&quot;] =</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :       1.0/convert[&quot;M4*SEC/KG&quot;][&quot;FT4*SEC/SLUG&quot;];</span>
+<span class="lineNum">     144 </span>            :     // Pressure
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :     convert[&quot;INHG&quot;][&quot;PSF&quot;] = 70.7180803;</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     convert[&quot;PSF&quot;][&quot;INHG&quot;] = 1.0/convert[&quot;INHG&quot;][&quot;PSF&quot;];</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     convert[&quot;ATM&quot;][&quot;INHG&quot;] = 29.9246899;</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     convert[&quot;INHG&quot;][&quot;ATM&quot;] = 1.0/convert[&quot;ATM&quot;][&quot;INHG&quot;];</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :     convert[&quot;PSI&quot;][&quot;INHG&quot;] = 2.03625437;</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :     convert[&quot;INHG&quot;][&quot;PSI&quot;] = 1.0/convert[&quot;PSI&quot;][&quot;INHG&quot;];</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :     convert[&quot;INHG&quot;][&quot;PA&quot;] = 3386.0; // inches Mercury to pascals</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :     convert[&quot;PA&quot;][&quot;INHG&quot;] = 1.0/convert[&quot;INHG&quot;][&quot;PA&quot;];</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT2&quot;][&quot;N/M2&quot;] = 14.5939/convert[&quot;FT&quot;][&quot;M&quot;];</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :     convert[&quot;N/M2&quot;][&quot;LBS/FT2&quot;] = 1.0/convert[&quot;LBS/FT2&quot;][&quot;N/M2&quot;];</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT2&quot;][&quot;PA&quot;] = convert[&quot;LBS/FT2&quot;][&quot;N/M2&quot;];</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :     convert[&quot;PA&quot;][&quot;LBS/FT2&quot;] = 1.0/convert[&quot;LBS/FT2&quot;][&quot;PA&quot;];</span>
+<span class="lineNum">     157 </span>            :     // Mass flow
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     convert[&quot;KG/MIN&quot;][&quot;LBS/MIN&quot;] = convert[&quot;KG&quot;][&quot;LBS&quot;];</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :     convert [&quot;N/SEC&quot;][&quot;LBS/SEC&quot;] = 0.224808943;</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :     convert [&quot;LBS/SEC&quot;][&quot;N/SEC&quot;] = 1.0/convert [&quot;N/SEC&quot;][&quot;LBS/SEC&quot;];</span>
+<span class="lineNum">     161 </span>            :     // Fuel Consumption
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/HP*HR&quot;][&quot;KG/KW*HR&quot;] = 0.6083;</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :     convert[&quot;KG/KW*HR&quot;][&quot;LBS/HP*HR&quot;] = 1.0/convert[&quot;LBS/HP*HR&quot;][&quot;KG/KW*HR&quot;];</span>
+<span class="lineNum">     164 </span>            :     // Density
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :     convert[&quot;KG/L&quot;][&quot;LBS/GAL&quot;] = 8.3454045;</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/GAL&quot;][&quot;KG/L&quot;] = 1.0/convert[&quot;KG/L&quot;][&quot;LBS/GAL&quot;];</span>
+<span class="lineNum">     167 </span>            :     // Gravitational
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :     convert[&quot;FT3/SEC2&quot;][&quot;M3/SEC2&quot;] = convert[&quot;FT3&quot;][&quot;M3&quot;];</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :     convert[&quot;M3/SEC2&quot;][&quot;FT3/SEC2&quot;] = convert[&quot;M3&quot;][&quot;FT3&quot;];</span>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span>            :     // Length
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :     convert[&quot;M&quot;][&quot;M&quot;] = 1.00;</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :     convert[&quot;KM&quot;][&quot;KM&quot;] = 1.00;</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :     convert[&quot;FT&quot;][&quot;FT&quot;] = 1.00;</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :     convert[&quot;IN&quot;][&quot;IN&quot;] = 1.00;</span>
+<span class="lineNum">     176 </span>            :     // Area
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :     convert[&quot;M2&quot;][&quot;M2&quot;] = 1.00;</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :     convert[&quot;FT2&quot;][&quot;FT2&quot;] = 1.00;</span>
+<span class="lineNum">     179 </span>            :     // Volume
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :     convert[&quot;IN3&quot;][&quot;IN3&quot;] = 1.00;</span>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :     convert[&quot;CC&quot;][&quot;CC&quot;] = 1.0;</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :     convert[&quot;M3&quot;][&quot;M3&quot;] = 1.0;</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :     convert[&quot;FT3&quot;][&quot;FT3&quot;] = 1.0;</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :     convert[&quot;LTR&quot;][&quot;LTR&quot;] = 1.0;</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :     convert[&quot;GAL&quot;][&quot;GAL&quot;] = 1.0;</span>
+<span class="lineNum">     186 </span>            :     // Mass &amp; Weight
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :     convert[&quot;KG&quot;][&quot;KG&quot;] = 1.00;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :     convert[&quot;LBS&quot;][&quot;LBS&quot;] = 1.00;</span>
+<span class="lineNum">     189 </span>            :     // Moments of Inertia
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     convert[&quot;KG*M2&quot;][&quot;KG*M2&quot;] = 1.00;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :     convert[&quot;SLUG*FT2&quot;][&quot;SLUG*FT2&quot;] = 1.00;</span>
+<span class="lineNum">     192 </span>            :     // Angles
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :     convert[&quot;DEG&quot;][&quot;DEG&quot;] = 1.00;</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :     convert[&quot;RAD&quot;][&quot;RAD&quot;] = 1.00;</span>
+<span class="lineNum">     195 </span>            :     // Angular rates
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :     convert[&quot;DEG/SEC&quot;][&quot;DEG/SEC&quot;] = 1.00;</span>
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :     convert[&quot;RAD/SEC&quot;][&quot;RAD/SEC&quot;] = 1.00;</span>
+<span class="lineNum">     198 </span>            :     // Spring force
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT&quot;][&quot;LBS/FT&quot;] = 1.00;</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :     convert[&quot;N/M&quot;][&quot;N/M&quot;] = 1.00;</span>
+<span class="lineNum">     201 </span>            :     // Damping force
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT/SEC&quot;][&quot;LBS/FT/SEC&quot;] = 1.00;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :     convert[&quot;N/M/SEC&quot;][&quot;N/M/SEC&quot;] = 1.00;</span>
+<span class="lineNum">     204 </span>            :     // Damping force (Square law)
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT2/SEC2&quot;][&quot;LBS/FT2/SEC2&quot;] = 1.00;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :     convert[&quot;N/M2/SEC2&quot;][&quot;N/M2/SEC2&quot;] = 1.00;</span>
+<span class="lineNum">     207 </span>            :     // Power
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :     convert[&quot;HP&quot;][&quot;HP&quot;] = 1.00;</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :     convert[&quot;WATTS&quot;][&quot;WATTS&quot;] = 1.00;</span>
+<span class="lineNum">     210 </span>            :     // Force
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :     convert[&quot;N&quot;][&quot;N&quot;] = 1.00;</span>
+<span class="lineNum">     212 </span>            :     // Velocity
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :     convert[&quot;FT/SEC&quot;][&quot;FT/SEC&quot;] = 1.00;</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :     convert[&quot;KTS&quot;][&quot;KTS&quot;] = 1.00;</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     convert[&quot;M/S&quot;][&quot;M/S&quot;] = 1.0;</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :     convert[&quot;M/SEC&quot;][&quot;M/SEC&quot;] = 1.0;</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :     convert[&quot;KM/SEC&quot;][&quot;KM/SEC&quot;] = 1.0;</span>
+<span class="lineNum">     218 </span>            :     // Torque
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :     convert[&quot;FT*LBS&quot;][&quot;FT*LBS&quot;] = 1.00;</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :     convert[&quot;N*M&quot;][&quot;N*M&quot;] = 1.00;</span>
+<span class="lineNum">     221 </span>            :     // Valve
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :     convert[&quot;M4*SEC/KG&quot;][&quot;M4*SEC/KG&quot;] = 1.0;</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :     convert[&quot;FT4*SEC/SLUG&quot;][&quot;FT4*SEC/SLUG&quot;] = 1.0;</span>
+<span class="lineNum">     224 </span>            :     // Pressure
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     convert[&quot;PSI&quot;][&quot;PSI&quot;] = 1.00;</span>
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :     convert[&quot;PSF&quot;][&quot;PSF&quot;] = 1.00;</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :     convert[&quot;INHG&quot;][&quot;INHG&quot;] = 1.00;</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :     convert[&quot;ATM&quot;][&quot;ATM&quot;] = 1.0;</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :     convert[&quot;PA&quot;][&quot;PA&quot;] = 1.0;</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :     convert[&quot;N/M2&quot;][&quot;N/M2&quot;] = 1.00;</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/FT2&quot;][&quot;LBS/FT2&quot;] = 1.00;</span>
+<span class="lineNum">     232 </span>            :     // Mass flow
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/SEC&quot;][&quot;LBS/SEC&quot;] = 1.00;</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :     convert[&quot;KG/MIN&quot;][&quot;KG/MIN&quot;] = 1.0;</span>
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/MIN&quot;][&quot;LBS/MIN&quot;] = 1.0;</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :     convert[&quot;N/SEC&quot;][&quot;N/SEC&quot;] = 1.0;</span>
+<span class="lineNum">     237 </span>            :     // Fuel Consumption
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/HP*HR&quot;][&quot;LBS/HP*HR&quot;] = 1.0;</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :     convert[&quot;KG/KW*HR&quot;][&quot;KG/KW*HR&quot;] = 1.0;</span>
+<span class="lineNum">     240 </span>            :     // Density
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :     convert[&quot;KG/L&quot;][&quot;KG/L&quot;] = 1.0;</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :     convert[&quot;LBS/GAL&quot;][&quot;LBS/GAL&quot;] = 1.0;</span>
+<span class="lineNum">     243 </span>            :     // Gravitational
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :     convert[&quot;FT3/SEC2&quot;][&quot;FT3/SEC2&quot;] = 1.0;</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :     convert[&quot;M3/SEC2&quot;][&quot;M3/SEC2&quot;] = 1.0;</span>
+<span class="lineNum">     246 </span>            :   }
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     248 </span>            : 
+<a name="249"><span class="lineNum">     249 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     250 </span>            : 
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 : Element::~Element(void)</span>
+<span class="lineNum">     252 </span>            : {
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :   for (unsigned int i = 0; i &lt; children.size(); ++i)</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :     children[i]-&gt;SetParent(0);</span>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     256 </span>            : 
+<a name="257"><span class="lineNum">     257 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 : string Element::GetAttributeValue(const string&amp; attr)</span>
+<span class="lineNum">     260 </span>            : {
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :   if (HasAttribute(attr))  return attributes[attr];</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :   else                     return (&quot;&quot;);</span>
+<span class="lineNum">     263 </span>            : }
+<span class="lineNum">     264 </span>            : 
+<a name="265"><span class="lineNum">     265 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 : bool Element::SetAttributeValue(const std::string&amp; key, const std::string&amp; value)</span>
+<span class="lineNum">     268 </span>            : {
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :   bool ret = HasAttribute(key);</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :   if (ret)</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :     attributes[key] = value;</span>
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :   return ret;</span>
+<span class="lineNum">     274 </span>            : }
+<span class="lineNum">     275 </span>            : 
+<a name="276"><span class="lineNum">     276 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 : double Element::GetAttributeValueAsNumber(const string&amp; attr)</span>
+<span class="lineNum">     279 </span>            : {
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :   string attribute = GetAttributeValue(attr);</span>
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :   if (attribute.empty()) {</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :     std::stringstream s;</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :     s &lt;&lt; ReadFrom() &lt;&lt; &quot;Expecting numeric attribute value, but got no data&quot;;</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :     throw length_error(s.str());</span>
+<span class="lineNum">     287 </span>            :   }
+<span class="lineNum">     288 </span>            :   else {
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :     double number=0;</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :     if (is_number(trim(attribute)))</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :       number = atof(attribute.c_str());</span>
+<span class="lineNum">     292 </span>            :     else {
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :       s &lt;&lt; ReadFrom() &lt;&lt; &quot;Expecting numeric attribute value, but got: &quot; &lt;&lt; attribute;</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     297 </span>            :     }
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :     return (number);</span>
+<span class="lineNum">     300 </span>            :   }
+<span class="lineNum">     301 </span>            : }
+<span class="lineNum">     302 </span>            : 
+<a name="303"><span class="lineNum">     303 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     304 </span>            : 
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 : Element* Element::GetElement(unsigned int el)</span>
+<span class="lineNum">     306 </span>            : {
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :   if (children.size() &gt; el) {</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :     element_index = el;</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :     return children[el];</span>
+<span class="lineNum">     310 </span>            :   }
+<span class="lineNum">     311 </span>            :   else {
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :     element_index = 0;</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :     return 0L;</span>
+<span class="lineNum">     314 </span>            :   }
+<span class="lineNum">     315 </span>            : }
+<span class="lineNum">     316 </span>            : 
+<a name="317"><span class="lineNum">     317 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 : Element* Element::GetNextElement(void)</span>
+<span class="lineNum">     320 </span>            : {
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :   if (children.size() &gt; element_index+1) {</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :     element_index++;</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :     return children[element_index];</span>
+<span class="lineNum">     324 </span>            :   } else {
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :     element_index = 0;</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :     return 0L;</span>
+<span class="lineNum">     327 </span>            :   }
+<span class="lineNum">     328 </span>            : }
+<span class="lineNum">     329 </span>            : 
+<a name="330"><span class="lineNum">     330 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     331 </span>            : 
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 : string Element::GetDataLine(unsigned int i)</span>
+<span class="lineNum">     333 </span>            : {
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :   if (data_lines.size() &gt; 0) return data_lines[i];</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :   else return string(&quot;&quot;);</span>
+<span class="lineNum">     336 </span>            : }
+<span class="lineNum">     337 </span>            : 
+<a name="338"><span class="lineNum">     338 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     339 </span>            : 
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 : double Element::GetDataAsNumber(void)</span>
+<span class="lineNum">     341 </span>            : {
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :   if (data_lines.size() == 1) {</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :     double number=0;</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :     if (is_number(trim(data_lines[0])))</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :       number = atof(data_lines[0].c_str());</span>
+<span class="lineNum">     346 </span>            :     else {
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :       s &lt;&lt; ReadFrom() &lt;&lt; &quot;Expected numeric value, but got: &quot; &lt;&lt; data_lines[0];</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     351 </span>            :     }
+<span class="lineNum">     352 </span>            : 
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :     return number;</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :   } else if (data_lines.size() == 0) {</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :     std::stringstream s;</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :     s &lt;&lt; ReadFrom() &lt;&lt; &quot;Expected numeric value, but got no data&quot;;</span>
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :     throw length_error(s.str());</span>
+<span class="lineNum">     359 </span>            :   } else {
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; ReadFrom() &lt;&lt; &quot;Attempting to get single data value in element &quot;</span>
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot;&lt;&quot; &lt;&lt; name &lt;&lt; &quot;&gt;&quot; &lt;&lt; endl</span>
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; from multiple lines:&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :     for(unsigned int i=0; i&lt;data_lines.size(); ++i)</span>
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; data_lines[i] &lt;&lt; endl;</span>
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :     std::stringstream s;</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :     s &lt;&lt; ReadFrom() &lt;&lt; &quot;Attempting to get single data value in element &quot;</span>
+<span class="lineNum">     367 </span>            :       &lt;&lt; &quot;&lt;&quot; &lt;&lt; name &lt;&lt; &quot;&gt;&quot;
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 :       &lt;&lt; &quot; from multiple lines (&quot; &lt;&lt; data_lines.size() &lt;&lt; &quot;).&quot;;</span>
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :     throw length_error(s.str());</span>
+<span class="lineNum">     370 </span>            :   }
+<span class="lineNum">     371 </span>            : }
+<span class="lineNum">     372 </span>            : 
+<a name="373"><span class="lineNum">     373 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     374 </span>            : 
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 : unsigned int Element::GetNumElements(const string&amp; element_name)</span>
+<span class="lineNum">     376 </span>            : {
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :   unsigned int number_of_elements=0;</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :   Element* el=FindElement(element_name);</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :   while (el) {</span>
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :     number_of_elements++;</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :     el=FindNextElement(element_name);</span>
+<span class="lineNum">     382 </span>            :   }
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :   return number_of_elements;</span>
+<span class="lineNum">     384 </span>            : }
+<span class="lineNum">     385 </span>            : 
+<a name="386"><span class="lineNum">     386 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     387 </span>            : 
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 : Element* Element::FindElement(const string&amp; el)</span>
+<span class="lineNum">     389 </span>            : {
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :   if (el.empty() &amp;&amp; children.size() &gt;= 1) {</span>
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :     element_index = 1;</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :     return children[0];</span>
+<span class="lineNum">     393 </span>            :   }
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;children.size(); i++) {</span>
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :     if (el == children[i]-&gt;GetName()) {</span>
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :       element_index = i+1;</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :       return children[i];</span>
+<span class="lineNum">     398 </span>            :     }
+<span class="lineNum">     399 </span>            :   }
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :   element_index = 0;</span>
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :   return 0L;</span>
+<span class="lineNum">     402 </span>            : }
+<span class="lineNum">     403 </span>            : 
+<a name="404"><span class="lineNum">     404 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 : Element* Element::FindNextElement(const string&amp; el)</span>
+<span class="lineNum">     407 </span>            : {
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :   if (el.empty()) {</span>
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :     if (element_index &lt; children.size()) {</span>
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :       return children[element_index++];</span>
+<span class="lineNum">     411 </span>            :     } else {
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :       element_index = 0;</span>
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :       return 0L;</span>
+<span class="lineNum">     414 </span>            :     }
+<span class="lineNum">     415 </span>            :   }
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :   for (unsigned int i=element_index; i&lt;children.size(); i++) {</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :     if (el == children[i]-&gt;GetName()) {</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :       element_index = i+1;</span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :       return children[i];</span>
+<span class="lineNum">     420 </span>            :     }
+<span class="lineNum">     421 </span>            :   }
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :   element_index = 0;</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :   return 0L;</span>
+<span class="lineNum">     424 </span>            : }
+<span class="lineNum">     425 </span>            : 
+<a name="426"><span class="lineNum">     426 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     427 </span>            : 
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 : double Element::FindElementValueAsNumber(const string&amp; el)</span>
+<span class="lineNum">     429 </span>            : {
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :   Element* element = FindElement(el);</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :   if (element) {</span>
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :     double value = element-&gt;GetDataAsNumber();</span>
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :     value = DisperseValue(element, value);</span>
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :     return value;</span>
+<span class="lineNum">     435 </span>            :   } else {
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :     std::stringstream s;</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :     s &lt;&lt; ReadFrom() &lt;&lt; &quot;Attempting to get non-existent element &quot; &lt;&lt; el;</span>
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :     throw length_error(s.str());</span>
+<span class="lineNum">     440 </span>            :   }
+<span class="lineNum">     441 </span>            : }
+<span class="lineNum">     442 </span>            : 
+<a name="443"><span class="lineNum">     443 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     444 </span>            : 
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 : bool Element::FindElementValueAsBoolean(const string&amp; el)</span>
+<span class="lineNum">     446 </span>            : {
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :   Element* element = FindElement(el);</span>
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 :   if (element) {</span>
+<span class="lineNum">     449 </span>            :     // check value as an ordinary number
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :     double value = element-&gt;GetDataAsNumber();</span>
+<span class="lineNum">     451 </span>            : 
+<span class="lineNum">     452 </span>            :     // now check how it should return data
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :     if (value == 0) {</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :       return false;</span>
+<span class="lineNum">     455 </span>            :     } else {
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :       return true;</span>
+<span class="lineNum">     457 </span>            :     }
+<span class="lineNum">     458 </span>            :   } else {
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; ReadFrom() &lt;&lt; &quot;Attempting to get non-existent element &quot; &lt;&lt; el &lt;&lt; &quot; ;returning false&quot;</span>
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :          &lt;&lt; endl;</span>
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     462 </span>            :   }
+<span class="lineNum">     463 </span>            : }
+<span class="lineNum">     464 </span>            : 
+<a name="465"><span class="lineNum">     465 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 : string Element::FindElementValue(const string&amp; el)</span>
+<span class="lineNum">     468 </span>            : {
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :   Element* element = FindElement(el);</span>
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :   if (element) {</span>
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :     return element-&gt;GetDataLine();</span>
+<span class="lineNum">     472 </span>            :   } else {
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :     return &quot;&quot;;</span>
+<span class="lineNum">     474 </span>            :   }
+<span class="lineNum">     475 </span>            : }
+<span class="lineNum">     476 </span>            : 
+<a name="477"><span class="lineNum">     477 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     478 </span>            : 
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 : double Element::FindElementValueAsNumberConvertTo(const string&amp; el, const string&amp; target_units)</span>
+<span class="lineNum">     480 </span>            : {
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :   Element* element = FindElement(el);</span>
+<span class="lineNum">     482 </span>            : 
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :   if (!element) {</span>
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :     std::stringstream s;</span>
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :     s &lt;&lt; ReadFrom() &lt;&lt; &quot;Attempting to get non-existent element &quot; &lt;&lt; el;</span>
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :     throw length_error(s.str());</span>
+<span class="lineNum">     488 </span>            :   }
+<span class="lineNum">     489 </span>            : 
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :   string supplied_units = element-&gt;GetAttributeValue(&quot;unit&quot;);</span>
+<span class="lineNum">     491 </span>            : 
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :   if (!supplied_units.empty()) {</span>
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :     if (convert.find(supplied_units) == convert.end()) {</span>
+<span class="lineNum">     494 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     495 </span><span class="lineNoCov">          0 :       s &lt;&lt; element-&gt;ReadFrom() &lt;&lt; &quot;Supplied unit: \&quot;&quot; &lt;&lt; supplied_units</span>
+<span class="lineNum">     496 </span><span class="lineNoCov">          0 :         &lt;&lt; &quot;\&quot; does not exist (typo?).&quot;;</span>
+<span class="lineNum">     497 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     499 </span>            :     }
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :     if (convert[supplied_units].find(target_units) == convert[supplied_units].end()) {</span>
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :       s &lt;&lt; element-&gt;ReadFrom() &lt;&lt; &quot;Supplied unit: \&quot;&quot; &lt;&lt; supplied_units</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :         &lt;&lt; &quot;\&quot; cannot be converted to &quot; &lt;&lt; target_units;</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     505 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     506 </span>            :     }
+<span class="lineNum">     507 </span>            :   }
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :   double value = element-&gt;GetDataAsNumber();</span>
+<span class="lineNum">     510 </span>            : 
+<span class="lineNum">     511 </span>            :   // Sanity check for angular values
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :   if ((supplied_units == &quot;RAD&quot;) &amp;&amp; (fabs(value) &gt; 2 * M_PI)) {</span>
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; element-&gt;ReadFrom() &lt;&lt; element-&gt;GetName() &lt;&lt; &quot; value &quot;</span>
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :          &lt;&lt; value &lt;&lt; &quot; RAD is outside the range [ -2*M_PI RAD ; +2*M_PI RAD ]&quot;</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :          &lt;&lt; endl;</span>
+<span class="lineNum">     516 </span>            :   }
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :   if ((supplied_units == &quot;DEG&quot;) &amp;&amp; (fabs(value) &gt; 360.0)) {</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; element-&gt;ReadFrom() &lt;&lt; element-&gt;GetName() &lt;&lt; &quot; value &quot;</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :          &lt;&lt; value &lt;&lt; &quot; DEG is outside the range [ -360 DEG ; +360 DEG ]&quot;</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :          &lt;&lt; endl;</span>
+<span class="lineNum">     521 </span>            :   }
+<span class="lineNum">     522 </span>            : 
+<span class="lineNum">     523 </span>            : 
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :   if (!supplied_units.empty()) {</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :     value *= convert[supplied_units][target_units];</span>
+<span class="lineNum">     526 </span>            :   }
+<span class="lineNum">     527 </span>            : 
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :   if ((target_units == &quot;RAD&quot;) &amp;&amp; (fabs(value) &gt; 2 * M_PI)) {</span>
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; element-&gt;ReadFrom() &lt;&lt; element-&gt;GetName() &lt;&lt; &quot; value &quot;</span>
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :          &lt;&lt; value &lt;&lt; &quot; RAD is outside the range [ -2*M_PI RAD ; +2*M_PI RAD ]&quot;</span>
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :          &lt;&lt; endl;</span>
+<span class="lineNum">     532 </span>            :   }
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :   if ((target_units == &quot;DEG&quot;) &amp;&amp; (fabs(value) &gt; 360.0)) {</span>
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; element-&gt;ReadFrom() &lt;&lt; element-&gt;GetName() &lt;&lt; &quot; value &quot;</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :          &lt;&lt; value &lt;&lt; &quot; DEG is outside the range [ -360 DEG ; +360 DEG ]&quot;</span>
+<span class="lineNum">     536 </span><span class="lineNoCov">          0 :          &lt;&lt; endl;</span>
+<span class="lineNum">     537 </span>            :   }
+<span class="lineNum">     538 </span>            : 
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :   value = DisperseValue(element, value, supplied_units, target_units);</span>
+<span class="lineNum">     540 </span>            : 
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :   return value;</span>
+<span class="lineNum">     542 </span>            : }
+<span class="lineNum">     543 </span>            : 
+<a name="544"><span class="lineNum">     544 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     545 </span>            : 
+<span class="lineNum">     546 </span><span class="lineNoCov">          0 : double Element::FindElementValueAsNumberConvertFromTo( const string&amp; el,</span>
+<span class="lineNum">     547 </span>            :                                                        const string&amp; supplied_units,
+<span class="lineNum">     548 </span>            :                                                        const string&amp; target_units)
+<span class="lineNum">     549 </span>            : {
+<span class="lineNum">     550 </span><span class="lineNoCov">          0 :   Element* element = FindElement(el);</span>
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span><span class="lineNoCov">          0 :   if (!element) {</span>
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :     std::stringstream s;</span>
+<span class="lineNum">     554 </span><span class="lineNoCov">          0 :     s &lt;&lt; ReadFrom() &lt;&lt; &quot;Attempting to get non-existent element &quot; &lt;&lt; el;</span>
+<span class="lineNum">     555 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     556 </span><span class="lineNoCov">          0 :     throw length_error(s.str());</span>
+<span class="lineNum">     557 </span>            :   }
+<span class="lineNum">     558 </span>            : 
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 :   if (!supplied_units.empty()) {</span>
+<span class="lineNum">     560 </span><span class="lineNoCov">          0 :     if (convert.find(supplied_units) == convert.end()) {</span>
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :       s &lt;&lt; element-&gt;ReadFrom() &lt;&lt; &quot;Supplied unit: \&quot;&quot; &lt;&lt; supplied_units</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :         &lt;&lt; &quot;\&quot; does not exist (typo?).&quot;;</span>
+<span class="lineNum">     564 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     566 </span>            :     }
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :     if (convert[supplied_units].find(target_units) == convert[supplied_units].end()) {</span>
+<span class="lineNum">     568 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :       s &lt;&lt; element-&gt;ReadFrom() &lt;&lt; &quot;Supplied unit: \&quot;&quot; &lt;&lt; supplied_units</span>
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :         &lt;&lt; &quot;\&quot; cannot be converted to &quot; &lt;&lt; target_units;</span>
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     573 </span>            :     }
+<span class="lineNum">     574 </span>            :   }
+<span class="lineNum">     575 </span>            : 
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :   double value = element-&gt;GetDataAsNumber();</span>
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :   if (!supplied_units.empty()) {</span>
+<span class="lineNum">     578 </span><span class="lineNoCov">          0 :     value *= convert[supplied_units][target_units];</span>
+<span class="lineNum">     579 </span>            :   }
+<span class="lineNum">     580 </span>            : 
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 :   value = DisperseValue(element, value, supplied_units, target_units);</span>
+<span class="lineNum">     582 </span>            : 
+<span class="lineNum">     583 </span><span class="lineNoCov">          0 :   return value;</span>
+<span class="lineNum">     584 </span>            : }
+<span class="lineNum">     585 </span>            : 
+<a name="586"><span class="lineNum">     586 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     587 </span>            : 
+<span class="lineNum">     588 </span><span class="lineNoCov">          0 : FGColumnVector3 Element::FindElementTripletConvertTo( const string&amp; target_units)</span>
+<span class="lineNum">     589 </span>            : {
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 :   FGColumnVector3 triplet;</span>
+<span class="lineNum">     591 </span>            :   Element* item;
+<span class="lineNum">     592 </span><span class="lineNoCov">          0 :   double value=0.0;</span>
+<span class="lineNum">     593 </span><span class="lineNoCov">          0 :   string supplied_units = GetAttributeValue(&quot;unit&quot;);</span>
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span><span class="lineNoCov">          0 :   if (!supplied_units.empty()) {</span>
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :     if (convert.find(supplied_units) == convert.end()) {</span>
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 :       s &lt;&lt; ReadFrom() &lt;&lt; &quot;Supplied unit: \&quot;&quot; &lt;&lt; supplied_units</span>
+<span class="lineNum">     599 </span><span class="lineNoCov">          0 :         &lt;&lt; &quot;\&quot; does not exist (typo?).&quot;;</span>
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     601 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     602 </span>            :     }
+<span class="lineNum">     603 </span><span class="lineNoCov">          0 :     if (convert[supplied_units].find(target_units) == convert[supplied_units].end()) {</span>
+<span class="lineNum">     604 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     605 </span><span class="lineNoCov">          0 :       s &lt;&lt; ReadFrom() &lt;&lt; &quot;Supplied unit: \&quot;&quot; &lt;&lt; supplied_units</span>
+<span class="lineNum">     606 </span><span class="lineNoCov">          0 :         &lt;&lt; &quot;\&quot; cannot be converted to &quot; &lt;&lt; target_units;</span>
+<span class="lineNum">     607 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     608 </span><span class="lineNoCov">          0 :       throw invalid_argument(s.str());</span>
+<span class="lineNum">     609 </span>            :     }
+<span class="lineNum">     610 </span>            :   }
+<span class="lineNum">     611 </span>            : 
+<span class="lineNum">     612 </span><span class="lineNoCov">          0 :   item = FindElement(&quot;x&quot;);</span>
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 :   if (!item) item = FindElement(&quot;roll&quot;);</span>
+<span class="lineNum">     614 </span><span class="lineNoCov">          0 :   if (item) {</span>
+<span class="lineNum">     615 </span><span class="lineNoCov">          0 :     value = item-&gt;GetDataAsNumber();</span>
+<span class="lineNum">     616 </span><span class="lineNoCov">          0 :     if (!supplied_units.empty()) value *= convert[supplied_units][target_units];</span>
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :     triplet(1) = DisperseValue(item, value, supplied_units, target_units);</span>
+<span class="lineNum">     618 </span>            :   } else {
+<span class="lineNum">     619 </span><span class="lineNoCov">          0 :     triplet(1) = 0.0;</span>
+<span class="lineNum">     620 </span>            :   }
+<span class="lineNum">     621 </span>            : 
+<span class="lineNum">     622 </span>            : 
+<span class="lineNum">     623 </span><span class="lineNoCov">          0 :   item = FindElement(&quot;y&quot;);</span>
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :   if (!item) item = FindElement(&quot;pitch&quot;);</span>
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :   if (item) {</span>
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :     value = item-&gt;GetDataAsNumber();</span>
+<span class="lineNum">     627 </span><span class="lineNoCov">          0 :     if (!supplied_units.empty()) value *= convert[supplied_units][target_units];</span>
+<span class="lineNum">     628 </span><span class="lineNoCov">          0 :     triplet(2) = DisperseValue(item, value, supplied_units, target_units);</span>
+<span class="lineNum">     629 </span>            :   } else {
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :     triplet(2) = 0.0;</span>
+<span class="lineNum">     631 </span>            :   }
+<span class="lineNum">     632 </span>            : 
+<span class="lineNum">     633 </span><span class="lineNoCov">          0 :   item = FindElement(&quot;z&quot;);</span>
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :   if (!item) item = FindElement(&quot;yaw&quot;);</span>
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :   if (item) {</span>
+<span class="lineNum">     636 </span><span class="lineNoCov">          0 :     value = item-&gt;GetDataAsNumber();</span>
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :     if (!supplied_units.empty()) value *= convert[supplied_units][target_units];</span>
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 :     triplet(3) = DisperseValue(item, value, supplied_units, target_units);</span>
+<span class="lineNum">     639 </span>            :   } else {
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :     triplet(3) = 0.0;</span>
+<span class="lineNum">     641 </span>            :   }
+<span class="lineNum">     642 </span>            : 
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :   return triplet;</span>
+<span class="lineNum">     644 </span>            : }
+<span class="lineNum">     645 </span>            : 
+<a name="646"><span class="lineNum">     646 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     647 </span>            : 
+<span class="lineNum">     648 </span><span class="lineNoCov">          0 : double Element::DisperseValue(Element *e, double val, const std::string&amp; supplied_units,</span>
+<span class="lineNum">     649 </span>            :                               const std::string&amp; target_units)
+<span class="lineNum">     650 </span>            : {
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :   double value=val;</span>
+<span class="lineNum">     652 </span>            : 
+<span class="lineNum">     653 </span><span class="lineNoCov">          0 :   bool disperse = false;</span>
+<span class="lineNum">     654 </span>            :   try {
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :     char* num = getenv(&quot;JSBSIM_DISPERSE&quot;);</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :     if (num) {</span>
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :       disperse = (atoi(num) == 1);  // set dispersions</span>
+<span class="lineNum">     658 </span>            :     }
+<span class="lineNum">     659 </span>            :   } catch (...) {                   // if error set to false
+<span class="lineNum">     660 </span>            :     disperse = false;
+<span class="lineNum">     661 </span>            :     std::cerr &lt;&lt; &quot;Could not process JSBSIM_DISPERSE environment variable: Assumed NO dispersions.&quot; &lt;&lt; endl;
+<span class="lineNum">     662 </span>            :   }
+<span class="lineNum">     663 </span>            : 
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 :   if (e-&gt;HasAttribute(&quot;dispersion&quot;) &amp;&amp; disperse) {</span>
+<span class="lineNum">     665 </span><span class="lineNoCov">          0 :     double disp = e-&gt;GetAttributeValueAsNumber(&quot;dispersion&quot;);</span>
+<span class="lineNum">     666 </span><span class="lineNoCov">          0 :     if (!supplied_units.empty()) disp *= convert[supplied_units][target_units];</span>
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 :     string attType = e-&gt;GetAttributeValue(&quot;type&quot;);</span>
+<span class="lineNum">     668 </span><span class="lineNoCov">          0 :     if (attType == &quot;gaussian&quot; || attType == &quot;gaussiansigned&quot;) {</span>
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :       double grn = FGJSBBase::GaussianRandomNumber();</span>
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :     if (attType == &quot;gaussian&quot;) {</span>
+<span class="lineNum">     671 </span><span class="lineNoCov">          0 :       value = val + disp*grn;</span>
+<span class="lineNum">     672 </span>            :       } else { // Assume gaussiansigned
+<span class="lineNum">     673 </span><span class="lineNoCov">          0 :         value = (val + disp*grn)*(fabs(grn)/grn);</span>
+<span class="lineNum">     674 </span>            :       }
+<span class="lineNum">     675 </span><span class="lineNoCov">          0 :     } else if (attType == &quot;uniform&quot; || attType == &quot;uniformsigned&quot;) {</span>
+<span class="lineNum">     676 </span><span class="lineNoCov">          0 :       double urn = ((((double)rand()/RAND_MAX)-0.5)*2.0);</span>
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 :       if (attType == &quot;uniform&quot;) {</span>
+<span class="lineNum">     678 </span><span class="lineNoCov">          0 :       value = val + disp * urn;</span>
+<span class="lineNum">     679 </span>            :       } else { // Assume uniformsigned
+<span class="lineNum">     680 </span><span class="lineNoCov">          0 :         value = (val + disp * urn)*(fabs(urn)/urn);</span>
+<span class="lineNum">     681 </span>            :       }
+<span class="lineNum">     682 </span>            :     } else {
+<span class="lineNum">     683 </span><span class="lineNoCov">          0 :       std::stringstream s;</span>
+<span class="lineNum">     684 </span><span class="lineNoCov">          0 :       s &lt;&lt; ReadFrom() &lt;&lt; &quot;Unknown dispersion type&quot; &lt;&lt; attType;</span>
+<span class="lineNum">     685 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; s.str() &lt;&lt; endl;</span>
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :       throw domain_error(s.str());</span>
+<span class="lineNum">     687 </span>            :     }
+<span class="lineNum">     688 </span>            : 
+<span class="lineNum">     689 </span>            :   }
+<span class="lineNum">     690 </span><span class="lineNoCov">          0 :   return value;</span>
+<span class="lineNum">     691 </span>            : }
+<span class="lineNum">     692 </span>            : 
+<a name="693"><span class="lineNum">     693 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     694 </span>            : 
+<span class="lineNum">     695 </span><span class="lineNoCov">          0 : void Element::Print(unsigned int level)</span>
+<span class="lineNum">     696 </span>            : {
+<span class="lineNum">     697 </span>            :   unsigned int i, spaces;
+<span class="lineNum">     698 </span>            : 
+<span class="lineNum">     699 </span><span class="lineNoCov">          0 :   level+=2;</span>
+<span class="lineNum">     700 </span><span class="lineNoCov">          0 :   for (spaces=0; spaces&lt;=level; spaces++) cout &lt;&lt; &quot; &quot;; // format output</span>
+<span class="lineNum">     701 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;Element Name: &quot; &lt;&lt; name;</span>
+<span class="lineNum">     702 </span>            : 
+<span class="lineNum">     703 </span><span class="lineNoCov">          0 :   map&lt;string, string&gt;::iterator it;</span>
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :   for (it = attributes.begin(); it != attributes.end(); ++it)</span>
+<span class="lineNum">     705 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  &quot; &lt;&lt; it-&gt;first &lt;&lt; &quot; = &quot; &lt;&lt; it-&gt;second;</span>
+<span class="lineNum">     706 </span>            : 
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :   cout &lt;&lt; endl;</span>
+<span class="lineNum">     708 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;data_lines.size(); i++) {</span>
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :     for (spaces=0; spaces&lt;=level; spaces++) cout &lt;&lt; &quot; &quot;; // format output</span>
+<span class="lineNum">     710 </span><span class="lineNoCov">          0 :     cout &lt;&lt; data_lines[i] &lt;&lt; endl;</span>
+<span class="lineNum">     711 </span>            :   }
+<span class="lineNum">     712 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;children.size(); i++) {</span>
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :     children[i]-&gt;Print(level);</span>
+<span class="lineNum">     714 </span>            :   }
+<span class="lineNum">     715 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     716 </span>            : 
+<a name="717"><span class="lineNum">     717 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     718 </span>            : 
+<span class="lineNum">     719 </span><span class="lineNoCov">          0 : void Element::AddAttribute(const string&amp; name, const string&amp; value)</span>
+<span class="lineNum">     720 </span>            : {
+<span class="lineNum">     721 </span><span class="lineNoCov">          0 :   attributes[name] = value;</span>
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     723 </span>            : 
+<a name="724"><span class="lineNum">     724 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     725 </span>            : 
+<span class="lineNum">     726 </span><span class="lineNoCov">          0 : void Element::AddData(string d)</span>
+<span class="lineNum">     727 </span>            : {
+<span class="lineNum">     728 </span><span class="lineNoCov">          0 :   string::size_type string_start = d.find_first_not_of(&quot; \t&quot;);</span>
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :   if (string_start != string::npos &amp;&amp; string_start &gt; 0) {</span>
+<span class="lineNum">     730 </span><span class="lineNoCov">          0 :     d.erase(0,string_start);</span>
+<span class="lineNum">     731 </span>            :   }
+<span class="lineNum">     732 </span><span class="lineNoCov">          0 :   data_lines.push_back(d);</span>
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     734 </span>            : 
+<a name="735"><span class="lineNum">     735 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     736 </span>            : 
+<span class="lineNum">     737 </span><span class="lineNoCov">          0 : string Element::ReadFrom(void) const</span>
+<span class="lineNum">     738 </span>            : {
+<span class="lineNum">     739 </span><span class="lineNoCov">          0 :   ostringstream message;</span>
+<span class="lineNum">     740 </span>            : 
+<span class="lineNum">     741 </span><span class="lineNoCov">          0 :   message &lt;&lt; endl</span>
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :           &lt;&lt; &quot;In file &quot; &lt;&lt; GetFileName() &lt;&lt; &quot;: line &quot; &lt;&lt; GetLineNumber()</span>
+<span class="lineNum">     743 </span><span class="lineNoCov">          0 :           &lt;&lt; endl;</span>
+<span class="lineNum">     744 </span>            : 
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 :   return message.str();</span>
+<span class="lineNum">     746 </span>            : }
+<span class="lineNum">     747 </span>            : 
+<a name="748"><span class="lineNum">     748 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     749 </span>            : 
+<span class="lineNum">     750 </span><span class="lineNoCov">          0 : void Element::MergeAttributes(Element* el)</span>
+<span class="lineNum">     751 </span>            : {
+<span class="lineNum">     752 </span><span class="lineNoCov">          0 :   map&lt;string, string&gt;::iterator it;</span>
+<span class="lineNum">     753 </span>            : 
+<span class="lineNum">     754 </span><span class="lineNoCov">          0 :   for (it=el-&gt;attributes.begin(); it != el-&gt;attributes.end(); ++it) {</span>
+<span class="lineNum">     755 </span><span class="lineNoCov">          0 :     if (attributes.find(it-&gt;first) == attributes.end())</span>
+<span class="lineNum">     756 </span><span class="lineNoCov">          0 :       attributes[it-&gt;first] = it-&gt;second;</span>
+<span class="lineNum">     757 </span>            :     else {
+<span class="lineNum">     758 </span><span class="lineNoCov">          0 :       if (FGJSBBase::debug_lvl &gt; 0 &amp;&amp; (attributes[it-&gt;first] != it-&gt;second))</span>
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :         cout &lt;&lt; el-&gt;ReadFrom() &lt;&lt; &quot; Attribute '&quot; &lt;&lt; it-&gt;first &lt;&lt; &quot;' is overridden in file &quot;</span>
+<span class="lineNum">     760 </span><span class="lineNoCov">          0 :              &lt;&lt; GetFileName() &lt;&lt; &quot;: line &quot; &lt;&lt; GetLineNumber() &lt;&lt; endl</span>
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 :              &lt;&lt; &quot; The value '&quot; &lt;&lt; attributes[it-&gt;first] &lt;&lt; &quot;' will be used instead of '&quot;</span>
+<span class="lineNum">     762 </span><span class="lineNoCov">          0 :              &lt;&lt; it-&gt;second &lt;&lt; &quot;'.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     763 </span>            :     }
+<span class="lineNum">     764 </span>            :   }
+<a name="765"><span class="lineNum">     765 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     766 </span>            : 
+<span class="lineNum">     767 </span><span class="lineCov">         12 : } // end namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

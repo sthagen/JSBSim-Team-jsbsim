@@ -1,0 +1,4 @@
+<map id="ResetIC" name="ResetIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a122dacd64147e2d1b1db97e719de2989" title="Sets pitch angle initial condition in degrees. " alt="" coords="124,5,237,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="285,5,336,32"/>
+</map>

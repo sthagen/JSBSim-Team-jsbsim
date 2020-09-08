@@ -1,0 +1,777 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGScript.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGScript.cpp<span style="font-size: 80%;"> (source / <a href="FGScript.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">379</td>
+            <td class="headerCovTableEntryLo">0.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryLo">22.2 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGScript.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 12/21/01
+<span class="lineNum">       6 </span>            :  Purpose:      Loads and runs JSBSim scripts.
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      12 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      13 </span>            :  later version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      21 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      22 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      25 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      28 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : This class wraps up the simulation scripting routines.
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : HISTORY
+<span class="lineNum">      33 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      34 </span>            : 12/21/01   JSB   Created
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : COMMENTS, REFERENCES,  and NOTES
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      41 </span>            : INCLUDES
+<span class="lineNum">      42 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #include &quot;FGScript.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;input_output/FGXMLFileRead.h&quot;
+<span class="lineNum">      49 </span>            : #include &quot;initialization/FGInitialCondition.h&quot;
+<span class="lineNum">      50 </span>            : #include &quot;models/FGInput.h&quot;
+<span class="lineNum">      51 </span>            : #include &quot;math/FGCondition.h&quot;
+<span class="lineNum">      52 </span>            : #include &quot;math/FGFunctionValue.h&quot;
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : using namespace std;
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : namespace JSBSim {
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      59 </span>            : CLASS IMPLEMENTATION
+<span class="lineNum">      60 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      61 </span>            : 
+<a name="62"><span class="lineNum">      62 </span>            : // Constructor</a>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 : FGScript::FGScript(FGFDMExec* fgex) : FDMExec(fgex)</span>
+<span class="lineNum">      65 </span>            : {
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :   PropertyManager=FDMExec-&gt;GetPropertyManager();</span>
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   Debug(0);</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      70 </span>            : 
+<a name="71"><span class="lineNum">      71 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 : FGScript::~FGScript()</span>
+<span class="lineNum">      74 </span>            : {
+<span class="lineNum">      75 </span>            :   unsigned int i, j;
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;Events.size(); i++) {</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :     delete Events[i].Condition;</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :     for (j=0; j&lt;Events[i].Functions.size(); j++)</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :       delete Events[i].Functions[j];</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :     for (j=0; j&lt;Events[i].NotifyProperties.size(); j++)</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :       delete Events[i].NotifyProperties[j];</span>
+<span class="lineNum">      83 </span>            :   }
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :   Events.clear();</span>
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   Debug(1);</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      88 </span>            : 
+<a name="89"><span class="lineNum">      89 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 : bool FGScript::LoadScript(const SGPath&amp; script, double default_dT,</span>
+<span class="lineNum">      92 </span>            :                           const SGPath&amp; initfile)
+<span class="lineNum">      93 </span>            : {
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :   SGPath initialize;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :   string aircraft=&quot;&quot;, prop_name=&quot;&quot;;</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :   string notifyPropertyName=&quot;&quot;;</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :   Element *element=0, *run_element=0, *event_element=0;</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   Element *set_element=0;</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :   Element *notify_element = 0L, *notify_property_element = 0L;</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :   double dt = 0.0, value = 0.0;</span>
+<span class="lineNum">     101 </span>            :   FGCondition *newCondition;
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :   FGXMLFileRead XMLFileRead;</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :   Element* document = XMLFileRead.LoadXMLDocument(script);</span>
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   if (!document) {</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;File: &quot; &lt;&lt; script &lt;&lt; &quot; could not be loaded.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     109 </span>            :   }
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :   if (document-&gt;GetName() != string(&quot;runscript&quot;)) {</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;File: &quot; &lt;&lt; script &lt;&lt; &quot; is not a script file&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     114 </span>            :   }
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :   ScriptName = document-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span>            :  // First, find &quot;run&quot; element and set delta T
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :   run_element = document-&gt;FindElement(&quot;run&quot;);</span>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :   if (!run_element) {</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;No \&quot;run\&quot; element found in script.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     125 </span>            :   }
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :   // Set sim timing
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :   if (run_element-&gt;HasAttribute(&quot;start&quot;))</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :     StartTime = run_element-&gt;GetAttributeValueAsNumber(&quot;start&quot;);</span>
+<span class="lineNum">     131 </span>            :   else
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :     StartTime = 0.0;</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :   FDMExec-&gt;Setsim_time(StartTime);</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :   if (run_element-&gt;HasAttribute(&quot;end&quot;)) {</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :     EndTime   = run_element-&gt;GetAttributeValueAsNumber(&quot;end&quot;);</span>
+<span class="lineNum">     136 </span>            :   } else {
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;An end time (duration) for the script must be specified in the script &lt;run&gt; element.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     139 </span>            :   }
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :   if (default_dT == 0.0)</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :     dt = run_element-&gt;GetAttributeValueAsNumber(&quot;dt&quot;);</span>
+<span class="lineNum">     143 </span>            :   else {
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     dt = default_dT;</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :     cout &lt;&lt; endl &lt;&lt; &quot;Overriding simulation step size from the command line. New step size is: &quot;</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :          &lt;&lt; default_dT &lt;&lt; &quot; seconds (&quot; &lt;&lt; 1/default_dT &lt;&lt; &quot; Hz)&quot; &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     147 </span>            :   }
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :   FDMExec-&gt;Setdt(dt);</span>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            :   // Make sure that the desired time is reached and executed.
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :   EndTime += 0.99*FDMExec-&gt;GetDeltaT();</span>
+<span class="lineNum">     153 </span>            :   
+<span class="lineNum">     154 </span>            :   // read aircraft and initialization files
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :   element = document-&gt;FindElement(&quot;use&quot;);</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :   if (element) {</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     aircraft = element-&gt;GetAttributeValue(&quot;aircraft&quot;);</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :     if (!aircraft.empty()) {</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :       if (!FDMExec-&gt;LoadModel(aircraft))</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :         return false;</span>
+<span class="lineNum">     162 </span>            :     } else {
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;Aircraft must be specified in use element.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :       return false;</span>
+<span class="lineNum">     165 </span>            :     }
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :     initialize = SGPath::fromLocal8Bit(element-&gt;GetAttributeValue(&quot;initialize&quot;).c_str());</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :     if (initfile.isNull()) {</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :       if (initialize.isNull()) {</span>
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :         cerr &lt;&lt; &quot;Initialization file must be specified in use element.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :         return false;</span>
+<span class="lineNum">     172 </span>            :       }
+<span class="lineNum">     173 </span>            :     } else {
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :       cout &lt;&lt; endl &lt;&lt; &quot;The initialization file specified in the script file (&quot;</span>
+<span class="lineNum">     175 </span>            :            &lt;&lt; initialize &lt;&lt; &quot;) has been overridden with a specified file (&quot;
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :            &lt;&lt; initfile &lt;&lt; &quot;).&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :       initialize = initfile;</span>
+<span class="lineNum">     178 </span>            :     }
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            :   } else {
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;No \&quot;use\&quot; directives in the script file.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     183 </span>            :   }
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :   FGInitialCondition *IC=FDMExec-&gt;GetIC();</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :   if ( ! IC-&gt;Load( initialize )) {</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;Initialization unsuccessful&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     189 </span>            :   }
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :   // Now, read input spec if given.
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :   element = document-&gt;FindElement(&quot;input&quot;);</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :   while (element) {</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :     if (!FDMExec-&gt;GetInput()-&gt;Load(element))</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :       return false;</span>
+<span class="lineNum">     196 </span>            :  
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :     element = document-&gt;FindNextElement(&quot;input&quot;);</span>
+<span class="lineNum">     198 </span>            :   }
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span>            :   // Now, read output spec if given.
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :   element = document-&gt;FindElement(&quot;output&quot;);</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :   SGPath scriptDir = SGPath(script.dir());</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :   if (scriptDir.isNull())</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :     scriptDir = SGPath(&quot;.&quot;);</span>
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :   while (element) {</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :     if (!FDMExec-&gt;GetOutput()-&gt;Load(element, scriptDir))</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :       return false;</span>
+<span class="lineNum">     209 </span>            :  
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :     element = document-&gt;FindNextElement(&quot;output&quot;);</span>
+<span class="lineNum">     211 </span>            :   }
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span>            :   // Read local property/value declarations
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :   int saved_debug_lvl = debug_lvl;</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :   debug_lvl = 0; // Disable messages</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :   LocalProperties.Load(run_element, PropertyManager, true);</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :   debug_lvl = saved_debug_lvl;</span>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :   // Read &quot;events&quot; from script
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   event_element = run_element-&gt;FindElement(&quot;event&quot;);</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   while (event_element) { // event processing</span>
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span>            :     // Create the event structure
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     struct event *newEvent = new struct event();</span>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :     // Retrieve the event name if given
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :     newEvent-&gt;Name = event_element-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            :     // Is this event persistent? That is, does it execute every time the
+<span class="lineNum">     231 </span>            :     // condition triggers to true, or does it execute as a one-shot event, only?
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :     if (event_element-&gt;GetAttributeValue(&quot;persistent&quot;) == string(&quot;true&quot;)) {</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :       newEvent-&gt;Persistent = true;</span>
+<span class="lineNum">     234 </span>            :     }
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :     // Does this event execute continuously when triggered to true?
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     if (event_element-&gt;GetAttributeValue(&quot;continuous&quot;) == string(&quot;true&quot;)) {</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :       newEvent-&gt;Continuous = true;</span>
+<span class="lineNum">     239 </span>            :     }
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span>            :     // Process the conditions
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :     Element* condition_element = event_element-&gt;FindElement(&quot;condition&quot;);</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :     if (condition_element != 0) {</span>
+<span class="lineNum">     244 </span>            :       try {
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :         newCondition = new FGCondition(condition_element, PropertyManager);</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :       } catch(string&amp; str) {</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl &lt;&lt; fgred &lt;&lt; str &lt;&lt; reset &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :         delete newEvent;</span>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :         return false;</span>
+<span class="lineNum">     250 </span>            :       }
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :       newEvent-&gt;Condition = newCondition;</span>
+<span class="lineNum">     252 </span>            :     } else {
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;No condition specified in script event &quot; &lt;&lt; newEvent-&gt;Name</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :            &lt;&lt; endl;</span>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :       delete newEvent;</span>
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :       return false;</span>
+<span class="lineNum">     257 </span>            :     }
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span>            :     // Is there a delay between the time this event is triggered, and when the
+<span class="lineNum">     260 </span>            :     // event actions are executed?
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :     Element* delay_element = event_element-&gt;FindElement(&quot;delay&quot;);</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :     if (delay_element)</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :       newEvent-&gt;Delay = event_element-&gt;FindElementValueAsNumber(&quot;delay&quot;);</span>
+<span class="lineNum">     265 </span>            :     else
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :       newEvent-&gt;Delay = 0.0;</span>
+<span class="lineNum">     267 </span>            : 
+<span class="lineNum">     268 </span>            :     // Notify about when this event is triggered?
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :     if ((notify_element = event_element-&gt;FindElement(&quot;notify&quot;)) != 0) {</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :       if (notify_element-&gt;HasAttribute(&quot;format&quot;)) {</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :         if (notify_element-&gt;GetAttributeValue(&quot;format&quot;) == &quot;kml&quot;) newEvent-&gt;NotifyKML = true;</span>
+<span class="lineNum">     272 </span>            :       }
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :       newEvent-&gt;Notify = true;</span>
+<span class="lineNum">     274 </span>            :       // Check here for new &lt;description&gt; tag that gets echoed
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :       string notify_description = notify_element-&gt;FindElementValue(&quot;description&quot;);</span>
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :       if (!notify_description.empty()) {</span>
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :         newEvent-&gt;Description = notify_description;</span>
+<span class="lineNum">     278 </span>            :       }
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :       notify_property_element = notify_element-&gt;FindElement(&quot;property&quot;);</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :       while (notify_property_element) {</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :         notifyPropertyName = notify_property_element-&gt;GetDataLine();</span>
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :         if (notify_property_element-&gt;HasAttribute(&quot;apply&quot;)) {</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :           string function_str = notify_property_element-&gt;GetAttributeValue(&quot;apply&quot;);</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :           FGTemplateFunc* f = FDMExec-&gt;GetTemplateFunc(function_str);</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :           if (f)</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :             newEvent-&gt;NotifyProperties.push_back(new FGFunctionValue(notifyPropertyName, PropertyManager, f));</span>
+<span class="lineNum">     288 </span>            :           else {
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :             cerr &lt;&lt; notify_property_element-&gt;ReadFrom()</span>
+<span class="lineNum">     290 </span>            :               &lt;&lt; fgred &lt;&lt; highint &lt;&lt; &quot;  No function by the name &quot;
+<span class="lineNum">     291 </span>            :               &lt;&lt; function_str &lt;&lt; &quot; has been defined. This property will &quot;
+<span class="lineNum">     292 </span>            :               &lt;&lt; &quot;not be logged. You should check your configuration file.&quot;
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :               &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     294 </span>            :           }
+<span class="lineNum">     295 </span>            :         }
+<span class="lineNum">     296 </span>            :         else
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :           newEvent-&gt;NotifyProperties.push_back(new FGPropertyValue(notifyPropertyName, PropertyManager));</span>
+<span class="lineNum">     298 </span>            :         
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :         string caption_attribute = notify_property_element-&gt;GetAttributeValue(&quot;caption&quot;);</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :         if (caption_attribute.empty()) {</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :           newEvent-&gt;DisplayString.push_back(notifyPropertyName);</span>
+<span class="lineNum">     302 </span>            :         } else {
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :           newEvent-&gt;DisplayString.push_back(caption_attribute);</span>
+<span class="lineNum">     304 </span>            :         }
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :         notify_property_element = notify_element-&gt;FindNextElement(&quot;property&quot;);</span>
+<span class="lineNum">     307 </span>            :       }
+<span class="lineNum">     308 </span>            :     }
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            :     // Read set definitions (these define the actions to be taken when the event
+<span class="lineNum">     311 </span>            :     // is triggered).
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :     set_element = event_element-&gt;FindElement(&quot;set&quot;);</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :     while (set_element) {</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :       prop_name = set_element-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :       if (PropertyManager-&gt;HasNode(prop_name)) {</span>
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :         newEvent-&gt;SetParam.push_back( PropertyManager-&gt;GetNode(prop_name) );</span>
+<span class="lineNum">     317 </span>            :       } else {
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :         newEvent-&gt;SetParam.push_back( 0L );</span>
+<span class="lineNum">     319 </span>            :       }
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :       newEvent-&gt;SetParamName.push_back( prop_name );</span>
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span>            :       // Todo - should probably do some safety checking here to make sure one or
+<span class="lineNum">     323 </span>            :       // the other of value or function is specified.
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :       if (!set_element-&gt;GetAttributeValue(&quot;value&quot;).empty()) {</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :         value = set_element-&gt;GetAttributeValueAsNumber(&quot;value&quot;);</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :         newEvent-&gt;Functions.push_back(nullptr);</span>
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :       } else if (set_element-&gt;FindElement(&quot;function&quot;)) {</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :         value = 0.0;</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :         newEvent-&gt;Functions.push_back(new FGFunction(FDMExec, set_element-&gt;FindElement(&quot;function&quot;)));</span>
+<span class="lineNum">     330 </span>            :       }
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :       newEvent-&gt;SetValue.push_back(value);</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :       newEvent-&gt;OriginalValue.push_back(0.0);</span>
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :       newEvent-&gt;newValue.push_back(0.0);</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :       newEvent-&gt;ValueSpan.push_back(0.0);</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :       string tempCompare = set_element-&gt;GetAttributeValue(&quot;type&quot;);</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :       if      (to_lower(tempCompare).find(&quot;delta&quot;) != string::npos) newEvent-&gt;Type.push_back(FG_DELTA);</span>
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :       else if (to_lower(tempCompare).find(&quot;bool&quot;) != string::npos)  newEvent-&gt;Type.push_back(FG_BOOL);</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :       else if (to_lower(tempCompare).find(&quot;value&quot;) != string::npos) newEvent-&gt;Type.push_back(FG_VALUE);</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :       else                                newEvent-&gt;Type.push_back(FG_VALUE); // DEFAULT</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :       tempCompare = set_element-&gt;GetAttributeValue(&quot;action&quot;);</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :       if      (to_lower(tempCompare).find(&quot;ramp&quot;) != string::npos) newEvent-&gt;Action.push_back(FG_RAMP);</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :       else if (to_lower(tempCompare).find(&quot;step&quot;) != string::npos) newEvent-&gt;Action.push_back(FG_STEP);</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :       else if (to_lower(tempCompare).find(&quot;exp&quot;) != string::npos) newEvent-&gt;Action.push_back(FG_EXP);</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :       else                               newEvent-&gt;Action.push_back(FG_STEP); // DEFAULT</span>
+<span class="lineNum">     345 </span>            : 
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :       if (!set_element-&gt;GetAttributeValue(&quot;tc&quot;).empty())</span>
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :         newEvent-&gt;TC.push_back(set_element-&gt;GetAttributeValueAsNumber(&quot;tc&quot;));</span>
+<span class="lineNum">     348 </span>            :       else
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :         newEvent-&gt;TC.push_back(1.0); // DEFAULT</span>
+<span class="lineNum">     350 </span>            : 
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :       newEvent-&gt;Transiting.push_back(false);</span>
+<span class="lineNum">     352 </span>            : 
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :       set_element = event_element-&gt;FindNextElement(&quot;set&quot;);</span>
+<span class="lineNum">     354 </span>            :     }
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :     Events.push_back(*newEvent);</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :     delete newEvent;</span>
+<span class="lineNum">     357 </span>            : 
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :     event_element = run_element-&gt;FindNextElement(&quot;event&quot;);</span>
+<span class="lineNum">     359 </span>            :   }
+<span class="lineNum">     360 </span>            : 
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :   Debug(4);</span>
+<span class="lineNum">     362 </span>            : 
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     364 </span>            : }
+<span class="lineNum">     365 </span>            : 
+<a name="366"><span class="lineNum">     366 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 : void FGScript::ResetEvents(void)</span>
+<span class="lineNum">     369 </span>            : {
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :   LocalProperties.ResetToIC();</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :   FDMExec-&gt;Setsim_time(StartTime);</span>
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;Events.size(); i++)</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :     Events[i].reset();</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     376 </span>            : 
+<a name="377"><span class="lineNum">     377 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 : bool FGScript::RunScript(void)</span>
+<span class="lineNum">     380 </span>            : {
+<span class="lineNum">     381 </span>            :   unsigned i, j;
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :   unsigned event_ctr = 0;</span>
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :   double currentTime = FDMExec-&gt;GetSimTime();</span>
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :   double newSetValue = 0;</span>
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :   if (currentTime &gt; EndTime) return false;</span>
+<span class="lineNum">     388 </span>            : 
+<span class="lineNum">     389 </span>            :   // Iterate over all events.
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :   for (unsigned int ev_ctr=0; ev_ctr &lt; Events.size(); ev_ctr++) {</span>
+<span class="lineNum">     391 </span>            : 
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :     struct event &amp;thisEvent = Events[ev_ctr];</span>
+<span class="lineNum">     393 </span>            : 
+<span class="lineNum">     394 </span>            :     // Determine whether the set of conditional tests for this condition equate
+<span class="lineNum">     395 </span>            :     // to true and should cause the event to execute. If the conditions evaluate
+<span class="lineNum">     396 </span>            :     // to true, then the event is triggered. If the event is not persistent,
+<span class="lineNum">     397 </span>            :     // then this trigger will remain set true. If the event is persistent, the
+<span class="lineNum">     398 </span>            :     // trigger will reset to false when the condition evaluates to false.
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :     if (thisEvent.Condition-&gt;Evaluate()) {</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :       if (!thisEvent.Triggered) {</span>
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span>            :         // The conditions are true, do the setting of the desired Event
+<span class="lineNum">     403 </span>            :         // parameters
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :         for (i=0; i&lt;thisEvent.SetValue.size(); i++) {</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :           if (thisEvent.SetParam[i] == 0L) { // Late bind property if necessary</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :             if (PropertyManager-&gt;HasNode(thisEvent.SetParamName[i])) {</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :               thisEvent.SetParam[i] = PropertyManager-&gt;GetNode(thisEvent.SetParamName[i]);</span>
+<span class="lineNum">     408 </span>            :             } else {
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :               throw(&quot;No property, \&quot;&quot;+thisEvent.SetParamName[i]+&quot;\&quot; is defined.&quot;);</span>
+<span class="lineNum">     410 </span>            :             }
+<span class="lineNum">     411 </span>            :           }
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :           thisEvent.OriginalValue[i] = thisEvent.SetParam[i]-&gt;getDoubleValue();</span>
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :           if (thisEvent.Functions[i] != 0) { // Parameter should be set to a function value</span>
+<span class="lineNum">     414 </span>            :             try {
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :               thisEvent.SetValue[i] = thisEvent.Functions[i]-&gt;GetValue();</span>
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :             } catch (string&amp; msg) {</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :               std::cerr &lt;&lt; std::endl &lt;&lt; &quot;A problem occurred in the execution of the script. &quot; &lt;&lt; msg &lt;&lt; endl;</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :               throw;</span>
+<span class="lineNum">     419 </span>            :             }
+<span class="lineNum">     420 </span>            :           }
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :           switch (thisEvent.Type[i]) {</span>
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :           case FG_VALUE:</span>
+<span class="lineNum">     423 </span>            :           case FG_BOOL:
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :             thisEvent.newValue[i] = thisEvent.SetValue[i];</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :           case FG_DELTA:</span>
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :             thisEvent.newValue[i] = thisEvent.OriginalValue[i] + thisEvent.SetValue[i];</span>
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :           default:</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :             cerr &lt;&lt; &quot;Invalid Type specified&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     432 </span>            :           }
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :           thisEvent.StartTime = currentTime + thisEvent.Delay;</span>
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :           thisEvent.ValueSpan[i] = thisEvent.newValue[i] - thisEvent.OriginalValue[i];</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :           thisEvent.Transiting[i] = true;</span>
+<span class="lineNum">     436 </span>            :         }
+<span class="lineNum">     437 </span>            :       }
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :       thisEvent.Triggered = true;</span>
+<span class="lineNum">     439 </span>            : 
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :     } else if (thisEvent.Persistent) { // If the event is persistent, reset the trigger.</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :       thisEvent.Triggered = false; // Reset the trigger for persistent events</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :       thisEvent.Notified = false;  // Also reset the notification flag</span>
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 :     } else if (thisEvent.Continuous) { // If the event is continuous, reset the trigger.</span>
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :       thisEvent.Triggered = false; // Reset the trigger for persistent events</span>
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :       thisEvent.Notified = false;  // Also reset the notification flag</span>
+<span class="lineNum">     446 </span>            :     }
+<span class="lineNum">     447 </span>            : 
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 :     if ((currentTime &gt;= thisEvent.StartTime) &amp;&amp; thisEvent.Triggered) {</span>
+<span class="lineNum">     449 </span>            : 
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :       for (i=0; i&lt;thisEvent.SetValue.size(); i++) {</span>
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :         if (thisEvent.Transiting[i]) {</span>
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 :           thisEvent.TimeSpan = currentTime - thisEvent.StartTime;</span>
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :           switch (thisEvent.Action[i]) {</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :           case FG_RAMP:</span>
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :             if (thisEvent.TimeSpan &lt;= thisEvent.TC[i]) {</span>
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :               newSetValue = thisEvent.TimeSpan/thisEvent.TC[i] * thisEvent.ValueSpan[i] + thisEvent.OriginalValue[i];</span>
+<span class="lineNum">     457 </span>            :             } else {
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 :               newSetValue = thisEvent.newValue[i];</span>
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :               if (thisEvent.Continuous != true) thisEvent.Transiting[i] = false;</span>
+<span class="lineNum">     460 </span>            :             }
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :           case FG_STEP:</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :             newSetValue = thisEvent.newValue[i];</span>
+<span class="lineNum">     464 </span>            : 
+<span class="lineNum">     465 </span>            :             // If this is not a continuous event, reset the transiting flag.
+<span class="lineNum">     466 </span>            :             // Otherwise, it is known that the event is a continuous event.
+<span class="lineNum">     467 </span>            :             // Furthermore, if the event is to be determined by a function,
+<span class="lineNum">     468 </span>            :             // then the function will be continuously calculated.
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :             if (thisEvent.Continuous != true)</span>
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :               thisEvent.Transiting[i] = false;</span>
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :             else if (thisEvent.Functions[i] != 0)</span>
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :               newSetValue = thisEvent.Functions[i]-&gt;GetValue();</span>
+<span class="lineNum">     473 </span>            : 
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :           case FG_EXP:</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :             newSetValue = (1 - exp( -thisEvent.TimeSpan/thisEvent.TC[i] )) * thisEvent.ValueSpan[i] + thisEvent.OriginalValue[i];</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :           default:</span>
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :             cerr &lt;&lt; &quot;Invalid Action specified&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     481 </span>            :           }
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :           thisEvent.SetParam[i]-&gt;setDoubleValue(newSetValue);</span>
+<span class="lineNum">     483 </span>            :         }
+<span class="lineNum">     484 </span>            :       }
+<span class="lineNum">     485 </span>            : 
+<span class="lineNum">     486 </span>            :       // Print notification values after setting them
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :       if (thisEvent.Notify &amp;&amp; !thisEvent.Notified) {</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 :         if (thisEvent.NotifyKML) {</span>
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :           cout &lt;&lt; endl &lt;&lt; &quot;&lt;Placemark&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &lt;name&gt; &quot; &lt;&lt; currentTime &lt;&lt; &quot; seconds&quot; &lt;&lt; &quot; &lt;/name&gt;&quot;</span>
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :                &lt;&lt; endl;</span>
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &lt;description&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &lt;![CDATA[&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     494 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &lt;b&gt;&quot; &lt;&lt; thisEvent.Name &lt;&lt; &quot; (Event &quot; &lt;&lt; event_ctr &lt;&lt; &quot;)&quot;</span>
+<span class="lineNum">     495 </span><span class="lineNoCov">          0 :                &lt;&lt; &quot; executed at time: &quot; &lt;&lt; currentTime &lt;&lt; &quot;&lt;/b&gt;&lt;br/&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     496 </span>            :         } else  {
+<span class="lineNum">     497 </span><span class="lineNoCov">          0 :           cout &lt;&lt; endl &lt;&lt; underon</span>
+<span class="lineNum">     498 </span>            :                &lt;&lt; highint &lt;&lt; thisEvent.Name &lt;&lt; normint &lt;&lt; underoff
+<span class="lineNum">     499 </span><span class="lineNoCov">          0 :                &lt;&lt; &quot; (Event &quot; &lt;&lt; event_ctr &lt;&lt; &quot;)&quot; </span>
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :                &lt;&lt; &quot; executed at time: &quot; &lt;&lt; highint &lt;&lt; currentTime &lt;&lt; normint</span>
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :                &lt;&lt; endl;</span>
+<span class="lineNum">     502 </span>            :         }
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :         if (!thisEvent.Description.empty()) {</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;    &quot; &lt;&lt; thisEvent.Description &lt;&lt; endl;</span>
+<span class="lineNum">     505 </span>            :         }
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 :         for (j=0; j&lt;thisEvent.NotifyProperties.size();j++) {</span>
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;    &quot; &lt;&lt; thisEvent.DisplayString[j] &lt;&lt; &quot; = &quot;</span>
+<span class="lineNum">     508 </span><span class="lineNoCov">          0 :                &lt;&lt; thisEvent.NotifyProperties[j]-&gt;getDoubleValue();</span>
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :           if (thisEvent.NotifyKML) cout &lt;&lt; &quot; &lt;br/&gt;&quot;;</span>
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :           cout &lt;&lt; endl;</span>
+<span class="lineNum">     511 </span>            :         }
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :         if (thisEvent.NotifyKML) {</span>
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  ]]&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &lt;/description&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &lt;Point&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;    &lt;altitudeMode&gt; absolute &lt;/altitudeMode&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;    &lt;extrude&gt; 1 &lt;/extrude&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;    &lt;coordinates&gt;&quot;</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :                &lt;&lt; FDMExec-&gt;GetPropagate()-&gt;GetLongitudeDeg() &lt;&lt; &quot;,&quot;</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :                &lt;&lt; FDMExec-&gt;GetPropagate()-&gt;GetGeodLatitudeDeg() &lt;&lt; &quot;,&quot;</span>
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :                &lt;&lt; FDMExec-&gt;GetPropagate()-&gt;GetAltitudeASLmeters()</span>
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :                &lt;&lt; &quot;&lt;/coordinates&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &lt;/Point&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;&lt;/Placemark&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     525 </span>            :         }
+<span class="lineNum">     526 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl;</span>
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :         thisEvent.Notified = true;</span>
+<span class="lineNum">     528 </span>            :       }
+<span class="lineNum">     529 </span>            : 
+<span class="lineNum">     530 </span>            :     }
+<span class="lineNum">     531 </span>            : 
+<span class="lineNum">     532 </span><span class="lineNoCov">          0 :     event_ctr++;</span>
+<span class="lineNum">     533 </span>            :   }
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     535 </span>            : }
+<span class="lineNum">     536 </span>            : 
+<span class="lineNum">     537 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     538 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     539 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     540 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     541 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     542 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     543 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     544 </span>            : //       whatsoever.
+<span class="lineNum">     545 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     546 </span>            : //       startup messages
+<span class="lineNum">     547 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     548 </span>            : //       a class is instantiated
+<span class="lineNum">     549 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     550 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     551 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     552 </span>            : //       are printed out periodically
+<span class="lineNum">     553 </span>            : //    16: When set various parameters are sanity checked and
+<a name="554"><span class="lineNum">     554 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     555 </span>            : 
+<span class="lineNum">     556 </span><span class="lineNoCov">          0 : void FGScript::Debug(int from)</span>
+<span class="lineNum">     557 </span>            : {
+<span class="lineNum">     558 </span><span class="lineNoCov">          0 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     559 </span>            : 
+<span class="lineNum">     560 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :     if (from == 0) { // Constructor</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :     } else if (from == 3) {</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :     } else if (from == 4)  { // print out script data</span>
+<span class="lineNum">     564 </span><span class="lineNoCov">          0 :       cout &lt;&lt; endl;</span>
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;Script: \&quot;&quot; &lt;&lt; ScriptName &lt;&lt; &quot;\&quot;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;  begins at &quot; &lt;&lt; StartTime &lt;&lt; &quot; seconds and runs to &quot; &lt;&lt; EndTime</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :            &lt;&lt; &quot; seconds with dt = &quot; &lt;&lt; setprecision(6) &lt;&lt; FDMExec-&gt;GetDeltaT()</span>
+<span class="lineNum">     568 </span><span class="lineNoCov">          0 :            &lt;&lt; &quot; (&quot; &lt;&lt; ceil(1.0/FDMExec-&gt;GetDeltaT()) &lt;&lt; &quot; Hz)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :       cout &lt;&lt; endl;</span>
+<span class="lineNum">     570 </span>            : 
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :       for (auto node: LocalProperties) {</span>
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;Local property: &quot; &lt;&lt; node-&gt;GetName()</span>
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :              &lt;&lt; &quot; = &quot; &lt;&lt; node-&gt;getDoubleValue()</span>
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :              &lt;&lt; endl;</span>
+<span class="lineNum">     575 </span>            :       }
+<span class="lineNum">     576 </span>            :       
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :       if (LocalProperties.empty()) cout &lt;&lt; endl;</span>
+<span class="lineNum">     578 </span>            : 
+<span class="lineNum">     579 </span><span class="lineNoCov">          0 :       for (unsigned i=0; i&lt;Events.size(); i++) {</span>
+<span class="lineNum">     580 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;Event &quot; &lt;&lt; i;</span>
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 :         if (!Events[i].Name.empty()) cout &lt;&lt; &quot; (&quot; &lt;&lt; Events[i].Name &lt;&lt; &quot;)&quot;;</span>
+<span class="lineNum">     582 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;:&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     583 </span>            : 
+<span class="lineNum">     584 </span><span class="lineNoCov">          0 :         if (Events[i].Persistent)</span>
+<span class="lineNum">     585 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &quot; &lt;&lt; &quot;Whenever triggered, executes once&quot;;</span>
+<span class="lineNum">     586 </span><span class="lineNoCov">          0 :         else if (Events[i].Continuous)</span>
+<span class="lineNum">     587 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &quot; &lt;&lt; &quot;While true, always executes&quot;;</span>
+<span class="lineNum">     588 </span>            :         else
+<span class="lineNum">     589 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  &quot; &lt;&lt; &quot;When first triggered, executes once&quot;;</span>
+<span class="lineNum">     590 </span>            : 
+<span class="lineNum">     591 </span><span class="lineNoCov">          0 :         Events[i].Condition-&gt;PrintCondition();</span>
+<span class="lineNum">     592 </span>            : 
+<span class="lineNum">     593 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl &lt;&lt; &quot;  Actions taken&quot;;</span>
+<span class="lineNum">     594 </span><span class="lineNoCov">          0 :         if (Events[i].Delay &gt; 0.0)</span>
+<span class="lineNum">     595 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot; (after a delay of &quot; &lt;&lt; Events[i].Delay &lt;&lt; &quot; secs)&quot;;</span>
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;:&quot; &lt;&lt; endl &lt;&lt; &quot;    {&quot;;</span>
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :         for (unsigned j=0; j&lt;Events[i].SetValue.size(); j++) {</span>
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 :           if (Events[i].SetValue[j] == 0.0 &amp;&amp; Events[i].Functions[j] != 0L) {</span>
+<span class="lineNum">     599 </span><span class="lineNoCov">          0 :             if (Events[i].SetParam[j] == 0) {</span>
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :               if (Events[i].SetParamName[j].size() == 0) {</span>
+<span class="lineNum">     601 </span><span class="lineNoCov">          0 :               cerr &lt;&lt; fgred &lt;&lt; highint &lt;&lt; endl</span>
+<span class="lineNum">     602 </span><span class="lineNoCov">          0 :                    &lt;&lt; &quot;  An attempt has been made to access a non-existent property&quot; &lt;&lt; endl</span>
+<span class="lineNum">     603 </span>            :                    &lt;&lt; &quot;  in this event. Please check the property names used, spelling, etc.&quot;
+<span class="lineNum">     604 </span><span class="lineNoCov">          0 :                    &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     605 </span><span class="lineNoCov">          0 :               exit(-1);</span>
+<span class="lineNum">     606 </span>            :               } else {
+<span class="lineNum">     607 </span><span class="lineNoCov">          0 :                 cout &lt;&lt; endl &lt;&lt; &quot;      set &quot; &lt;&lt; Events[i].SetParamName[j]</span>
+<span class="lineNum">     608 </span><span class="lineNoCov">          0 :                      &lt;&lt; &quot; to function value (Late Bound)&quot;;</span>
+<span class="lineNum">     609 </span>            :             }
+<span class="lineNum">     610 </span>            :             } else {
+<span class="lineNum">     611 </span><span class="lineNoCov">          0 :             cout &lt;&lt; endl &lt;&lt; &quot;      set &quot;</span>
+<span class="lineNum">     612 </span><span class="lineNoCov">          0 :                  &lt;&lt; Events[i].SetParam[j]-&gt;GetRelativeName(&quot;/fdm/jsbsim/&quot;)</span>
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 :                  &lt;&lt; &quot; to function value&quot;;</span>
+<span class="lineNum">     614 </span>            :             }
+<span class="lineNum">     615 </span>            :           } else {
+<span class="lineNum">     616 </span><span class="lineNoCov">          0 :             if (Events[i].SetParam[j] == 0) {</span>
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :               if (Events[i].SetParamName[j].size() == 0) {</span>
+<span class="lineNum">     618 </span><span class="lineNoCov">          0 :               cerr &lt;&lt; fgred &lt;&lt; highint &lt;&lt; endl</span>
+<span class="lineNum">     619 </span><span class="lineNoCov">          0 :                    &lt;&lt; &quot;  An attempt has been made to access a non-existent property&quot; &lt;&lt; endl</span>
+<span class="lineNum">     620 </span>            :                    &lt;&lt; &quot;  in this event. Please check the property names used, spelling, etc.&quot;
+<span class="lineNum">     621 </span><span class="lineNoCov">          0 :                    &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     622 </span><span class="lineNoCov">          0 :               exit(-1);</span>
+<span class="lineNum">     623 </span>            :               } else {
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :                 cout &lt;&lt; endl &lt;&lt; &quot;      set &quot; &lt;&lt; Events[i].SetParamName[j]</span>
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :                      &lt;&lt; &quot; to function value (Late Bound)&quot;;</span>
+<span class="lineNum">     626 </span>            :             }
+<span class="lineNum">     627 </span>            :             } else {
+<span class="lineNum">     628 </span><span class="lineNoCov">          0 :             cout &lt;&lt; endl &lt;&lt; &quot;      set &quot;</span>
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :                  &lt;&lt; Events[i].SetParam[j]-&gt;GetRelativeName(&quot;/fdm/jsbsim/&quot;)</span>
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :                  &lt;&lt; &quot; to &quot; &lt;&lt; Events[i].SetValue[j];</span>
+<span class="lineNum">     631 </span>            :           }
+<span class="lineNum">     632 </span>            :           }
+<span class="lineNum">     633 </span>            : 
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :           switch (Events[i].Type[j]) {</span>
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :           case FG_VALUE:</span>
+<span class="lineNum">     636 </span>            :           case FG_BOOL:
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; (constant&quot;;</span>
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 :           case FG_DELTA:</span>
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; (delta&quot;;</span>
+<span class="lineNum">     641 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 :           default:</span>
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; (unspecified type&quot;;</span>
+<span class="lineNum">     644 </span>            :           }
+<span class="lineNum">     645 </span>            : 
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :           switch (Events[i].Action[j]) {</span>
+<span class="lineNum">     647 </span><span class="lineNoCov">          0 :           case FG_RAMP:</span>
+<span class="lineNum">     648 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; via ramp&quot;;</span>
+<span class="lineNum">     649 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 :           case FG_STEP:</span>
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; via step)&quot;;</span>
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     653 </span><span class="lineNoCov">          0 :           case FG_EXP:</span>
+<span class="lineNum">     654 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; via exponential approach&quot;;</span>
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :           default:</span>
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; via unspecified action)&quot;;</span>
+<span class="lineNum">     658 </span>            :           }
+<span class="lineNum">     659 </span>            : 
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :           if (Events[i].Action[j] == FG_RAMP || Events[i].Action[j] == FG_EXP)</span>
+<span class="lineNum">     661 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot; with time constant &quot; &lt;&lt; Events[i].TC[j] &lt;&lt; &quot;)&quot;;</span>
+<span class="lineNum">     662 </span>            :         }
+<span class="lineNum">     663 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl &lt;&lt; &quot;    }&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     664 </span>            : 
+<span class="lineNum">     665 </span>            :         // Print notifications
+<span class="lineNum">     666 </span><span class="lineNoCov">          0 :         if (Events[i].Notify) {</span>
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 :           if (Events[i].NotifyProperties.size() &gt; 0) {</span>
+<span class="lineNum">     668 </span><span class="lineNoCov">          0 :             if (Events[i].NotifyKML) {</span>
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :               cout &lt;&lt; &quot;  Notifications (KML Format):&quot; &lt;&lt; endl &lt;&lt; &quot;    {&quot;</span>
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :                    &lt;&lt; endl;</span>
+<span class="lineNum">     671 </span>            :             } else {
+<span class="lineNum">     672 </span><span class="lineNoCov">          0 :               cout &lt;&lt; &quot;  Notifications:&quot; &lt;&lt; endl &lt;&lt; &quot;    {&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     673 </span>            :             }
+<span class="lineNum">     674 </span><span class="lineNoCov">          0 :             for (unsigned j=0; j&lt;Events[i].NotifyProperties.size();j++) {</span>
+<span class="lineNum">     675 </span>            :               cout &lt;&lt; &quot;      &quot;
+<span class="lineNum">     676 </span><span class="lineNoCov">          0 :                    &lt;&lt; Events[i].NotifyProperties[j]-&gt;GetPrintableName()</span>
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl;</span>
+<span class="lineNum">     678 </span>            :             }
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :             cout &lt;&lt; &quot;    }&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     680 </span>            :           }
+<span class="lineNum">     681 </span>            :         }
+<span class="lineNum">     682 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl;</span>
+<span class="lineNum">     683 </span>            :       }
+<span class="lineNum">     684 </span>            :     }
+<span class="lineNum">     685 </span>            :   }
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     687 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGScript&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     688 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGScript&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     689 </span>            :   }
+<span class="lineNum">     690 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     691 </span>            :   }
+<span class="lineNum">     692 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     693 </span>            :   }
+<span class="lineNum">     694 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     695 </span>            :   }
+<span class="lineNum">     696 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     697 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     698 </span>            :     }
+<a name="699"><span class="lineNum">     699 </span>            :   }</a>
+<span class="lineNum">     700 </span>            : }
+<span class="lineNum">     701 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

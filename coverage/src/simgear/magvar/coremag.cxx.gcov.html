@@ -1,0 +1,418 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/simgear/magvar/coremag.cxx</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/simgear/magvar</a> - coremag.cxx<span style="font-size: 80%;"> (source / <a href="coremag.cxx.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">90</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // coremag.cxx -- compute local magnetic variation given position,</a>
+<span class="lineNum">       2 </span>            : //                altitude, and date
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // This is an implementation of the NIMA (formerly DMA) WMM2000
+<span class="lineNum">       5 </span>            : //
+<span class="lineNum">       6 </span>            : //    http://www.nima.mil/GandG/ngdc-wmm2000.html
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (C) 2000  Edward A Williams &lt;Ed_Williams@compuserve.com&gt;
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Adapted from Excel 3.0 version 3/27/94 EAW
+<span class="lineNum">      11 </span>            : // Recoded in C++ by Starry Chan
+<span class="lineNum">      12 </span>            : // WMM95 added and rearranged in ANSI-C EAW 7/9/95
+<span class="lineNum">      13 </span>            : // Put shell around program and made Borland &amp; GCC compatible EAW 11/22/95
+<span class="lineNum">      14 </span>            : // IGRF95 added 2/96 EAW
+<span class="lineNum">      15 </span>            : // WMM2000 IGR2000 added 2/00 EAW
+<span class="lineNum">      16 </span>            : // Released under GPL 3/26/00 EAW
+<span class="lineNum">      17 </span>            : // Adaptions and modifications for the SimGear project  3/27/2000 CLO
+<span class="lineNum">      18 </span>            : //
+<span class="lineNum">      19 </span>            : // Removed all pow() calls and made static roots[][] arrays to
+<span class="lineNum">      20 </span>            : // save many sqrt() calls on subsequent invocations
+<span class="lineNum">      21 </span>            : // left old code as SGMagVarOrig() for testing purposes
+<span class="lineNum">      22 </span>            : // 3/28/2000  Norman Vine -- nhv@yahoo.com
+<span class="lineNum">      23 </span>            : //
+<span class="lineNum">      24 </span>            : // Put in some bullet-proofing to handle magnetic and geographic poles.
+<span class="lineNum">      25 </span>            : // 3/28/2000 EAW
+<span class="lineNum">      26 </span>            : //
+<span class="lineNum">      27 </span>            : // Updated coefficient arrays to use the current WMM2005 model,
+<span class="lineNum">      28 </span>            : // (valid between 2005.0 and 2010.0)
+<span class="lineNum">      29 </span>            : // Also removed unused variables and corrected earth radii constants
+<span class="lineNum">      30 </span>            : // to the values for WGS84 and WMM2005.
+<span class="lineNum">      31 </span>            : // Reference:
+<span class="lineNum">      32 </span>            : //     McLean, S., S. Macmillan, S. Maus, V. Lesur, A.
+<span class="lineNum">      33 </span>            : //     Thomson, and D. Dater, December 2004, The
+<span class="lineNum">      34 </span>            : //     US/UK World Magnetic Model for 2005-2010,
+<span class="lineNum">      35 </span>            : //     NOAA Technical Report NESDIS/NGDC-1.
+<span class="lineNum">      36 </span>            : //
+<span class="lineNum">      37 </span>            : // 25/10/2006  Wim Van Hoydonck -- wim.van.hoydonck@gmail.com
+<span class="lineNum">      38 </span>            : //
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : //  The routine uses a spherical harmonic expansion of the magnetic
+<span class="lineNum">      41 </span>            : // potential up to twelfth order, together with its time variation, as
+<span class="lineNum">      42 </span>            : // described in Chapter 4 of &quot;Geomagnetism, Vol 1, Ed. J.A.Jacobs,
+<span class="lineNum">      43 </span>            : // Academic Press (London 1987)&quot;. The program first converts geodetic
+<span class="lineNum">      44 </span>            : // coordinates (lat/long on elliptic earth and altitude) to spherical
+<span class="lineNum">      45 </span>            : // geocentric (spherical lat/long and radius) coordinates. Using this,
+<span class="lineNum">      46 </span>            : // the spherical (B_r, B_theta, B_phi) magnetic field components are
+<span class="lineNum">      47 </span>            : // computed from the model. These are finally referred to surface (X, Y,
+<span class="lineNum">      48 </span>            : // Z) coordinates.
+<span class="lineNum">      49 </span>            : //
+<span class="lineNum">      50 </span>            : //   Fields are accurate to better than 200nT, variation and dip to
+<span class="lineNum">      51 </span>            : // better than 0.5 degrees, with the exception of the declination near
+<span class="lineNum">      52 </span>            : // the magnetic poles (where it is ill-defined) where the error may reach
+<span class="lineNum">      53 </span>            : // 4 degrees or more.
+<span class="lineNum">      54 </span>            : //
+<span class="lineNum">      55 </span>            : //   Variation is undefined at both the geographic and  
+<span class="lineNum">      56 </span>            : // magnetic poles, even though the field itself is well-behaved. To
+<span class="lineNum">      57 </span>            : // avoid the routine blowing up, latitude entries corresponding to
+<span class="lineNum">      58 </span>            : // the geographic poles are slightly offset. At the magnetic poles,
+<span class="lineNum">      59 </span>            : // the routine returns zero variation.
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : //
+<span class="lineNum">      63 </span>            : // This library is free software; you can redistribute it and/or
+<span class="lineNum">      64 </span>            : // modify it under the terms of the GNU Library General Public
+<span class="lineNum">      65 </span>            : // License as published by the Free Software Foundation; either
+<span class="lineNum">      66 </span>            : // version 2 of the License, or (at your option) any later version.
+<span class="lineNum">      67 </span>            : //
+<span class="lineNum">      68 </span>            : // This library is distributed in the hope that it will be useful,
+<span class="lineNum">      69 </span>            : // but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      70 </span>            : // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      71 </span>            : // Library General Public License for more details.
+<span class="lineNum">      72 </span>            : //
+<span class="lineNum">      73 </span>            : // You should have received a copy of the GNU General Public License
+<span class="lineNum">      74 </span>            : // along with this program; if not, write to the Free Software
+<span class="lineNum">      75 </span>            : // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+<span class="lineNum">      76 </span>            : //
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            : #include &lt;cstdio&gt;
+<span class="lineNum">      80 </span>            : #include &lt;cstdlib&gt;
+<span class="lineNum">      81 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            : #include &quot;coremag.hxx&quot;
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            : #define MAX(X, Y) X&gt;Y?X:Y
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            : static const double a = 6378.137;       /* semi-major axis (equatorial radius) of WGS84 ellipsoid */
+<span class="lineNum">      88 </span>            : static const double b = 6356.7523142;   /* semi-minor axis referenced to the WGS84 ellipsoid */
+<span class="lineNum">      89 </span>            : static const double r_0 = 6371.2;      /* standard Earth magnetic reference radius  */
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            : static double gnm_wmm2005[13][13] =
+<span class="lineNum">      92 </span>            : {
+<span class="lineNum">      93 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">      94 </span>            :     {-29556.8, -1671.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">      95 </span>            :     {-2340.6, 3046.9, 1657.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">      96 </span>            :     {1335.4, -2305.1, 1246.7, 674.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">      97 </span>            :     {919.8, 798.1, 211.3, -379.4, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">      98 </span>            :     {-227.4, 354.6, 208.7, -136.5, -168.3, -14.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">      99 </span>            :     {73.2, 69.7, 76.7, -151.2, -14.9, 14.6, -86.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     100 </span>            :     {80.1, -74.5, -1.4, 38.5, 12.4, 9.5, 5.7, 1.8, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     101 </span>            :     {24.9, 7.7, -11.6, -6.9, -18.2, 10.0, 9.2, -11.6, -5.2, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     102 </span>            :     {5.6, 9.9, 3.5, -7.0, 5.1, -10.8, -1.3, 8.8, -6.7, -9.1, 0.0, 0.0, 0.0},
+<span class="lineNum">     103 </span>            :     {-2.3, -6.3, 1.6, -2.6, 0.0, 3.1, 0.4, 2.1, 3.9, -0.1, -2.3, 0.0, 0.0},
+<span class="lineNum">     104 </span>            :     {2.8, -1.6, -1.7, 1.7, -0.1, 0.1, -0.7, 0.7, 1.8, 0.0, 1.1, 4.1, 0.0},
+<span class="lineNum">     105 </span>            :     {-2.4, -0.4, 0.2, 0.8, -0.3, 1.1, -0.5, 0.4, -0.3, -0.3, -0.1, -0.3, -0.1},
+<span class="lineNum">     106 </span>            : };
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            : static double hnm_wmm2005[13][13]=
+<span class="lineNum">     109 </span>            : {
+<span class="lineNum">     110 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     111 </span>            :     {0.0, 5079.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     112 </span>            :     {0.0, -2594.7, -516.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     113 </span>            :     {0.0, -199.9, 269.3, -524.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     114 </span>            :     {0.0, 281.5, -226.0, 145.8, -304.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     115 </span>            :     {0.0, 42.4, 179.8, -123.0, -19.5, 103.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     116 </span>            :     {0.0, -20.3, 54.7, 63.6, -63.4, -0.1, 50.4, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     117 </span>            :     {0.0, -61.5, -22.4, 7.2, 25.4, 11.0, -26.4, -5.1, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     118 </span>            :     {0.0, 11.2, -21.0, 9.6, -19.8, 16.1, 7.7, -12.9, -0.2, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     119 </span>            :     {0.0, -20.1, 12.9, 12.6, -6.7, -8.1, 8.0, 2.9, -7.9, 6.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     120 </span>            :     {0.0, 2.4, 0.2, 4.4, 4.8, -6.5, -1.1, -3.4, -0.8, -2.3, -7.9, 0.0, 0.0},
+<span class="lineNum">     121 </span>            :     {0.0, 0.3, 1.2, -0.8, -2.5, 0.9, -0.6, -2.7, -0.9, -1.3, -2.0, -1.2, 0.0},
+<span class="lineNum">     122 </span>            :     {0.0, -0.4, 0.3, 2.4, -2.6, 0.6, 0.3, 0.0, 0.0, 0.3, -0.9, -0.4, 0.8},
+<span class="lineNum">     123 </span>            : };
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            : static double gtnm_wmm2005[13][13]=
+<span class="lineNum">     126 </span>            : {
+<span class="lineNum">     127 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     128 </span>            :     {8.0, 10.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     129 </span>            :     {-15.1, -7.8, -0.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     130 </span>            :     {0.4, -2.6, -1.2, -6.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     131 </span>            :     {-2.5, 2.8, -7.0, 6.2, -3.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     132 </span>            :     {-2.8, 0.7, -3.2, -1.1, 0.1, -0.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     133 </span>            :     {-0.7, 0.4, -0.3, 2.3, -2.1, -0.6, 1.4, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     134 </span>            :     {0.2, -0.1, -0.3, 1.1, 0.6, 0.5, -0.4, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     135 </span>            :     {0.1, 0.3, -0.4, 0.3, -0.3, 0.2, 0.4, -0.7, 0.4, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     136 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     137 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     138 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     139 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     140 </span>            : };
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            : static double htnm_wmm2005[13][13]=
+<span class="lineNum">     143 </span>            : {
+<span class="lineNum">     144 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     145 </span>            :     {0.0, -20.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     146 </span>            :     {0.0, -23.2, -14.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     147 </span>            :     {0.0, 5.0, -7.0, -0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     148 </span>            :     {0.0, 2.2, 1.6, 5.8, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     149 </span>            :     {0.0, 0.0, 1.7, 2.1, 4.8, -1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     150 </span>            :     {0.0, -0.6, -1.9, -0.4, -0.5, -0.3, 0.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     151 </span>            :     {0.0, 0.6, 0.4, 0.2, 0.3, -0.8, -0.2, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     152 </span>            :     {0.0, -0.2, 0.1, 0.3, 0.4, 0.1, -0.2, 0.4, 0.4, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     153 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     154 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     155 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     156 </span>            :     {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+<span class="lineNum">     157 </span>            : };
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            : static const int nmax = 12;
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            : static double P[13][13];
+<span class="lineNum">     162 </span>            : static double DP[13][13];
+<span class="lineNum">     163 </span>            : static double gnm[13][13];
+<span class="lineNum">     164 </span>            : static double hnm[13][13];
+<span class="lineNum">     165 </span>            : static double sm[13];
+<span class="lineNum">     166 </span>            : static double cm[13];
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            : static double root[13];
+<span class="lineNum">     169 </span>            : static double roots[13][13][2];
+<a name="170"><span class="lineNum">     170 </span>            : </a>
+<span class="lineNum">     171 </span>            : /* Convert date to Julian day    1950-2049 */
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 : unsigned long int yymmdd_to_julian_days( int yy, int mm, int dd )</span>
+<span class="lineNum">     173 </span>            : {
+<span class="lineNum">     174 </span>            :     unsigned long jd;
+<span class="lineNum">     175 </span>            :  
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :     yy = (yy &lt; 50) ? (2000 + yy) : (1900 + yy);</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :     jd = dd - 32075L + 1461L * (yy + 4800L + (mm - 14) / 12 ) / 4;</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :     jd = jd + 367L * (mm - 2 - (mm - 14) / 12*12) / 12;</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :     jd = jd - 3 * ((yy + 4900L + (mm - 14) / 12) / 100) / 4;</span>
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :     /* printf(&quot;julian date = %d\n&quot;, jd ); */
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :     return jd;</span>
+<span class="lineNum">     183 </span>            : } 
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span>            : /*
+<span class="lineNum">     187 </span>            :  * return variation (in radians) given geodetic latitude (radians),
+<span class="lineNum">     188 </span>            :  * longitude(radians), height (km) and (Julian) date
+<span class="lineNum">     189 </span>            :  * N and E lat and long are positive, S and W negative
+<a name="190"><span class="lineNum">     190 </span>            : */</a>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 : double calc_magvar( double lat, double lon, double h, long dat, double* field )</span>
+<span class="lineNum">     193 </span>            : {
+<span class="lineNum">     194 </span>            :     /* output field B_r,B_th,B_phi,B_x,B_y,B_z */
+<span class="lineNum">     195 </span>            :     int n,m;
+<span class="lineNum">     196 </span>            :     /* reference date for current model is 1 januari 2005 */
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :     long date0_wmm2005 = yymmdd_to_julian_days(5,1,1);</span>
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            :     double yearfrac,sr,r,theta,c,s,psi,fn,fn_0,B_r,B_theta,B_phi,X,Y,Z;
+<span class="lineNum">     200 </span>            :     double sinpsi, cospsi, inv_s;
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :     static int been_here = 0;
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :     double sinlat = sin(lat);</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :     double coslat = cos(lat);</span>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            :     /* convert to geocentric coords: */
+<span class="lineNum">     208 </span>            :     // sr = sqrt(pow(a*coslat,2.0)+pow(b*sinlat,2.0));
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :     sr = sqrt(a*a*coslat*coslat + b*b*sinlat*sinlat);</span>
+<span class="lineNum">     210 </span>            :     /* sr is effective radius */
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :     theta = atan2(coslat * (h*sr + a*a),</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :               sinlat * (h*sr + b*b));</span>
+<span class="lineNum">     213 </span>            :     /* theta is geocentric co-latitude */
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     r = h*h + 2.0*h * sr +</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :       (a*a*a*a - ( a*a*a*a - b*b*b*b ) * sinlat*sinlat ) / </span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :       (a*a - (a*a - b*b) * sinlat*sinlat );</span>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :     r = sqrt(r);</span>
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span>            :     /* r is geocentric radial distance */
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :     c = cos(theta);</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :     s = sin(theta);</span>
+<span class="lineNum">     224 </span>            :     /* protect against zero divide at geographic poles */
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     inv_s =  1.0 / (s + (s == 0.)*1.0e-8); </span>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :     /* zero out arrays */
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :     for ( n = 0; n &lt;= nmax; n++ ) {</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :       for ( m = 0; m &lt;= n; m++ ) {</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :           P[n][m] = 0;</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :           DP[n][m] = 0;</span>
+<span class="lineNum">     232 </span>            :       }
+<span class="lineNum">     233 </span>            :     }
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            :     /* diagonal elements */
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :     P[0][0] = 1;</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     P[1][1] = s;</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :     DP[0][0] = 0;</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :     DP[1][1] = c;</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :     P[1][0] = c ;</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :     DP[1][0] = -s;</span>
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            :     // these values will not change for subsequent function calls
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :     if( !been_here ) {</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :       for ( n = 2; n &lt;= nmax; n++ ) {</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :           root[n] = sqrt((2.0*n-1) / (2.0*n));</span>
+<span class="lineNum">     247 </span>            :       }
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :       for ( m = 0; m &lt;= nmax; m++ ) {</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :           double mm = m*m;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :           for ( n = MAX(m + 1, 2); n &lt;= nmax; n++ ) {</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :             roots[m][n][0] = sqrt((n-1)*(n-1) - mm);</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :             roots[m][n][1] = 1.0 / sqrt( n*n - mm);</span>
+<span class="lineNum">     254 </span>            :           }
+<span class="lineNum">     255 </span>            :       }
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :       been_here = 1;</span>
+<span class="lineNum">     257 </span>            :     }
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :     for ( n=2; n &lt;= nmax; n++ ) {</span>
+<span class="lineNum">     260 </span>            :       // double root = sqrt((2.0*n-1) / (2.0*n));
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :       P[n][n] = P[n-1][n-1] * s * root[n];</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :       DP[n][n] = (DP[n-1][n-1] * s + P[n-1][n-1] * c) *</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :           root[n];</span>
+<span class="lineNum">     264 </span>            :     }
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span>            :     /* lower triangle */
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :     for ( m = 0; m &lt;= nmax; m++ ) {</span>
+<span class="lineNum">     268 </span>            :       // double mm = m*m;
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :       for ( n = MAX(m + 1, 2); n &lt;= nmax; n++ ) {</span>
+<span class="lineNum">     270 </span>            :           // double root1 = sqrt((n-1)*(n-1) - mm);
+<span class="lineNum">     271 </span>            :           // double root2 = 1.0 / sqrt( n*n - mm);
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :           P[n][m] = (P[n-1][m] * c * (2.0*n-1) -</span>
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :                    P[n-2][m] * roots[m][n][0]) *</span>
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :             roots[m][n][1];</span>
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :           DP[n][m] = ((DP[n-1][m] * c - P[n-1][m] * s) *</span>
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :                   (2.0*n-1) - DP[n-2][m] * roots[m][n][0]) *</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :             roots[m][n][1];</span>
+<span class="lineNum">     279 </span>            :       }
+<span class="lineNum">     280 </span>            :     }
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span>            :     /* compute Gauss coefficients gnm and hnm of degree n and order m for the desired time
+<span class="lineNum">     283 </span>            :        achieved by adjusting the coefficients at time t0 for linear secular variation */
+<span class="lineNum">     284 </span>            :     /* WMM2005 */
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :     yearfrac = (dat - date0_wmm2005) / 365.25;</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :     for ( n = 1; n &lt;= nmax; n++ ) {</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :       for ( m = 0; m &lt;= nmax; m++ ) {</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :           gnm[n][m] = gnm_wmm2005[n][m] + yearfrac * gtnm_wmm2005[n][m];</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :           hnm[n][m] = hnm_wmm2005[n][m] + yearfrac * htnm_wmm2005[n][m];</span>
+<span class="lineNum">     290 </span>            :       }
+<span class="lineNum">     291 </span>            :     }
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            :     /* compute sm (sin(m lon) and cm (cos(m lon)) */
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :     for ( m = 0; m &lt;= nmax; m++ ) {</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :       sm[m] = sin(m * lon);</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :       cm[m] = cos(m * lon);</span>
+<span class="lineNum">     297 </span>            :     }
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span>            :     /* compute B fields */
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :     B_r = 0.0;</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :     B_theta = 0.0;</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :     B_phi = 0.0;</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :     fn_0 = r_0/r;</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :     fn = fn_0 * fn_0;</span>
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :     for ( n = 1; n &lt;= nmax; n++ ) {</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :       double c1_n=0;</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :       double c2_n=0;</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :       double c3_n=0;</span>
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :       for ( m = 0; m &lt;= n; m++ ) {</span>
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :           double tmp = (gnm[n][m] * cm[m] + hnm[n][m] * sm[m]); </span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :           c1_n=c1_n + tmp * P[n][m];</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :           c2_n=c2_n + tmp * DP[n][m];</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :           c3_n=c3_n + m * (gnm[n][m] * sm[m] - hnm[n][m] * cm[m]) * P[n][m];</span>
+<span class="lineNum">     315 </span>            :       }
+<span class="lineNum">     316 </span>            :       // fn=pow(r_0/r,n+2.0);
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :       fn *= fn_0;</span>
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :       B_r = B_r + (n + 1) * c1_n * fn;</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :       B_theta = B_theta - c2_n * fn;</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :       B_phi = B_phi + c3_n * fn * inv_s;</span>
+<span class="lineNum">     321 </span>            :     }
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span>            :     /* Find geodetic field components: */
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :     psi = theta - ((M_PI / 2.0) - lat);</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :     sinpsi = sin(psi);</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :     cospsi = cos(psi);</span>
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :     X = -B_theta * cospsi - B_r * sinpsi;</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :     Y = B_phi;</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :     Z = B_theta * sinpsi - B_r * cospsi;</span>
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :     field[0]=B_r;</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :     field[1]=B_theta;</span>
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :     field[2]=B_phi;</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :     field[3]=X;</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :     field[4]=Y;</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :     field[5]=Z;   /* output fields */</span>
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span>            :     /* find variation in radians */
+<span class="lineNum">     339 </span>            :     /* return zero variation at magnetic pole X=Y=0. */
+<span class="lineNum">     340 </span>            :     /* E is positive */
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :     return (X != 0. || Y != 0.) ? atan2(Y, X) : (double) 0.;  </span>
+<span class="lineNum">     342 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

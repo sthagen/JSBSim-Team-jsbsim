@@ -1,0 +1,613 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/propulsion/FGTank.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/propulsion</a> - FGTank.cpp<span style="font-size: 80%;"> (source / <a href="FGTank.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">295</td>
+            <td class="headerCovTableEntryLo">0.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryLo">11.8 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGTank.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       5 </span>            :  Date started: 01/21/99
+<span class="lineNum">       6 </span>            :  Called by:    FGAircraft
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      12 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      13 </span>            :  later version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      21 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      22 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      25 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      28 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : See header file.
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : HISTORY
+<span class="lineNum">      32 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      33 </span>            : 01/21/99   JSB   Created
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      36 </span>            : INCLUDES
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : #include &quot;FGTank.h&quot;
+<span class="lineNum">      40 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      41 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : using namespace std;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : namespace JSBSim {
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      48 </span>            : CLASS IMPLEMENTATION
+<a name="49"><span class="lineNum">      49 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 : FGTank::FGTank(FGFDMExec* exec, Element* el, int tank_number)</span>
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :   : TankNumber(tank_number)</span>
+<span class="lineNum">      53 </span>            : {
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :   string token, strFuelName;</span>
+<span class="lineNum">      55 </span>            :   Element* element;
+<span class="lineNum">      56 </span>            :   Element* element_Grain;
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :   FGPropertyManager *PropertyManager = exec-&gt;GetPropertyManager();</span>
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :   Area = 1.0;</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :   Density = 6.6;</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :   InitialTemperature = Temperature = -9999.0;</span>
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :   Ixx = Iyy = Izz = 0.0;</span>
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :   InertiaFactor = 1.0;</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :   Radius = Contents = Standpipe = Length = InnerRadius = 0.0;</span>
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :   ExternalFlow = 0.0;</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :   InitialStandpipe = 0.0;</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :   Capacity = 0.00001; UnusableVol = 0.0;</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :   Priority = InitialPriority = 1;</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   vXYZ.InitMatrix();</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   vXYZ_drain.InitMatrix();</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :   ixx_unit = iyy_unit = izz_unit = 1.0;</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :   grainType = gtUNKNOWN; // This is the default</span>
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   type = el-&gt;GetAttributeValue(&quot;type&quot;);</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :   if      (type == &quot;FUEL&quot;)     Type = ttFUEL;</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :   else if (type == &quot;OXIDIZER&quot;) Type = ttOXIDIZER;</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :   else                         Type = ttUNKNOWN;</span>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :   element = el-&gt;FindElement(&quot;location&quot;);</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   if (element)  vXYZ = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :   else          cerr &lt;&lt; el-&gt;ReadFrom() &lt;&lt; &quot;No location found for this tank.&quot;</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :                      &lt;&lt; endl;</span>
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   vXYZ_drain = vXYZ; // Set initial drain location to initial tank CG</span>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :   element = el-&gt;FindElement(&quot;drain_location&quot;);</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   if (element)  {</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :     vXYZ_drain = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">      88 </span>            :   }
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;radius&quot;))</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :     Radius = el-&gt;FindElementValueAsNumberConvertTo(&quot;radius&quot;, &quot;IN&quot;);</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;inertia_factor&quot;))</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :     InertiaFactor = el-&gt;FindElementValueAsNumber(&quot;inertia_factor&quot;);</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;capacity&quot;))</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :     Capacity = el-&gt;FindElementValueAsNumberConvertTo(&quot;capacity&quot;, &quot;LBS&quot;);</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;contents&quot;))</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :     InitialContents = Contents = el-&gt;FindElementValueAsNumberConvertTo(&quot;contents&quot;, &quot;LBS&quot;);</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;unusable-volume&quot;))</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :     UnusableVol = el-&gt;FindElementValueAsNumberConvertTo(&quot;unusable-volume&quot;, &quot;GAL&quot;);</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;temperature&quot;))</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :     InitialTemperature = Temperature = el-&gt;FindElementValueAsNumber(&quot;temperature&quot;);</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;standpipe&quot;))</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :     InitialStandpipe = Standpipe = el-&gt;FindElementValueAsNumberConvertTo(&quot;standpipe&quot;, &quot;LBS&quot;);</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;priority&quot;))</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :     InitialPriority = Priority = (int)el-&gt;FindElementValueAsNumber(&quot;priority&quot;);</span>
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;density&quot;))</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :     Density = el-&gt;FindElementValueAsNumberConvertTo(&quot;density&quot;, &quot;LBS/GAL&quot;);</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;type&quot;))</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :     strFuelName = el-&gt;FindElementValue(&quot;type&quot;);</span>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :   SetPriority( InitialPriority );     // this will also set the Selected flag</span>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :   if (Capacity == 0) {</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; el-&gt;ReadFrom()</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot;Tank capacity must not be zero. Reset to 0.00001 lbs!&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :     Capacity = 0.00001;</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :     Contents = 0.0;</span>
+<span class="lineNum">     119 </span>            :   }
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :   if (Capacity &lt;= GetUnusable()) {</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; el-&gt;ReadFrom() &lt;&lt; &quot;Tank capacity (&quot; &lt;&lt; Capacity</span>
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; lbs) is lower than the amount of unusable fuel (&quot; &lt;&lt; GetUnusable()</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; lbs) for tank &quot; &lt;&lt; tank_number</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot;! Did you accidentally swap unusable and capacity?&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :     throw(&quot;tank definition error&quot;);</span>
+<span class="lineNum">     126 </span>            :   }
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :   if (Contents &gt; Capacity) {</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; el-&gt;ReadFrom() &lt;&lt; &quot;Tank content (&quot; &lt;&lt; Contents</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; lbs) is greater than tank capacity (&quot; &lt;&lt; Capacity</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; lbs) for tank &quot; &lt;&lt; tank_number</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot;! Did you accidentally swap contents and capacity?&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :     throw(&quot;tank definition error&quot;);</span>
+<span class="lineNum">     133 </span>            :   }
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :   if (Contents &lt; GetUnusable()) {</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; el-&gt;ReadFrom() &lt;&lt; &quot;Tank content (&quot; &lt;&lt; Contents</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; lbs) is lower than the amount of unusable fuel (&quot; &lt;&lt; GetUnusable()</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; lbs) for tank &quot; &lt;&lt; tank_number &lt;&lt; endl;</span>
+<span class="lineNum">     138 </span>            :   }
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   PctFull = 100.0*Contents/Capacity;            // percent full; 0 to 100.0</span>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            :   // Check whether this is a solid propellant &quot;tank&quot;. Initialize it if true.
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :   element_Grain = el-&gt;FindElement(&quot;grain_config&quot;);</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :   if (element_Grain) {</span>
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     strGType = element_Grain-&gt;GetAttributeValue(&quot;type&quot;);</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     if (strGType == &quot;CYLINDRICAL&quot;)     grainType = gtCYLINDRICAL;</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :     else if (strGType == &quot;ENDBURNING&quot;) grainType = gtENDBURNING;</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :     else if (strGType == &quot;FUNCTION&quot;)   {</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :       grainType = gtFUNCTION;</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :       if (element_Grain-&gt;FindElement(&quot;ixx&quot;) != 0) {</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :         Element* element_ixx = element_Grain-&gt;FindElement(&quot;ixx&quot;);</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         if (element_ixx-&gt;GetAttributeValue(&quot;unit&quot;) == &quot;KG*M2&quot;) ixx_unit = 1.0/1.35594;</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :         if (element_ixx-&gt;FindElement(&quot;function&quot;) != 0) {</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :           function_ixx = new FGFunction(exec, element_ixx-&gt;FindElement(&quot;function&quot;));</span>
+<span class="lineNum">     157 </span>            :         }
+<span class="lineNum">     158 </span>            :       } else {
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :         throw(&quot;For tank &quot;+to_string(TankNumber)+&quot; and when grain_config is specified an ixx must be specified when the FUNCTION grain type is specified.&quot;);</span>
+<span class="lineNum">     160 </span>            :       }
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :       if (element_Grain-&gt;FindElement(&quot;iyy&quot;)) {</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :         Element* element_iyy = element_Grain-&gt;FindElement(&quot;iyy&quot;);</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :         if (element_iyy-&gt;GetAttributeValue(&quot;unit&quot;) == &quot;KG*M2&quot;) iyy_unit = 1.0/1.35594;</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :         if (element_iyy-&gt;FindElement(&quot;function&quot;) != 0) {</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :           function_iyy = new FGFunction(exec, element_iyy-&gt;FindElement(&quot;function&quot;));</span>
+<span class="lineNum">     167 </span>            :         }
+<span class="lineNum">     168 </span>            :       } else {
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :         throw(&quot;For tank &quot;+to_string(TankNumber)+&quot; and when grain_config is specified an iyy must be specified when the FUNCTION grain type is specified.&quot;);</span>
+<span class="lineNum">     170 </span>            :       }
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :       if (element_Grain-&gt;FindElement(&quot;izz&quot;)) {</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :         Element* element_izz = element_Grain-&gt;FindElement(&quot;izz&quot;);</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :         if (element_izz-&gt;GetAttributeValue(&quot;unit&quot;) == &quot;KG*M2&quot;) izz_unit = 1.0/1.35594;</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :         if (element_izz-&gt;FindElement(&quot;function&quot;) != 0) {</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :           function_izz = new FGFunction(exec, element_izz-&gt;FindElement(&quot;function&quot;));</span>
+<span class="lineNum">     177 </span>            :         }
+<span class="lineNum">     178 </span>            :       } else {
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         throw(&quot;For tank &quot;+to_string(TankNumber)+&quot; and when grain_config is specified an izz must be specified when the FUNCTION grain type is specified.&quot;);</span>
+<span class="lineNum">     180 </span>            :       }
+<span class="lineNum">     181 </span>            :     }
+<span class="lineNum">     182 </span>            :     else
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; el-&gt;ReadFrom() &lt;&lt; &quot;Unknown propellant grain type specified&quot;</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :            &lt;&lt; endl;</span>
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :     if (element_Grain-&gt;FindElement(&quot;length&quot;))</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :       Length = element_Grain-&gt;FindElementValueAsNumberConvertTo(&quot;length&quot;, &quot;IN&quot;);</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :     if (element_Grain-&gt;FindElement(&quot;bore_diameter&quot;))</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :       InnerRadius = element_Grain-&gt;FindElementValueAsNumberConvertTo(&quot;bore_diameter&quot;, &quot;IN&quot;)/2.0;</span>
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :     // Initialize solid propellant values for debug and runtime use.
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :     switch (grainType) {</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :       case gtCYLINDRICAL:</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :         if (Radius &lt;= InnerRadius) {</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :           cerr &lt;&lt; element_Grain-&gt;ReadFrom()</span>
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :                &lt;&lt; &quot;The bore diameter should be smaller than the total grain diameter!&quot;</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :                &lt;&lt; endl;</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :           exit(-1);</span>
+<span class="lineNum">     200 </span>            :         }
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :         Volume = M_PI * Length * (Radius*Radius - InnerRadius*InnerRadius); // cubic inches</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :       case gtENDBURNING:</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :         Volume = M_PI * Length * Radius * Radius; // cubic inches</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :       case gtFUNCTION:</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :         Volume = 1;  // Volume is irrelevant for the FUNCTION type, but it can't be zero!</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :       case gtUNKNOWN:</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :         cerr &lt;&lt; el-&gt;ReadFrom()</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :              &lt;&lt; &quot;Unknown grain type found in this rocket engine definition.&quot;</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :              &lt;&lt; endl;</span>
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :         exit(-1);</span>
+<span class="lineNum">     214 </span>            :     }
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     Density = (Capacity*lbtoslug)/Volume; // slugs/in^3</span>
+<span class="lineNum">     216 </span>            :   }
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :   CalculateInertias();</span>
+<span class="lineNum">     219 </span>            : 
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :   if (Temperature != -9999.0)  InitialTemperature = Temperature = FahrenheitToCelsius(Temperature);</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   Area = 40.0 * pow(Capacity/1975, 0.666666667);</span>
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            :   // A named fuel type will override a previous density value
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :   if (!strFuelName.empty()) Density = ProcessFuelName(strFuelName); </span>
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :   bind(PropertyManager);</span>
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :   Debug(0);</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     230 </span>            : 
+<a name="231"><span class="lineNum">     231 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 : FGTank::~FGTank()</span>
+<span class="lineNum">     234 </span>            : {
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :   Debug(1);</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     237 </span>            : 
+<a name="238"><span class="lineNum">     238 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 : void FGTank::ResetToIC(void)</span>
+<span class="lineNum">     241 </span>            : {
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :   SetTemperature( InitialTemperature );</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :   SetStandpipe ( InitialStandpipe );</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :   SetContents ( InitialContents );</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :   PctFull = 100.0*Contents/Capacity;</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   SetPriority( InitialPriority );</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :   CalculateInertias();</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     249 </span>            : 
+<a name="250"><span class="lineNum">     250 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 : FGColumnVector3 FGTank::GetXYZ(void) const</span>
+<span class="lineNum">     253 </span>            : {
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   return vXYZ_drain + (Contents/Capacity)*(vXYZ - vXYZ_drain);</span>
+<span class="lineNum">     255 </span>            : }
+<span class="lineNum">     256 </span>            : 
+<a name="257"><span class="lineNum">     257 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 : double FGTank::GetXYZ(int idx) const</span>
+<span class="lineNum">     260 </span>            : {
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :   return vXYZ_drain(idx) + (Contents/Capacity)*(vXYZ(idx)-vXYZ_drain(idx));</span>
+<span class="lineNum">     262 </span>            : }
+<span class="lineNum">     263 </span>            : 
+<a name="264"><span class="lineNum">     264 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 : double FGTank::Drain(double used)</span>
+<span class="lineNum">     267 </span>            : {
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :   double remaining = Contents - used;</span>
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :   if (remaining &gt;= GetUnusable()) { // Reduce contents by amount used.</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :     Contents -= used;</span>
+<span class="lineNum">     272 </span>            :   } else { // This tank must be empty.
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :     if (Contents &gt; GetUnusable())</span>
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :       Contents = GetUnusable();</span>
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :     remaining = Contents;</span>
+<span class="lineNum">     277 </span>            :   }
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :   PctFull = 100.0*Contents/Capacity;</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :   CalculateInertias();</span>
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :   return remaining;</span>
+<span class="lineNum">     283 </span>            : }
+<span class="lineNum">     284 </span>            : 
+<a name="285"><span class="lineNum">     285 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 : double FGTank::Fill(double amount)</span>
+<span class="lineNum">     288 </span>            : {
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :   double overage = 0.0;</span>
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :   Contents += amount;</span>
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :   if (Contents &gt; Capacity) {</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :     overage = Contents - Capacity;</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :     Contents = Capacity;</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :     PctFull = 100.0;</span>
+<span class="lineNum">     297 </span>            :   } else {
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :     PctFull = Contents/Capacity*100.0;</span>
+<span class="lineNum">     299 </span>            :   }
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :   CalculateInertias();</span>
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :   return overage;</span>
+<span class="lineNum">     304 </span>            : }
+<span class="lineNum">     305 </span>            : 
+<a name="306"><span class="lineNum">     306 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     307 </span>            : 
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 : void FGTank::SetContents(double amount)</span>
+<span class="lineNum">     309 </span>            : {
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :   Contents = amount;</span>
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :   if (Contents &gt; Capacity) {</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :     Contents = Capacity;</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :     PctFull = 100.0;</span>
+<span class="lineNum">     314 </span>            :   } else {
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :     PctFull = Contents/Capacity*100.0;</span>
+<span class="lineNum">     316 </span>            :   }
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :   CalculateInertias();</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     320 </span>            : 
+<a name="321"><span class="lineNum">     321 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 : void FGTank::SetContentsGallons(double gallons)</span>
+<span class="lineNum">     324 </span>            : {
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :   SetContents(gallons * Density);</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span>            : 
+<a name="329"><span class="lineNum">     329 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 : double FGTank::Calculate(double dt, double TAT_C)</span>
+<span class="lineNum">     332 </span>            : {
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :   if(ExternalFlow &lt; 0.) Drain( -ExternalFlow *dt);</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :   else Fill(ExternalFlow * dt);</span>
+<span class="lineNum">     335 </span>            : 
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :   if (Temperature == -9999.0) return 0.0;</span>
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :   double HeatCapacity = 900.0;        // Joules/lbm/C</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :   double TempFlowFactor = 1.115;      // Watts/sqft/C</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :   double Tdiff = TAT_C - Temperature;</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   double dTemp = 0.0;                 // Temp change due to one surface</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :   if (fabs(Tdiff) &gt; 0.1 &amp;&amp; Contents &gt; 0.01) {</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :     dTemp = (TempFlowFactor * Area * Tdiff * dt) / (Contents * HeatCapacity);</span>
+<span class="lineNum">     343 </span>            :   }
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :   return Temperature += (dTemp + dTemp);    // For now, assume upper/lower the same</span>
+<span class="lineNum">     346 </span>            : }
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     349 </span>            : //  This function calculates the moments of inertia for a solid propellant
+<span class="lineNum">     350 </span>            : //  grain - either an end burning cylindrical grain or a bored cylindrical
+<span class="lineNum">     351 </span>            : //  grain, as well as liquid propellants IF a tank radius and inertia factor
+<span class="lineNum">     352 </span>            : //  are given.
+<span class="lineNum">     353 </span>            : //
+<span class="lineNum">     354 </span>            : //  From NASA CR-383, the MoI of a tank with liquid propellant is specified
+<span class="lineNum">     355 </span>            : //  for baffled and non-baffled tanks as a ratio compared to that in which the
+<span class="lineNum">     356 </span>            : //  propellant is solid. The more baffles, the more &quot;rigid&quot; the propellant and
+<span class="lineNum">     357 </span>            : //  the higher the ratio (up to 1.0). For a cube tank with five baffles, the
+<span class="lineNum">     358 </span>            : //  ratio ranges from 0.5 to 0.7. For a cube tank with no baffles, the ratio is
+<span class="lineNum">     359 </span>            : //  roughly 0.18. One might estimate that for a spherical tank with no baffles
+<span class="lineNum">     360 </span>            : //  the ratio might be somewhere around 0.10 to 0.15. Cylindrical tanks with or
+<span class="lineNum">     361 </span>            : //  without baffles might have biased moment of inertia effects based on the
+<span class="lineNum">     362 </span>            : //  baffle layout and tank geometry. A vector inertia_factor may be supported
+<a name="363"><span class="lineNum">     363 </span>            : //  at some point.</a>
+<span class="lineNum">     364 </span>            : 
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 : void FGTank::CalculateInertias(void)</span>
+<span class="lineNum">     366 </span>            : {
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :   double Mass = Contents*lbtoslug;</span>
+<span class="lineNum">     368 </span>            :   double RadSumSqr;
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :   double Rad2 = Radius*Radius;</span>
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :   if (grainType != gtUNKNOWN) { // assume solid propellant</span>
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :     if (Density &gt; 0.0) {</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :       Volume = (Contents*lbtoslug)/Density; // in^3</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :     } else if (Contents &lt;= 0.0) {</span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :       Volume = 0;</span>
+<span class="lineNum">     377 </span>            :     } else {
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; endl &lt;&lt; &quot;  Solid propellant grain density is zero!&quot; &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :       exit(-1);</span>
+<span class="lineNum">     380 </span>            :     }
+<span class="lineNum">     381 </span>            : 
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :     switch (grainType) {</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :     case gtCYLINDRICAL:</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :       InnerRadius = sqrt(Rad2 - Volume/(M_PI * Length));</span>
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :       RadSumSqr = (Rad2 + InnerRadius*InnerRadius)/144.0;</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :       Ixx = 0.5*Mass*RadSumSqr;</span>
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :       Iyy = Mass*(3.0*RadSumSqr + Length*Length/144.0)/12.0;</span>
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :       Izz  = Iyy;</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :     case gtENDBURNING:</span>
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :       Length = Volume/(M_PI*Rad2);</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :       Ixx = 0.5*Mass*Rad2/144.0;</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :       Iyy = Mass*(3.0*Rad2 + Length*Length)/(144.0*12.0);</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :       Izz  = Iyy;</span>
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :     case gtFUNCTION:</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :       Ixx = function_ixx-&gt;GetValue()*ixx_unit;</span>
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :       Iyy = function_iyy-&gt;GetValue()*iyy_unit;</span>
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :       Izz = function_izz-&gt;GetValue()*izz_unit;</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;Unknown grain type found.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :       exit(-1);</span>
+<span class="lineNum">     404 </span>            :       break;
+<span class="lineNum">     405 </span>            :     }
+<span class="lineNum">     406 </span>            : 
+<span class="lineNum">     407 </span>            :   } else { // assume liquid propellant: shrinking snowball
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :     if (Radius &gt; 0.0) Ixx = Iyy = Izz = Mass * InertiaFactor * 0.4 * Radius * Radius / 144.0;</span>
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            :   }
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     413 </span>            : 
+<a name="414"><span class="lineNum">     414 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     415 </span>            : 
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 : double FGTank::ProcessFuelName(const std::string&amp; name)</span>
+<span class="lineNum">     417 </span>            : {
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :    if      (name == &quot;AVGAS&quot;)    return 6.02; </span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :    else if (name == &quot;JET-A&quot;)    return 6.74;</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :    else if (name == &quot;JET-A1&quot;)   return 6.74;</span>
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :    else if (name == &quot;JET-B&quot;)    return 6.48;</span>
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-1&quot;)     return 6.76;</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-2&quot;)     return 6.38;</span>
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-3&quot;)     return 6.34;</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-4&quot;)     return 6.48;</span>
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-5&quot;)     return 6.81;</span>
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-6&quot;)     return 6.55;</span>
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-7&quot;)     return 6.61;</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-8&quot;)     return 6.66;</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :    else if (name == &quot;JP-8+100&quot;) return 6.66;</span>
+<span class="lineNum">     431 </span>            :  //else if (name == &quot;JP-9&quot;)     return 6.74;
+<span class="lineNum">     432 </span>            :  //else if (name == &quot;JPTS&quot;)     return 6.74;
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :    else if (name == &quot;RP-1&quot;)     return 6.73;</span>
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :    else if (name == &quot;T-1&quot;)      return 6.88;</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :    else if (name == &quot;ETHANOL&quot;)  return 6.58;</span>
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :    else if (name == &quot;HYDRAZINE&quot;)return 8.61;</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :    else if (name == &quot;F-34&quot;)     return 6.66;</span>
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :    else if (name == &quot;F-35&quot;)     return 6.74;</span>
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :    else if (name == &quot;F-40&quot;)     return 6.48;</span>
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :    else if (name == &quot;F-44&quot;)     return 6.81;</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :    else if (name == &quot;AVTAG&quot;)    return 6.48;</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :    else if (name == &quot;AVCAT&quot;)    return 6.81;</span>
+<span class="lineNum">     443 </span>            :    else {
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :      cerr &lt;&lt; &quot;Unknown fuel type specified: &quot;&lt;&lt; name &lt;&lt; endl;</span>
+<span class="lineNum">     445 </span>            :    } 
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :    return 6.6;</span>
+<span class="lineNum">     448 </span>            : }
+<span class="lineNum">     449 </span>            : 
+<a name="450"><span class="lineNum">     450 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     451 </span>            : 
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 : void FGTank::bind(FGPropertyManager* PropertyManager)</span>
+<span class="lineNum">     453 </span>            : {
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :   string property_name, base_property_name;</span>
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :   base_property_name = CreateIndexedPropertyName(&quot;propulsion/tank&quot;, TankNumber);</span>
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/contents-lbs&quot;;</span>
+<span class="lineNum">     457 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetContents,</span>
+<span class="lineNum">     458 </span>            :                                        &amp;FGTank::SetContents );
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/unusable-volume-gal&quot;;</span>
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetUnusableVolume,</span>
+<span class="lineNum">     461 </span>            :                         &amp;FGTank::SetUnusableVolume );
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/pct-full&quot;;</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetPctFull);</span>
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/density-lbs_per_gal&quot;;</span>
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetDensity);</span>
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/priority&quot;;</span>
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetPriority,</span>
+<span class="lineNum">     469 </span>            :                                        &amp;FGTank::SetPriority );
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/external-flow-rate-pps&quot;;</span>
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetExternalFlow,</span>
+<span class="lineNum">     472 </span>            :                                        &amp;FGTank::SetExternalFlow );
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/local-ixx-slug_ft2&quot;;</span>
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetIxx);</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/local-iyy-slug_ft2&quot;;</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetIyy);</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/local-izz-slug_ft2&quot;;</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGTank*)this, &amp;FGTank::GetIzz);</span>
+<span class="lineNum">     479 </span>            : 
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/x-position&quot;;</span>
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(property_name.c_str(), (FGTank*)this, &amp;FGTank::GetLocationX, &amp;FGTank::SetLocationX);</span>
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/y-position&quot;;</span>
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(property_name.c_str(), (FGTank*)this, &amp;FGTank::GetLocationY, &amp;FGTank::SetLocationY);</span>
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/z-position&quot;;</span>
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(property_name.c_str(), (FGTank*)this, &amp;FGTank::GetLocationZ, &amp;FGTank::SetLocationZ);</span>
+<span class="lineNum">     486 </span>            : 
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     488 </span>            : 
+<span class="lineNum">     489 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     490 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     491 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     492 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     493 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     494 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     495 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     496 </span>            : //       whatsoever.
+<span class="lineNum">     497 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     498 </span>            : //       startup messages
+<span class="lineNum">     499 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     500 </span>            : //       a class is instantiated
+<span class="lineNum">     501 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     502 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     503 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     504 </span>            : //       are printed out periodically
+<span class="lineNum">     505 </span>            : //    16: When set various parameters are sanity checked and
+<a name="506"><span class="lineNum">     506 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     507 </span>            : 
+<span class="lineNum">     508 </span><span class="lineNoCov">          0 : void FGTank::Debug(int from)</span>
+<span class="lineNum">     509 </span>            : {
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     511 </span>            : 
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :     if (from == 0) { // Constructor</span>
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      &quot; &lt;&lt; type &lt;&lt; &quot; tank holds &quot; &lt;&lt; Capacity &lt;&lt; &quot; lbs. &quot; &lt;&lt; type &lt;&lt; endl;</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      currently at &quot; &lt;&lt; PctFull &lt;&lt; &quot;% of maximum capacity&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Tank location (X, Y, Z): &quot; &lt;&lt; vXYZ(eX) &lt;&lt; &quot;, &quot; &lt;&lt; vXYZ(eY) &lt;&lt; &quot;, &quot; &lt;&lt; vXYZ(eZ) &lt;&lt; endl;</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Effective radius: &quot; &lt;&lt; Radius &lt;&lt; &quot; inches&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Initial temperature: &quot; &lt;&lt; Temperature &lt;&lt; &quot; Fahrenheit&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Priority: &quot; &lt;&lt; Priority &lt;&lt; endl;</span>
+<span class="lineNum">     520 </span>            :     }
+<span class="lineNum">     521 </span>            :   }
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGTank&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGTank&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     525 </span>            :   }
+<span class="lineNum">     526 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     527 </span>            :   }
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     529 </span>            :   }
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     531 </span>            :   }
+<span class="lineNum">     532 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     533 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     534 </span>            :     }
+<a name="535"><span class="lineNum">     535 </span>            :   }</a>
+<span class="lineNum">     536 </span>            : }
+<span class="lineNum">     537 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

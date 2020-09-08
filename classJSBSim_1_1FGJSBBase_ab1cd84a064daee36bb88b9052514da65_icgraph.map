@@ -1,0 +1,4 @@
+<map id="KelvinToRankine" name="KelvinToRankine">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAtmosphere.html#a3ef269c7002ec866114404079457ca8a" title="Calculates the pressure altitude given any temperature or pressure bias. " alt="" coords="175,5,356,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGAtmosphere.html#a4c497d810b0509f4743ec5acf449864c" title="Calculate the atmosphere for the given altitude. " alt="" coords="404,5,571,47"/>
+</map>

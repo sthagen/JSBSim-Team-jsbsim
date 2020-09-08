@@ -1,0 +1,32 @@
+<map id="GetRadius" name="GetRadius">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAuxiliary.html#a764e8c6d39b827d2ad03f570a2fc37e6" title="Runs the Auxiliary routines; called by the Executive Can pass in a value indicating if the executive ..." alt="" coords="372,18,551,45"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInertial.html#a6d0c95d18efaa1d57774a5caf0fd8026" title="Transform matrix from the local horizontal frame to earth centered. " alt="" coords="161,1432,296,1473"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a346a168487e721ed793f896774dbc12c" title="Gets the initial altitude above sea level. " alt="" coords="137,520,320,561"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="833,437,1016,479"/>
+<area shape="rect" id="node20" href="$classJSBSim_1_1FGLocation.html#afa50b3c5c4e01a2b203a9c30dcf67414" title="Get the geodetic distance between the current location and a given location. " alt="" coords="173,69,284,95"/>
+<area shape="rect" id="node22" href="$classJSBSim_1_1FGPropagate.html#a645621ae6613dac57bf228543069e829" title="Returns the current altitude above sea level. " alt="" coords="151,1037,306,1079"/>
+<area shape="rect" id="node30" href="$classJSBSim_1_1FGPropagate.html#a3554b724a9f259cb57840ae37cbec446" title="Returns the &quot;constant&quot; LocalTerrainRadius. " alt="" coords="147,1249,310,1291"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInertial.html#ad9453df496ad1736e08e3de3d0a23bc5" title="Get the gravity type. " alt="" coords="394,1497,529,1539"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInertial.html#a891d6a4818f727f19c512da34b692871" title="Transform matrix from the earth centered to local horizontal frame. " alt="" coords="394,1432,529,1473"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a13d4b8fd402f41dcf6eef8ed0c11f435" title="Set equivalent airspeed initial condition in knots. " alt="" coords="603,404,785,445"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGInitialCondition.html#a4b214047e1c25d93b9d706621f32f6ce" title="Set mach initial condition. " alt="" coords="603,469,785,511"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGInitialCondition.html#abaa026e39ca6d9c383ccffa8f9bbd936" title="Set calibrated airspeed initial condition in knots. " alt="" coords="603,535,785,576"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGInitialCondition.html#a78752db06521e6974fad0089a5e31695" title="Sets the initial Altitude above ground level. " alt="" coords="370,579,553,620"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGInitialCondition.html#ab6f6dae970e40878a34789be7dfcb9a7" title="Sets the initial latitude. " alt="" coords="603,652,785,693"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGInitialCondition.html#adb6fe57c0d1ce470a4d12b8e3054f75b" title="Sets the altitude above sea level initial condition in feet. " alt="" coords="370,696,553,737"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGInitialCondition.html#a777b283e5014563b30f96b47a9e6220a" title="Sets the initial geodetic latitude. " alt="" coords="603,769,785,811"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="607,901,781,927"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1FGInitialCondition.html#a5ff3b7823e19062dfc47fc7350e6384b" title="Gets the initial calibrated airspeed. " alt="" coords="603,835,785,876"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1FGInitialCondition.html#abe2a911da5e3610023f885e9e50939d1" title="Gets the initial equivalent airspeed. " alt="" coords="603,171,785,212"/>
+<area shape="rect" id="node18" href="$classJSBSim_1_1FGInitialCondition.html#a8576d36700cec35ab3aafe6b4591a354" title="Gets the initial mach. " alt="" coords="603,236,785,277"/>
+<area shape="rect" id="node19" href="$classJSBSim_1_1FGInitialCondition.html#afc878176c820859eb67f63414bbc0b45" title="Gets the initial longitude. " alt="" coords="370,295,553,336"/>
+<area shape="rect" id="node21" href="$classJSBSim_1_1FGLocation.html#a46dcaa6897b19f880fea90dbbc11c76c" title="Transform matrix from the earth centered to local horizontal frame. " alt="" coords="657,69,731,95"/>
+<area shape="rect" id="node23" href="$classJSBSim_1_1FGFDMExec.html#aa83769769c700eba0b0b82a5c62dbc71" title="This function executes each scheduled model in succession. " alt="" coords="368,914,555,941"/>
+<area shape="rect" id="node24" href="$classJSBSim_1_1MSIS.html#a35ac9aa2a24b4c76037dcc874cdfdcdd" title="Runs the MSIS&#45;00 atmosphere model; called by the Executive Can pass in a value indicating if the exec..." alt="" coords="390,965,533,991"/>
+<area shape="rect" id="node25" href="$classJSBSim_1_1FGOutputFG.html#ac139d3edf9cdfcdd83a3eba596995817" title="Evaluate the output directives from an XML file. " alt="" coords="617,1112,771,1153"/>
+<area shape="rect" id="node26" href="$classJSBSim_1_1FGOutputSocket.html#a0d7143a7146c3401f1c71e68d68097d6" title="Generates the output. " alt="" coords="373,1067,549,1108"/>
+<area shape="rect" id="node27" href="$classJSBSim_1_1FGPropagate.html#a269d067d10ad81cf2b04e951dc1af761" title="Retrieves the Euler angles (in degrees) that define the vehicle orientation. " alt="" coords="617,1281,771,1323"/>
+<area shape="rect" id="node28" href="$classJSBSim_1_1FGPropagate.html#a2ae3515cd5cf63620a4818be07ef18b6" title="Calculates and retrieves the velocity vector relative to the earth centered earth fixed (ECEF) frame ..." alt="" coords="384,1132,539,1173"/>
+<area shape="rect" id="node29" href="$classJSBSim_1_1FGPropagate.html#aeb50df5f9743ef416f0b4b700ade49e5" title="Returns the current altitude above sea level. " alt="" coords="381,1315,541,1356"/>
+<area shape="rect" id="node31" href="$classJSBSim_1_1FGPropagate.html#a21e73db757464873633de46e50b9ac1b" title="Returns the current altitude rate. " alt="" coords="384,1249,539,1291"/>
+</map>

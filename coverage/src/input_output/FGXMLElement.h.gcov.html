@@ -1,0 +1,481 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGXMLElement.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGXMLElement.h<span style="font-size: 80%;"> (source / <a href="FGXMLElement.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  File:         FGXMLElement.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 9/28/04
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2004  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      11 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      12 </span>            :  version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      20 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      21 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      24 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      27 </span>            : SENTRY
+<span class="lineNum">      28 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : #ifndef XMLELEMENT_H
+<span class="lineNum">      31 </span>            : #define XMLELEMENT_H
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      34 </span>            : INCLUDES
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : #include &lt;string&gt;
+<span class="lineNum">      38 </span>            : #include &lt;map&gt;
+<span class="lineNum">      39 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &quot;simgear/structure/SGSharedPtr.hxx&quot;
+<span class="lineNum">      42 </span>            : #include &quot;math/FGColumnVector3.h&quot;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      45 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      46 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : namespace JSBSim {
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      51 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      52 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /** Encapsulates an XML element.
+<span class="lineNum">      55 </span>            :     This class handles the creation, storage, and manipulation of XML elements.
+<span class="lineNum">      56 </span>            :     This class also can convert supplied values as follows:
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            :     convert [&quot;from&quot;][&quot;to&quot;] = factor, so: from * factor = to
+<span class="lineNum">      59 </span>            :     - convert[&quot;M&quot;][&quot;FT&quot;] = 3.2808399;
+<span class="lineNum">      60 </span>            :     - convert[&quot;FT&quot;][&quot;M&quot;] = 1.0/convert[&quot;M&quot;][&quot;FT&quot;];
+<span class="lineNum">      61 </span>            :     - convert[&quot;M2&quot;][&quot;FT2&quot;] = convert[&quot;M&quot;][&quot;FT&quot;]*convert[&quot;M&quot;][&quot;FT&quot;];
+<span class="lineNum">      62 </span>            :     - convert[&quot;FT2&quot;][&quot;M2&quot;] = 1.0/convert[&quot;M2&quot;][&quot;FT2&quot;];
+<span class="lineNum">      63 </span>            :     - convert[&quot;FT&quot;][&quot;IN&quot;] = 12.0;
+<span class="lineNum">      64 </span>            :     - convert[&quot;IN&quot;][&quot;FT&quot;] = 1.0/convert[&quot;FT&quot;][&quot;IN&quot;];
+<span class="lineNum">      65 </span>            :     - convert[&quot;LBS&quot;][&quot;KG&quot;] = 0.45359237;
+<span class="lineNum">      66 </span>            :     - convert[&quot;KG&quot;][&quot;LBS&quot;] = 1.0/convert[&quot;LBS&quot;][&quot;KG&quot;];
+<span class="lineNum">      67 </span>            :     - convert[&quot;SLUG*FT2&quot;][&quot;KG*M2&quot;] = 1.35594;
+<span class="lineNum">      68 </span>            :     - convert[&quot;KG*M2&quot;][&quot;SLUG*FT2&quot;] = 1.0/convert[&quot;SLUG*FT2&quot;][&quot;KG*M2&quot;];
+<span class="lineNum">      69 </span>            :     - convert[&quot;RAD&quot;][&quot;DEG&quot;] = 360.0/(2.0*3.1415926);
+<span class="lineNum">      70 </span>            :     - convert[&quot;DEG&quot;][&quot;RAD&quot;] = 1.0/convert[&quot;RAD&quot;][&quot;DEG&quot;];
+<span class="lineNum">      71 </span>            :     - convert[&quot;LBS/FT&quot;][&quot;N/M&quot;] = 14.5939;
+<span class="lineNum">      72 </span>            :     - convert[&quot;LBS/FT/SEC&quot;][&quot;N/M/SEC&quot;] = 14.5939;
+<span class="lineNum">      73 </span>            :     - convert[&quot;N/M&quot;][&quot;LBS/FT&quot;] = 1.0/convert[&quot;LBS/FT&quot;][&quot;N/M&quot;];
+<span class="lineNum">      74 </span>            :     - convert[&quot;N/M/SEC&quot;][&quot;LBS/FT/SEC&quot;] = 1.0/convert[&quot;LBS/FT/SEC&quot;][&quot;N/M/SEC&quot;];
+<span class="lineNum">      75 </span>            :     - convert[&quot;WATTS&quot;][&quot;HP&quot;] = 0.001341022;
+<span class="lineNum">      76 </span>            :     - convert[&quot;HP&quot;][&quot;WATTS&quot;] = 1.0/convert[&quot;WATTS&quot;][&quot;HP&quot;];
+<span class="lineNum">      77 </span>            :     - convert[&quot;N&quot;][&quot;LBS&quot;] = 0.22482;
+<span class="lineNum">      78 </span>            :     - convert[&quot;LBS&quot;][&quot;N&quot;] = 1.0/convert[&quot;N&quot;][&quot;LBS&quot;];
+<span class="lineNum">      79 </span>            :     - convert[&quot;KTS&quot;][&quot;FT/SEC&quot;] = ktstofps;
+<span class="lineNum">      80 </span>            :     - convert[&quot;KG/MIN&quot;][&quot;LBS/MIN&quot;] = convert[&quot;KG&quot;][&quot;LBS&quot;];
+<span class="lineNum">      81 </span>            :     - convert[&quot;LBS/HP*HR&quot;][&quot;KG/KW*HR&quot;] = 0.6083;
+<span class="lineNum">      82 </span>            :     - convert[&quot;KG/KW*HR&quot;][&quot;LBS/HP*HR&quot;] = 1/convert[&quot;LBS/HP*HR&quot;][&quot;KG/KW*HR&quot;];
+<span class="lineNum">      83 </span>            :     - convert[&quot;KG/L&quot;][&quot;LBS/GAL&quot;] = 8.3454045;
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :     - convert[&quot;M&quot;][&quot;M&quot;] = 1.00;
+<span class="lineNum">      86 </span>            :     - convert[&quot;FT&quot;][&quot;FT&quot;] = 1.00;
+<span class="lineNum">      87 </span>            :     - convert[&quot;IN&quot;][&quot;IN&quot;] = 1.00;
+<span class="lineNum">      88 </span>            :     - convert[&quot;DEG&quot;][&quot;DEG&quot;] = 1.00;
+<span class="lineNum">      89 </span>            :     - convert[&quot;RAD&quot;][&quot;RAD&quot;] = 1.00;
+<span class="lineNum">      90 </span>            :     - convert[&quot;M2&quot;][&quot;M2&quot;] = 1.00;
+<span class="lineNum">      91 </span>            :     - convert[&quot;FT2&quot;][&quot;FT2&quot;] = 1.00;
+<span class="lineNum">      92 </span>            :     - convert[&quot;KG*M2&quot;][&quot;KG*M2&quot;] = 1.00;
+<span class="lineNum">      93 </span>            :     - convert[&quot;SLUG*FT2&quot;][&quot;SLUG*FT2&quot;] = 1.00;
+<span class="lineNum">      94 </span>            :     - convert[&quot;KG&quot;][&quot;KG&quot;] = 1.00;
+<span class="lineNum">      95 </span>            :     - convert[&quot;LBS&quot;][&quot;LBS&quot;] = 1.00;
+<span class="lineNum">      96 </span>            :     - convert[&quot;LBS/FT&quot;][&quot;LBS/FT&quot;] = 1.00;
+<span class="lineNum">      97 </span>            :     - convert[&quot;N/M&quot;][&quot;N/M&quot;] = 1.00;
+<span class="lineNum">      98 </span>            :     - convert[&quot;LBS/FT/SEC&quot;][&quot;LBS/FT/SEC&quot;] = 1.00;
+<span class="lineNum">      99 </span>            :     - convert[&quot;N/M/SEC&quot;][&quot;N/M/SEC&quot;] = 1.00;
+<span class="lineNum">     100 </span>            :     - convert[&quot;PSI&quot;][&quot;PSI&quot;] = 1.00;
+<span class="lineNum">     101 </span>            :     - convert[&quot;INHG&quot;][&quot;INHG&quot;] = 1.00;
+<span class="lineNum">     102 </span>            :     - convert[&quot;HP&quot;][&quot;HP&quot;] = 1.00;
+<span class="lineNum">     103 </span>            :     - convert[&quot;N&quot;][&quot;N&quot;] = 1.00;
+<span class="lineNum">     104 </span>            :     - convert[&quot;WATTS&quot;][&quot;WATTS&quot;] = 1.00;
+<span class="lineNum">     105 </span>            :     - convert[&quot;KTS&quot;][&quot;KTS&quot;] = 1.0;
+<span class="lineNum">     106 </span>            :     - convert[&quot;FT/SEC&quot;][&quot;FT/SEC&quot;] = 1.0;
+<span class="lineNum">     107 </span>            :     - convert[&quot;KG/MIN&quot;][&quot;KG/MIN&quot;] = 1.0;
+<span class="lineNum">     108 </span>            :     - convert[&quot;LBS/MIN&quot;][&quot;LBS/MIN&quot;] = 1.0;
+<span class="lineNum">     109 </span>            :     - convert[&quot;LBS/HP*HR&quot;][&quot;LBS/HP*HR&quot;] = 1.0;
+<span class="lineNum">     110 </span>            :     - convert[&quot;KG/KW*HR&quot;][&quot;KG/KW*HR&quot;] = 1.0;
+<span class="lineNum">     111 </span>            :     - convert[&quot;KG/L&quot;][&quot;KG/L&quot;] = 1.0;
+<span class="lineNum">     112 </span>            :     - convert[&quot;LBS/GAL&quot;][&quot;LBS/GAL&quot;] = 1.0;
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :     Where:
+<span class="lineNum">     115 </span>            :     - N = newtons
+<span class="lineNum">     116 </span>            :     - M = meters
+<span class="lineNum">     117 </span>            :     - M2 = meters squared
+<span class="lineNum">     118 </span>            :     - KG = kilograms
+<span class="lineNum">     119 </span>            :     - LBS = pounds force
+<span class="lineNum">     120 </span>            :     - FT = feet
+<span class="lineNum">     121 </span>            :     - FT2 = feet squared
+<span class="lineNum">     122 </span>            :     - SEC = seconds
+<span class="lineNum">     123 </span>            :     - MIN = minutes
+<span class="lineNum">     124 </span>            :     - SLUG = slug
+<span class="lineNum">     125 </span>            :     - DEG = degrees
+<span class="lineNum">     126 </span>            :     - RAD = radians
+<span class="lineNum">     127 </span>            :     - WATTS = watts
+<span class="lineNum">     128 </span>            :     - HP = horsepower
+<span class="lineNum">     129 </span>            :     - HR = hour
+<span class="lineNum">     130 </span>            :     - L = liter
+<span class="lineNum">     131 </span>            :     - GAL = gallon (U.S. liquid) 
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            :     @author Jon S. Berndt
+<span class="lineNum">     134 </span>            : */
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            : class Element;
+<span class="lineNum">     137 </span>            : typedef SGSharedPtr&lt;Element&gt; Element_ptr;
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     140 </span>            : CLASS DECLARATION
+<span class="lineNum">     141 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            : class Element : public SGReferenced {
+<span class="lineNum">     144 </span>            : public:
+<span class="lineNum">     145 </span>            :   /** Constructor
+<span class="lineNum">     146 </span>            :       @param nm the name of this element (if given)
+<span class="lineNum">     147 </span>            :       */
+<span class="lineNum">     148 </span>            :   Element(const std::string&amp; nm);
+<span class="lineNum">     149 </span>            :   /// Destructor
+<span class="lineNum">     150 </span>            :   ~Element(void);
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            :   /** Determines if an element has the supplied attribute.
+<a name="153"><span class="lineNum">     153 </span>            :       @param key specifies the attribute key to retrieve the value of.</a>
+<span class="lineNum">     154 </span>            :       @return true or false. */
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :   bool HasAttribute(const std::string&amp; key) {return attributes.find(key) != attributes.end();}</span>
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            :   /** Retrieves an attribute.
+<span class="lineNum">     158 </span>            :       @param key specifies the attribute key to retrieve the value of.
+<span class="lineNum">     159 </span>            :       @return the key value (as a string), or the empty string if no such
+<span class="lineNum">     160 </span>            :               attribute exists. */
+<span class="lineNum">     161 </span>            :   std::string GetAttributeValue(const std::string&amp; key);
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :   /** Modifies an attribute.
+<span class="lineNum">     164 </span>            :       @param key specifies the attribute key to modify the value of.
+<span class="lineNum">     165 </span>            :       @param value new key value (as a string).
+<span class="lineNum">     166 </span>            :       @return false if it did not find any attribute with the requested key,
+<span class="lineNum">     167 </span>            :               true otherwise.
+<span class="lineNum">     168 </span>            :    */
+<span class="lineNum">     169 </span>            :   bool SetAttributeValue(const std::string&amp; key, const std::string&amp; value);
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span>            :   /** Retrieves an attribute value as a double precision real number.
+<span class="lineNum">     172 </span>            :       @param key specifies the attribute key to retrieve the value of.
+<span class="lineNum">     173 </span>            :       @return the key value (as a number), or the HUGE_VAL if no such
+<span class="lineNum">     174 </span>            :               attribute exists. */
+<span class="lineNum">     175 </span>            :   double GetAttributeValueAsNumber(const std::string&amp; key);
+<span class="lineNum">     176 </span>            : 
+<a name="177"><span class="lineNum">     177 </span>            :   /** Retrieves the element name.</a>
+<a name="178"><span class="lineNum">     178 </span>            :       @return the element name, or the empty string if no name has been set.*/</a>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :   const std::string&amp; GetName(void) const {return name;}</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :   void ChangeName(const std::string&amp; _name) { name = _name; }</span>
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            :   /** Gets a line of data belonging to an element.
+<span class="lineNum">     183 </span>            :       @param i the index of the data line to return (0 by default).
+<span class="lineNum">     184 </span>            :       @return a string representing the data line requested, or the empty string
+<span class="lineNum">     185 </span>            :               if none exists.*/
+<span class="lineNum">     186 </span>            :   std::string GetDataLine(unsigned int i=0);
+<a name="187"><span class="lineNum">     187 </span>            : </a>
+<span class="lineNum">     188 </span>            :   /// Returns the number of lines of data stored
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :   unsigned int GetNumDataLines(void) {return (unsigned int)data_lines.size();}</span>
+<a name="190"><span class="lineNum">     190 </span>            : </a>
+<span class="lineNum">     191 </span>            :   /// Returns the number of child elements for this element.
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :   unsigned int GetNumElements(void) {return (unsigned int)children.size();}</span>
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span>            :   /// Returns the number of named child elements for this element.
+<span class="lineNum">     195 </span>            :   unsigned int GetNumElements(const std::string&amp; element_name);
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            :   /** Converts the element data to a number.
+<span class="lineNum">     198 </span>            :       This function attempts to convert the first (and presumably only) line of
+<span class="lineNum">     199 </span>            :       data &quot;owned&quot; by the element into a real number. If there is not exactly one
+<span class="lineNum">     200 </span>            :       line of data owned by the element, then HUGE_VAL is returned.
+<span class="lineNum">     201 </span>            :       @return the numeric value of the data owned by the element.*/
+<span class="lineNum">     202 </span>            :   double GetDataAsNumber(void);
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span>            :   /** Returns a pointer to the element requested by index.
+<span class="lineNum">     205 </span>            :       This function also resets an internal counter to the index, so that
+<span class="lineNum">     206 </span>            :       subsequent calls to GetNextElement() will return the following
+<span class="lineNum">     207 </span>            :       elements sequentially, until the last element is reached. At that point,
+<span class="lineNum">     208 </span>            :       GetNextElement() will return NULL.
+<span class="lineNum">     209 </span>            :       @param el the index of the requested element (0 by default)
+<span class="lineNum">     210 </span>            :       @return a pointer to the Element, or 0 if no valid element exists. */
+<span class="lineNum">     211 </span>            :   Element* GetElement(unsigned int el=0);
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span>            :   /** Returns a pointer to the next element in the list.
+<span class="lineNum">     214 </span>            :       The function GetElement() must be called first to be sure that this
+<span class="lineNum">     215 </span>            :       function will return the correct element. The call to GetElement() resets
+<span class="lineNum">     216 </span>            :       the internal counter to zero. Subsequent calls to GetNextElement() return
+<span class="lineNum">     217 </span>            :       a pointer to subsequent elements in the list. When the final element is
+<span class="lineNum">     218 </span>            :       reached, 0 is returned.
+<span class="lineNum">     219 </span>            :       @return a pointer to the next Element in the sequence, or 0 if no valid
+<span class="lineNum">     220 </span>            :               Element is present. */
+<span class="lineNum">     221 </span>            :   Element* GetNextElement(void);
+<span class="lineNum">     222 </span>            : 
+<a name="223"><span class="lineNum">     223 </span>            :   /** Returns a pointer to the parent of an element.</a>
+<span class="lineNum">     224 </span>            :       @return a pointer to the parent Element, or 0 if this is the top level Element. */
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :   Element* GetParent(void) {return parent;}</span>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :   /** Returns the line number at which the element has been defined.
+<a name="228"><span class="lineNum">     228 </span>            :       @return the line number</a>
+<span class="lineNum">     229 </span>            :    */
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :   int GetLineNumber(void) const { return line_number; }</span>
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :   /** Returns the name of the file in which the element has been read.
+<a name="233"><span class="lineNum">     233 </span>            :       @return the file name</a>
+<span class="lineNum">     234 </span>            :   */
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :   const std::string&amp; GetFileName(void) const { return file_name; }</span>
+<span class="lineNum">     236 </span>            : 
+<span class="lineNum">     237 </span>            :   /** Searches for a specified element.
+<span class="lineNum">     238 </span>            :       Finds the first element that matches the supplied string, or simply the first
+<span class="lineNum">     239 </span>            :       element if no search string is supplied. This function call resets the internal
+<span class="lineNum">     240 </span>            :       element counter to the first element.
+<span class="lineNum">     241 </span>            :       @param el the search string (empty string by default).
+<span class="lineNum">     242 </span>            :       @return a pointer to the first element that matches the supplied search string. */
+<span class="lineNum">     243 </span>            :   Element* FindElement(const std::string&amp; el=&quot;&quot;);
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            :   /** Searches for the next element as specified.
+<span class="lineNum">     246 </span>            :       This function would be called after FindElement() is first called (in order to
+<span class="lineNum">     247 </span>            :       reset the internal counter). If no argument is supplied (or the empty string)
+<span class="lineNum">     248 </span>            :       a pointer to the very next element is returned. Otherwise, the next occurence
+<span class="lineNum">     249 </span>            :       of the named element is returned. If the end of the list is reached, 0 is
+<span class="lineNum">     250 </span>            :       returned.
+<span class="lineNum">     251 </span>            :       @param el the name of the next element to find.
+<span class="lineNum">     252 </span>            :       @return the pointer to the found element, or 0 if no appropriate element us
+<span class="lineNum">     253 </span>            :               found.*/
+<span class="lineNum">     254 </span>            :   Element* FindNextElement(const std::string&amp; el=&quot;&quot;);
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span>            :   /** Searches for the named element and returns the string data belonging to it.
+<span class="lineNum">     257 </span>            :       This function allows the data belonging to a named element to be returned
+<span class="lineNum">     258 </span>            :       as a string. If no element is found, the empty string is returned. If no
+<span class="lineNum">     259 </span>            :       argument is supplied, the data string for the first element is returned.
+<span class="lineNum">     260 </span>            :       @param el the name of the element being searched for (the empty string by
+<span class="lineNum">     261 </span>            :       default)
+<span class="lineNum">     262 </span>            :       @return the data value for the named element as a string, or the empty
+<span class="lineNum">     263 </span>            :               string if the element cannot be found. */
+<span class="lineNum">     264 </span>            :   std::string FindElementValue(const std::string&amp; el=&quot;&quot;);
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span>            :   /** Searches for the named element and returns the data belonging to it as a number.
+<span class="lineNum">     267 </span>            :       This function allows the data belonging to a named element to be returned
+<span class="lineNum">     268 </span>            :       as a double. If no element is found, HUGE_VAL is returned. If no
+<span class="lineNum">     269 </span>            :       argument is supplied, the data for the first element is returned.
+<span class="lineNum">     270 </span>            :       @param el the name of the element being searched for (the empty string by
+<span class="lineNum">     271 </span>            :       default)
+<span class="lineNum">     272 </span>            :       @return the data value for the named element as a double, or HUGE_VAL if the
+<span class="lineNum">     273 </span>            :               data is missing. */
+<span class="lineNum">     274 </span>            :   double FindElementValueAsNumber(const std::string&amp; el=&quot;&quot;);
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span>            :   /** Searches for the named element and returns the data belonging to it as a bool.
+<span class="lineNum">     277 </span>            :       This function allows the data belonging to a named element to be returned
+<span class="lineNum">     278 </span>            :       as a bool. If no element is found, false is returned. If no
+<span class="lineNum">     279 </span>            :       argument is supplied, the data for the first element is returned.
+<span class="lineNum">     280 </span>            :       @param el the name of the element being searched for (the empty string by
+<span class="lineNum">     281 </span>            :       default)
+<span class="lineNum">     282 </span>            :       @return the data value for the named element as a bool, or false if the
+<span class="lineNum">     283 </span>            :               data is missing. Zero will be false, while any other number will be true. */
+<span class="lineNum">     284 </span>            :   bool FindElementValueAsBoolean(const std::string&amp; el=&quot;&quot;);
+<span class="lineNum">     285 </span>            :   
+<span class="lineNum">     286 </span>            :   /** Searches for the named element and converts and returns the data belonging to it.
+<span class="lineNum">     287 </span>            :       This function allows the data belonging to a named element to be returned
+<span class="lineNum">     288 </span>            :       as a double. If no element is found, HUGE_VAL is returned. If no
+<span class="lineNum">     289 </span>            :       argument is supplied, the data for the first element is returned. Additionally,
+<span class="lineNum">     290 </span>            :       this function converts the value from the units specified in the config file (via
+<span class="lineNum">     291 </span>            :       the UNITS=&quot;&quot; attribute in the element definition) to the native units used by
+<span class="lineNum">     292 </span>            :       JSBSim itself, as specified by the target_units parameter. The currently
+<span class="lineNum">     293 </span>            :       allowable unit conversions are seen in the source file FGXMLElement.cpp.
+<span class="lineNum">     294 </span>            :       Also, see above in the main documentation for this class.
+<span class="lineNum">     295 </span>            :       @param el the name of the element being searched for (the empty string by
+<span class="lineNum">     296 </span>            :       default)
+<span class="lineNum">     297 </span>            :       @param target_units the string representing the native units used by JSBSim
+<span class="lineNum">     298 </span>            :              to which the value returned will be converted.
+<span class="lineNum">     299 </span>            :       @return the unit-converted data value for the named element as a double,
+<span class="lineNum">     300 </span>            :               or HUGE_VAL if the data is missing. */
+<span class="lineNum">     301 </span>            :   double FindElementValueAsNumberConvertTo(const std::string&amp; el, const std::string&amp; target_units);
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            :   /** Searches for the named element and converts and returns the data belonging to it.
+<span class="lineNum">     304 </span>            :       This function allows the data belonging to a named element to be returned
+<span class="lineNum">     305 </span>            :       as a double. If no element is found, HUGE_VAL is returned. If no
+<span class="lineNum">     306 </span>            :       argument is supplied, the data for the first element is returned. Additionally,
+<span class="lineNum">     307 </span>            :       this function converts the value from the units specified in the supplied_units
+<span class="lineNum">     308 </span>            :       parameter to the units specified in the target_units parameter. JSBSim itself,
+<span class="lineNum">     309 </span>            :       as specified by the target_units parameter. The currently allowable unit
+<span class="lineNum">     310 </span>            :       conversions are seen in the source file FGXMLElement.cpp. Also, see above
+<span class="lineNum">     311 </span>            :       in the main documentation for this class.
+<span class="lineNum">     312 </span>            :       @param el the name of the element being searched for (the empty string by
+<span class="lineNum">     313 </span>            :       default)
+<span class="lineNum">     314 </span>            :       @param supplied_units the string representing the units of the value as
+<span class="lineNum">     315 </span>            :              supplied by the config file.
+<span class="lineNum">     316 </span>            :       @param target_units the string representing the native units used by JSBSim
+<span class="lineNum">     317 </span>            :              to which the value returned will be converted.
+<span class="lineNum">     318 </span>            :       @return the unit-converted data value for the named element as a double,
+<span class="lineNum">     319 </span>            :               or HUGE_VAL if the data is missing. */
+<span class="lineNum">     320 </span>            :   double FindElementValueAsNumberConvertFromTo( const std::string&amp; el,
+<span class="lineNum">     321 </span>            :                                                 const std::string&amp; supplied_units,
+<span class="lineNum">     322 </span>            :                                                 const std::string&amp; target_units);
+<span class="lineNum">     323 </span>            : 
+<span class="lineNum">     324 </span>            :   /** Composes a 3-element column vector for the supplied location or orientation.
+<span class="lineNum">     325 </span>            :       This function processes a LOCATION or ORIENTATION construct, returning a
+<span class="lineNum">     326 </span>            :       filled-out 3-element column vector containing the X, Y, Z or ROLL, PITCH,
+<span class="lineNum">     327 </span>            :       YAW elements found in the supplied element. If one of the mentioned components
+<span class="lineNum">     328 </span>            :       is not found, that component is set to zero and a warning message is printed.
+<span class="lineNum">     329 </span>            :       All three elements should be supplied.
+<span class="lineNum">     330 </span>            :       @param target_units the string representing the native units used by JSBSim
+<span class="lineNum">     331 </span>            :              to which the value returned will be converted.
+<span class="lineNum">     332 </span>            :       @return a column vector object built from the LOCATION or ORIENT components. */
+<span class="lineNum">     333 </span>            :   FGColumnVector3 FindElementTripletConvertTo( const std::string&amp; target_units);
+<span class="lineNum">     334 </span>            : 
+<span class="lineNum">     335 </span>            :   double DisperseValue(Element *e, double val, const std::string&amp; supplied_units=&quot;&quot;,
+<span class="lineNum">     336 </span>            :                        const std::string&amp; target_units=&quot;&quot;);
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span>            :   /** This function sets the value of the parent class attribute to the supplied
+<a name="339"><span class="lineNum">     339 </span>            :       Element pointer.</a>
+<span class="lineNum">     340 </span>            :       @param p pointer to the parent Element. */
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :   void SetParent(Element* p) {parent = p;}</span>
+<span class="lineNum">     342 </span>            : 
+<a name="343"><span class="lineNum">     343 </span>            :   /** Adds a child element to the list of children stored for this element.</a>
+<span class="lineNum">     344 </span>            :   *   @param el Child element to add. */
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :   void AddChildElement(Element* el) {children.push_back(el);}</span>
+<span class="lineNum">     346 </span>            : 
+<span class="lineNum">     347 </span>            :   /** Stores an attribute belonging to this element.
+<span class="lineNum">     348 </span>            :   *   @param name The string name of the attribute.
+<span class="lineNum">     349 </span>            :   *   @param value The string value of the attribute. */
+<span class="lineNum">     350 </span>            :   void AddAttribute(const std::string&amp; name, const std::string&amp; value);
+<span class="lineNum">     351 </span>            : 
+<span class="lineNum">     352 </span>            :   /** Stores data belonging to this element.
+<span class="lineNum">     353 </span>            :   *   @param d the data to store. */
+<span class="lineNum">     354 </span>            :   void AddData(std::string d);
+<span class="lineNum">     355 </span>            : 
+<span class="lineNum">     356 </span>            :   /** Prints the element.
+<span class="lineNum">     357 </span>            :   *   Prints this element and calls the Print routine for child elements.
+<span class="lineNum">     358 </span>            :   *   @param d The tab level. A level corresponds to a single space. */
+<span class="lineNum">     359 </span>            :   void Print(unsigned int level=0);
+<span class="lineNum">     360 </span>            : 
+<span class="lineNum">     361 </span>            :   /** Set the line number at which the element has been read.
+<a name="362"><span class="lineNum">     362 </span>            :    *  @param line line number.</a>
+<span class="lineNum">     363 </span>            :    */
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :   void SetLineNumber(int line) { line_number = line; }</span>
+<span class="lineNum">     365 </span>            : 
+<span class="lineNum">     366 </span>            :   /** Set the name of the file in which the element has been read.
+<a name="367"><span class="lineNum">     367 </span>            :    *  @param name file name</a>
+<span class="lineNum">     368 </span>            :    */
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :   void SetFileName(const std::string&amp; name) { file_name = name; }</span>
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span>            :   /** Return a string that contains a description of the location where the
+<span class="lineNum">     372 </span>            :    *  current XML element was read from.
+<span class="lineNum">     373 </span>            :    *  @return a string describing the file name and line number where the
+<span class="lineNum">     374 </span>            :    *          element was read.
+<span class="lineNum">     375 </span>            :    */
+<span class="lineNum">     376 </span>            :   std::string ReadFrom(void) const;
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            :   /** Merges the attributes of the current element with another element. The
+<span class="lineNum">     379 </span>            :    *  attributes from the current element override the element that is passed
+<span class="lineNum">     380 </span>            :    *  as a parameter. In other words if the two elements have an attribute with
+<span class="lineNum">     381 </span>            :    *  the same name, the attribute from the current element is kept and the
+<span class="lineNum">     382 </span>            :    *  corresponding attribute of the other element is ignored.
+<span class="lineNum">     383 </span>            :    *  @param el element with which the current element will merge its attributes.
+<span class="lineNum">     384 </span>            :    */
+<span class="lineNum">     385 </span>            :   void MergeAttributes(Element* el);
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span>            : private:
+<span class="lineNum">     388 </span>            :   std::string name;
+<span class="lineNum">     389 </span>            :   std::map &lt;std::string, std::string&gt; attributes;
+<span class="lineNum">     390 </span>            :   std::vector &lt;std::string&gt; data_lines;
+<span class="lineNum">     391 </span>            :   std::vector &lt;Element_ptr&gt; children;
+<span class="lineNum">     392 </span>            :   Element *parent;
+<span class="lineNum">     393 </span>            :   unsigned int element_index;
+<span class="lineNum">     394 </span>            :   std::string file_name;
+<span class="lineNum">     395 </span>            :   int line_number;
+<span class="lineNum">     396 </span>            :   typedef std::map &lt;std::string, std::map &lt;std::string, double&gt; &gt; tMapConvert;
+<span class="lineNum">     397 </span>            :   static tMapConvert convert;
+<span class="lineNum">     398 </span>            :   static bool converterIsInitialized;
+<span class="lineNum">     399 </span>            : };
+<span class="lineNum">     400 </span>            : 
+<span class="lineNum">     401 </span>            : } // namespace JSBSim
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     404 </span>            : 
+<span class="lineNum">     405 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

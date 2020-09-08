@@ -1,0 +1,4 @@
+<map id="SetIdx" name="SetIdx">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInput.html#a0b8d108c40ce8b06c3c849824ab18397" title="Load the input directives and adds a new input instance to the Input Manager list. " alt="" coords="113,5,275,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="323,5,523,32"/>
+</map>

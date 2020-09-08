@@ -1,0 +1,11 @@
+<map id="SetVgroundKtsIC" name="SetVgroundKtsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#aef47a274b700f482ad7c4e75aa8e204b" title="Sets the initial ground speed. " alt="" coords="177,115,304,142"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a4b214047e1c25d93b9d706621f32f6ce" title="Set mach initial condition. " alt="" coords="197,269,285,295"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGQuaternion.html#ab0e5564df2ba8ac3f2db0a760e64c564" title="Backward transformation matrix. " alt="" coords="587,167,745,208"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGQuaternion.html#a15a2018bc1a5faa4c85a2e27a20fa5d8" title="Retrieves cosine of the given euler angle. " alt="" coords="366,43,525,84"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGQuaternion.html#a05a24cffb3dbe93f6dac60998eb3dbf9" title="Retrieves sine of the given euler angle. " alt="" coords="366,108,525,149"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGColumnVector3.html#a4b994a872678de3097f1c86723ce92c9" title="Length of the vector. " alt="" coords="352,173,539,215"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#a346a168487e721ed793f896774dbc12c" title="Gets the initial altitude above sea level. " alt="" coords="376,239,515,266"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGAtmosphere.html#a9279f5c904e49a436c68665f57ab6be9" title="Returns the speed of sound in ft/sec. " alt="" coords="362,291,529,332"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGInitialCondition.html#aa27763a4d398c95e7b346b824153d11e" title="Sets the initial true airspeed. " alt="" coords="391,357,500,383"/>
+</map>

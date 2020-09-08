@@ -1,0 +1,16 @@
+<map id="GetDsCmd" name="GetDsCmd">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGGroundReactions.html#a9df30f127d68cac80b72996975b60653" title="Sets the steering command. " alt="" coords="141,325,228,351"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1Element.html#a4fd4cb4d88046523b2cf729bf847e0e2" title="Retrieves an attribute. " alt="" coords="293,5,497,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGModel.html#a42ce334dbfdce7ccb2a75f9d32d02065" title="Uploads this model in memory. " alt="" coords="305,122,485,149"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1Element.html#a0290668d182e1035b626b551f2b552e7" title="Searches for a specified element. " alt="" coords="563,82,769,109"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1Element.html#ac49b58ae4fd6170ac11c2ed21d882666" title="Searches for the next element as specified. " alt="" coords="573,144,759,185"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1Element.html#a79aeff482261686b1544f79b93dd4063" title="Returns the number of child elements for this element. " alt="" coords="276,223,515,250"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGLGear.html#a8bc9d2981379e37c791f8f5efaaa3115" title="Gets the Weight On Wheels flag value. " alt="" coords="297,274,493,301"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGLGear.html#aa4bf61964ce6530c67c60da7e3277c8b" title="Gets the current compressed length of the gear in feet. " alt="" coords="287,325,503,351"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGLGear.html#aad680b0f3967b2b5bd1dd6f3fb4701a0" title="Gets the current gear compression velocity in ft/sec. " alt="" coords="288,375,503,402"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGLGear.html#a7e422729b8626b8df54a33545822540e" title="Gets the gear compression force in pounds. " alt="" coords="298,427,493,468"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGFDMExec.html#af2d06a737321b234a81a09e9177243c7" title="Returns the FGAccelerations pointer. " alt="" coords="314,492,477,533"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGAccelerations.html#a987af96f9410692dde3fc14fab762d2b" title="Retrieves the ground forces applied on the body. " alt="" coords="308,581,483,623"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGAccelerations.html#a4e22194282ff2c2e8829aaf04b4af0e4" title="Retrieves the ground moments applied on the body. " alt="" coords="308,671,483,712"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGGroundReactions.html#a3c2c81e3be81d86f1756896dc2e477e9" title="Gets the number of gears. " alt="" coords="330,737,461,763"/>
+</map>

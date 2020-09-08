@@ -1,0 +1,4 @@
+<map id="PitotTotalPressure" name="PitotTotalPressure">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAuxiliary.html#a764e8c6d39b827d2ad03f570a2fc37e6" title="Runs the Auxiliary routines; called by the Executive Can pass in a value indicating if the executive ..." alt="" coords="184,5,363,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGJSBBase.html#a8c51473eff249bacddf47d95834c6f69" title="Converts from feet to meters. " alt="" coords="222,56,325,83"/>
+</map>

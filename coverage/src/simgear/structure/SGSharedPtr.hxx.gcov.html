@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/simgear/structure/SGSharedPtr.hxx</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/simgear/structure</a> - SGSharedPtr.hxx<span style="font-size: 80%;"> (source / <a href="SGSharedPtr.hxx.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntryHi">91.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">90</td>
+            <td class="headerCovTableEntryLo">22.2 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* -*-c++-*-</a>
+<span class="lineNum">       2 </span>            :  *
+<span class="lineNum">       3 </span>            :  * Copyright (C) 2005-2006 Mathias Froehlich 
+<span class="lineNum">       4 </span>            :  *
+<span class="lineNum">       5 </span>            :  * This program is free software; you can redistribute it and/or
+<span class="lineNum">       6 </span>            :  * modify it under the terms of the GNU Lesser General Public License as
+<span class="lineNum">       7 </span>            :  * published by the Free Software Foundation; either version 2 of the
+<span class="lineNum">       8 </span>            :  * License, or (at your option) any later version.
+<span class="lineNum">       9 </span>            :  *
+<span class="lineNum">      10 </span>            :  * This program is distributed in the hope that it will be useful, but
+<span class="lineNum">      11 </span>            :  * WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      12 </span>            :  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      13 </span>            :  * Lesser General Public License for more details.
+<span class="lineNum">      14 </span>            :  *
+<span class="lineNum">      15 </span>            :  * You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      16 </span>            :  * along with this program; if not, write to the Free Software
+<span class="lineNum">      17 </span>            :  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+<span class="lineNum">      18 </span>            :  *
+<span class="lineNum">      19 </span>            :  */
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #ifndef SGSharedPtr_HXX
+<span class="lineNum">      22 </span>            : #define SGSharedPtr_HXX
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : #include &quot;SGReferenced.hxx&quot;
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : /// This class is a pointer proxy doing reference counting on the object
+<span class="lineNum">      27 </span>            : /// it is pointing to.
+<span class="lineNum">      28 </span>            : /// The SGSharedPtr class handles reference counting and possible
+<span class="lineNum">      29 </span>            : /// destruction if no nore references are in use automatically.
+<span class="lineNum">      30 </span>            : /// Classes derived from @SGReferenced can be handled with SGSharedPtr.
+<span class="lineNum">      31 </span>            : /// Once you have a SGSharedPtr available you can use it just like
+<span class="lineNum">      32 </span>            : /// a usual pointer with the exception that you don't need to delete it.
+<span class="lineNum">      33 </span>            : /// Such a reference is initialized by zero if not initialized with a
+<span class="lineNum">      34 </span>            : /// class pointer.
+<span class="lineNum">      35 </span>            : /// One thing you need to avoid are cyclic loops with such pointers.
+<span class="lineNum">      36 </span>            : /// As long as such a cyclic loop exists the reference count never drops
+<span class="lineNum">      37 </span>            : /// to zero and consequently the objects will never be destroyed.
+<span class="lineNum">      38 </span>            : /// Always try to use directed graphs where the references away from the
+<span class="lineNum">      39 </span>            : /// top node are made with SGSharedPtr's and the back references are done with
+<span class="lineNum">      40 </span>            : /// ordinary pointers.
+<span class="lineNum">      41 </span>            : /// There is a very good description of OpenSceneGraphs ref_ptr which is
+<span class="lineNum">      42 </span>            : /// pretty much the same than this one at
+<span class="lineNum">      43 </span>            : /// http://dburns.dhs.org/OSG/Articles/RefPointers/RefPointers.html
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : template&lt;typename T&gt;
+<a name="46"><span class="lineNum">      46 </span>            : class SGSharedPtr {</a>
+<span class="lineNum">      47 </span>            : public:
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         80 :   SGSharedPtr(void) : _ptr(nullptr)</span></a>
+<span class="lineNum">      49 </span><span class="lineCov">         80 :   {}</span>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       6104 :   SGSharedPtr(T* ptr) : _ptr(ptr)</span></a>
+<span class="lineNum">      51 </span><span class="lineCov">       6104 :   { get(_ptr); }</span>
+<span class="lineNum">      52 </span><span class="lineCov">      14480 :   SGSharedPtr(const SGSharedPtr&amp; p) : _ptr(p.ptr())</span>
+<span class="lineNum">      53 </span><span class="lineCov">      14480 :   { get(_ptr); }</span>
+<span class="lineNum">      54 </span>            :   template&lt;typename U&gt;
+<a name="55"><span class="lineNum">      55 </span>            :   SGSharedPtr(const SGSharedPtr&lt;U&gt;&amp; p) : _ptr(p.ptr())</a>
+<span class="lineNum">      56 </span>            :   { get(_ptr); }
+<span class="lineNum">      57 </span><span class="lineCov">      20664 :   ~SGSharedPtr(void)</span>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">      20664 :   { put(); }</span></a>
+<span class="lineNum">      59 </span>            :   
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :   SGSharedPtr&amp; operator=(const SGSharedPtr&amp; p)</span>
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :   { assign(p.ptr()); return *this; }</span>
+<span class="lineNum">      62 </span>            :   template&lt;typename U&gt;
+<span class="lineNum">      63 </span>            :   SGSharedPtr&amp; operator=(const SGSharedPtr&lt;U&gt;&amp; p)
+<a name="64"><span class="lineNum">      64 </span>            :   { assign(p.ptr()); return *this; }</a>
+<span class="lineNum">      65 </span>            :   template&lt;typename U&gt;
+<span class="lineNum">      66 </span><span class="lineCov">          8 :   SGSharedPtr&amp; operator=(U* p)</span>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          8 :   { assign(p); return *this; }</span></a>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineCov">       9064 :   T* operator-&gt;(void) const</span>
+<span class="lineNum">      70 </span><span class="lineCov">       9064 :   { return _ptr; }</span>
+<a name="71"><span class="lineNum">      71 </span>            :   T&amp; operator*(void) const</a>
+<span class="lineNum">      72 </span>            :   { return *_ptr; }
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">      76380 :   operator T*(void) const</span></a>
+<span class="lineNum">      74 </span><span class="lineCov">      76380 :   { return _ptr; }</span>
+<span class="lineNum">      75 </span><span class="lineCov">      14480 :   T* ptr(void) const</span>
+<span class="lineNum">      76 </span><span class="lineCov">      14480 :   { return _ptr; }</span>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            :   bool isShared(void) const
+<span class="lineNum">      79 </span>            :   { return SGReferenced::shared(_ptr); }
+<span class="lineNum">      80 </span>            :   unsigned getNumRefs(void) const
+<span class="lineNum">      81 </span>            :   { return SGReferenced::count(_ptr); }
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            :   bool valid(void) const
+<span class="lineNum">      84 </span>            :   { return _ptr; }
+<a name="85"><span class="lineNum">      85 </span>            : </a>
+<span class="lineNum">      86 </span>            : private:
+<span class="lineNum">      87 </span><span class="lineCov">          8 :   void assign(T* p)</span>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">          8 :   { get(p); put(); _ptr = p; }</span></a>
+<span class="lineNum">      89 </span>            : 
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">      20592 :   void get(const T* p) const</span></a>
+<span class="lineNum">      91 </span><span class="lineCov">      20592 :   { SGReferenced::get(p); }</span>
+<span class="lineNum">      92 </span><span class="lineCov">      20672 :   void put(void)</span>
+<span class="lineNum">      93 </span><span class="lineCov">      20672 :   { if (!SGReferenced::put(_ptr)) { delete _ptr; _ptr = 0; } }</span>
+<span class="lineNum">      94 </span>            :   
+<span class="lineNum">      95 </span>            :   // The reference itself.
+<span class="lineNum">      96 </span>            :   T* _ptr;
+<span class="lineNum">      97 </span>            : };
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

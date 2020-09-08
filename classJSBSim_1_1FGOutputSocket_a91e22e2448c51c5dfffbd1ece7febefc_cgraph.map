@@ -1,0 +1,7 @@
+<map id="InitModel" name="InitModel">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutputType.html#a91e22e2448c51c5dfffbd1ece7febefc" title="Init the output model according to its configitation. " alt="" coords="155,5,319,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGAerodynamics.html#a0354e29bf7dea97bcb25f875e235a85d" title="Gets the strings for the current set of aero functions. " alt="" coords="148,71,327,112"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFCS.html#a2e42bd7d9a33583998563eec0d59a113" title="Retrieves all component names for inclusion in output stream. " alt="" coords="128,136,347,177"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGPropulsion.html#af9836eb91cc0c0c2bcb426f49415d7bc" title="Retrieves the number of engines defined for the aircraft. " alt="" coords="159,201,316,243"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGModelFunctions.html#a6d0e47cd9c6bdba65db88286e0b5ee06" title="Gets the strings for the current set of functions. " alt="" coords="395,71,583,112"/>
+</map>

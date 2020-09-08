@@ -1,0 +1,7 @@
+<map id="GetWindDFpsIC" name="GetWindDFpsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a4c68f8e908b432d18201003670fa2c7c" title="Gets the initial total wind velocity in feet/sec. " alt="" coords="181,74,291,101"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a6788d9297505a09051952a5fa67a48a9" title="Gets the initial wind direction. " alt="" coords="172,17,300,43"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGQuaternion.html#ab0e5564df2ba8ac3f2db0a760e64c564" title="Backward transformation matrix. " alt="" coords="362,5,521,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGColumnVector3.html#a4b994a872678de3097f1c86723ce92c9" title="Length of the vector. " alt="" coords="348,71,535,112"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGQuaternion.html#a4c650fa69b797cb5d122b7b19c70d380" title="Transformation matrix. " alt="" coords="362,136,521,177"/>
+</map>

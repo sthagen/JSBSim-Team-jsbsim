@@ -1,0 +1,17 @@
+<map id="Normalize" name="Normalize">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGColumnVector3.html#a3a91b782f9b048f1eab26e983c25e025" title="Scale by a scalar. " alt="" coords="199,46,281,73"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInertial.html#a6d0c95d18efaa1d57774a5caf0fd8026" title="Transform matrix from the local horizontal frame to earth centered. " alt="" coords="173,97,307,139"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#aab430a890b7eb995d69c0c042fca969a" title="Sets the initial angle of attack. " alt="" coords="149,203,331,244"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGInitialCondition.html#a4e35ac529197f0bbcd476f52eae08a40" title="Sets the initial sideslip angle. " alt="" coords="149,297,331,339"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGLGear.html#ad983d4035efc81bf292e4269cd3601cc" title="The Force vector for this gear. " alt="" coords="145,363,335,404"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="153,443,327,470"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGWinds.html#a5ed79dd94ea2bc253ca214c99f4f77af" title="Sets the direction that the wind is coming from. " alt="" coords="135,502,345,529"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInertial.html#ad9453df496ad1736e08e3de3d0a23bc5" title="Get the gravity type. " alt="" coords="431,5,566,47"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInertial.html#a891d6a4818f727f19c512da34b692871" title="Transform matrix from the earth centered to local horizontal frame. " alt="" coords="431,71,566,112"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="652,253,835,295"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#a5c958bfa2833878f77a13e857e446534" title="Sets angle of attack initial condition in degrees. " alt="" coords="407,188,590,229"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGInitialCondition.html#a4432f5e65443121378434889b2580f07" title="Sets the initial flight path angle. " alt="" coords="407,253,590,295"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGInitialCondition.html#abffe2ecc4a7f992d6e4a8569e374eb5e" title="Sets angle of sideslip initial condition in degrees. " alt="" coords="407,371,590,412"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGFDMExec.html#a8ae88a0b73749057a42c729d2330f5ee" title="Executes trimming in the selected mode. " alt="" coords="417,436,580,477"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1FGWinds.html#ae8a5512750069682ea5d3b312e58bdb9" title="Retrieves the direction that the wind is coming from. " alt="" coords="393,502,604,529"/>
+</map>

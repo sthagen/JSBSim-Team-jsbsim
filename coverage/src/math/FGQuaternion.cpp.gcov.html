@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/math/FGQuaternion.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/math</a> - FGQuaternion.cpp<span style="font-size: 80%;"> (source / <a href="FGQuaternion.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGQuaternion.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt, Mathias Froehlich
+<span class="lineNum">       5 </span>            :  Date started: 12/02/98
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) ------------------
+<span class="lineNum">       8 </span>            :  -------           (C) 2004  Mathias Froehlich (Mathias.Froehlich@web.de) ----
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      12 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      13 </span>            :  version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      21 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      22 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      25 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : HISTORY
+<span class="lineNum">      28 </span>            : -------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : 12/02/98   JSB   Created
+<span class="lineNum">      30 </span>            : 15/01/04   Mathias Froehlich implemented a quaternion class from many places
+<span class="lineNum">      31 </span>            :            in JSBSim.
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      34 </span>            : SENTRY
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            :   INCLUDES
+<span class="lineNum">      39 </span>            :   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &lt;string&gt;
+<span class="lineNum">      42 </span>            : #include &lt;iostream&gt;
+<span class="lineNum">      43 </span>            : #include &lt;sstream&gt;
+<span class="lineNum">      44 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      45 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">      46 </span>            : using std::cerr;
+<span class="lineNum">      47 </span>            : using std::cout;
+<span class="lineNum">      48 </span>            : using std::endl;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : #include &quot;FGMatrix33.h&quot;
+<span class="lineNum">      51 </span>            : #include &quot;FGColumnVector3.h&quot;
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : #include &quot;FGQuaternion.h&quot;
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      56 </span>            :   DEFINITIONS
+<span class="lineNum">      57 </span>            :   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : namespace JSBSim {
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="62"><span class="lineNum">      62 </span>            : </a>
+<span class="lineNum">      63 </span>            : // Initialize from q
+<span class="lineNum">      64 </span><span class="lineCov">         80 : FGQuaternion::FGQuaternion(const FGQuaternion&amp; q) : mCacheValid(q.mCacheValid)</span>
+<span class="lineNum">      65 </span>            : {
+<span class="lineNum">      66 </span><span class="lineCov">         80 :   data[0] = q(1);</span>
+<span class="lineNum">      67 </span><span class="lineCov">         80 :   data[1] = q(2);</span>
+<span class="lineNum">      68 </span><span class="lineCov">         80 :   data[2] = q(3);</span>
+<span class="lineNum">      69 </span><span class="lineCov">         80 :   data[3] = q(4);</span>
+<span class="lineNum">      70 </span><span class="lineCov">         80 :   if (mCacheValid) {</span>
+<span class="lineNum">      71 </span><span class="lineCov">          2 :     mT = q.mT;</span>
+<span class="lineNum">      72 </span><span class="lineCov">          2 :     mTInv = q.mTInv;</span>
+<span class="lineNum">      73 </span><span class="lineCov">          2 :     mEulerAngles = q.mEulerAngles;</span>
+<span class="lineNum">      74 </span><span class="lineCov">          2 :     mEulerSines = q.mEulerSines;</span>
+<span class="lineNum">      75 </span><span class="lineCov">          2 :     mEulerCosines = q.mEulerCosines;</span>
+<span class="lineNum">      76 </span>            :   }
+<span class="lineNum">      77 </span><span class="lineCov">         80 : }</span>
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="80"><span class="lineNum">      80 </span>            : </a>
+<span class="lineNum">      81 </span>            : // Initialize with the three euler angles
+<span class="lineNum">      82 </span><span class="lineCov">        468 : FGQuaternion::FGQuaternion(double phi, double tht, double psi): mCacheValid(false)</span>
+<span class="lineNum">      83 </span>            : {
+<span class="lineNum">      84 </span><span class="lineCov">        468 :   InitializeFromEulerAngles(phi, tht, psi);</span>
+<span class="lineNum">      85 </span><span class="lineCov">        468 : }</span>
+<span class="lineNum">      86 </span>            : 
+<a name="87"><span class="lineNum">      87 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineCov">        106 : FGQuaternion::FGQuaternion(FGColumnVector3 vOrient): mCacheValid(false)</span>
+<span class="lineNum">      90 </span>            : {
+<span class="lineNum">      91 </span><span class="lineCov">        106 :   double phi = vOrient(ePhi);</span>
+<span class="lineNum">      92 </span><span class="lineCov">        106 :   double tht = vOrient(eTht);</span>
+<span class="lineNum">      93 </span><span class="lineCov">        106 :   double psi = vOrient(ePsi);</span>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineCov">        106 :   InitializeFromEulerAngles(phi, tht, psi);</span>
+<span class="lineNum">      96 </span><span class="lineCov">        106 : }</span>
+<span class="lineNum">      97 </span>            :  
+<span class="lineNum">      98 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      99 </span>            : //
+<span class="lineNum">     100 </span>            : // This function computes the quaternion that describes the relationship of the
+<span class="lineNum">     101 </span>            : // body frame with respect to another frame, such as the ECI or ECEF frames. The
+<span class="lineNum">     102 </span>            : // Euler angles used represent a 3-2-1 (psi, theta, phi) rotation sequence from
+<span class="lineNum">     103 </span>            : // the reference frame to the body frame. See &quot;Quaternions and Rotation
+<a name="104"><span class="lineNum">     104 </span>            : // Sequences&quot;, Jack B. Kuipers, sections 9.2 and 7.6. </a>
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineCov">        574 : void FGQuaternion::InitializeFromEulerAngles(double phi, double tht, double psi)</span>
+<span class="lineNum">     107 </span>            : {
+<span class="lineNum">     108 </span><span class="lineCov">        574 :   mEulerAngles(ePhi) = phi;</span>
+<span class="lineNum">     109 </span><span class="lineCov">        574 :   mEulerAngles(eTht) = tht;</span>
+<span class="lineNum">     110 </span><span class="lineCov">        574 :   mEulerAngles(ePsi) = psi;</span>
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span><span class="lineCov">        574 :   double thtd2 = 0.5*tht;</span>
+<span class="lineNum">     113 </span><span class="lineCov">        574 :   double psid2 = 0.5*psi;</span>
+<span class="lineNum">     114 </span><span class="lineCov">        574 :   double phid2 = 0.5*phi;</span>
+<span class="lineNum">     115 </span>            :   
+<span class="lineNum">     116 </span><span class="lineCov">        574 :   double Sthtd2 = sin(thtd2);</span>
+<span class="lineNum">     117 </span><span class="lineCov">        574 :   double Spsid2 = sin(psid2);</span>
+<span class="lineNum">     118 </span><span class="lineCov">        574 :   double Sphid2 = sin(phid2);</span>
+<span class="lineNum">     119 </span>            :   
+<span class="lineNum">     120 </span><span class="lineCov">        574 :   double Cthtd2 = cos(thtd2);</span>
+<span class="lineNum">     121 </span><span class="lineCov">        574 :   double Cpsid2 = cos(psid2);</span>
+<span class="lineNum">     122 </span><span class="lineCov">        574 :   double Cphid2 = cos(phid2);</span>
+<span class="lineNum">     123 </span>            :   
+<span class="lineNum">     124 </span><span class="lineCov">        574 :   double Cphid2Cthtd2 = Cphid2*Cthtd2;</span>
+<span class="lineNum">     125 </span><span class="lineCov">        574 :   double Cphid2Sthtd2 = Cphid2*Sthtd2;</span>
+<span class="lineNum">     126 </span><span class="lineCov">        574 :   double Sphid2Sthtd2 = Sphid2*Sthtd2;</span>
+<span class="lineNum">     127 </span><span class="lineCov">        574 :   double Sphid2Cthtd2 = Sphid2*Cthtd2;</span>
+<span class="lineNum">     128 </span>            :   
+<span class="lineNum">     129 </span><span class="lineCov">        574 :   data[0] = Cphid2Cthtd2*Cpsid2 + Sphid2Sthtd2*Spsid2;</span>
+<span class="lineNum">     130 </span><span class="lineCov">        574 :   data[1] = Sphid2Cthtd2*Cpsid2 - Cphid2Sthtd2*Spsid2;</span>
+<span class="lineNum">     131 </span><span class="lineCov">        574 :   data[2] = Cphid2Sthtd2*Cpsid2 + Sphid2Cthtd2*Spsid2;</span>
+<span class="lineNum">     132 </span><span class="lineCov">        574 :   data[3] = Cphid2Cthtd2*Spsid2 - Sphid2Sthtd2*Cpsid2;</span>
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span><span class="lineCov">        574 :   Normalize();</span>
+<span class="lineNum">     135 </span><span class="lineCov">        574 : }</span>
+<span class="lineNum">     136 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="137"><span class="lineNum">     137 </span>            : // Initialize with a direction cosine (rotation) matrix</a>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineCov">          3 : FGQuaternion::FGQuaternion(const FGMatrix33&amp; m) : mCacheValid(false)</span>
+<span class="lineNum">     140 </span>            : {
+<span class="lineNum">     141 </span><span class="lineCov">          3 :   data[0] = 0.50*sqrt(1.0 + m(1,1) + m(2,2) + m(3,3));</span>
+<span class="lineNum">     142 </span><span class="lineCov">          3 :   double t = 0.25/data[0];</span>
+<span class="lineNum">     143 </span><span class="lineCov">          3 :   data[1] = t*(m(2,3) - m(3,2));</span>
+<span class="lineNum">     144 </span><span class="lineCov">          3 :   data[2] = t*(m(3,1) - m(1,3));</span>
+<span class="lineNum">     145 </span><span class="lineCov">          3 :   data[3] = t*(m(1,2) - m(2,1));</span>
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span><span class="lineCov">          3 :   Normalize();</span>
+<span class="lineNum">     148 </span><span class="lineCov">          3 : }</span>
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            : /** Returns the derivative of the quaternion corresponding to the
+<span class="lineNum">     153 </span>            :     angular velocities PQR.
+<span class="lineNum">     154 </span>            :     See Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;, Second Edition,
+<span class="lineNum">     155 </span>            :     Equation 1.3-36.
+<a name="156"><span class="lineNum">     156 </span>            :     Also see Jack Kuipers, &quot;Quaternions and Rotation Sequences&quot;, Equation 11.12.</a>
+<span class="lineNum">     157 </span>            : */
+<span class="lineNum">     158 </span><span class="lineCov">          1 : FGQuaternion FGQuaternion::GetQDot(const FGColumnVector3&amp; PQR) const</span>
+<span class="lineNum">     159 </span>            : {
+<span class="lineNum">     160 </span>            :   return FGQuaternion(
+<span class="lineNum">     161 </span><span class="lineCov">          1 :     -0.5*( data[1]*PQR(eP) + data[2]*PQR(eQ) + data[3]*PQR(eR)),</span>
+<span class="lineNum">     162 </span><span class="lineCov">          1 :      0.5*( data[0]*PQR(eP) - data[3]*PQR(eQ) + data[2]*PQR(eR)),</span>
+<span class="lineNum">     163 </span><span class="lineCov">          1 :      0.5*( data[3]*PQR(eP) + data[0]*PQR(eQ) - data[1]*PQR(eR)),</span>
+<span class="lineNum">     164 </span><span class="lineCov">          1 :      0.5*(-data[2]*PQR(eP) + data[1]*PQR(eQ) + data[0]*PQR(eR))</span>
+<span class="lineNum">     165 </span><span class="lineCov">          4 :   );</span>
+<span class="lineNum">     166 </span>            : }
+<span class="lineNum">     167 </span>            : 
+<a name="168"><span class="lineNum">     168 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span><span class="lineCov">        581 : void FGQuaternion::Normalize()</span>
+<span class="lineNum">     171 </span>            : {
+<span class="lineNum">     172 </span>            :   // Note: this does not touch the cache since it does not change the orientation
+<span class="lineNum">     173 </span><span class="lineCov">        581 :   double norm = Magnitude();</span>
+<span class="lineNum">     174 </span><span class="lineCov">        581 :   if (norm == 0.0 || fabs(norm - 1.000) &lt; 1e-10) return;</span>
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span><span class="lineCov">          1 :   double rnorm = 1.0/norm;</span>
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span><span class="lineCov">          1 :   data[0] *= rnorm;</span>
+<span class="lineNum">     179 </span><span class="lineCov">          1 :   data[1] *= rnorm;</span>
+<span class="lineNum">     180 </span><span class="lineCov">          1 :   data[2] *= rnorm;</span>
+<span class="lineNum">     181 </span><span class="lineCov">          1 :   data[3] *= rnorm;</span>
+<span class="lineNum">     182 </span>            : }
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="185"><span class="lineNum">     185 </span>            : </a>
+<span class="lineNum">     186 </span>            : // Compute the derived values if required ...
+<span class="lineNum">     187 </span><span class="lineCov">       1039 : void FGQuaternion::ComputeDerivedUnconditional(void) const</span>
+<span class="lineNum">     188 </span>            : {
+<span class="lineNum">     189 </span><span class="lineCov">       1039 :   mCacheValid = true;</span>
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span><span class="lineCov">       1039 :   double q0 = data[0]; // use some aliases/shorthand for the quat elements.</span>
+<span class="lineNum">     192 </span><span class="lineCov">       1039 :   double q1 = data[1];</span>
+<span class="lineNum">     193 </span><span class="lineCov">       1039 :   double q2 = data[2];</span>
+<span class="lineNum">     194 </span><span class="lineCov">       1039 :   double q3 = data[3];</span>
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            :   // Now compute the transformation matrix.
+<span class="lineNum">     197 </span><span class="lineCov">       1039 :   double q0q0 = q0*q0;</span>
+<span class="lineNum">     198 </span><span class="lineCov">       1039 :   double q1q1 = q1*q1;</span>
+<span class="lineNum">     199 </span><span class="lineCov">       1039 :   double q2q2 = q2*q2;</span>
+<span class="lineNum">     200 </span><span class="lineCov">       1039 :   double q3q3 = q3*q3;</span>
+<span class="lineNum">     201 </span><span class="lineCov">       1039 :   double q0q1 = q0*q1;</span>
+<span class="lineNum">     202 </span><span class="lineCov">       1039 :   double q0q2 = q0*q2;</span>
+<span class="lineNum">     203 </span><span class="lineCov">       1039 :   double q0q3 = q0*q3;</span>
+<span class="lineNum">     204 </span><span class="lineCov">       1039 :   double q1q2 = q1*q2;</span>
+<span class="lineNum">     205 </span><span class="lineCov">       1039 :   double q1q3 = q1*q3;</span>
+<span class="lineNum">     206 </span><span class="lineCov">       1039 :   double q2q3 = q2*q3;</span>
+<span class="lineNum">     207 </span>            :   
+<span class="lineNum">     208 </span><span class="lineCov">       1039 :   mT(1,1) = q0q0 + q1q1 - q2q2 - q3q3; // This is found from Eqn. 1.3-32 in</span>
+<span class="lineNum">     209 </span><span class="lineCov">       1039 :   mT(1,2) = 2.0*(q1q2 + q0q3);         // Stevens and Lewis</span>
+<span class="lineNum">     210 </span><span class="lineCov">       1039 :   mT(1,3) = 2.0*(q1q3 - q0q2);</span>
+<span class="lineNum">     211 </span><span class="lineCov">       1039 :   mT(2,1) = 2.0*(q1q2 - q0q3);</span>
+<span class="lineNum">     212 </span><span class="lineCov">       1039 :   mT(2,2) = q0q0 - q1q1 + q2q2 - q3q3;</span>
+<span class="lineNum">     213 </span><span class="lineCov">       1039 :   mT(2,3) = 2.0*(q2q3 + q0q1);</span>
+<span class="lineNum">     214 </span><span class="lineCov">       1039 :   mT(3,1) = 2.0*(q1q3 + q0q2);</span>
+<span class="lineNum">     215 </span><span class="lineCov">       1039 :   mT(3,2) = 2.0*(q2q3 - q0q1);</span>
+<span class="lineNum">     216 </span><span class="lineCov">       1039 :   mT(3,3) = q0q0 - q1q1 - q2q2 + q3q3;</span>
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :   // Since this is an orthogonal matrix, the inverse is simply the transpose.
+<span class="lineNum">     219 </span>            : 
+<span class="lineNum">     220 </span><span class="lineCov">       1039 :   mTInv = mT;</span>
+<span class="lineNum">     221 </span><span class="lineCov">       1039 :   mTInv.T();</span>
+<span class="lineNum">     222 </span>            :   
+<span class="lineNum">     223 </span>            :   // Compute the Euler-angles
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span><span class="lineCov">       1039 :   mEulerAngles = mT.GetEuler();</span>
+<span class="lineNum">     226 </span>            :   
+<span class="lineNum">     227 </span>            :   // FIXME: may be one can compute those values easier ???
+<span class="lineNum">     228 </span><span class="lineCov">       1039 :   mEulerSines(ePhi) = sin(mEulerAngles(ePhi));</span>
+<span class="lineNum">     229 </span>            :   // mEulerSines(eTht) = sin(mEulerAngles(eTht));
+<span class="lineNum">     230 </span><span class="lineCov">       1039 :   mEulerSines(eTht) = -mT(1,3);</span>
+<span class="lineNum">     231 </span><span class="lineCov">       1039 :   mEulerSines(ePsi) = sin(mEulerAngles(ePsi));</span>
+<span class="lineNum">     232 </span><span class="lineCov">       1039 :   mEulerCosines(ePhi) = cos(mEulerAngles(ePhi));</span>
+<span class="lineNum">     233 </span><span class="lineCov">       1039 :   mEulerCosines(eTht) = cos(mEulerAngles(eTht));</span>
+<span class="lineNum">     234 </span><span class="lineCov">       1039 :   mEulerCosines(ePsi) = cos(mEulerAngles(ePsi));</span>
+<span class="lineNum">     235 </span><span class="lineCov">       1039 : }</span>
+<span class="lineNum">     236 </span>            : 
+<a name="237"><span class="lineNum">     237 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span><span class="lineCov">          1 : std::string FGQuaternion::Dump(const std::string&amp; delimiter) const</span>
+<span class="lineNum">     240 </span>            : {
+<span class="lineNum">     241 </span><span class="lineCov">          2 :   std::ostringstream buffer;</span>
+<span class="lineNum">     242 </span><span class="lineCov">          1 :   buffer &lt;&lt; std::setprecision(16) &lt;&lt; data[0] &lt;&lt; delimiter;</span>
+<span class="lineNum">     243 </span><span class="lineCov">          1 :   buffer &lt;&lt; std::setprecision(16) &lt;&lt; data[1] &lt;&lt; delimiter;</span>
+<span class="lineNum">     244 </span><span class="lineCov">          1 :   buffer &lt;&lt; std::setprecision(16) &lt;&lt; data[2] &lt;&lt; delimiter;</span>
+<span class="lineNum">     245 </span><span class="lineCov">          1 :   buffer &lt;&lt; std::setprecision(16) &lt;&lt; data[3];</span>
+<span class="lineNum">     246 </span><span class="lineCov">          2 :   return buffer.str();</span>
+<span class="lineNum">     247 </span>            : }
+<span class="lineNum">     248 </span>            : 
+<a name="249"><span class="lineNum">     249 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     250 </span>            : 
+<span class="lineNum">     251 </span><span class="lineCov">          1 : std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const FGQuaternion&amp; q)</span>
+<span class="lineNum">     252 </span>            : {
+<span class="lineNum">     253 </span><span class="lineCov">          1 :   os &lt;&lt; q(1) &lt;&lt; &quot; , &quot; &lt;&lt; q(2) &lt;&lt; &quot; , &quot; &lt;&lt; q(3) &lt;&lt; &quot; , &quot; &lt;&lt; q(4);</span>
+<span class="lineNum">     254 </span><span class="lineCov">          1 :   return os;</span>
+<a name="255"><span class="lineNum">     255 </span>            : }</a>
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span><span class="lineCov">         21 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

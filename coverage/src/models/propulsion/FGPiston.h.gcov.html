@@ -1,0 +1,474 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/propulsion/FGPiston.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/propulsion</a> - FGPiston.h<span style="font-size: 80%;"> (source / <a href="FGPiston.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGPiston.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 09/12/2000
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2000  Jon S. Berndt (jon@jsbsim.org) --------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      11 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      12 </span>            :  version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      20 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      21 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      24 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 09/12/2000  JSB  Created
+<span class="lineNum">      29 </span>            : 10/01/2001  DPM  Modified to use equations from Dave Luff's piston model.
+<span class="lineNum">      30 </span>            : 11/01/2008  RKJ  Modified piston engine model for more general use.
+<span class="lineNum">      31 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      32 </span>            : SENTRY
+<span class="lineNum">      33 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : #ifndef FGPISTON_H
+<span class="lineNum">      36 </span>            : #define FGPISTON_H
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      39 </span>            : INCLUDES
+<span class="lineNum">      40 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : #include &quot;FGEngine.h&quot;
+<span class="lineNum">      43 </span>            : #include &quot;math/FGTable.h&quot;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      46 </span>            : DEFINITIONS
+<span class="lineNum">      47 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : #define FG_MAX_BOOST_SPEEDS 3
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      52 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      53 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : namespace JSBSim {
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      58 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      59 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : /** Models a Supercharged Piston engine. Based on Dave Luff's model.
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : &lt;h3&gt;Configuration File Format:&lt;/h3&gt;
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            : @code
+<span class="lineNum">      66 </span>            : &lt;piston_engine name=&quot;{string}&quot;&gt;
+<span class="lineNum">      67 </span>            :   &lt;minmp unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/minmp&gt;
+<span class="lineNum">      68 </span>            :   &lt;maxmp unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/maxmp&gt;
+<span class="lineNum">      69 </span>            :   &lt;idlerpm&gt; {number} &lt;/idlerpm&gt;
+<span class="lineNum">      70 </span>            :   &lt;maxrpm&gt; {number} &lt;/maxrpm&gt;
+<span class="lineNum">      71 </span>            :   &lt;maxhp unit=&quot;{HP | WATTS}&quot;&gt; {number} &lt;/maxhp&gt;
+<span class="lineNum">      72 </span>            :   &lt;displacement unit=&quot;{IN3 | LTR | CC}&quot;&gt; {number} &lt;/displacement&gt;
+<span class="lineNum">      73 </span>            :   &lt;cycles&gt; {number} &lt;/cycles&gt;
+<span class="lineNum">      74 </span>            :   &lt;bore unit=&quot;{IN | M}&quot;&gt; {number} &lt;/bore&gt;
+<span class="lineNum">      75 </span>            :   &lt;stroke unit=&quot;{IN | M}&quot;&gt; {number} &lt;/stroke&gt;
+<span class="lineNum">      76 </span>            :   &lt;cylinders&gt; {number} &lt;/cylinders&gt;
+<span class="lineNum">      77 </span>            :   &lt;compression-ratio&gt; {number} &lt;/compression-ratio&gt;
+<span class="lineNum">      78 </span>            :   &lt;sparkfaildrop&gt; {number} &lt;/sparkfaildrop&gt;
+<span class="lineNum">      79 </span>            :   &lt;static-friction unit=&quot;{HP | WATTS}&quot;&gt; {number} &lt;/static-friction&gt;
+<span class="lineNum">      80 </span>            :   &lt;air-intake-impedance-factor&gt; {number} &lt;/air-intake-impedance-factor&gt;
+<span class="lineNum">      81 </span>            :   &lt;ram-air-factor&gt; {number} &lt;/ram-air-factor&gt;
+<span class="lineNum">      82 </span>            :   &lt;cooling-factor&gt; {number} &lt;/cooling-factor&gt;
+<span class="lineNum">      83 </span>            :   &lt;man-press-lag&gt; {number} &lt;/man-press-lag&gt;
+<span class="lineNum">      84 </span>            :   &lt;starter-torque&gt; {number} &lt;/starter-torque&gt; 
+<span class="lineNum">      85 </span>            :   &lt;starter-rpm&gt; {number} &lt;/starter-rpm&gt; 
+<span class="lineNum">      86 </span>            :   &lt;cylinder-head-mass unit=&quot;{KG | LBS}&quot;&gt; {number} &lt;/cylinder-head-mass&gt;
+<span class="lineNum">      87 </span>            :   &lt;bsfc unit=&quot;{LBS/HP*HR | &quot;KG/KW*HR&quot;}&quot;&gt; {number} &lt;/bsfc&gt;
+<span class="lineNum">      88 </span>            :   &lt;volumetric-efficiency&gt; {number} &lt;/volumetric-efficiency&gt;
+<span class="lineNum">      89 </span>            :   &lt;dynamic-fmep unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/dynamic-fmep&gt;
+<span class="lineNum">      90 </span>            :   &lt;static-fmep unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/static-fmep&gt;
+<span class="lineNum">      91 </span>            :   &lt;numboostspeeds&gt; {number} &lt;/numboostspeeds&gt;
+<span class="lineNum">      92 </span>            :   &lt;boostoverride&gt; {0 | 1} &lt;/boostoverride&gt;
+<span class="lineNum">      93 </span>            :   &lt;boostmanual&gt; {0 | 1} &lt;/boostmanual&gt;
+<span class="lineNum">      94 </span>            :   &lt;boost-loss-factor&gt; {number} &lt;/boost-loss-factor&gt;
+<span class="lineNum">      95 </span>            :   &lt;ratedboost1 unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/ratedboost1&gt;
+<span class="lineNum">      96 </span>            :   &lt;ratedpower1 unit=&quot;{HP | WATTS}&quot;&gt; {number} &lt;/ratedpower1&gt;
+<span class="lineNum">      97 </span>            :   &lt;ratedrpm1&gt; {number} &lt;/ratedrpm1&gt;
+<span class="lineNum">      98 </span>            :   &lt;ratedaltitude1 unit=&quot;{FT | M}&quot;&gt; {number} &lt;/ratedaltitude1&gt;
+<span class="lineNum">      99 </span>            :   &lt;ratedboost2 unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/ratedboost2&gt;
+<span class="lineNum">     100 </span>            :   &lt;ratedpower2 unit=&quot;{HP | WATTS}&quot;&gt; {number} &lt;/ratedpower2&gt;
+<span class="lineNum">     101 </span>            :   &lt;ratedrpm2&gt; {number} &lt;/ratedrpm2&gt;
+<span class="lineNum">     102 </span>            :   &lt;ratedaltitude2 unit=&quot;{FT | M}&quot;&gt; {number} &lt;/ratedaltitude2&gt;
+<span class="lineNum">     103 </span>            :   &lt;ratedboost3 unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/ratedboost3&gt;
+<span class="lineNum">     104 </span>            :   &lt;ratedpower3 unit=&quot;{HP | WATTS}&quot;&gt; {number} &lt;/ratedpower3&gt;
+<span class="lineNum">     105 </span>            :   &lt;ratedrpm3&gt; {number} &lt;/ratedrpm3&gt;
+<span class="lineNum">     106 </span>            :   &lt;ratedaltitude3 unit=&quot;{FT | M}&quot;&gt; {number} &lt;/ratedaltitude3&gt;
+<span class="lineNum">     107 </span>            :   &lt;takeoffboost unit=&quot;{INHG | PA | ATM}&quot;&gt; {number} &lt;/takeoffboost&gt;
+<span class="lineNum">     108 </span>            :   &lt;oil-pressure-relief-valve-psi&gt; {number} &lt;/oil-pressure-relief-valve=psi&gt;
+<span class="lineNum">     109 </span>            :   &lt;design-oil-temp-degK&gt;  {number} &lt;/design-oil-temp-degK&gt;
+<span class="lineNum">     110 </span>            :   &lt;oil-pressure-rpm-max&gt; {number} &lt;/oil-pressure-rpm-max&gt;
+<span class="lineNum">     111 </span>            :   &lt;oil-viscosity-index&gt; {number} &lt;/oil-viscosity-index&gt;
+<span class="lineNum">     112 </span>            : &lt;/piston_engine&gt;
+<span class="lineNum">     113 </span>            : @endcode
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span>            : &lt;h3&gt;Definition of the piston engine configuration file parameters:&lt;/h3&gt;
+<span class="lineNum">     116 </span>            : Basic parameters:
+<span class="lineNum">     117 </span>            : - \b minmp - this value is the nominal idle manifold pressure at sea-level
+<span class="lineNum">     118 </span>            :       without boost. Along with idlerpm, it determines throttle response slope.
+<span class="lineNum">     119 </span>            : - \b maxmp - this value is the nominal maximum manifold pressure at sea-level
+<span class="lineNum">     120 </span>            :       without boost. Along with maxrpm it determines the resistance of the
+<span class="lineNum">     121 </span>            :       aircraft intake system. Overridden by air-intake-impedance-factor
+<span class="lineNum">     122 </span>            : - \b man-press-lag - Delay in seconds for manifold pressure changes to take effect
+<span class="lineNum">     123 </span>            : - \b starter-torque - A value specifing the zero RPM torque in lb*ft the starter motor
+<span class="lineNum">     124 </span>            :       provides. Current default value is 40% of the horse power value.
+<span class="lineNum">     125 </span>            : - \b starter-rpm - A value specifing the maximum RPM the unloaded starter motor
+<span class="lineNum">     126 </span>            :       can achieve. Loads placed on the engine by the propeller and throttle will
+<span class="lineNum">     127 </span>            :       further limit RPM achieved in practice.
+<span class="lineNum">     128 </span>            : - \b idlerpm - this value affects the throttle fall off and the engine stops
+<span class="lineNum">     129 </span>            :       running if it is slowed below 80% of this value. The engine starts
+<span class="lineNum">     130 </span>            :       running when it reaches 80% of this value.
+<span class="lineNum">     131 </span>            : - \b maxrpm - this value is used to calculate air-box resistance and BSFC. It 
+<span class="lineNum">     132 </span>            :       also affects oil pressure among other things.
+<span class="lineNum">     133 </span>            : - \b maxhp - this value is the nominal power the engine creates at maxrpm. It
+<span class="lineNum">     134 </span>            :       will determine bsfc if that tag is not input. It also determines the
+<span class="lineNum">     135 </span>            :       starter motor power.
+<span class="lineNum">     136 </span>            : - \b displacement - this value is used to determine mass air and fuel flow
+<span class="lineNum">     137 </span>            :       which impacts engine power and cooling.
+<span class="lineNum">     138 </span>            : - \b cycles - Designate a 2 or 4 stroke engine. Currently only the 4 stroke
+<span class="lineNum">     139 </span>            :       engine is supported.
+<span class="lineNum">     140 </span>            : - \b bore - cylinder bore is currently unused.
+<span class="lineNum">     141 </span>            : - \b stroke - piston stroke is used to determine the mean piston speed. Longer
+<span class="lineNum">     142 </span>            :       strokes result in an engine that does not work as well at higher RPMs.
+<span class="lineNum">     143 </span>            : - \b compression-ratio - the compression ratio affects the change in volumetric
+<span class="lineNum">     144 </span>            :       efficiency with altitude.
+<span class="lineNum">     145 </span>            : - \b sparkfaildrop - this is the percentage drop in horsepower for single
+<span class="lineNum">     146 </span>            :       magneto operation.
+<span class="lineNum">     147 </span>            : - \b static-friction - this value is the power required to turn an engine that 
+<span class="lineNum">     148 </span>            :       is not running. Used to control and slow a windmilling propeller. Choose
+<span class="lineNum">     149 </span>            :       a small percentage of maxhp.
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            : Advanced parameters
+<span class="lineNum">     152 </span>            : - \b bsfc - Indicated Specific Fuel Consumption. The power produced per unit of
+<span class="lineNum">     153 </span>            :       fuel. Higher numbers give worse fuel economy. This number may need to be
+<span class="lineNum">     154 </span>            :       lowered slightly from actual BSFC numbers because some internal engine 
+<span class="lineNum">     155 </span>            :       losses are modeled separately. Typically between 0.3 and 0.5
+<span class="lineNum">     156 </span>            : - \b volumetric-efficiency - the nominal volumetric efficiency of the engine.
+<span class="lineNum">     157 </span>            :       This is the primary way to control fuel flow  Boosted engines may require
+<span class="lineNum">     158 </span>            :       values above 1. Typical engines are 0.80 to 0.82
+<span class="lineNum">     159 </span>            : - \b air-intake-impedance-factor - this number is the pressure drop across the
+<span class="lineNum">     160 </span>            :       intake system. Increasing it reduces available manifold pressure. Also a 
+<span class="lineNum">     161 </span>            :       property for run-time adjustment.
+<span class="lineNum">     162 </span>            : - \b ram-air-factor - this number creates increases manifold pressure with an
+<span class="lineNum">     163 </span>            :       increase in dynamic pressure (aircraft speed).
+<span class="lineNum">     164 </span>            :       Also a property for run-time adjustment.
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            : Cooling control:
+<span class="lineNum">     167 </span>            : - \b cylinders  - number of cylinders scales the cylinder head mass.
+<span class="lineNum">     168 </span>            : - \b cylinder-head-mass - the nominal mass of a cylinder head. A larger value
+<span class="lineNum">     169 </span>            :       slows changes in engine temperature
+<span class="lineNum">     170 </span>            : - \b cooling-factor - this number models the efficiency of the aircraft cooling
+<span class="lineNum">     171 </span>            :       system. Also a property for run-time adjustment.
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            : Supercharge parameters:
+<span class="lineNum">     174 </span>            : - \b numboostspeed -  zero (or not present) for a naturally-aspirated engine,
+<span class="lineNum">     175 </span>            :       either 1, 2 or 3 for a boosted engine.  This corresponds to the number of
+<span class="lineNum">     176 </span>            :       supercharger speeds.  Merlin XII had 1 speed, Merlin 61 had 2, a late
+<span class="lineNum">     177 </span>            :       Griffon engine apparently had 3.  No known engine more than 3, although
+<span class="lineNum">     178 </span>            :       some German engines had continuously variable-speed superchargers.
+<span class="lineNum">     179 </span>            : - \b boostoverride - whether or not to clip output to the wastegate value
+<span class="lineNum">     180 </span>            : - \b boost-loss-factor - zero (or not present) for 'free' supercharging. A value entered
+<span class="lineNum">     181 </span>            :       will be used as a multiplier to the power required to compress the input air. Typical 
+<span class="lineNum">     182 </span>            :       value should be 1.15 to 1.20.
+<span class="lineNum">     183 </span>            : - \b boostmanual - whether a multispeed supercharger will manually or
+<span class="lineNum">     184 </span>            :       automatically shift boost speeds. On manual shifting the boost speeds is
+<span class="lineNum">     185 </span>            :       accomplished by controlling the property propulsion/engine/boostspeed.
+<span class="lineNum">     186 </span>            : - \b takeoffboost - boost in psi above sea level ambient. Typically used for
+<span class="lineNum">     187 </span>            :       takeoff, and emergency situations, generally for not more than five
+<span class="lineNum">     188 </span>            :       minutes.  This is a change in the boost control setting, not the actual
+<span class="lineNum">     189 </span>            :       supercharger speed, and so would only give extra power below the rated altitude.
+<span class="lineNum">     190 </span>            :       A typical takeoff boost for an early Merlin was about 12psi, compared
+<span class="lineNum">     191 </span>            :       with a rated boost of 9psi.
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span>            :       When TAKEOFFBOOST is specified in the config file (and is above RATEDBOOST1), 
+<span class="lineNum">     194 </span>            :       the throttle position is interpreted as:
+<span class="lineNum">     195 </span>            :      - 0 to 0.98 : idle manifold pressure to rated boost (where attainable)
+<span class="lineNum">     196 </span>            :      - 0.99, 1.0 : takeoff boost (where attainable).
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            : The next items are all appended with either 1, 2 or 3 depending on which
+<span class="lineNum">     199 </span>            : boostspeed they refer to:
+<span class="lineNum">     200 </span>            : - \b ratedboost[123] - the absolute rated boost above sea level ambient
+<span class="lineNum">     201 </span>            :       (14.7 PSI, 29.92 inHg) for a given boost speed.
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            : - \b ratedpower[123] - unused
+<span class="lineNum">     204 </span>            : - \b ratedrpm[123] - The rpm at which rated boost is developed
+<span class="lineNum">     205 </span>            : - \b ratedaltitude[123] - The altitude up to which the rated boost can be
+<span class="lineNum">     206 </span>            :       maintained. Up to this altitude the boost is clipped to rated boost or
+<span class="lineNum">     207 </span>            :       takeoffboost. Beyond this altitude the manifold pressure must drop,
+<span class="lineNum">     208 </span>            :       since the supercharger is now at maximum unregulated output. The actual
+<span class="lineNum">     209 </span>            :       pressure multiplier of the supercharger system is calculated at
+<span class="lineNum">     210 </span>            :       initialization from this value.
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            :     @author Jon S. Berndt (Engine framework code and framework-related mods)
+<span class="lineNum">     213 </span>            :     @author Dave Luff (engine operational code)
+<span class="lineNum">     214 </span>            :     @author David Megginson (initial porting and additional code)
+<span class="lineNum">     215 </span>            :     @author Ron Jensen (additional engine code)
+<span class="lineNum">     216 </span>            :     @see Taylor, Charles Fayette, &quot;The Internal Combustion Engine in Theory and Practice&quot;
+<span class="lineNum">     217 </span>            :   */
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     220 </span>            : CLASS DECLARATION
+<span class="lineNum">     221 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            : class FGPiston : public FGEngine
+<span class="lineNum">     224 </span>            : {
+<span class="lineNum">     225 </span>            : public:
+<span class="lineNum">     226 </span>            :   /// Constructor
+<span class="lineNum">     227 </span>            :   FGPiston(FGFDMExec* exec, Element* el, int engine_number, struct Inputs&amp; input);
+<span class="lineNum">     228 </span>            :   /// Destructor
+<span class="lineNum">     229 </span>            :   ~FGPiston();
+<span class="lineNum">     230 </span>            : 
+<span class="lineNum">     231 </span>            :   std::string GetEngineLabels(const std::string&amp; delimiter);
+<span class="lineNum">     232 </span>            :   std::string GetEngineValues(const std::string&amp; delimiter);
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            :   void Calculate(void);
+<span class="lineNum">     235 </span>            :   double GetPowerAvailable(void) const {return (HP * hptoftlbssec);}
+<span class="lineNum">     236 </span>            :   double CalcFuelNeed(void);
+<a name="237"><span class="lineNum">     237 </span>            : </a>
+<span class="lineNum">     238 </span>            :   void ResetToIC(void);
+<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :   void SetMagnetos(int magnetos) {Magnetos = magnetos;}</span></a>
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :   double  GetEGT(void) const { return EGT_degC; }</span>
+<a name="242"><span class="lineNum">     242 </span>            :   int     GetMagnetos(void) const {return Magnetos;}</a>
+<a name="243"><span class="lineNum">     243 </span>            : </a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :   double getExhaustGasTemp_degF(void) const {return KelvinToFahrenheit(ExhaustGasTemp_degK);}</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :   double getManifoldPressure_inHg(void) const {return ManifoldPressure_inHg;}</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :   double getCylinderHeadTemp_degF(void) const {return KelvinToFahrenheit(CylinderHeadTemp_degK);}</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :   double getOilPressure_psi(void) const {return OilPressure_psi;}</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 :   double getOilTemp_degF (void) const {return KelvinToFahrenheit(OilTemp_degK);}</span></a>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :   double getRPM(void) const {return RPM;}</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :   double getAFR(void) const {return m_dot_fuel &gt; 0.0 ? m_dot_air / m_dot_fuel : INFINITY;}</span>
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            : protected:
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span>            : private:
+<span class="lineNum">     255 </span>            :   int crank_counter = 0;
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span>            :   double IndicatedHorsePower = 0.0;
+<span class="lineNum">     258 </span>            :   //double IndicatedPower;
+<span class="lineNum">     259 </span>            :   double PMEP = 0.0;
+<span class="lineNum">     260 </span>            :   double FMEP = 0.0;
+<span class="lineNum">     261 </span>            :   double FMEPDynamic = 0.0;
+<span class="lineNum">     262 </span>            :   double FMEPStatic = 0.0;
+<span class="lineNum">     263 </span>            :   //double T_Intake;
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            :   void doEngineStartup(void);
+<span class="lineNum">     266 </span>            :   void doBoostControl(void);
+<span class="lineNum">     267 </span>            :   void doMAP(void);
+<span class="lineNum">     268 </span>            :   void doAirFlow(void);
+<span class="lineNum">     269 </span>            :   void doFuelFlow(void);
+<span class="lineNum">     270 </span>            :   void doEnginePower(void);
+<span class="lineNum">     271 </span>            :   void doEGT(void);
+<span class="lineNum">     272 </span>            :   void doCHT(void);
+<span class="lineNum">     273 </span>            :   void doOilPressure(void);
+<span class="lineNum">     274 </span>            :   void doOilTemperature(void);
+<span class="lineNum">     275 </span>            :   double GetStdPressure100K(double altitude) const;
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span>            :   int InitRunning(void);
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            :   //
+<span class="lineNum">     280 </span>            :   // constants
+<span class="lineNum">     281 </span>            :   //
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span>            :   const double R_air;
+<span class="lineNum">     284 </span>            :   //const double rho_fuel;    // kg/m^3
+<span class="lineNum">     285 </span>            :   const double calorific_value_fuel;  // J/Kg (approximate)
+<span class="lineNum">     286 </span>            :   const double Cp_air;      // J/KgK
+<span class="lineNum">     287 </span>            :   const double Cp_fuel;     // J/KgK
+<span class="lineNum">     288 </span>            :   const double standard_pressure; //Pa
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            :   FGTable *Lookup_Combustion_Efficiency;
+<span class="lineNum">     292 </span>            :   FGTable *Mixture_Efficiency_Correlation;
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span>            :   //
+<span class="lineNum">     295 </span>            :   // Configuration
+<span class="lineNum">     296 </span>            :   //
+<span class="lineNum">     297 </span>            :   double MinManifoldPressure_inHg = 0.0; // Inches Hg
+<span class="lineNum">     298 </span>            :   double MaxManifoldPressure_inHg = 0.0; // Inches Hg
+<span class="lineNum">     299 </span>            :   //double MaxManifoldPressure_Percent; // MaxManifoldPressure / 29.92
+<span class="lineNum">     300 </span>            :   double ManifoldPressureLag = 0.0;      // Manifold Pressure delay in seconds.
+<span class="lineNum">     301 </span>            :   double Displacement = 0.0;             // cubic inches
+<span class="lineNum">     302 </span>            :   double displacement_SI = 0.0;          // cubic meters
+<span class="lineNum">     303 </span>            :   double MaxHP = 0.0;                    // horsepower
+<span class="lineNum">     304 </span>            :   double StaticFriction_HP = 0.0;        // horsepower: amount subtracted from final engine power
+<span class="lineNum">     305 </span>            :   double SparkFailDrop = 0.0;            // drop of power due to spark failure
+<span class="lineNum">     306 </span>            :   double Cycles = 0.0;                   // cycles/power stroke
+<span class="lineNum">     307 </span>            :   double IdleRPM = 0.0;                  // revolutions per minute
+<span class="lineNum">     308 </span>            :   double MaxRPM = 0.0;                   // revolutions per minute
+<span class="lineNum">     309 </span>            :   double Bore = 0.0;                     // inches
+<span class="lineNum">     310 </span>            :   double Stroke = 0.0;                   // inches
+<span class="lineNum">     311 </span>            :   double Cylinders = 0.0;                // number
+<span class="lineNum">     312 </span>            :   double CylinderHeadMass = 0.0;         // kilograms
+<span class="lineNum">     313 </span>            :   double CompressionRatio = 0.0;         // number
+<span class="lineNum">     314 </span>            :   double Z_airbox = 0.0; // number representing intake impediance before the throttle
+<span class="lineNum">     315 </span>            :   double Z_throttle = 0.0; // number representing slope of throttle impediance
+<span class="lineNum">     316 </span>            :   double PeakMeanPistonSpeed_fps = 0.0; // ft/sec speed where intake valves begin to choke. Typically 33-50 fps
+<span class="lineNum">     317 </span>            :   double RatedMeanPistonSpeed_fps = 0.0; // ft/sec derived from MaxRPM and stroke.
+<span class="lineNum">     318 </span>            :   double Ram_Air_Factor = 0.0;           // number
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            :   double StarterTorque = 0.0;// Peak Torque of the starter motor
+<span class="lineNum">     321 </span>            :   double StarterRPM = 0.0;   // Peak RPM of the starter motor
+<span class="lineNum">     322 </span>            :   double StarterGain = 0.0;  // control the torque of the starter motor.
+<span class="lineNum">     323 </span>            :   int BoostSpeeds = 0;  // Number of super/turbocharger boost speeds - zero implies no turbo/supercharging.
+<span class="lineNum">     324 </span>            :   int BoostSpeed = 0;   // The current boost-speed (zero-based).
+<span class="lineNum">     325 </span>            :   bool Boosted = false;     // Set true for boosted engine.
+<span class="lineNum">     326 </span>            :   int BoostManual = 0;  // The raw value read in from the config file - should be 1 or 0 - see description below.
+<span class="lineNum">     327 </span>            :   bool bBoostManual = false;    // Set true if pilot must manually control the boost speed.
+<span class="lineNum">     328 </span>            :   int BoostOverride = 0;    // The raw value read in from the config file - should be 1 or 0 - see description below.
+<span class="lineNum">     329 </span>            :   bool bBoostOverride = false;  // Set true if pilot override of the boost regulator was fitted.
+<span class="lineNum">     330 </span>            :               // (Typically called 'war emergency power').
+<span class="lineNum">     331 </span>            :   bool bTakeoffBoost = false;   // Set true if extra takeoff / emergency boost above rated boost could be attained.
+<span class="lineNum">     332 </span>            :               // (Typically by extra throttle movement past a mechanical 'gate').
+<span class="lineNum">     333 </span>            :   double TakeoffBoost = 0.0;  // Sea-level takeoff boost in psi. (if fitted).
+<span class="lineNum">     334 </span>            :   double RatedBoost[FG_MAX_BOOST_SPEEDS] = {0.0, 0.0, 0.0};   // Sea-level rated boost in psi.
+<span class="lineNum">     335 </span>            :   double RatedAltitude[FG_MAX_BOOST_SPEEDS] = {0.0, 0.0, 0.0};    // Altitude at which full boost is reached (boost regulation ends)
+<span class="lineNum">     336 </span>            :                           // and at which power starts to fall with altitude [ft].
+<span class="lineNum">     337 </span>            :   double RatedRPM[FG_MAX_BOOST_SPEEDS] = {0.0, 0.0, 0.0}; // Engine speed at which the rated power for each boost speed is delivered [rpm].
+<span class="lineNum">     338 </span>            :   double RatedPower[FG_MAX_BOOST_SPEEDS] = {0.0, 0.0, 0.0};   // Power at rated throttle position at rated altitude [HP].
+<span class="lineNum">     339 </span>            :   double BoostSwitchAltitude[FG_MAX_BOOST_SPEEDS - 1] = {0.0, 0.0};  // Altitude at which switchover (currently assumed automatic)
+<span class="lineNum">     340 </span>            :                               // from one boost speed to next occurs [ft].
+<span class="lineNum">     341 </span>            :   double BoostSwitchPressure[FG_MAX_BOOST_SPEEDS - 1] = {0.0, 0.0};  // Pressure at which boost speed switchover occurs [Pa]
+<span class="lineNum">     342 </span>            :   double BoostMul[FG_MAX_BOOST_SPEEDS] = {0.0, 0.0, 0.0}; // Pressure multiplier of unregulated supercharger
+<span class="lineNum">     343 </span>            :   double RatedMAP[FG_MAX_BOOST_SPEEDS] = {0.0, 0.0, 0.0}; // Rated manifold absolute pressure [Pa] (BCV clamp)
+<span class="lineNum">     344 </span>            :   double TakeoffMAP[FG_MAX_BOOST_SPEEDS] = {0.0, 0.0, 0.0};   // Takeoff setting manifold absolute pressure [Pa] (BCV clamp)
+<span class="lineNum">     345 </span>            :   double BoostSwitchHysteresis = 0.0; // Pa.
+<span class="lineNum">     346 </span>            :   double BoostLossFactor = 0.0; // multiplier for HP consumed by the supercharger
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span>            :   double minMAP = 0.0;  // Pa
+<span class="lineNum">     349 </span>            :   double maxMAP = 0.0;  // Pa
+<span class="lineNum">     350 </span>            :   double MAP = 0.0;     // Pa
+<span class="lineNum">     351 </span>            :   double TMAP = 0.0;    // Pa - throttle manifold pressure e.g. before the supercharger boost
+<span class="lineNum">     352 </span>            :   double ISFC = 0.0;    // Indicated specific fuel consumption [lbs/horsepower*hour
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span>            :   //
+<span class="lineNum">     355 </span>            :   // Inputs (in addition to those in FGEngine).
+<span class="lineNum">     356 </span>            :   //
+<span class="lineNum">     357 </span>            :   double p_amb = 0.0;              // Pascals
+<span class="lineNum">     358 </span>            :   double p_ram = 0.0;              // Pascals
+<span class="lineNum">     359 </span>            :   double T_amb = 0.0;              // degrees Kelvin
+<span class="lineNum">     360 </span>            :   double RPM = 0.0;                // revolutions per minute
+<span class="lineNum">     361 </span>            :   double IAS = 0.0;                // knots
+<span class="lineNum">     362 </span>            :   double Cooling_Factor = 0.0;     // normal
+<span class="lineNum">     363 </span>            :   bool Magneto_Left = false;
+<span class="lineNum">     364 </span>            :   bool Magneto_Right = false;
+<span class="lineNum">     365 </span>            :   int Magnetos = 0;
+<span class="lineNum">     366 </span>            : 
+<span class="lineNum">     367 </span>            :   double Oil_Press_Relief_Valve = 0.0;
+<span class="lineNum">     368 </span>            :   double Oil_Press_RPM_Max = 0.0;
+<span class="lineNum">     369 </span>            :   double Design_Oil_Temp = 0.0;         // degK
+<span class="lineNum">     370 </span>            :   double Oil_Viscosity_Index = 0.0;
+<span class="lineNum">     371 </span>            : 
+<span class="lineNum">     372 </span>            :   //
+<span class="lineNum">     373 </span>            :   // Outputs (in addition to those in FGEngine).
+<span class="lineNum">     374 </span>            :   //
+<span class="lineNum">     375 </span>            :   double rho_air = 0.0;
+<span class="lineNum">     376 </span>            :   double volumetric_efficiency = 0.0;
+<span class="lineNum">     377 </span>            :   double volumetric_efficiency_reduced = 0.0;
+<span class="lineNum">     378 </span>            :   //double map_coefficient;
+<span class="lineNum">     379 </span>            :   double m_dot_air = 0.0;
+<span class="lineNum">     380 </span>            :   double v_dot_air = 0.0;
+<span class="lineNum">     381 </span>            :   double equivalence_ratio = 0.0;
+<span class="lineNum">     382 </span>            :   double m_dot_fuel = 0.0;
+<span class="lineNum">     383 </span>            :   double HP = 0.0;
+<span class="lineNum">     384 </span>            :   double BoostLossHP = 0.0;
+<span class="lineNum">     385 </span>            :   double combustion_efficiency = 0.0;
+<span class="lineNum">     386 </span>            :   double ExhaustGasTemp_degK = 0.0;
+<span class="lineNum">     387 </span>            :   double EGT_degC = 0.0;
+<span class="lineNum">     388 </span>            :   double ManifoldPressure_inHg = 0.0;
+<span class="lineNum">     389 </span>            :   double CylinderHeadTemp_degK = 0.0;
+<span class="lineNum">     390 </span>            :   double OilPressure_psi = 0.0;
+<span class="lineNum">     391 </span>            :   double OilTemp_degK = 0.0;
+<span class="lineNum">     392 </span>            :   double MeanPistonSpeed_fps = 0.0;
+<span class="lineNum">     393 </span>            : 
+<span class="lineNum">     394 </span>            :   void Debug(int from);
+<span class="lineNum">     395 </span>            : };
+<span class="lineNum">     396 </span>            : }
+<span class="lineNum">     397 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     398 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

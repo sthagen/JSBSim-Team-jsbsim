@@ -1,0 +1,9 @@
+<map id="GetQuaternionECEF" name="GetQuaternionECEF">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropagate.html#ae7bc2590ddc9fba3244495b8967fb30c" title="Sets the property forces/hold&#45;down. " alt="" coords="196,177,299,203"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGQuaternion.html#a826e9ee7aaf8e2b88cfb96f6d00fedce" title="Quaternion derivative for given angular rates. " alt="" coords="347,5,505,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGQuaternion.html#a231f7602591a267c2669a2af9b9c8749" title="Normalize. " alt="" coords="347,71,505,112"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGLocation.html#a156e4ffdc82b052e0d84548153e4709e" title="Transform matrix from local horizontal to earth centered frame. " alt="" coords="353,136,499,177"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGMatrix33.html#a039718b92a595f3eafaafb2091cfa52a" title="Transposed matrix. " alt="" coords="353,201,499,243"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGQuaternion.html#a4c650fa69b797cb5d122b7b19c70d380" title="Transformation matrix. " alt="" coords="347,267,505,308"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGMatrix33.html#ab34c3b92e11d24a9094bc4aab80577a0" title="Returns the quaternion associated with this direction cosine (rotation) matrix. " alt="" coords="353,332,499,373"/>
+</map>

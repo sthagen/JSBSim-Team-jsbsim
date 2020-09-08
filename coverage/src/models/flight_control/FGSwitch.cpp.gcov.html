@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/flight_control/FGSwitch.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/flight_control</a> - FGSwitch.cpp<span style="font-size: 80%;"> (source / <a href="FGSwitch.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">75</td>
+            <td class="headerCovTableEntryLo">1.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryLo">25.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGSwitch.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 4/2000
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2000 -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : HISTORY
+<span class="lineNum">      30 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      33 </span>            : COMMENTS, REFERENCES,  and NOTES
+<span class="lineNum">      34 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : The switch component is defined as follows (see the API documentation for more
+<span class="lineNum">      37 </span>            : information):
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : @code
+<span class="lineNum">      40 </span>            : &lt;switch name=&quot;switch1&quot;&gt;
+<span class="lineNum">      41 </span>            :   &lt;default value=&quot;{property|value}&quot;/&gt;
+<span class="lineNum">      42 </span>            :   &lt;test logic=&quot;{AND|OR}&quot; value=&quot;{property|value}&quot;&gt;
+<span class="lineNum">      43 </span>            :     {property} {conditional} {property|value}
+<span class="lineNum">      44 </span>            :     &lt;test logic=&quot;{AND|OR}&quot;&gt;
+<span class="lineNum">      45 </span>            :       {property} {conditional} {property|value}
+<span class="lineNum">      46 </span>            :       ...
+<span class="lineNum">      47 </span>            :     &lt;/test&gt;
+<span class="lineNum">      48 </span>            :     ...
+<span class="lineNum">      49 </span>            :   &lt;/test&gt;
+<span class="lineNum">      50 </span>            :   &lt;test logic=&quot;{AND|OR}&quot; value=&quot;{property|value}&quot;&gt;
+<span class="lineNum">      51 </span>            :     {property} {conditional} {property|value}
+<span class="lineNum">      52 </span>            :     ...
+<span class="lineNum">      53 </span>            :   &lt;/test&gt;
+<span class="lineNum">      54 </span>            :   ...
+<span class="lineNum">      55 </span>            : &lt;/switch&gt;
+<span class="lineNum">      56 </span>            : @endcode
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : Also, see the header file (FGSwitch.h) for further details.
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      61 </span>            : INCLUDES
+<span class="lineNum">      62 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            : #include &quot;FGSwitch.h&quot;
+<span class="lineNum">      65 </span>            : #include &quot;math/FGCondition.h&quot;
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            : using namespace std;
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            : namespace JSBSim {
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      72 </span>            : CLASS IMPLEMENTATION
+<a name="73"><span class="lineNum">      73 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 : FGSwitch::FGSwitch(FGFCS* fcs, Element* element) : FGFCSComponent(fcs, element)</span>
+<span class="lineNum">      76 </span>            : {
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   string value;</span>
+<span class="lineNum">      78 </span>            :   Test *current_test;
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :   bind(element); // Bind() this component here in case it is used in its own</span>
+<span class="lineNum">      81 </span>            :                  // definition for a sample-and-hold
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :   Element* test_element = element-&gt;FindElement(&quot;default&quot;);</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   if (test_element) {</span>
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :     current_test = new Test;</span>
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :     value = test_element-&gt;GetAttributeValue(&quot;value&quot;);</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :     current_test-&gt;setTestValue(value, Name, PropertyManager);</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :     current_test-&gt;Default = true;</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :     if (delay &gt; 0 &amp;&amp; is_number(value)) {        // If there is a delay, initialize the</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :       for (unsigned int i=0; i&lt;delay-1; i++) {  // delay buffer to the default value</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         output_array[i] = atof(value.c_str());  // for the switch if that value is a number.</span>
+<span class="lineNum">      91 </span>            :       }
+<span class="lineNum">      92 </span>            :     }
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :     tests.push_back(current_test);</span>
+<span class="lineNum">      94 </span>            :   }
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :   test_element = element-&gt;FindElement(&quot;test&quot;);</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :   while (test_element) {</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :     current_test = new Test;</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :     current_test-&gt;condition = new FGCondition(test_element, PropertyManager);</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :     value = test_element-&gt;GetAttributeValue(&quot;value&quot;);</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :     current_test-&gt;setTestValue(value, Name, PropertyManager);</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :     tests.push_back(current_test);</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :     test_element = element-&gt;FindNextElement(&quot;test&quot;);</span>
+<span class="lineNum">     104 </span>            :   }
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   Debug(0);</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     108 </span>            : 
+<a name="109"><span class="lineNum">     109 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 : FGSwitch::~FGSwitch()</span>
+<span class="lineNum">     112 </span>            : {
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :   for (auto test: tests) {</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :     delete test-&gt;condition;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :     delete test;</span>
+<span class="lineNum">     116 </span>            :   }
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :   Debug(1);</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     120 </span>            : 
+<a name="121"><span class="lineNum">     121 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 : bool FGSwitch::Run(void )</span>
+<span class="lineNum">     124 </span>            : {
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :   bool pass = false;</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :   double default_output=0.0;</span>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            :   // To detect errors early, make sure all conditions and values can be
+<span class="lineNum">     129 </span>            :   // evaluated in the first time step.
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :   if (!initialized) {</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :     initialized = true;</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :     VerifyProperties();</span>
+<span class="lineNum">     133 </span>            :   }
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :   for (auto test: tests) {</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :     if (test-&gt;Default) {</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :       default_output = test-&gt;OutputValue-&gt;GetValue();</span>
+<span class="lineNum">     138 </span>            :     } else {
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :       pass = test-&gt;condition-&gt;Evaluate();</span>
+<span class="lineNum">     140 </span>            :     }
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :     if (pass) {</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :       Output = test-&gt;OutputValue-&gt;GetValue();</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     145 </span>            :     }
+<span class="lineNum">     146 </span>            :   }
+<span class="lineNum">     147 </span>            :   
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :   if (!pass) Output = default_output;</span>
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :   if (delay != 0) Delay();</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :   Clip();</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :   SetOutput();</span>
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     155 </span>            : }
+<span class="lineNum">     156 </span>            : 
+<a name="157"><span class="lineNum">     157 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 : void FGSwitch::VerifyProperties(void)</span>
+<span class="lineNum">     160 </span>            : {
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :   for (auto test: tests) {</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :     if (!test-&gt;Default) {</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :       test-&gt;condition-&gt;Evaluate();</span>
+<span class="lineNum">     164 </span>            :     }
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :     test-&gt;OutputValue-&gt;GetValue();</span>
+<span class="lineNum">     166 </span>            :   }
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     170 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     171 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     172 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     173 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     174 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     175 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     176 </span>            : //       whatsoever.
+<span class="lineNum">     177 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     178 </span>            : //       startup messages
+<span class="lineNum">     179 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     180 </span>            : //       a class is instantiated
+<span class="lineNum">     181 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     182 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     183 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     184 </span>            : //       are printed out periodically
+<span class="lineNum">     185 </span>            : //    16: When set various parameters are sanity checked and
+<a name="186"><span class="lineNum">     186 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 : void FGSwitch::Debug(int from)</span>
+<span class="lineNum">     189 </span>            : {
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :     if (from == 0) { // Constructor</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :       unsigned int i = 0;</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :       for (auto test: tests) {</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :         if (test-&gt;Default) {</span>
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;      Switch default value is: &quot; &lt;&lt; test-&gt;GetOutputName();</span>
+<span class="lineNum">     198 </span>            :         } else {
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;      Switch takes test &quot; &lt;&lt; i &lt;&lt; &quot; value (&quot; &lt;&lt; test-&gt;GetOutputName() &lt;&lt; &quot;)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     200 </span>            : 
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :           test-&gt;condition-&gt;PrintCondition(&quot;      &quot;);</span>
+<span class="lineNum">     202 </span>            :         }
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl;</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :         ++i;</span>
+<span class="lineNum">     205 </span>            :       }
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :       for (auto node: OutputNodes)</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      OUTPUT: &quot; &lt;&lt; node-&gt;getName() &lt;&lt; endl;</span>
+<span class="lineNum">     208 </span>            :     }
+<span class="lineNum">     209 </span>            :   }
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGSwitch&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGSwitch&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     213 </span>            :   }
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     215 </span>            :   }
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     217 </span>            :   }
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     219 </span>            :   }
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     221 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     222 </span>            :     }
+<span class="lineNum">     223 </span>            :   }
+<a name="224"><span class="lineNum">     224 </span>            : }</a>
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span><span class="lineCov">         12 : } //namespace JSBSim</span>
+<span class="lineNum">     227 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

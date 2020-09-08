@@ -1,0 +1,368 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGAerodynamics.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGAerodynamics.h<span style="font-size: 80%;"> (source / <a href="FGAerodynamics.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntryMed">87.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">25</td>
+            <td class="headerCovTableEntryMed">88.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGAerodynamics.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 09/13/00
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 09/13/00   JSB   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGAERODYNAMICS_H
+<span class="lineNum">      35 </span>            : #define FGAERODYNAMICS_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &lt;string&gt;
+<span class="lineNum">      42 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      43 </span>            : #include &lt;map&gt;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : #include &quot;FGModel.h&quot;
+<span class="lineNum">      46 </span>            : #include &quot;math/FGFunction.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;math/FGColumnVector3.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;math/FGMatrix33.h&quot;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      51 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      52 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : namespace JSBSim {
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      57 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      58 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : /** Encapsulates the aerodynamic calculations.
+<span class="lineNum">      61 </span>            :     This class owns and contains the list of force/coefficients that define the
+<span class="lineNum">      62 </span>            :     aerodynamic properties of an aircraft. Here also, such unique phenomena
+<span class="lineNum">      63 </span>            :     as ground effect, aerodynamic reference point shift, and maximum lift curve
+<span class="lineNum">      64 </span>            :     tailoff are handled.
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :     &lt;h3&gt;Configuration File Format for \&lt;aerodynamics&gt; Section:&lt;/h3&gt;
+<span class="lineNum">      67 </span>            :     @code{.xml}
+<span class="lineNum">      68 </span>            :     &lt;aerodynamics&gt;
+<span class="lineNum">      69 </span>            :        &lt;alphalimits unit=&quot;{RAD | DEG}&quot;&gt;
+<span class="lineNum">      70 </span>            :          &lt;min&gt; {number} &lt;/min&gt;
+<span class="lineNum">      71 </span>            :          &lt;max&gt; {number} &lt;/max&gt;
+<span class="lineNum">      72 </span>            :        &lt;/alphalimits&gt;
+<span class="lineNum">      73 </span>            :        &lt;hysteresis_limits unit=&quot;{RAD | DEG}&quot;&gt;
+<span class="lineNum">      74 </span>            :          &lt;min&gt; {number} &lt;/min&gt;
+<span class="lineNum">      75 </span>            :          &lt;max&gt; {number} &lt;/max&gt;
+<span class="lineNum">      76 </span>            :        &lt;/hysteresis_limits&gt;
+<span class="lineNum">      77 </span>            :        &lt;aero_ref_pt_shift_x&gt;  
+<span class="lineNum">      78 </span>            :          &lt;function&gt;
+<span class="lineNum">      79 </span>            :            {function contents}
+<span class="lineNum">      80 </span>            :          &lt;/function&gt; 
+<span class="lineNum">      81 </span>            :        &lt;/aero_ref_pt_shift_x&gt;  
+<span class="lineNum">      82 </span>            :        &lt;function&gt;
+<span class="lineNum">      83 </span>            :          {function contents}
+<span class="lineNum">      84 </span>            :        &lt;/function&gt;
+<span class="lineNum">      85 </span>            :        &lt;axis name=&quot;{LIFT | DRAG | SIDE | ROLL | PITCH | YAW}&quot;&gt;
+<span class="lineNum">      86 </span>            :          {force or moment definitions}
+<span class="lineNum">      87 </span>            :        &lt;/axis&gt;
+<span class="lineNum">      88 </span>            :        {additional axis definitions}
+<span class="lineNum">      89 </span>            :     &lt;/aerodynamics&gt;
+<span class="lineNum">      90 </span>            :     @endcode
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :     Optionally two other coordinate systems may be used.&lt;br&gt;&lt;br&gt;
+<span class="lineNum">      93 </span>            :     1) Body coordinate system:
+<span class="lineNum">      94 </span>            :     @code{.xml}
+<span class="lineNum">      95 </span>            :        &lt;axis name=&quot;{X | Y | Z}&quot;&gt;
+<span class="lineNum">      96 </span>            :     @endcode
+<span class="lineNum">      97 </span>            :     &lt;br&gt;
+<span class="lineNum">      98 </span>            :     2) Axial-Normal coordinate system:
+<span class="lineNum">      99 </span>            :     @code{.xml}
+<span class="lineNum">     100 </span>            :        &lt;axis name=&quot;{AXIAL | NORMAL | SIDE}&quot;&gt;
+<span class="lineNum">     101 </span>            :     @endcode
+<span class="lineNum">     102 </span>            :     &lt;br&gt;
+<span class="lineNum">     103 </span>            :     Systems may NOT be combined, or a load error will occur.
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            :     @author Jon S. Berndt, Tony Peden
+<span class="lineNum">     106 </span>            :     @version $Revision: 1.30 $
+<span class="lineNum">     107 </span>            : */
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     110 </span>            : CLASS DECLARATION
+<span class="lineNum">     111 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            : class FGAerodynamics : public FGModel
+<span class="lineNum">     114 </span>            : {
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            : public:
+<span class="lineNum">     117 </span>            :   /** Constructor
+<span class="lineNum">     118 </span>            :       @param Executive a pointer to the parent executive object */
+<span class="lineNum">     119 </span>            :   FGAerodynamics(FGFDMExec* Executive);
+<span class="lineNum">     120 </span>            :   /// Destructor
+<span class="lineNum">     121 </span>            :   ~FGAerodynamics() override;
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :   bool InitModel(void) override;
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            :   /** Runs the Aerodynamics model; called by the Executive
+<span class="lineNum">     126 </span>            :       Can pass in a value indicating if the executive is directing the simulation to Hold.
+<span class="lineNum">     127 </span>            :       @param Holding if true, the executive has been directed to hold the sim from 
+<span class="lineNum">     128 </span>            :                      advancing time. Some models may ignore this flag, such as the Input
+<span class="lineNum">     129 </span>            :                      model, which may need to be active to listen on a socket for the
+<span class="lineNum">     130 </span>            :                      &quot;Resume&quot; command to be given.
+<span class="lineNum">     131 </span>            :       @return false if no error */
+<span class="lineNum">     132 </span>            :   bool Run(bool Holding) override;
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :   /** Loads the Aerodynamics model.
+<span class="lineNum">     135 </span>            :       The Load function for this class expects the XML parser to
+<span class="lineNum">     136 </span>            :       have found the aerodynamics keyword in the configuration file.
+<span class="lineNum">     137 </span>            :       @param element pointer to the current XML element for aerodynamics parameters.
+<span class="lineNum">     138 </span>            :       @return true if successful */
+<span class="lineNum">     139 </span>            :   bool Load(Element* element) override;
+<span class="lineNum">     140 </span>            : 
+<a name="141"><span class="lineNum">     141 </span>            :   /** Gets the total aerodynamic force vector.</a>
+<span class="lineNum">     142 </span>            :       @return a force vector reference. */
+<span class="lineNum">     143 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetForces(void) const {return vForces;}</span>
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            :   /** Gets the aerodynamic force for an axis.
+<span class="lineNum">     146 </span>            :       @param n Axis index. This could be 0, 1, or 2, or one of the
+<a name="147"><span class="lineNum">     147 </span>            :                axis enums: eX, eY, eZ.</a>
+<span class="lineNum">     148 </span>            :       @return the force acting on an axis */
+<span class="lineNum">     149 </span><span class="lineCov">         24 :   double GetForces(int n) const {return vForces(n);}</span>
+<span class="lineNum">     150 </span>            : 
+<a name="151"><span class="lineNum">     151 </span>            :   /** Gets the total aerodynamic moment vector about the CG.</a>
+<span class="lineNum">     152 </span>            :       @return a moment vector reference. */
+<span class="lineNum">     153 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetMoments(void) const {return vMoments;}</span>
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span>            :   /** Gets the aerodynamic moment about the CG for an axis.
+<a name="156"><span class="lineNum">     156 </span>            :       @return the moment about a single axis (as described also in the</a>
+<span class="lineNum">     157 </span>            :               similar call to GetForces(int n).*/
+<span class="lineNum">     158 </span><span class="lineCov">         24 :   double GetMoments(int n) const {return vMoments(n);}</span>
+<span class="lineNum">     159 </span>            : 
+<a name="160"><span class="lineNum">     160 </span>            :   /** Gets the total aerodynamic moment vector about the Moment Reference Center.</a>
+<span class="lineNum">     161 </span>            :       @return a moment vector reference. */
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :   const FGColumnVector3&amp; GetMomentsMRC(void) const {return vMomentsMRC;}</span>
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            :   /** Gets the aerodynamic moment about the Moment Reference Center for an axis.
+<span class="lineNum">     165 </span>            :       @return the moment about a single axis (as described also in the
+<span class="lineNum">     166 </span>            :               similar call to GetForces(int n).*/
+<span class="lineNum">     167 </span>            :   double GetMomentsMRC(int n) const {return vMomentsMRC(n);}
+<span class="lineNum">     168 </span>            : 
+<a name="169"><span class="lineNum">     169 </span>            :   /** Retrieves the aerodynamic forces in the wind axes.</a>
+<span class="lineNum">     170 </span>            :       @return a reference to a column vector containing the wind axis forces. */
+<span class="lineNum">     171 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetvFw(void) const { return vFw; }</span>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :   /** Retrieves the aerodynamic forces in the wind axes, given an axis.
+<span class="lineNum">     174 </span>            :       @param axis the axis to return the force for (eX, eY, eZ).
+<a name="175"><span class="lineNum">     175 </span>            :       @return a reference to a column vector containing the requested wind</a>
+<span class="lineNum">     176 </span>            :       axis force. */
+<span class="lineNum">     177 </span><span class="lineCov">         24 :   double GetvFw(int axis) const { return vFw(axis); }</span>
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span>            :   /** Retrieves the aerodynamic forces in the stability axes.
+<span class="lineNum">     180 </span>            :   @return a reference to a column vector containing the stability axis forces. */
+<span class="lineNum">     181 </span>            :   FGColumnVector3 GetForcesInStabilityAxes(void) const;
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span>            :   /** Retrieves the aerodynamic forces in the stability axes, given an axis.
+<span class="lineNum">     184 </span>            :   @param axis the axis to return the force for (eX, eY, eZ).
+<a name="185"><span class="lineNum">     185 </span>            :   @return a reference to a column vector containing the requested stability</a>
+<span class="lineNum">     186 </span>            :   axis force. */
+<span class="lineNum">     187 </span><span class="lineCov">         24 :   double GetForcesInStabilityAxes(int n) const { return GetForcesInStabilityAxes()(n); }</span>
+<span class="lineNum">     188 </span>            : 
+<a name="189"><span class="lineNum">     189 </span>            :   /** Gets the total aerodynamic moment vector about the CG in the stability axes.</a>
+<span class="lineNum">     190 </span>            :   @return a moment vector reference. */
+<span class="lineNum">     191 </span><span class="lineCov">         24 :   FGColumnVector3 GetMomentsInStabilityAxes(void) const { return Tb2s*vMoments; }</span>
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span>            :   /** Gets the aerodynamic moment about the CG for an axis.
+<a name="194"><span class="lineNum">     194 </span>            :   @return the moment about a single axis (as described also in the</a>
+<span class="lineNum">     195 </span>            :   similar call to GetForces(int n).*/
+<span class="lineNum">     196 </span><span class="lineCov">         24 :   double GetMomentsInStabilityAxes(int n) const { return GetMomentsInStabilityAxes()(n); }</span>
+<span class="lineNum">     197 </span>            : 
+<a name="198"><span class="lineNum">     198 </span>            :   /** Gets the total aerodynamic moment vector about the CG in the wind axes.</a>
+<span class="lineNum">     199 </span>            :   @return a moment vector reference. */
+<span class="lineNum">     200 </span><span class="lineCov">         24 :   FGColumnVector3 GetMomentsInWindAxes(void) const { return in.Tb2w*vMoments; }</span>
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :   /** Gets the aerodynamic moment about the CG for an axis.
+<a name="203"><span class="lineNum">     203 </span>            :   @return the moment about a single axis (as described also in the</a>
+<span class="lineNum">     204 </span>            :   similar call to GetForces(int n).*/
+<span class="lineNum">     205 </span><span class="lineCov">         24 :   double GetMomentsInWindAxes(int n) const { return GetMomentsInWindAxes()(n); }</span>
+<a name="206"><span class="lineNum">     206 </span>            : </a>
+<span class="lineNum">     207 </span>            :   /** Retrieves the lift over drag ratio */
+<span class="lineNum">     208 </span><span class="lineCov">          8 :   double GetLoD(void) const { return lod; }</span>
+<a name="209"><span class="lineNum">     209 </span>            : </a>
+<a name="210"><span class="lineNum">     210 </span>            :   /** Retrieves the square of the lift coefficient. */</a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          8 :   double GetClSquared(void) const { return clsq; }</span></a>
+<span class="lineNum">     212 </span><span class="lineCov">          8 :   double GetAlphaCLMax(void) const { return alphaclmax; }</span>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">          8 :   double GetAlphaCLMin(void) const { return alphaclmin; }</span></a>
+<a name="214"><span class="lineNum">     214 </span>            : </a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          8 :   double GetHysteresisParm(void) const { return stall_hyst; }</span></a>
+<span class="lineNum">     216 </span><span class="lineCov">          8 :   double GetStallWarn(void) const { return impending_stall; }</span>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">          8 :   double GetAlphaW(void) const { return alphaw; }</span></a>
+<a name="218"><span class="lineNum">     218 </span>            : </a>
+<span class="lineNum">     219 </span><span class="lineCov">          8 :   double GetBI2Vel(void) const { return bi2vel; }</span>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          8 :   double GetCI2Vel(void) const { return ci2vel; }</span></a>
+<a name="221"><span class="lineNum">     221 </span>            : </a>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   void SetAlphaCLMax(double tt) { alphaclmax=tt; }</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :   void SetAlphaCLMin(double tt) { alphaclmin=tt; }</span>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            :   /** Gets the strings for the current set of aero functions.
+<span class="lineNum">     226 </span>            :       @param delimeter either a tab or comma string depending on output type
+<span class="lineNum">     227 </span>            :       @return a string containing the descriptive names for all aero functions */
+<span class="lineNum">     228 </span>            :   std::string GetAeroFunctionStrings(const std::string&amp; delimeter) const;
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            :   /** Gets the aero function values.
+<span class="lineNum">     231 </span>            :       @param delimeter either a tab or comma string depending on output type
+<span class="lineNum">     232 </span>            :       @return a string containing the numeric values for the current set of
+<span class="lineNum">     233 </span>            :       aero functions */
+<span class="lineNum">     234 </span>            :   std::string GetAeroFunctionValues(const std::string&amp; delimeter) const;
+<span class="lineNum">     235 </span>            : 
+<a name="236"><span class="lineNum">     236 </span>            :   std::vector &lt;FGFunction*&gt; * GetAeroFunctions(void) const { return AeroFunctions; }</a>
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span><span class="lineCov">         16 :   struct Inputs {</span>
+<span class="lineNum">     239 </span>            :     double Alpha;
+<span class="lineNum">     240 </span>            :     double Beta;
+<span class="lineNum">     241 </span>            :     double Vt;
+<span class="lineNum">     242 </span>            :     double Qbar;
+<span class="lineNum">     243 </span>            :     double Wingarea;
+<span class="lineNum">     244 </span>            :     double Wingspan;
+<span class="lineNum">     245 </span>            :     double Wingchord;
+<span class="lineNum">     246 </span>            :     double Wingincidence;
+<span class="lineNum">     247 </span>            :     FGColumnVector3 RPBody;
+<span class="lineNum">     248 </span>            :     FGMatrix33 Tb2w;
+<span class="lineNum">     249 </span>            :     FGMatrix33 Tw2b;
+<span class="lineNum">     250 </span>            :   } in;
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            : private:
+<span class="lineNum">     253 </span>            :   enum eAxisType {atNone, atWind, atBodyAxialNormal, atBodyXYZ, atStability} forceAxisType, momentAxisType;
+<span class="lineNum">     254 </span>            :   typedef std::map&lt;std::string,int&gt; AxisIndex;
+<span class="lineNum">     255 </span>            :   AxisIndex AxisIdx;
+<span class="lineNum">     256 </span>            :   FGFunction* AeroRPShift;
+<span class="lineNum">     257 </span>            :   typedef std::vector &lt;FGFunction*&gt; AeroFunctionArray;
+<span class="lineNum">     258 </span>            :   AeroFunctionArray* AeroFunctions;
+<span class="lineNum">     259 </span>            :   FGMatrix33 Ts2b, Tb2s;
+<span class="lineNum">     260 </span>            :   FGColumnVector3 vFnative;
+<span class="lineNum">     261 </span>            :   FGColumnVector3 vFw;
+<span class="lineNum">     262 </span>            :   FGColumnVector3 vForces;
+<span class="lineNum">     263 </span>            :   AeroFunctionArray* AeroFunctionsAtCG;
+<span class="lineNum">     264 </span>            :   FGColumnVector3 vFnativeAtCG;
+<span class="lineNum">     265 </span>            :   FGColumnVector3 vForcesAtCG;
+<span class="lineNum">     266 </span>            :   FGColumnVector3 vMoments;
+<span class="lineNum">     267 </span>            :   FGColumnVector3 vMomentsMRC;
+<span class="lineNum">     268 </span>            :   FGColumnVector3 vMomentsMRCBodyXYZ;
+<span class="lineNum">     269 </span>            :   FGColumnVector3 vDXYZcg;
+<span class="lineNum">     270 </span>            :   FGColumnVector3 vDeltaRP;
+<span class="lineNum">     271 </span>            :   double alphaclmax, alphaclmin;
+<span class="lineNum">     272 </span>            :   double alphaclmax0, alphaclmin0;
+<span class="lineNum">     273 </span>            :   double alphahystmax, alphahystmin;
+<span class="lineNum">     274 </span>            :   double impending_stall, stall_hyst;
+<span class="lineNum">     275 </span>            :   double bi2vel, ci2vel,alphaw;
+<span class="lineNum">     276 </span>            :   double clsq, lod, qbar_area;
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span>            :   typedef double (FGAerodynamics::*PMF)(int) const;
+<span class="lineNum">     279 </span>            :   void DetermineAxisSystem(Element* document);
+<span class="lineNum">     280 </span>            :   void ProcessAxesNameAndFrame(FGAerodynamics::eAxisType&amp; axisType,
+<span class="lineNum">     281 </span>            :                                const string&amp; name, const string&amp; frame,
+<span class="lineNum">     282 </span>            :                                Element* el, const string&amp; validNames);
+<span class="lineNum">     283 </span>            :   void bind(void);
+<span class="lineNum">     284 </span>            :   void BuildStabilityTransformMatrices(void);
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            :   void Debug(int from) override;
+<span class="lineNum">     287 </span>            : };
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span>            : } // namespace JSBSim
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     292 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

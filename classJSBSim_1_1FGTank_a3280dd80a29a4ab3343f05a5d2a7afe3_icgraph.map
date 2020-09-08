@@ -1,0 +1,4 @@
+<map id="ProcessFuelName" name="ProcessFuelName">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGTank.html#a3f836b4283222c9b9a1e556ab2205f5a" title="Constructor. " alt="" coords="207,5,277,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGTank.html#a214dcdce5277cf592fa2d1deca9c4fdf" title="Gets the temperature of the fuel. " alt="" coords="184,56,300,83"/>
+</map>

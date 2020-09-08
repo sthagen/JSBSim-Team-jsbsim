@@ -1,0 +1,12 @@
+<map id="SetClimbRateFpsIC" name="SetClimbRateFpsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="475,84,525,110"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a3f18678496bb8d851fcb164dbb9b74fc" title="Sets the climb rate initial condition in feet/minute. " alt="" coords="207,33,351,60"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a68c83023466c7734fea2917175d9325d" title="Sets the flight path angle initial condition in degrees. " alt="" coords="193,84,365,110"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#aae17f88a86799403d5a50d5a3a981c60" title="Sets the initial body axis yaw rate. " alt="" coords="227,134,331,161"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGInitialCondition.html#a4432f5e65443121378434889b2580f07" title="Sets the initial flight path angle. " alt="" coords="193,185,365,212"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a4824f36ca8f38ef52be1bcaa785c404f" title="Gets the target normal load factor set from IC. " alt="" coords="696,58,807,85"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInput.html#a8204557b6f2865b7e6e29b3a3a9d524d" title="Adds a new input instance to the Input Manager. " alt="" coords="635,109,868,136"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="651,160,851,186"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="413,134,587,161"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGInitialCondition.html#a1fabb78d427d8f826631eb863fccce28" title="Resets the IC data structure to new values. " alt="" coords="465,185,535,212"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="SetLongitude" name="SetLongitude">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a1fabb78d427d8f826631eb863fccce28" title="Resets the IC data structure to new values. " alt="" coords="152,19,335,60"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInitialCondition.html#a5c7c88a597829607471730f280b3266b" title="Sets the initial longitude. " alt="" coords="152,97,335,139"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a122dacd64147e2d1b1db97e719de2989" title="Sets pitch angle initial condition in degrees. " alt="" coords="383,5,565,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="613,93,796,135"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a6fe6c08828d7c74e174ba1ad7f61101e" title="Sets the initial longitude. " alt="" coords="383,123,565,164"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a0ab5b13bb7a8589f9c565ceb3dd96202" title="Sets the initial heading angle. " alt="" coords="383,188,565,229"/>
+</map>

@@ -1,0 +1,560 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/math/FGMatrix33.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/math</a> - FGMatrix33.h<span style="font-size: 80%;"> (source / <a href="FGMatrix33.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">73</td>
+            <td class="headerCovTableEntry">73</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            : Header: FGMatrix33.h
+<span class="lineNum">       4 </span>            : Author: Tony Peden, Jon Berndt, Mathias Frolich
+<span class="lineNum">       5 </span>            : Date started: Unknown
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2001  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : ??/??/??   TP   Created
+<span class="lineNum">      29 </span>            : 03/16/2000 JSB  Added exception throwing
+<span class="lineNum">      30 </span>            : 03/06/2004 MF   Rework of the code to make it a bit compiler friendlier
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      33 </span>            : SENTRY
+<span class="lineNum">      34 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : #ifndef FGMATRIX33_H
+<span class="lineNum">      37 </span>            : #define FGMATRIX33_H
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      40 </span>            : INCLUDES
+<span class="lineNum">      41 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : #include &lt;string&gt;
+<span class="lineNum">      44 </span>            : #include &lt;iosfwd&gt;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #include &quot;FGColumnVector3.h&quot;
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      49 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      50 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : namespace JSBSim {
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : class FGQuaternion;
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      57 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      58 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : /** Exception convenience class.
+<span class="lineNum">      61 </span>            :   */
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      64 </span>            : DECLARATION: MatrixException
+<a name="65"><span class="lineNum">      65 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineCov">         12 : class MatrixException //: public FGJSBBase</span>
+<span class="lineNum">      68 </span>            : {
+<span class="lineNum">      69 </span>            : public:
+<span class="lineNum">      70 </span>            :   std::string Message;
+<span class="lineNum">      71 </span>            : };
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      74 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      75 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :   /** Handles matrix math operations.
+<span class="lineNum">      78 </span>            :       @author Tony Peden, Jon Berndt, Mathias Froelich
+<span class="lineNum">      79 </span>            :   */
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      82 </span>            : DECLARATION: FGMatrix33
+<span class="lineNum">      83 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            : class FGMatrix33
+<span class="lineNum">      86 </span>            : {
+<span class="lineNum">      87 </span>            : public:
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            :   enum {
+<span class="lineNum">      90 </span>            :     eRows = 3,
+<span class="lineNum">      91 </span>            :     eColumns = 3
+<span class="lineNum">      92 </span>            :   };
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :   /** Default initializer.
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            :       Create a zero matrix.
+<span class="lineNum">      97 </span>            :    */
+<span class="lineNum">      98 </span>            :   FGMatrix33(void);
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :   /** Copy constructor.
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :       @param M Matrix which is used for initialization.
+<span class="lineNum">     103 </span>            : 
+<a name="104"><span class="lineNum">     104 </span>            :       Create copy of the matrix given in the argument.</a>
+<span class="lineNum">     105 </span>            :    */
+<span class="lineNum">     106 </span><span class="lineCov">        167 :   FGMatrix33(const FGMatrix33&amp; M)</span>
+<span class="lineNum">     107 </span><span class="lineCov">        167 :   {</span>
+<span class="lineNum">     108 </span><span class="lineCov">        167 :     data[0] = M.data[0];</span>
+<span class="lineNum">     109 </span><span class="lineCov">        167 :     data[1] = M.data[1];</span>
+<span class="lineNum">     110 </span><span class="lineCov">        167 :     data[2] = M.data[2];</span>
+<span class="lineNum">     111 </span><span class="lineCov">        167 :     data[3] = M.data[3];</span>
+<span class="lineNum">     112 </span><span class="lineCov">        167 :     data[4] = M.data[4];</span>
+<span class="lineNum">     113 </span><span class="lineCov">        167 :     data[5] = M.data[5];</span>
+<span class="lineNum">     114 </span><span class="lineCov">        167 :     data[6] = M.data[6];</span>
+<span class="lineNum">     115 </span><span class="lineCov">        167 :     data[7] = M.data[7];</span>
+<span class="lineNum">     116 </span><span class="lineCov">        167 :     data[8] = M.data[8];</span>
+<span class="lineNum">     117 </span><span class="lineCov">        167 :   }</span>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :   /** Initialization by given values.
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            :       @param m11 value of the 1,1 Matrix element.
+<span class="lineNum">     122 </span>            :       @param m12 value of the 1,2 Matrix element.
+<span class="lineNum">     123 </span>            :       @param m13 value of the 1,3 Matrix element.
+<span class="lineNum">     124 </span>            :       @param m21 value of the 2,1 Matrix element.
+<span class="lineNum">     125 </span>            :       @param m22 value of the 2,2 Matrix element.
+<span class="lineNum">     126 </span>            :       @param m23 value of the 2,3 Matrix element.
+<span class="lineNum">     127 </span>            :       @param m31 value of the 3,1 Matrix element.
+<span class="lineNum">     128 </span>            :       @param m32 value of the 3,2 Matrix element.
+<span class="lineNum">     129 </span>            :       @param m33 value of the 3,3 Matrix element.
+<span class="lineNum">     130 </span>            : 
+<a name="131"><span class="lineNum">     131 </span>            :       Create a matrix from the doubles given in the arguments.</a>
+<span class="lineNum">     132 </span>            :    */
+<span class="lineNum">     133 </span><span class="lineCov">    1284951 :   FGMatrix33(const double m11, const double m12, const double m13,</span>
+<span class="lineNum">     134 </span>            :              const double m21, const double m22, const double m23,
+<span class="lineNum">     135 </span>            :              const double m31, const double m32, const double m33)
+<span class="lineNum">     136 </span><span class="lineCov">    1284951 :   {</span>
+<span class="lineNum">     137 </span><span class="lineCov">    1284951 :     data[0] = m11;</span>
+<span class="lineNum">     138 </span><span class="lineCov">    1284951 :     data[1] = m21;</span>
+<span class="lineNum">     139 </span><span class="lineCov">    1284951 :     data[2] = m31;</span>
+<span class="lineNum">     140 </span><span class="lineCov">    1284951 :     data[3] = m12;</span>
+<span class="lineNum">     141 </span><span class="lineCov">    1284951 :     data[4] = m22;</span>
+<span class="lineNum">     142 </span><span class="lineCov">    1284951 :     data[5] = m32;</span>
+<span class="lineNum">     143 </span><span class="lineCov">    1284951 :     data[6] = m13;</span>
+<span class="lineNum">     144 </span><span class="lineCov">    1284951 :     data[7] = m23;</span>
+<span class="lineNum">     145 </span><span class="lineCov">    1284951 :     data[8] = m33;</span>
+<span class="lineNum">     146 </span><span class="lineCov">    1284951 :   }</span>
+<span class="lineNum">     147 </span>            : 
+<a name="148"><span class="lineNum">     148 </span>            :   /** Destructor.</a>
+<span class="lineNum">     149 </span>            :    */
+<span class="lineNum">     150 </span><span class="lineCov">    4773988 :   ~FGMatrix33(void) {}</span>
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            :   /** Prints the contents of the matrix.
+<span class="lineNum">     153 </span>            :       @param delimeter the item separator (tab or comma)
+<span class="lineNum">     154 </span>            :       @return a string with the delimeter-separated contents of the matrix  */
+<span class="lineNum">     155 </span>            :   std::string Dump(const std::string&amp; delimeter) const;
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            :   /** Prints the contents of the matrix.
+<span class="lineNum">     158 </span>            :       @param delimeter the item separator (tab or comma, etc.)
+<span class="lineNum">     159 </span>            :       @param prefix an additional prefix that is used to indent the 3X3 matrix
+<span class="lineNum">     160 </span>            :              printout
+<span class="lineNum">     161 </span>            :       @return a string with the delimeter-separated contents of the matrix  */
+<span class="lineNum">     162 </span>            :   std::string Dump(const std::string&amp; delimiter, const std::string&amp; prefix) const;
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            :   /** Read access the entries of the matrix.
+<span class="lineNum">     165 </span>            :       @param row Row index.
+<span class="lineNum">     166 </span>            :       @param col Column index.
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            :       @return the value of the matrix entry at the given row and
+<a name="169"><span class="lineNum">     169 </span>            :       column indices. Indices are counted starting with 1.</a>
+<span class="lineNum">     170 </span>            :    */
+<span class="lineNum">     171 </span><span class="lineCov">      22460 :   double operator()(unsigned int row, unsigned int col) const {</span>
+<span class="lineNum">     172 </span><span class="lineCov">      22460 :     return data[(col-1)*eRows+row-1];</span>
+<span class="lineNum">     173 </span>            :   }
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span>            :   /** Write access the entries of the matrix.
+<span class="lineNum">     176 </span>            :       Note that the indices given in the arguments are unchecked.
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span>            :       @param row Row index.
+<span class="lineNum">     179 </span>            :       @param col Column index.
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :       @return a reference to the matrix entry at the given row and
+<a name="182"><span class="lineNum">     182 </span>            :       column indices. Indices are counted starting with 1.</a>
+<span class="lineNum">     183 </span>            :    */
+<span class="lineNum">     184 </span><span class="lineCov">      16257 :   double&amp; operator()(unsigned int row, unsigned int col) {</span>
+<span class="lineNum">     185 </span><span class="lineCov">      16257 :     return data[(col-1)*eRows+row-1];</span>
+<span class="lineNum">     186 </span>            :   }
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            :   /** Read access the entries of the matrix.
+<span class="lineNum">     189 </span>            :       This function is just a shortcut for the &lt;tt&gt;double&amp;
+<span class="lineNum">     190 </span>            :       operator()(unsigned int row, unsigned int col)&lt;/tt&gt; function. It is
+<span class="lineNum">     191 </span>            :       used internally to access the elements in a more convenient way.
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span>            :       Note that the indices given in the arguments are unchecked.
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            :       @param row Row index.
+<span class="lineNum">     196 </span>            :       @param col Column index.
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            :       @return the value of the matrix entry at the given row and
+<a name="199"><span class="lineNum">     199 </span>            :       column indices. Indices are counted starting with 1.</a>
+<span class="lineNum">     200 </span>            :    */
+<span class="lineNum">     201 </span><span class="lineCov">          9 :   double Entry(unsigned int row, unsigned int col) const {</span>
+<span class="lineNum">     202 </span><span class="lineCov">          9 :     return data[(col-1)*eRows+row-1];</span>
+<span class="lineNum">     203 </span>            :   }
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span>            :   /** Write access the entries of the matrix.
+<span class="lineNum">     206 </span>            :       This function is just a shortcut for the &lt;tt&gt;double&amp;
+<span class="lineNum">     207 </span>            :       operator()(unsigned int row, unsigned int col)&lt;/tt&gt; function. It is
+<span class="lineNum">     208 </span>            :       used internally to access the elements in a more convenient way.
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span>            :       Note that the indices given in the arguments are unchecked.
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            :       @param row Row index.
+<span class="lineNum">     213 </span>            :       @param col Column index.
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span>            :       @return a reference to the matrix entry at the given row and
+<a name="216"><span class="lineNum">     216 </span>            :       column indices. Indices are counted starting with 1.</a>
+<span class="lineNum">     217 </span>            :    */
+<span class="lineNum">     218 </span><span class="lineCov">          9 :    double&amp; Entry(unsigned int row, unsigned int col) {</span>
+<span class="lineNum">     219 </span><span class="lineCov">          9 :      return data[(col-1)*eRows+row-1];</span>
+<span class="lineNum">     220 </span>            :    }
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            :   /** Number of rows in the matrix.
+<a name="223"><span class="lineNum">     223 </span>            :       @return the number of rows in the matrix.</a>
+<span class="lineNum">     224 </span>            :    */
+<span class="lineNum">     225 </span><span class="lineCov">         18 :    unsigned int Rows(void) const { return eRows; }</span>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :   /** Number of cloumns in the matrix.
+<a name="228"><span class="lineNum">     228 </span>            :       @return the number of columns in the matrix.</a>
+<span class="lineNum">     229 </span>            :    */
+<span class="lineNum">     230 </span><span class="lineCov">         28 :    unsigned int Cols(void) const { return eColumns; }</span>
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :   /** Transposed matrix.
+<span class="lineNum">     233 </span>            :       This function only returns the transpose of this matrix. This matrix
+<span class="lineNum">     234 </span>            :       itself remains unchanged.
+<a name="235"><span class="lineNum">     235 </span>            :       @return the transposed matrix.</a>
+<span class="lineNum">     236 </span>            :    */
+<span class="lineNum">     237 </span><span class="lineCov">    1284543 :   FGMatrix33 Transposed(void) const {</span>
+<span class="lineNum">     238 </span><span class="lineCov">    1284543 :     return FGMatrix33( data[0], data[1], data[2],</span>
+<span class="lineNum">     239 </span><span class="lineCov">    1284543 :                        data[3], data[4], data[5],</span>
+<span class="lineNum">     240 </span><span class="lineCov">    2569086 :                        data[6], data[7], data[8] );</span>
+<span class="lineNum">     241 </span>            :   }
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            :   /** Transposes this matrix.
+<span class="lineNum">     244 </span>            :       This function only transposes this matrix. Nothing is returned.
+<span class="lineNum">     245 </span>            :    */
+<span class="lineNum">     246 </span>            :   void T(void);
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            : /** Initialize the matrix.
+<span class="lineNum">     249 </span>            :     This function initializes a matrix to all 0.0.
+<span class="lineNum">     250 </span>            :  */
+<span class="lineNum">     251 </span>            :   void InitMatrix(void);
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            : /** Initialize the matrix.
+<a name="254"><span class="lineNum">     254 </span>            :     This function initializes a matrix to user specified values.</a>
+<span class="lineNum">     255 </span>            :  */
+<span class="lineNum">     256 </span><span class="lineCov">          7 :   void InitMatrix(const double m11, const double m12, const double m13,</span>
+<span class="lineNum">     257 </span>            :                   const double m21, const double m22, const double m23,
+<span class="lineNum">     258 </span>            :                   const double m31, const double m32, const double m33)
+<span class="lineNum">     259 </span>            :   {
+<span class="lineNum">     260 </span><span class="lineCov">          7 :     data[0] = m11;</span>
+<span class="lineNum">     261 </span><span class="lineCov">          7 :     data[1] = m21;</span>
+<span class="lineNum">     262 </span><span class="lineCov">          7 :     data[2] = m31;</span>
+<span class="lineNum">     263 </span><span class="lineCov">          7 :     data[3] = m12;</span>
+<span class="lineNum">     264 </span><span class="lineCov">          7 :     data[4] = m22;</span>
+<span class="lineNum">     265 </span><span class="lineCov">          7 :     data[5] = m32;</span>
+<span class="lineNum">     266 </span><span class="lineCov">          7 :     data[6] = m13;</span>
+<span class="lineNum">     267 </span><span class="lineCov">          7 :     data[7] = m23;</span>
+<span class="lineNum">     268 </span><span class="lineCov">          7 :     data[8] = m33;</span>
+<span class="lineNum">     269 </span><span class="lineCov">          7 :   }</span>
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            :   /** Returns the quaternion associated with this direction cosine (rotation) matrix.
+<span class="lineNum">     272 </span>            :   */
+<span class="lineNum">     273 </span>            :   FGQuaternion GetQuaternion(void) const;
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            :   /** Returns the Euler angle column vector associated with this matrix.
+<span class="lineNum">     276 </span>            :   */
+<span class="lineNum">     277 </span>            :   FGColumnVector3 GetEuler() const;
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            :   /** Determinant of the matrix.
+<span class="lineNum">     280 </span>            :       @return the determinant of the matrix.
+<span class="lineNum">     281 </span>            :    */
+<span class="lineNum">     282 </span>            :   double Determinant(void) const;
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span>            :   /** Return if the matrix is invertible.
+<span class="lineNum">     285 </span>            :       Checks and returns if the matrix is nonsingular and thus
+<span class="lineNum">     286 </span>            :       invertible. This is done by simply computing the determinant and
+<span class="lineNum">     287 </span>            :       check if it is zero. Note that this test does not cover any
+<span class="lineNum">     288 </span>            :       instabilities caused by nearly singular matirces using finite
+<a name="289"><span class="lineNum">     289 </span>            :       arithmetics. It only checks exact singularity.</a>
+<span class="lineNum">     290 </span>            :    */
+<span class="lineNum">     291 </span><span class="lineCov">          2 :   bool Invertible(void) const { return 0.0 != Determinant(); }</span>
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            :   /** Return the inverse of the matrix.
+<span class="lineNum">     294 </span>            :       Computes and returns if the inverse of the matrix. It is computed
+<span class="lineNum">     295 </span>            :       by Cramers Rule. Also there are no checks performed if the matrix
+<span class="lineNum">     296 </span>            :       is invertible. If you are not sure that it really is check this
+<span class="lineNum">     297 </span>            :       with the @ref Invertible() call before.
+<span class="lineNum">     298 </span>            :    */
+<span class="lineNum">     299 </span>            :   FGMatrix33 Inverse(void) const;
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span>            :   /** Assignment operator.
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            :       @param A source matrix.
+<span class="lineNum">     304 </span>            : 
+<a name="305"><span class="lineNum">     305 </span>            :       Copy the content of the matrix given in the argument into *this.</a>
+<span class="lineNum">     306 </span>            :    */
+<span class="lineNum">     307 </span><span class="lineCov">    1738060 :   FGMatrix33&amp; operator=(const FGMatrix33&amp; A)</span>
+<span class="lineNum">     308 </span>            :   {
+<span class="lineNum">     309 </span><span class="lineCov">    1738060 :     data[0] = A.data[0];</span>
+<span class="lineNum">     310 </span><span class="lineCov">    1738060 :     data[1] = A.data[1];</span>
+<span class="lineNum">     311 </span><span class="lineCov">    1738060 :     data[2] = A.data[2];</span>
+<span class="lineNum">     312 </span><span class="lineCov">    1738060 :     data[3] = A.data[3];</span>
+<span class="lineNum">     313 </span><span class="lineCov">    1738060 :     data[4] = A.data[4];</span>
+<span class="lineNum">     314 </span><span class="lineCov">    1738060 :     data[5] = A.data[5];</span>
+<span class="lineNum">     315 </span><span class="lineCov">    1738060 :     data[6] = A.data[6];</span>
+<span class="lineNum">     316 </span><span class="lineCov">    1738060 :     data[7] = A.data[7];</span>
+<span class="lineNum">     317 </span><span class="lineCov">    1738060 :     data[8] = A.data[8];</span>
+<span class="lineNum">     318 </span><span class="lineCov">    1738060 :     return *this;</span>
+<span class="lineNum">     319 </span>            :   }
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span>            :   /** Assignment operator.
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span>            :       @param lv initializer list of at most 9 values.
+<a name="324"><span class="lineNum">     324 </span>            : </a>
+<span class="lineNum">     325 </span>            :       Copy the content of the list into *this. */
+<span class="lineNum">     326 </span><span class="lineCov">    1283685 :   FGMatrix33&amp; operator=(std::initializer_list&lt;double&gt; lv)</span>
+<span class="lineNum">     327 </span>            :   {
+<span class="lineNum">     328 </span><span class="lineCov">    1283685 :     double *v = data;</span>
+<span class="lineNum">     329 </span><span class="lineCov">   12836850 :     for(auto&amp; x: lv) {</span>
+<span class="lineNum">     330 </span><span class="lineCov">   11553165 :       *v = x;</span>
+<span class="lineNum">     331 </span><span class="lineCov">   11553165 :       v += 3;</span>
+<span class="lineNum">     332 </span><span class="lineCov">   11553165 :       if (v-data &gt; 8)</span>
+<span class="lineNum">     333 </span><span class="lineCov">    3851055 :         v -= 8;</span>
+<span class="lineNum">     334 </span>            :     }
+<span class="lineNum">     335 </span>            : 
+<span class="lineNum">     336 </span><span class="lineCov">    1283685 :     return *this;</span>
+<span class="lineNum">     337 </span>            :   }
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span>            :   /** Matrix vector multiplication.
+<span class="lineNum">     340 </span>            : 
+<span class="lineNum">     341 </span>            :       @param v vector to multiply with.
+<span class="lineNum">     342 </span>            :       @return matric vector product.
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span>            :       Compute and return the product of the current matrix with the
+<span class="lineNum">     345 </span>            :       vector given in the argument.
+<span class="lineNum">     346 </span>            :    */
+<span class="lineNum">     347 </span>            :   FGColumnVector3 operator*(const FGColumnVector3&amp; v) const;
+<span class="lineNum">     348 </span>            : 
+<span class="lineNum">     349 </span>            :   /** Matrix subtraction.
+<span class="lineNum">     350 </span>            : 
+<span class="lineNum">     351 </span>            :       @param B matrix to add to.
+<span class="lineNum">     352 </span>            :       @return difference of the matrices.
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span>            :       Compute and return the sum of the current matrix and the matrix
+<span class="lineNum">     355 </span>            :       B given in the argument.
+<span class="lineNum">     356 </span>            :   */
+<span class="lineNum">     357 </span>            :   FGMatrix33 operator-(const FGMatrix33&amp; B) const;
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span>            :   /** Matrix addition.
+<span class="lineNum">     360 </span>            : 
+<span class="lineNum">     361 </span>            :       @param B matrix to add to.
+<span class="lineNum">     362 </span>            :       @return sum of the matrices.
+<span class="lineNum">     363 </span>            : 
+<span class="lineNum">     364 </span>            :       Compute and return the sum of the current matrix and the matrix
+<span class="lineNum">     365 </span>            :       B given in the argument.
+<span class="lineNum">     366 </span>            :   */
+<span class="lineNum">     367 </span>            :   FGMatrix33 operator+(const FGMatrix33&amp; B) const;
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span>            :   /** Matrix product.
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span>            :       @param B matrix to add to.
+<span class="lineNum">     372 </span>            :       @return product of the matrices.
+<span class="lineNum">     373 </span>            : 
+<span class="lineNum">     374 </span>            :       Compute and return the product of the current matrix and the matrix
+<span class="lineNum">     375 </span>            :       B given in the argument.
+<span class="lineNum">     376 </span>            :   */
+<span class="lineNum">     377 </span>            :   FGMatrix33 operator*(const FGMatrix33&amp; B) const;
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span>            :   /** Multiply the matrix with a scalar.
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            :       @param scalar scalar factor to multiply with.
+<span class="lineNum">     382 </span>            :       @return scaled matrix.
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span>            :       Compute and return the product of the current matrix with the
+<span class="lineNum">     385 </span>            :       scalar value scalar given in the argument.
+<span class="lineNum">     386 </span>            :   */
+<span class="lineNum">     387 </span>            :   FGMatrix33 operator*(const double scalar) const;
+<span class="lineNum">     388 </span>            : 
+<span class="lineNum">     389 </span>            :   /** Multiply the matrix with 1.0/scalar.
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span>            :       @param scalar scalar factor to divide through.
+<span class="lineNum">     392 </span>            :       @return scaled matrix.
+<span class="lineNum">     393 </span>            : 
+<span class="lineNum">     394 </span>            :       Compute and return the product of the current matrix with the
+<span class="lineNum">     395 </span>            :       scalar value 1.0/scalar, where scalar is given in the argument.
+<span class="lineNum">     396 </span>            :   */
+<span class="lineNum">     397 </span>            :   FGMatrix33 operator/(const double scalar) const;
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span>            :   /** In place matrix subtraction.
+<span class="lineNum">     400 </span>            : 
+<span class="lineNum">     401 </span>            :       @param B matrix to subtract.
+<span class="lineNum">     402 </span>            :       @return reference to the current matrix.
+<span class="lineNum">     403 </span>            : 
+<span class="lineNum">     404 </span>            :       Compute the diffence from the current matrix and the matrix B
+<span class="lineNum">     405 </span>            :       given in the argument.
+<span class="lineNum">     406 </span>            :   */
+<span class="lineNum">     407 </span>            :   FGMatrix33&amp; operator-=(const FGMatrix33 &amp;B);
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span>            :   /** In place matrix addition.
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            :       @param B matrix to add.
+<span class="lineNum">     412 </span>            :       @return reference to the current matrix.
+<span class="lineNum">     413 </span>            : 
+<span class="lineNum">     414 </span>            :       Compute the sum of the current matrix and the matrix B
+<span class="lineNum">     415 </span>            :       given in the argument.
+<span class="lineNum">     416 </span>            :   */
+<span class="lineNum">     417 </span>            :   FGMatrix33&amp; operator+=(const FGMatrix33 &amp;B);
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span>            :   /** In place matrix multiplication.
+<span class="lineNum">     420 </span>            : 
+<span class="lineNum">     421 </span>            :       @param B matrix to multiply with.
+<span class="lineNum">     422 </span>            :       @return reference to the current matrix.
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span>            :       Compute the product of the current matrix and the matrix B
+<span class="lineNum">     425 </span>            :       given in the argument.
+<span class="lineNum">     426 </span>            :   */
+<span class="lineNum">     427 </span>            :   FGMatrix33&amp; operator*=(const FGMatrix33 &amp;B);
+<span class="lineNum">     428 </span>            : 
+<span class="lineNum">     429 </span>            :   /** In place matrix scale.
+<span class="lineNum">     430 </span>            : 
+<span class="lineNum">     431 </span>            :       @param scalar scalar value to multiply with.
+<span class="lineNum">     432 </span>            :       @return reference to the current matrix.
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span>            :       Compute the product of the current matrix and the scalar value scalar
+<span class="lineNum">     435 </span>            :       given in the argument.
+<span class="lineNum">     436 </span>            :   */
+<span class="lineNum">     437 </span>            :   FGMatrix33&amp; operator*=(const double scalar);
+<span class="lineNum">     438 </span>            : 
+<span class="lineNum">     439 </span>            :   /** In place matrix scale.
+<span class="lineNum">     440 </span>            : 
+<span class="lineNum">     441 </span>            :       @param scalar scalar value to divide through.
+<span class="lineNum">     442 </span>            :       @return reference to the current matrix.
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span>            :       Compute the product of the current matrix and the scalar value
+<span class="lineNum">     445 </span>            :       1.0/scalar, where scalar is given in the argument.
+<span class="lineNum">     446 </span>            :   */
+<span class="lineNum">     447 </span>            :   FGMatrix33&amp; operator/=(const double scalar);
+<span class="lineNum">     448 </span>            : 
+<span class="lineNum">     449 </span>            : private:
+<span class="lineNum">     450 </span>            :   double data[eRows*eColumns];
+<span class="lineNum">     451 </span>            : };
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span>            : /** Scalar multiplication.
+<span class="lineNum">     454 </span>            : 
+<span class="lineNum">     455 </span>            :     @param scalar scalar value to multiply with.
+<span class="lineNum">     456 </span>            :     @param A Matrix to multiply.
+<span class="lineNum">     457 </span>            : 
+<a name="458"><span class="lineNum">     458 </span>            :     Multiply the Matrix with a scalar value.</a>
+<span class="lineNum">     459 </span>            : */
+<span class="lineNum">     460 </span><span class="lineCov">          1 : inline FGMatrix33 operator*(double scalar, const FGMatrix33&amp; A) {</span>
+<span class="lineNum">     461 </span>            :   // use already defined operation.
+<span class="lineNum">     462 </span><span class="lineCov">          1 :   return A*scalar;</span>
+<span class="lineNum">     463 </span>            : }
+<span class="lineNum">     464 </span>            : 
+<span class="lineNum">     465 </span>            : /** Write matrix to a stream.
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span>            :     @param os Stream to write to.
+<span class="lineNum">     468 </span>            :     @param M Matrix to write.
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span>            :     Write the matrix to a stream.
+<span class="lineNum">     471 </span>            : */
+<span class="lineNum">     472 </span>            : std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const FGMatrix33&amp; M);
+<span class="lineNum">     473 </span>            : 
+<span class="lineNum">     474 </span>            : /** Read matrix from a stream.
+<span class="lineNum">     475 </span>            : 
+<span class="lineNum">     476 </span>            :     @param os Stream to read from.
+<span class="lineNum">     477 </span>            :     @param M Matrix to initialize with the values from the stream.
+<span class="lineNum">     478 </span>            : 
+<span class="lineNum">     479 </span>            :     Read matrix from a stream.
+<span class="lineNum">     480 </span>            : */
+<span class="lineNum">     481 </span>            : std::istream&amp; operator&gt;&gt;(std::istream&amp; is, FGMatrix33&amp; M);
+<span class="lineNum">     482 </span>            : 
+<span class="lineNum">     483 </span>            : } // namespace JSBSim
+<span class="lineNum">     484 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

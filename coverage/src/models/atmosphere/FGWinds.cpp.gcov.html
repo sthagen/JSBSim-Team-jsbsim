@@ -1,0 +1,689 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/atmosphere/FGWinds.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/atmosphere</a> - FGWinds.cpp<span style="font-size: 80%;"> (source / <a href="FGWinds.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">88</td>
+            <td class="headerCovTableEntry">285</td>
+            <td class="headerCovTableEntryLo">30.9 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryLo">47.4 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGWinds.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt, Tony Peden, Andreas Gaeb
+<span class="lineNum">       5 </span>            :  Date started: Extracted from FGAtmosphere, which originated in 1998
+<span class="lineNum">       6 </span>            :                5/2011
+<span class="lineNum">       7 </span>            :  Purpose:      Models winds, gusts, turbulence, and other atmospheric
+<span class="lineNum">       8 </span>            :                disturbances
+<span class="lineNum">       9 </span>            :  Called by:    FGFDMExec
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  ------------- Copyright (C) 2011  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      14 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      15 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      16 </span>            :  later version.
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      19 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      20 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      21 </span>            :  details.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      24 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      25 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      28 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      31 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : HISTORY
+<span class="lineNum">      34 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : COMMENTS, REFERENCES,  and NOTES
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      39 </span>            : [1]   Anderson, John D. &quot;Introduction to Flight, Third Edition&quot;, McGraw-Hill,
+<span class="lineNum">      40 </span>            :       1989, ISBN 0-07-001641-0
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      43 </span>            : INCLUDES
+<span class="lineNum">      44 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #include &quot;FGWinds.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;math/FGTable.h&quot;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : using namespace std;
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : namespace JSBSim {
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      55 </span>            : CLASS IMPLEMENTATION
+<span class="lineNum">      56 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      59 </span>            : // square a value, but preserve the original sign
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : /*
+<span class="lineNum">      62 </span>            : static inline double square_signed (double value)
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span>            :     if (value &lt; 0)
+<span class="lineNum">      65 </span>            :         return value * value * -1;
+<span class="lineNum">      66 </span>            :     else
+<span class="lineNum">      67 </span>            :         return value * value;
+<span class="lineNum">      68 </span>            : }
+<span class="lineNum">      69 </span>            : */
+<a name="70"><span class="lineNum">      70 </span>            : </a>
+<span class="lineNum">      71 </span>            : /// simply square a value
+<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 : constexpr double sqr(double x) { return x*x; }</span></a>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">          8 : FGWinds::FGWinds(FGFDMExec* fdmex) : FGModel(fdmex)</span>
+<span class="lineNum">      75 </span>            : {
+<span class="lineNum">      76 </span><span class="lineCov">          8 :   Name = &quot;FGWinds&quot;;</span>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineCov">          8 :   MagnitudedAccelDt = MagnitudeAccel = Magnitude = TurbDirection = 0.0;</span>
+<span class="lineNum">      79 </span><span class="lineCov">          8 :   SetTurbType( ttMilspec );</span>
+<span class="lineNum">      80 </span><span class="lineCov">          8 :   TurbGain = 1.0;</span>
+<span class="lineNum">      81 </span><span class="lineCov">          8 :   TurbRate = 10.0;</span>
+<span class="lineNum">      82 </span><span class="lineCov">          8 :   Rhythmicity = 0.1;</span>
+<span class="lineNum">      83 </span><span class="lineCov">          8 :   spike = target_time = strength = 0.0;</span>
+<span class="lineNum">      84 </span><span class="lineCov">          8 :   wind_from_clockwise = 0.0;</span>
+<span class="lineNum">      85 </span><span class="lineCov">          8 :   psiw = 0.0;</span>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span><span class="lineCov">          8 :   vGustNED.InitMatrix();</span>
+<span class="lineNum">      88 </span><span class="lineCov">          8 :   vTurbulenceNED.InitMatrix();</span>
+<span class="lineNum">      89 </span><span class="lineCov">          8 :   vCosineGust.InitMatrix();</span>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            :   // Milspec turbulence model
+<span class="lineNum">      92 </span><span class="lineCov">          8 :   windspeed_at_20ft = 0.;</span>
+<span class="lineNum">      93 </span><span class="lineCov">          8 :   probability_of_exceedence_index = 0;</span>
+<span class="lineNum">      94 </span><span class="lineCov">          8 :   POE_Table = new FGTable(7,12);</span>
+<span class="lineNum">      95 </span>            :   // this is Figure 7 from p. 49 of MIL-F-8785C
+<span class="lineNum">      96 </span>            :   // rows: probability of exceedance curve index, cols: altitude in ft
+<span class="lineNum">      97 </span><span class="lineCov">          8 :   *POE_Table</span>
+<span class="lineNum">      98 </span><span class="lineCov">          8 :            &lt;&lt; 500.0 &lt;&lt; 1750.0 &lt;&lt; 3750.0 &lt;&lt; 7500.0 &lt;&lt; 15000.0 &lt;&lt; 25000.0 &lt;&lt; 35000.0 &lt;&lt; 45000.0 &lt;&lt; 55000.0 &lt;&lt; 65000.0 &lt;&lt; 75000.0 &lt;&lt; 80000.0</span>
+<span class="lineNum">      99 </span><span class="lineCov">          8 :     &lt;&lt; 1   &lt;&lt;   3.2 &lt;&lt;    2.2 &lt;&lt;    1.5 &lt;&lt;    0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0</span>
+<span class="lineNum">     100 </span><span class="lineCov">          8 :     &lt;&lt; 2   &lt;&lt;   4.2 &lt;&lt;    3.6 &lt;&lt;    3.3 &lt;&lt;    1.6 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0</span>
+<span class="lineNum">     101 </span><span class="lineCov">          8 :     &lt;&lt; 3   &lt;&lt;   6.6 &lt;&lt;    6.9 &lt;&lt;    7.4 &lt;&lt;    6.7 &lt;&lt;     4.6 &lt;&lt;     2.7 &lt;&lt;     0.4 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0</span>
+<span class="lineNum">     102 </span><span class="lineCov">          8 :     &lt;&lt; 4   &lt;&lt;   8.6 &lt;&lt;    9.6 &lt;&lt;   10.6 &lt;&lt;   10.1 &lt;&lt;     8.0 &lt;&lt;     6.6 &lt;&lt;     5.0 &lt;&lt;     4.2 &lt;&lt;     2.7 &lt;&lt;     0.0 &lt;&lt;     0.0 &lt;&lt;     0.0</span>
+<span class="lineNum">     103 </span><span class="lineCov">          8 :     &lt;&lt; 5   &lt;&lt;  11.8 &lt;&lt;   13.0 &lt;&lt;   16.0 &lt;&lt;   15.1 &lt;&lt;    11.6 &lt;&lt;     9.7 &lt;&lt;     8.1 &lt;&lt;     8.2 &lt;&lt;     7.9 &lt;&lt;     4.9 &lt;&lt;     3.2 &lt;&lt;     2.1</span>
+<span class="lineNum">     104 </span><span class="lineCov">          8 :     &lt;&lt; 6   &lt;&lt;  15.6 &lt;&lt;   17.6 &lt;&lt;   23.0 &lt;&lt;   23.6 &lt;&lt;    22.1 &lt;&lt;    20.0 &lt;&lt;    16.0 &lt;&lt;    15.1 &lt;&lt;    12.1 &lt;&lt;     7.9 &lt;&lt;     6.2 &lt;&lt;     5.1</span>
+<span class="lineNum">     105 </span><span class="lineCov">          8 :     &lt;&lt; 7   &lt;&lt;  18.7 &lt;&lt;   21.5 &lt;&lt;   28.4 &lt;&lt;   30.2 &lt;&lt;    30.7 &lt;&lt;    31.0 &lt;&lt;    25.2 &lt;&lt;    23.1 &lt;&lt;    17.5 &lt;&lt;    10.7 &lt;&lt;     8.4 &lt;&lt;     7.2;</span>
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span><span class="lineCov">          8 :   bind();</span>
+<span class="lineNum">     108 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">     109 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     110 </span>            : 
+<a name="111"><span class="lineNum">     111 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span><span class="lineCov">         24 : FGWinds::~FGWinds()</span>
+<span class="lineNum">     114 </span>            : {
+<span class="lineNum">     115 </span><span class="lineCov">          8 :   delete(POE_Table);</span>
+<span class="lineNum">     116 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">     117 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">     118 </span>            : 
+<a name="119"><span class="lineNum">     119 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span><span class="lineCov">          8 : bool FGWinds::InitModel(void)</span>
+<span class="lineNum">     122 </span>            : {
+<span class="lineNum">     123 </span><span class="lineCov">          8 :   if (!FGModel::InitModel()) return false;</span>
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span><span class="lineCov">          8 :   psiw = 0.0;</span>
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span><span class="lineCov">          8 :   vGustNED.InitMatrix();</span>
+<span class="lineNum">     128 </span><span class="lineCov">          8 :   vTurbulenceNED.InitMatrix();</span>
+<span class="lineNum">     129 </span><span class="lineCov">          8 :   vCosineGust.InitMatrix();</span>
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span><span class="lineCov">          8 :   oneMinusCosineGust.gustProfile.Running = false;</span>
+<span class="lineNum">     132 </span><span class="lineCov">          8 :   oneMinusCosineGust.gustProfile.elapsedTime = 0.0;</span>
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span><span class="lineCov">          8 :   return true;</span>
+<span class="lineNum">     135 </span>            : }
+<span class="lineNum">     136 </span>            : 
+<a name="137"><span class="lineNum">     137 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 : bool FGWinds::Run(bool Holding)</span>
+<span class="lineNum">     140 </span>            : {
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :   if (FGModel::Run(Holding)) return true;</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :   if (Holding) return false;</span>
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :   if (turbType != ttNone) Turbulence(in.AltitudeASL);</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :   if (oneMinusCosineGust.gustProfile.Running) CosineGust();</span>
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :   vTotalWindNED = vWindNED + vGustNED + vCosineGust + vTurbulenceNED;</span>
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span>            :    // psiw (Wind heading) is the direction the wind is blowing towards
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :   if (vWindNED(eX) != 0.0) psiw = atan2( vWindNED(eY), vWindNED(eX) );</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :   if (psiw &lt; 0) psiw += 2*M_PI;</span>
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :   Debug(2);</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     155 </span>            : }
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     158 </span>            : //
+<a name="159"><span class="lineNum">     159 </span>            : // psi is the angle that the wind is blowing *towards*</a>
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 : void FGWinds::SetWindspeed(double speed)</span>
+<span class="lineNum">     162 </span>            : {
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :   if (vWindNED.Magnitude() == 0.0) {</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     psiw = 0.0;</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :     vWindNED(eNorth) = speed;</span>
+<span class="lineNum">     166 </span>            :   } else {
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :     vWindNED(eNorth) = speed * cos(psiw);</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :     vWindNED(eEast) = speed * sin(psiw);</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :     vWindNED(eDown) = 0.0;</span>
+<span class="lineNum">     170 </span>            :   }
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     172 </span>            : 
+<a name="173"><span class="lineNum">     173 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineCov">          8 : double FGWinds::GetWindspeed(void) const</span>
+<span class="lineNum">     176 </span>            : {
+<span class="lineNum">     177 </span><span class="lineCov">          8 :   return vWindNED.Magnitude();</span>
+<span class="lineNum">     178 </span>            : }
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     181 </span>            : //
+<a name="182"><span class="lineNum">     182 </span>            : // psi is the angle that the wind is blowing *towards*</a>
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 : void FGWinds::SetWindPsi(double dir)</span>
+<span class="lineNum">     185 </span>            : {
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :   double mag = GetWindspeed();</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :   psiw = dir;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :   SetWindspeed(mag);</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     190 </span>            : 
+<a name="191"><span class="lineNum">     191 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 : void FGWinds::Turbulence(double h)</span>
+<span class="lineNum">     194 </span>            : {
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :   switch (turbType) {</span>
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :   case ttCulp: {</span>
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :     vTurbPQR(eP) = wind_from_clockwise;</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :     if (TurbGain == 0.0) return;</span>
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :     // keep the inputs within allowable limts for this model
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :     if (TurbGain &lt; 0.0) TurbGain = 0.0;</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :     if (TurbGain &gt; 1.0) TurbGain = 1.0;</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :     if (TurbRate &lt; 0.0) TurbRate = 0.0;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :     if (TurbRate &gt; 30.0) TurbRate = 30.0;</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :     if (Rhythmicity &lt; 0.0) Rhythmicity = 0.0;</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :     if (Rhythmicity &gt; 1.0) Rhythmicity = 1.0;</span>
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span>            :     // generate a sine wave corresponding to turbulence rate in hertz
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :     double time = FDMExec-&gt;GetSimTime();</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :     double sinewave = sin( time * TurbRate * 6.283185307 );</span>
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :     double random = 0.0;</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     if (target_time == 0.0) {</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :       strength = random = 1 - 2.0*(double(rand())/double(RAND_MAX));</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :       target_time = time + 0.71 + (random * 0.5);</span>
+<span class="lineNum">     218 </span>            :     }
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :     if (time &gt; target_time) {</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :       spike = 1.0;</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :       target_time = 0.0;</span>
+<span class="lineNum">     222 </span>            :     }
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span>            :     // max vertical wind speed in fps, corresponds to TurbGain = 1.0
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     double max_vs = 40;</span>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :     vTurbulenceNED.InitMatrix();</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :     double delta = strength * max_vs * TurbGain * (1-Rhythmicity) * spike;</span>
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            :     // Vertical component of turbulence.
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :     vTurbulenceNED(eDown) = sinewave * max_vs * TurbGain * Rhythmicity;</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :     vTurbulenceNED(eDown)+= delta;</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :     if (in.DistanceAGL/in.wingspan &lt; 3.0)</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :         vTurbulenceNED(eDown) *= in.DistanceAGL/in.wingspan * 0.3333;</span>
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :     // Yaw component of turbulence.
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     vTurbulenceNED(eNorth) = sin( delta * 3.0 );</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :     vTurbulenceNED(eEast) = cos( delta * 3.0 );</span>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            :     // Roll component of turbulence. Clockwise vortex causes left roll.
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :     vTurbPQR(eP) += delta * 0.04;</span>
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :     spike = spike * 0.9;</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     245 </span>            :   }
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   case ttMilspec:</span>
+<span class="lineNum">     247 </span>            :   case ttTustin: {
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span>            :     // an index of zero means turbulence is disabled
+<span class="lineNum">     250 </span>            :     // airspeed occurs as divisor in the code below
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :     if (probability_of_exceedence_index == 0 || in.V == 0) {</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :       vTurbulenceNED(eNorth) = vTurbulenceNED(eEast) = vTurbulenceNED(eDown) = 0.0;</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :       vTurbPQR(eP) = vTurbPQR(eQ) = vTurbPQR(eR) = 0.0;</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :       return;</span>
+<span class="lineNum">     255 </span>            :     }
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span>            :     // Turbulence model according to MIL-F-8785C (Flying Qualities of Piloted Aircraft)
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :     double b_w = in.wingspan, L_u, L_w, sig_u, sig_w;</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :       if (b_w == 0.) b_w = 30.;</span>
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span>            :     // clip height functions at 10 ft
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :     if (h &lt;= 10.) h = 10;</span>
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            :     // Scale lengths L and amplitudes sigma as function of height
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :     if (h &lt;= 1000) {</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :       L_u = h/pow(0.177 + 0.000823*h, 1.2); // MIL-F-8785c, Fig. 10, p. 55</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :       L_w = h;</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :       sig_w = 0.1*windspeed_at_20ft;</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :       sig_u = sig_w/pow(0.177 + 0.000823*h, 0.4); // MIL-F-8785c, Fig. 11, p. 56</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :     } else if (h &lt;= 2000) {</span>
+<span class="lineNum">     272 </span>            :       // linear interpolation between low altitude and high altitude models
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :       L_u = L_w = 1000 + (h-1000.)/1000.*750.;</span>
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :       sig_u = sig_w = 0.1*windspeed_at_20ft</span>
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :                     + (h-1000.)/1000.*(POE_Table-&gt;GetValue(probability_of_exceedence_index, h) - 0.1*windspeed_at_20ft);</span>
+<span class="lineNum">     276 </span>            :     } else {
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :       L_u = L_w = 1750.; //  MIL-F-8785c, Sec. 3.7.2.1, p. 48</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :       sig_u = sig_w = POE_Table-&gt;GetValue(probability_of_exceedence_index, h);</span>
+<span class="lineNum">     279 </span>            :     }
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span>            :     // keep values from last timesteps
+<span class="lineNum">     282 </span>            :     // TODO maybe use deque?
+<span class="lineNum">     283 </span>            :     static double
+<span class="lineNum">     284 </span>            :       xi_u_km1 = 0, nu_u_km1 = 0,
+<span class="lineNum">     285 </span>            :       xi_v_km1 = 0, xi_v_km2 = 0, nu_v_km1 = 0, nu_v_km2 = 0,
+<span class="lineNum">     286 </span>            :       xi_w_km1 = 0, xi_w_km2 = 0, nu_w_km1 = 0, nu_w_km2 = 0,
+<span class="lineNum">     287 </span>            :       xi_p_km1 = 0, nu_p_km1 = 0,
+<span class="lineNum">     288 </span>            :       xi_q_km1 = 0, xi_r_km1 = 0;
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            :     double
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :       T_V = in.totalDeltaT, // for compatibility of nomenclature</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :       sig_p = 1.9/sqrt(L_w*b_w)*sig_w, // Yeager1998, eq. (8)</span>
+<span class="lineNum">     294 </span>            :       //sig_q = sqrt(M_PI/2/L_w/b_w), // eq. (14)
+<span class="lineNum">     295 </span>            :       //sig_r = sqrt(2*M_PI/3/L_w/b_w), // eq. (17)
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :       L_p = sqrt(L_w*b_w)/2.6, // eq. (10)</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :       tau_u = L_u/in.V, // eq. (6)</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :       tau_w = L_w/in.V, // eq. (3)</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :       tau_p = L_p/in.V, // eq. (9)</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :       tau_q = 4*b_w/M_PI/in.V, // eq. (13)</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :       tau_r =3*b_w/M_PI/in.V, // eq. (17)</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :       nu_u = GaussianRandomNumber(),</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :       nu_v = GaussianRandomNumber(),</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :       nu_w = GaussianRandomNumber(),</span>
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :       nu_p = GaussianRandomNumber(),</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :       xi_u=0, xi_v=0, xi_w=0, xi_p=0, xi_q=0, xi_r=0;</span>
+<span class="lineNum">     307 </span>            : 
+<span class="lineNum">     308 </span>            :     // values of turbulence NED velocities
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :     if (turbType == ttTustin) {</span>
+<span class="lineNum">     311 </span>            :       // the following is the Tustin formulation of Yeager's report
+<span class="lineNum">     312 </span>            :       double
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :         omega_w = in.V/L_w, // hidden in nomenclature p. 3</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :         omega_v = in.V/L_u, // this is defined nowhere</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :         C_BL  = 1/tau_u/tan(T_V/2/tau_u), // eq. (19)</span>
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :         C_BLp = 1/tau_p/tan(T_V/2/tau_p), // eq. (22)</span>
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :         C_BLq = 1/tau_q/tan(T_V/2/tau_q), // eq. (24)</span>
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :         C_BLr = 1/tau_r/tan(T_V/2/tau_r); // eq. (26)</span>
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            :       // all values calculated so far are strictly positive, except for
+<span class="lineNum">     321 </span>            :       // the random numbers nu_*. This means that in the code below, all
+<span class="lineNum">     322 </span>            :       // divisors are strictly positive, too, and no floating point
+<span class="lineNum">     323 </span>            :       // exception should occur.
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :       xi_u = -(1 - C_BL*tau_u)/(1 + C_BL*tau_u)*xi_u_km1</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :            + sig_u*sqrt(2*tau_u/T_V)/(1 + C_BL*tau_u)*(nu_u + nu_u_km1); // eq. (18)</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :       xi_v = -2*(sqr(omega_v) - sqr(C_BL))/sqr(omega_v + C_BL)*xi_v_km1</span>
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :            - sqr(omega_v - C_BL)/sqr(omega_v + C_BL) * xi_v_km2</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :            + sig_u*sqrt(3*omega_v/T_V)/sqr(omega_v + C_BL)*(</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :                  (C_BL + omega_v/sqrt(3.))*nu_v</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :                + 2/sqrt(3.)*omega_v*nu_v_km1</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :                + (omega_v/sqrt(3.) - C_BL)*nu_v_km2); // eq. (20) for v</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :       xi_w = -2*(sqr(omega_w) - sqr(C_BL))/sqr(omega_w + C_BL)*xi_w_km1</span>
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :            - sqr(omega_w - C_BL)/sqr(omega_w + C_BL) * xi_w_km2</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :            + sig_w*sqrt(3*omega_w/T_V)/sqr(omega_w + C_BL)*(</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :                  (C_BL + omega_w/sqrt(3.))*nu_w</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :                + 2/sqrt(3.)*omega_w*nu_w_km1</span>
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :                + (omega_w/sqrt(3.) - C_BL)*nu_w_km2); // eq. (20) for w</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :       xi_p = -(1 - C_BLp*tau_p)/(1 + C_BLp*tau_p)*xi_p_km1</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :            + sig_p*sqrt(2*tau_p/T_V)/(1 + C_BLp*tau_p) * (nu_p + nu_p_km1); // eq. (21)</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :       xi_q = -(1 - 4*b_w*C_BLq/M_PI/in.V)/(1 + 4*b_w*C_BLq/M_PI/in.V) * xi_q_km1</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :            + C_BLq/in.V/(1 + 4*b_w*C_BLq/M_PI/in.V) * (xi_w - xi_w_km1); // eq. (23)</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :       xi_r = - (1 - 3*b_w*C_BLr/M_PI/in.V)/(1 + 3*b_w*C_BLr/M_PI/in.V) * xi_r_km1</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :            + C_BLr/in.V/(1 + 3*b_w*C_BLr/M_PI/in.V) * (xi_v - xi_v_km1); // eq. (25)</span>
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :     } else if (turbType == ttMilspec) {</span>
+<span class="lineNum">     346 </span>            :       // the following is the MIL-STD-1797A formulation
+<span class="lineNum">     347 </span>            :       // as cited in Yeager's report
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :       xi_u = (1 - T_V/tau_u)  *xi_u_km1 + sig_u*sqrt(2*T_V/tau_u)*nu_u;  // eq. (30)</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :       xi_v = (1 - 2*T_V/tau_u)*xi_v_km1 + sig_u*sqrt(4*T_V/tau_u)*nu_v;  // eq. (31)</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :       xi_w = (1 - 2*T_V/tau_w)*xi_w_km1 + sig_w*sqrt(4*T_V/tau_w)*nu_w;  // eq. (32)</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :       xi_p = (1 - T_V/tau_p)  *xi_p_km1 + sig_p*sqrt(2*T_V/tau_p)*nu_p;  // eq. (33)</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :       xi_q = (1 - T_V/tau_q)  *xi_q_km1 + M_PI/4/b_w*(xi_w - xi_w_km1);  // eq. (34)</span>
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :       xi_r = (1 - T_V/tau_r)  *xi_r_km1 + M_PI/3/b_w*(xi_v - xi_v_km1);  // eq. (35)</span>
+<span class="lineNum">     354 </span>            :     }
+<span class="lineNum">     355 </span>            : 
+<span class="lineNum">     356 </span>            :     // rotate by wind azimuth and assign the velocities
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :     double cospsi = cos(psiw), sinpsi = sin(psiw);</span>
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :     vTurbulenceNED(eNorth) =  cospsi*xi_u + sinpsi*xi_v;</span>
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :     vTurbulenceNED(eEast) = -sinpsi*xi_u + cospsi*xi_v;</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :     vTurbulenceNED(eDown) = xi_w;</span>
+<span class="lineNum">     361 </span>            : 
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :     vTurbPQR(eP) =  cospsi*xi_p + sinpsi*xi_q;</span>
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :     vTurbPQR(eQ) = -sinpsi*xi_p + cospsi*xi_q;</span>
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :     vTurbPQR(eR) = xi_r;</span>
+<span class="lineNum">     365 </span>            : 
+<span class="lineNum">     366 </span>            :     // vTurbPQR is in the body fixed frame, not NED
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :     vTurbPQR = in.Tl2b*vTurbPQR;</span>
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span>            :     // hand on the values for the next timestep
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :     xi_u_km1 = xi_u; nu_u_km1 = nu_u;</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :     xi_v_km2 = xi_v_km1; xi_v_km1 = xi_v; nu_v_km2 = nu_v_km1; nu_v_km1 = nu_v;</span>
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :     xi_w_km2 = xi_w_km1; xi_w_km1 = xi_w; nu_w_km2 = nu_w_km1; nu_w_km1 = nu_w;</span>
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :     xi_p_km1 = xi_p; nu_p_km1 = nu_p;</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :     xi_q_km1 = xi_q;</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :     xi_r_km1 = xi_r;</span>
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span>            :   }
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :   default:</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     380 </span>            :   }
+<span class="lineNum">     381 </span>            : 
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :   TurbDirection = atan2( vTurbulenceNED(eEast), vTurbulenceNED(eNorth))*radtodeg;</span>
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span>            : }
+<span class="lineNum">     385 </span>            : 
+<a name="386"><span class="lineNum">     386 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     387 </span>            : 
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 : double FGWinds::CosineGustProfile(double startDuration, double steadyDuration, double endDuration, double elapsedTime)</span>
+<span class="lineNum">     389 </span>            : {
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :   double factor = 0.0;</span>
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :   if (elapsedTime &gt;= 0 &amp;&amp; elapsedTime &lt;= startDuration) {</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :     factor = (1.0 - cos(M_PI*elapsedTime/startDuration))/2.0;</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :   } else if (elapsedTime &gt; startDuration &amp;&amp; (elapsedTime &lt;= (startDuration + steadyDuration))) {</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :     factor = 1.0;</span>
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :   } else if (elapsedTime &gt; (startDuration + steadyDuration) &amp;&amp; elapsedTime &lt;= (startDuration + steadyDuration + endDuration)) {</span>
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :     factor = (1-cos(M_PI*(1-(elapsedTime-(startDuration + steadyDuration))/endDuration)))/2.0;</span>
+<span class="lineNum">     397 </span>            :   } else {
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :     factor = 0.0;</span>
+<span class="lineNum">     399 </span>            :   }
+<span class="lineNum">     400 </span>            : 
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :   return factor;</span>
+<span class="lineNum">     402 </span>            : }
+<span class="lineNum">     403 </span>            : 
+<a name="404"><span class="lineNum">     404 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 : void FGWinds::CosineGust()</span>
+<span class="lineNum">     407 </span>            : {
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :   struct OneMinusCosineProfile&amp; profile = oneMinusCosineGust.gustProfile;</span>
+<span class="lineNum">     409 </span>            : 
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :   double factor = CosineGustProfile( profile.startupDuration,</span>
+<span class="lineNum">     411 </span>            :                                      profile.steadyDuration,
+<span class="lineNum">     412 </span>            :                                      profile.endDuration,
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :                                      profile.elapsedTime);</span>
+<span class="lineNum">     414 </span>            :   // Normalize the gust wind vector
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :   oneMinusCosineGust.vWind.Normalize();</span>
+<span class="lineNum">     416 </span>            : 
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :   if (oneMinusCosineGust.vWindTransformed.Magnitude() == 0.0) {</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :     switch (oneMinusCosineGust.gustFrame) {</span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :     case gfBody:</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :       oneMinusCosineGust.vWindTransformed = in.Tl2b.Inverse() * oneMinusCosineGust.vWind;</span>
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :     case gfWind:</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :       oneMinusCosineGust.vWindTransformed = in.Tl2b.Inverse() * in.Tw2b * oneMinusCosineGust.vWind;</span>
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :     case gfLocal:</span>
+<span class="lineNum">     426 </span>            :       // this is the native frame - and the default.
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :       oneMinusCosineGust.vWindTransformed = oneMinusCosineGust.vWind;</span>
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     431 </span>            :     }
+<span class="lineNum">     432 </span>            :   }
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :   vCosineGust = factor * oneMinusCosineGust.vWindTransformed * oneMinusCosineGust.magnitude;</span>
+<span class="lineNum">     435 </span>            : 
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :   profile.elapsedTime += in.totalDeltaT;</span>
+<span class="lineNum">     437 </span>            : 
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :   if (profile.elapsedTime &gt; (profile.startupDuration + profile.steadyDuration + profile.endDuration)) {</span>
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :     profile.Running = false;</span>
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :     profile.elapsedTime = 0.0;</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :     oneMinusCosineGust.vWindTransformed.InitMatrix();</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :     vCosineGust.InitMatrix(0);</span>
+<span class="lineNum">     443 </span>            :   }
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     445 </span>            : 
+<a name="446"><span class="lineNum">     446 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     447 </span>            : 
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 : void FGWinds::NumberOfUpDownburstCells(int num)</span>
+<span class="lineNum">     449 </span>            : {
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;UpDownBurstCells.size();i++) delete UpDownBurstCells[i];</span>
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :   UpDownBurstCells.clear();</span>
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 :   if (num &gt;= 0) {</span>
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :     for (int i=0; i&lt;num; i++) UpDownBurstCells.push_back(new struct UpDownBurst);</span>
+<span class="lineNum">     454 </span>            :   }
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     456 </span>            : 
+<span class="lineNum">     457 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     458 </span>            : // Calculates the distance between a specified point (where presumably the
+<span class="lineNum">     459 </span>            : // Up/Downburst is centered) and the current vehicle location. The distance
+<a name="460"><span class="lineNum">     460 </span>            : // here is calculated from the Haversine formula.</a>
+<span class="lineNum">     461 </span>            : 
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 : double FGWinds::DistanceFromRingCenter(double lat, double lon)</span>
+<span class="lineNum">     463 </span>            : {
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :   double deltaLat = in.latitude - lat;</span>
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 :   double deltaLong = in.longitude - lon;</span>
+<span class="lineNum">     466 </span><span class="lineNoCov">          0 :   double dLat2 = deltaLat/2.0;</span>
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :   double dLong2 = deltaLong/2.0;</span>
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :   double a = sin(dLat2)*sin(dLat2)</span>
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :              + cos(lat)*cos(in.latitude)*sin(dLong2)*sin(dLong2);</span>
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :   double c = 2.0*atan2(sqrt(a), sqrt(1.0 - a));</span>
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :   double d = in.planetRadius*c;</span>
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :   return d;</span>
+<span class="lineNum">     473 </span>            : }
+<span class="lineNum">     474 </span>            : 
+<a name="475"><span class="lineNum">     475 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     476 </span>            : 
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 : void FGWinds::UpDownBurst()</span>
+<span class="lineNum">     478 </span>            : {
+<span class="lineNum">     479 </span>            : 
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;UpDownBurstCells.size(); i++) {</span>
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :     /*double d =*/ DistanceFromRingCenter(UpDownBurstCells[i]-&gt;ringLatitude, UpDownBurstCells[i]-&gt;ringLongitude);</span>
+<span class="lineNum">     482 </span>            : 
+<span class="lineNum">     483 </span>            :   }
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     485 </span>            : 
+<a name="486"><span class="lineNum">     486 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     487 </span>            : 
+<span class="lineNum">     488 </span><span class="lineCov">          8 : void FGWinds::bind(void)</span>
+<span class="lineNum">     489 </span>            : {
+<span class="lineNum">     490 </span>            :   typedef double (FGWinds::*PMF)(int) const;
+<span class="lineNum">     491 </span>            :   typedef int (FGWinds::*PMFt)(void) const;
+<span class="lineNum">     492 </span>            :   typedef void   (FGWinds::*PMFd)(int,double);
+<span class="lineNum">     493 </span>            :   typedef void   (FGWinds::*PMFi)(int);
+<span class="lineNum">     494 </span>            :   typedef double (FGWinds::*Ptr)(void) const;
+<span class="lineNum">     495 </span>            : 
+<span class="lineNum">     496 </span>            :   // User-specified steady, constant, wind properties (local navigational/geographic frame: N-E-D)
+<span class="lineNum">     497 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/psiw-rad&quot;, this, &amp;FGWinds::GetWindPsi, &amp;FGWinds::SetWindPsi);</span>
+<span class="lineNum">     498 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/wind-north-fps&quot;, this, eNorth, (PMF)&amp;FGWinds::GetWindNED,</span>
+<span class="lineNum">     499 </span>            :                                                           (PMFd)&amp;FGWinds::SetWindNED);
+<span class="lineNum">     500 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/wind-east-fps&quot;,  this, eEast, (PMF)&amp;FGWinds::GetWindNED,</span>
+<span class="lineNum">     501 </span>            :                                                           (PMFd)&amp;FGWinds::SetWindNED);
+<span class="lineNum">     502 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/wind-down-fps&quot;,  this, eDown, (PMF)&amp;FGWinds::GetWindNED,</span>
+<span class="lineNum">     503 </span>            :                                                           (PMFd)&amp;FGWinds::SetWindNED);
+<span class="lineNum">     504 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/wind-mag-fps&quot;, this, &amp;FGWinds::GetWindspeed,</span>
+<span class="lineNum">     505 </span>            :                                                         &amp;FGWinds::SetWindspeed);
+<span class="lineNum">     506 </span>            : 
+<span class="lineNum">     507 </span>            :   // User-specifieded gust (local navigational/geographic frame: N-E-D)
+<span class="lineNum">     508 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/gust-north-fps&quot;, this, eNorth, (PMF)&amp;FGWinds::GetGustNED,</span>
+<span class="lineNum">     509 </span>            :                                                           (PMFd)&amp;FGWinds::SetGustNED);
+<span class="lineNum">     510 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/gust-east-fps&quot;,  this, eEast, (PMF)&amp;FGWinds::GetGustNED,</span>
+<span class="lineNum">     511 </span>            :                                                           (PMFd)&amp;FGWinds::SetGustNED);
+<span class="lineNum">     512 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/gust-down-fps&quot;,  this, eDown, (PMF)&amp;FGWinds::GetGustNED,</span>
+<span class="lineNum">     513 </span>            :                                                           (PMFd)&amp;FGWinds::SetGustNED);
+<span class="lineNum">     514 </span>            : 
+<span class="lineNum">     515 </span>            :   // User-specified 1 - cosine gust parameters (in specified frame)
+<span class="lineNum">     516 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/startup-duration-sec&quot;, this, (Ptr)0L, &amp;FGWinds::StartupGustDuration);</span>
+<span class="lineNum">     517 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/steady-duration-sec&quot;, this, (Ptr)0L, &amp;FGWinds::SteadyGustDuration);</span>
+<span class="lineNum">     518 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/end-duration-sec&quot;, this, (Ptr)0L, &amp;FGWinds::EndGustDuration);</span>
+<span class="lineNum">     519 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/magnitude-ft_sec&quot;, this, (Ptr)0L, &amp;FGWinds::GustMagnitude);</span>
+<span class="lineNum">     520 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/frame&quot;, this, (PMFt)0L, (PMFi)&amp;FGWinds::GustFrame);</span>
+<span class="lineNum">     521 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/X-velocity-ft_sec&quot;, this, (Ptr)0L, &amp;FGWinds::GustXComponent);</span>
+<span class="lineNum">     522 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/Y-velocity-ft_sec&quot;, this, (Ptr)0L, &amp;FGWinds::GustYComponent);</span>
+<span class="lineNum">     523 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/Z-velocity-ft_sec&quot;, this, (Ptr)0L, &amp;FGWinds::GustZComponent);</span>
+<span class="lineNum">     524 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/cosine-gust/start&quot;, this, static_cast&lt;bool (FGWinds::*)(void) const&gt;(nullptr), &amp;FGWinds::StartGust);</span>
+<span class="lineNum">     525 </span>            : 
+<span class="lineNum">     526 </span>            :   // User-specified Up- Down-burst parameters
+<span class="lineNum">     527 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/number-of-cells&quot;, this, (PMFt)0L, &amp;FGWinds::NumberOfUpDownburstCells);</span>
+<span class="lineNum">     528 </span>            : //  PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/&quot;, this, (Ptr)0L, &amp;FGWinds::);
+<span class="lineNum">     529 </span>            : //  PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/&quot;, this, (Ptr)0L, &amp;FGWinds::);
+<span class="lineNum">     530 </span>            : //  PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/&quot;, this, (Ptr)0L, &amp;FGWinds::);
+<span class="lineNum">     531 </span>            : //  PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/&quot;, this, (Ptr)0L, &amp;FGWinds::);
+<span class="lineNum">     532 </span>            : //  PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/&quot;, this, (Ptr)0L, &amp;FGWinds::);
+<span class="lineNum">     533 </span>            : //  PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/&quot;, this, (Ptr)0L, &amp;FGWinds::);
+<span class="lineNum">     534 </span>            : //  PropertyManager-&gt;Tie(&quot;atmosphere/updownburst/&quot;, this, (Ptr)0L, &amp;FGWinds::);
+<span class="lineNum">     535 </span>            : 
+<span class="lineNum">     536 </span>            :   // User-specified turbulence (local navigational/geographic frame: N-E-D)
+<span class="lineNum">     537 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turb-north-fps&quot;, this, eNorth, (PMF)&amp;FGWinds::GetTurbNED,</span>
+<span class="lineNum">     538 </span>            :                                                           (PMFd)&amp;FGWinds::SetTurbNED);
+<span class="lineNum">     539 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turb-east-fps&quot;,  this, eEast, (PMF)&amp;FGWinds::GetTurbNED,</span>
+<span class="lineNum">     540 </span>            :                                                           (PMFd)&amp;FGWinds::SetTurbNED);
+<span class="lineNum">     541 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turb-down-fps&quot;,  this, eDown, (PMF)&amp;FGWinds::GetTurbNED,</span>
+<span class="lineNum">     542 </span>            :                                                           (PMFd)&amp;FGWinds::SetTurbNED);
+<span class="lineNum">     543 </span>            :   // Experimental turbulence parameters
+<span class="lineNum">     544 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/p-turb-rad_sec&quot;, this,1, (PMF)&amp;FGWinds::GetTurbPQR);</span>
+<span class="lineNum">     545 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/q-turb-rad_sec&quot;, this,2, (PMF)&amp;FGWinds::GetTurbPQR);</span>
+<span class="lineNum">     546 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/r-turb-rad_sec&quot;, this,3, (PMF)&amp;FGWinds::GetTurbPQR);</span>
+<span class="lineNum">     547 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turb-type&quot;, this, (PMFt)&amp;FGWinds::GetTurbType, (PMFi)&amp;FGWinds::SetTurbType);</span>
+<span class="lineNum">     548 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turb-rate&quot;, this, &amp;FGWinds::GetTurbRate, &amp;FGWinds::SetTurbRate);</span>
+<span class="lineNum">     549 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turb-gain&quot;, this, &amp;FGWinds::GetTurbGain, &amp;FGWinds::SetTurbGain);</span>
+<span class="lineNum">     550 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turb-rhythmicity&quot;, this, &amp;FGWinds::GetRhythmicity,</span>
+<span class="lineNum">     551 </span>            :                                                             &amp;FGWinds::SetRhythmicity);
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span>            :   // Parameters for milspec turbulence
+<span class="lineNum">     554 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turbulence/milspec/windspeed_at_20ft_AGL-fps&quot;,</span>
+<span class="lineNum">     555 </span>            :                        this, &amp;FGWinds::GetWindspeed20ft,
+<span class="lineNum">     556 </span>            :                              &amp;FGWinds::SetWindspeed20ft);
+<span class="lineNum">     557 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/turbulence/milspec/severity&quot;,</span>
+<span class="lineNum">     558 </span>            :                        this, &amp;FGWinds::GetProbabilityOfExceedence,
+<span class="lineNum">     559 </span>            :                              &amp;FGWinds::SetProbabilityOfExceedence);
+<span class="lineNum">     560 </span>            : 
+<span class="lineNum">     561 </span>            :   // Total, calculated winds (local navigational/geographic frame: N-E-D). Read only.
+<span class="lineNum">     562 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/total-wind-north-fps&quot;, this, eNorth, (PMF)&amp;FGWinds::GetTotalWindNED);</span>
+<span class="lineNum">     563 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/total-wind-east-fps&quot;,  this, eEast,  (PMF)&amp;FGWinds::GetTotalWindNED);</span>
+<span class="lineNum">     564 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/total-wind-down-fps&quot;,  this, eDown,  (PMF)&amp;FGWinds::GetTotalWindNED);</span>
+<span class="lineNum">     565 </span>            : 
+<span class="lineNum">     566 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     567 </span>            : 
+<span class="lineNum">     568 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     569 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     570 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     571 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     572 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     573 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     574 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     575 </span>            : //       whatsoever.
+<span class="lineNum">     576 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     577 </span>            : //       startup messages
+<span class="lineNum">     578 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     579 </span>            : //       a class is instantiated
+<span class="lineNum">     580 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     581 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     582 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     583 </span>            : //       are printed out periodically
+<span class="lineNum">     584 </span>            : //    16: When set various parameters are sanity checked and
+<a name="585"><span class="lineNum">     585 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     586 </span>            : 
+<span class="lineNum">     587 </span><span class="lineCov">         16 : void FGWinds::Debug(int from)</span>
+<span class="lineNum">     588 </span>            : {
+<span class="lineNum">     589 </span><span class="lineCov">         16 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     590 </span>            : 
+<span class="lineNum">     591 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     592 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     593 </span>            :     }
+<span class="lineNum">     594 </span>            :   }
+<span class="lineNum">     595 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGWinds&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGWinds&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     598 </span>            :   }
+<span class="lineNum">     599 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     600 </span>            :   }
+<span class="lineNum">     601 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     602 </span>            :   }
+<span class="lineNum">     603 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     604 </span>            :   }
+<span class="lineNum">     605 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 128) { //</span>
+<span class="lineNum">     606 </span>            :   }
+<span class="lineNum">     607 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     608 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     609 </span>            :     }
+<span class="lineNum">     610 </span>            :   }
+<a name="611"><span class="lineNum">     611 </span>            : }</a>
+<span class="lineNum">     612 </span>            : 
+<span class="lineNum">     613 </span><span class="lineCov">         12 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

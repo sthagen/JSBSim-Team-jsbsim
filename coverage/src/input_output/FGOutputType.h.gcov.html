@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGOutputType.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGOutputType.h<span style="font-size: 80%;"> (source / <a href="FGOutputType.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGOutputType.h
+<span class="lineNum">       4 </span>            :  Author:       Bertrand Coconnier
+<span class="lineNum">       5 </span>            :  Date started: 09/10/11
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2011 Bertrand Coconnier -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      11 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      12 </span>            :  version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      20 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      21 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      24 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 09/10/11   BC    Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGOUTPUTTYPE_H
+<span class="lineNum">      35 </span>            : #define FGOUTPUTTYPE_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &quot;models/FGModel.h&quot;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      44 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      45 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : namespace JSBSim {
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : class FGFDMExec;
+<span class="lineNum">      50 </span>            : class Element;
+<span class="lineNum">      51 </span>            : class FGAerodynamics;
+<span class="lineNum">      52 </span>            : class FGAuxiliary;
+<span class="lineNum">      53 </span>            : class FGAircraft;
+<span class="lineNum">      54 </span>            : class FGAtmosphere;
+<span class="lineNum">      55 </span>            : class FGWinds;
+<span class="lineNum">      56 </span>            : class FGPropulsion;
+<span class="lineNum">      57 </span>            : class FGMassBalance;
+<span class="lineNum">      58 </span>            : class FGPropagate;
+<span class="lineNum">      59 </span>            : class FGAccelerations;
+<span class="lineNum">      60 </span>            : class FGFCS;
+<span class="lineNum">      61 </span>            : class FGGroundReactions;
+<span class="lineNum">      62 </span>            : class FGExternalReactions;
+<span class="lineNum">      63 </span>            : class FGBuoyantForces;
+<span class="lineNum">      64 </span>            : class FGPropertyValue;
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      67 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      68 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            : /** Abstract class to provide functions generic to all the output directives.
+<span class="lineNum">      71 </span>            :     This class is used by the output manager FGOutput to manage a list of
+<span class="lineNum">      72 </span>            :     different output classes without needing to know the details of each one of
+<span class="lineNum">      73 </span>            :     them. It also provides the functions that are common to all the output
+<span class="lineNum">      74 </span>            :     classes.
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :     The class inherits from FGModelFunctions so it is possible to define
+<span class="lineNum">      77 </span>            :     functions that execute before or after the output is generated. Such
+<span class="lineNum">      78 </span>            :     functions need to be tagged with a &quot;pre&quot; or &quot;post&quot; type attribute to denote
+<span class="lineNum">      79 </span>            :     the sequence in which they should be executed.
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :     The class mimics some functionalities of FGModel (methods InitModel(),
+<span class="lineNum">      82 </span>            :     Run() and SetRate()). However it does not inherit from FGModel since it is
+<span class="lineNum">      83 </span>            :     conceptually different from the model paradigm.
+<span class="lineNum">      84 </span>            :  */
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      87 </span>            : CLASS DECLARATION
+<span class="lineNum">      88 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            : class FGOutputType : public FGModel
+<span class="lineNum">      91 </span>            : {
+<span class="lineNum">      92 </span>            : public:
+<span class="lineNum">      93 </span>            :   /** Constructor (implement the FGModel interface).
+<span class="lineNum">      94 </span>            :       @param fdmex a pointer to the parent executive object
+<span class="lineNum">      95 </span>            :    */
+<span class="lineNum">      96 </span>            :   FGOutputType(FGFDMExec* fdmex);
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :   /// Destructor
+<span class="lineNum">      99 </span>            :   ~FGOutputType() override;
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :   /** Set the idx for this output instance
+<span class="lineNum">     102 </span>            :       @param idx ID of the output instance that is constructed
+<span class="lineNum">     103 </span>            :    */
+<span class="lineNum">     104 </span>            :   void SetIdx(unsigned int idx);
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :   /** Set the output rate for this output instances.
+<span class="lineNum">     107 </span>            :       @param rtHz new output rate in Hz */
+<span class="lineNum">     108 </span>            :   void SetRateHz(double rtHz);
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            :   /// Get the output rate in Hz for this output.
+<span class="lineNum">     111 </span>            :   double GetRateHz(void) const;
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            :   /** Set the activated subsystems for this output instance.
+<span class="lineNum">     114 </span>            :       @param subSystems bitfield that describes the activated subsystems
+<a name="115"><span class="lineNum">     115 </span>            :       @param outputProperties list of properties that should be output</a>
+<span class="lineNum">     116 </span>            :   */
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :   void SetSubSystems(int subSystems) { SubSystems = subSystems; }</span>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :   /** Set the list of properties that should be output for this output instance.
+<span class="lineNum">     120 </span>            :       @param outputProperties list of properties that should be output
+<span class="lineNum">     121 </span>            :   */
+<span class="lineNum">     122 </span>            :   void SetOutputProperties(std::vector&lt;FGPropertyNode_ptr&gt; &amp; outputProperties);
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            :   /** Overwrites the name identifier under which the output will be logged.
+<span class="lineNum">     125 </span>            :       This method is taken into account if it is called before
+<span class="lineNum">     126 </span>            :       FGFDMExec::RunIC() otherwise it is ignored until the next call to
+<a name="127"><span class="lineNum">     127 </span>            :       SetStartNewOutput().</a>
+<span class="lineNum">     128 </span>            :       @param name new name */
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :   virtual void SetOutputName(const std::string&amp; name) { Name = name; }</span>
+<span class="lineNum">     130 </span>            : 
+<a name="131"><span class="lineNum">     131 </span>            :   /** Get the name identifier to which the output will be directed.</a>
+<span class="lineNum">     132 </span>            :       @result the name identifier.*/
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :   virtual const std::string&amp; GetOutputName(void) const { return Name; }</span>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :   /** Init the output directives from an XML file (implement the FGModel interface).
+<span class="lineNum">     136 </span>            :       @param element XML Element that is pointing to the output directives
+<span class="lineNum">     137 </span>            :   */
+<span class="lineNum">     138 </span>            :   bool Load(Element* el) override;
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            :   /// Init the output model according to its configitation.
+<span class="lineNum">     141 </span>            :   bool InitModel(void) override;
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            :   /** Executes the output directives (implement the FGModel interface).
+<span class="lineNum">     144 </span>            :       This method checks that the current time step matches the output
+<span class="lineNum">     145 </span>            :       rate and calls the registered &quot;pre&quot; functions, the output
+<span class="lineNum">     146 </span>            :       generation and finally the &quot;post&quot; functions.
+<span class="lineNum">     147 </span>            :       @result false if no error.
+<span class="lineNum">     148 </span>            :    */
+<span class="lineNum">     149 </span>            :   bool Run(void);
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            :   /** Generate the output. This is a pure method so it must be implemented by
+<span class="lineNum">     152 </span>            :       the classes that inherits from FGOutputType. The Print name may not be
+<span class="lineNum">     153 </span>            :       relevant to all outputs but it has been kept for backward compatibility.
+<span class="lineNum">     154 </span>            :    */
+<span class="lineNum">     155 </span>            :   virtual void Print(void) = 0;
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            :   /** Reset the output prior to a restart of the simulation. This method should
+<span class="lineNum">     158 </span>            :       be called when the simulation is restarted with, for example, new initial
+<span class="lineNum">     159 </span>            :       conditions. When this method is executed the output instance can take
+<span class="lineNum">     160 </span>            :       special actions such as closing the current output file and open a new
+<a name="161"><span class="lineNum">     161 </span>            :       one with a different name. */</a>
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :   virtual void SetStartNewOutput(void) {}</span>
+<a name="164"><span class="lineNum">     164 </span>            : </a>
+<span class="lineNum">     165 </span>            :   /// Enables the output generation.
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :   void Enable(void) { enabled = true; }</span></a>
+<span class="lineNum">     167 </span>            :   /// Disables the output generation.
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :   void Disable(void) { enabled = false; }</span>
+<span class="lineNum">     169 </span>            :   /** Toggles the output generation.
+<a name="170"><span class="lineNum">     170 </span>            :       @result the output generation status i.e. true if the output has been</a>
+<span class="lineNum">     171 </span>            :               enabled, false if the output has been disabled. */
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :   bool Toggle(void) {enabled = !enabled; return enabled;}</span>
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span>            :   /// Subsystem types for specifying which will be output in the FDM data logging
+<span class="lineNum">     175 </span>            :   enum  eSubSystems {
+<span class="lineNum">     176 </span>            :     /** Subsystem: Simulation (= 1)          */ ssSimulation      = 1,
+<span class="lineNum">     177 </span>            :     /** Subsystem: Aerosurfaces (= 2)        */ ssAerosurfaces    = 2,
+<span class="lineNum">     178 </span>            :     /** Subsystem: Body rates (= 4)          */ ssRates           = 4,
+<span class="lineNum">     179 </span>            :     /** Subsystem: Velocities (= 8)          */ ssVelocities      = 8,
+<span class="lineNum">     180 </span>            :     /** Subsystem: Forces (= 16)             */ ssForces          = 16,
+<span class="lineNum">     181 </span>            :     /** Subsystem: Moments (= 32)            */ ssMoments         = 32,
+<span class="lineNum">     182 </span>            :     /** Subsystem: Atmosphere (= 64)         */ ssAtmosphere      = 64,
+<span class="lineNum">     183 </span>            :     /** Subsystem: Mass Properties (= 128)   */ ssMassProps       = 128,
+<span class="lineNum">     184 </span>            :     /** Subsystem: Coefficients (= 256)      */ ssAeroFunctions   = 256,
+<span class="lineNum">     185 </span>            :     /** Subsystem: Propagate (= 512)         */ ssPropagate       = 512,
+<span class="lineNum">     186 </span>            :     /** Subsystem: Ground Reactions (= 1024) */ ssGroundReactions = 1024,
+<span class="lineNum">     187 </span>            :     /** Subsystem: FCS (= 2048)              */ ssFCS             = 2048,
+<span class="lineNum">     188 </span>            :     /** Subsystem: Propulsion (= 4096)       */ ssPropulsion      = 4096
+<span class="lineNum">     189 </span>            :   } subsystems;
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            : protected:
+<span class="lineNum">     192 </span>            :   unsigned int OutputIdx;
+<span class="lineNum">     193 </span>            :   int SubSystems;
+<span class="lineNum">     194 </span>            :   std::vector &lt;FGPropertyValue*&gt; OutputParameters;
+<span class="lineNum">     195 </span>            :   std::vector &lt;std::string&gt; OutputCaptions;
+<span class="lineNum">     196 </span>            :   bool enabled;
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            :   FGAerodynamics* Aerodynamics;
+<span class="lineNum">     199 </span>            :   FGAuxiliary* Auxiliary;
+<span class="lineNum">     200 </span>            :   FGAircraft* Aircraft;
+<span class="lineNum">     201 </span>            :   FGAtmosphere* Atmosphere;
+<span class="lineNum">     202 </span>            :   FGWinds* Winds;
+<span class="lineNum">     203 </span>            :   FGPropulsion* Propulsion;
+<span class="lineNum">     204 </span>            :   FGMassBalance* MassBalance;
+<span class="lineNum">     205 </span>            :   FGPropagate* Propagate;
+<span class="lineNum">     206 </span>            :   FGAccelerations* Accelerations;
+<span class="lineNum">     207 </span>            :   FGFCS* FCS;
+<span class="lineNum">     208 </span>            :   FGGroundReactions* GroundReactions;
+<span class="lineNum">     209 </span>            :   FGExternalReactions* ExternalReactions;
+<span class="lineNum">     210 </span>            :   FGBuoyantForces* BuoyantForces;
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            :   void Debug(int from) override;
+<span class="lineNum">     213 </span>            : };
+<span class="lineNum">     214 </span>            : }
+<span class="lineNum">     215 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     216 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

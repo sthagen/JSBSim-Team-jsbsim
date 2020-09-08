@@ -1,0 +1,12 @@
+<map id="GetXYZcg" name="GetXYZcg">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFDMExec.html#aa83769769c700eba0b0b82a5c62dbc71" title="This function executes each scheduled model in succession. " alt="" coords="365,63,551,90"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGMassBalance.html#ac676bdc18d8b00dbcee4d135cd24a003" title="Conversion from the structural frame to the body frame. " alt="" coords="163,114,285,141"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGOutputSocket.html#a0d7143a7146c3401f1c71e68d68097d6" title="Generates the output. " alt="" coords="136,165,312,207"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#afaf93cada78d011829d409d0b250120b" title="Initializes the sim from the initial condition object and executes each scheduled model without integ..." alt="" coords="820,35,983,76"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFDMExec.html#ad178a57b91f9d74dd7888748477f2dce" title="Unbind all tied JSBSim properties. " alt="" coords="1036,5,1199,47"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html#a1580c9edd024a31c38a13d9b40fa8914" title="Initializes the simulation with initial conditions. " alt="" coords="604,85,767,127"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="815,126,988,153"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGForce.html#a06ef165f39feac98d53ce45276118618" title="Destructor. " alt="" coords="360,165,556,191"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGMassBalance.html#ae268173584e6f3caca80f1c3e601d98f" title="Computes the inertia contribution of a pointmass. " alt="" coords="387,215,529,242"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGRotor.html#a630c02bbc20b13cbbd9f10ebe27871be" title="Destructor for FGRotor. " alt="" coords="361,114,555,141"/>
+</map>

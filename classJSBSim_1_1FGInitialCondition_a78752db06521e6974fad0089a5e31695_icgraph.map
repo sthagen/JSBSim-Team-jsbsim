@@ -1,0 +1,10 @@
+<map id="SetAltitudeAGLFtIC" name="SetAltitudeAGLFtIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a93ec4bc417c0505b4548f6a63af82bdf" title="Sets the initial terrain elevation. " alt="" coords="192,9,355,35"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="623,186,673,213"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#a68c83023466c7734fea2917175d9325d" title="Sets the flight path angle initial condition in degrees. " alt="" coords="403,59,575,86"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInitialCondition.html#ab6f6dae970e40878a34789be7dfcb9a7" title="Sets the initial latitude. " alt="" coords="210,186,337,213"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#a5c7c88a597829607471730f280b3266b" title="Sets the initial longitude. " alt="" coords="205,287,341,314"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#ad1f01b8c9218fce2c418d2a60593a99c" title="Sets the initial latitude. " alt="" coords="425,211,552,238"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a0ab5b13bb7a8589f9c565ceb3dd96202" title="Sets the initial heading angle. " alt="" coords="439,262,538,289"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGInitialCondition.html#a6fe6c08828d7c74e174ba1ad7f61101e" title="Sets the initial longitude. " alt="" coords="421,363,557,390"/>
+</map>

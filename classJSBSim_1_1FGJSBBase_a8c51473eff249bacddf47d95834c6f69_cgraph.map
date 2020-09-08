@@ -1,0 +1,6 @@
+<map id="FeetToMeters" name="FeetToMeters">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGJSBBase.html#a3adac6c789864d8794ff33d676a3ed63" title="Compute the total pressure in front of the Pitot tube. " alt="" coords="179,5,309,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGJSBBase.html#a60cec18543e3feaf803735a68d23cdd3" title="Compute the Mach number from the differential pressure (qc) and the static pressure. " alt="" coords="156,56,332,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGJSBBase.html#a47ce4c428bfaf43335c8967eb18ace51" title="Calculate the calibrated airspeed from the Mach number. " alt="" coords="169,107,319,133"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGJSBBase.html#a45ed508b4577f72ab2324cc61c68427b" title="Calculate the Mach number from the calibrated airspeed.Based on the formulas in the US Air Force Airc..." alt="" coords="169,157,319,184"/>
+</map>

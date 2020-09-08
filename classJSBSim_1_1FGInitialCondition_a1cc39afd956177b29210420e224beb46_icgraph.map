@@ -1,0 +1,5 @@
+<map id="SetWindDownKtsIC" name="SetWindDownKtsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#aae17f88a86799403d5a50d5a3a981c60" title="Sets the initial body axis yaw rate. " alt="" coords="193,31,297,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="407,5,457,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="345,56,519,83"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="GetPowerRequired" name="GetPowerRequired">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropeller.html#a15792c31b5924f5afe34808502a965ef" title="Calculates and returns the thrust produced by this propeller. " alt="" coords="185,5,263,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropeller.html#ab7a6f2b751e3426ae992289ccca62781" title="Retrieves the Torque in foot&#45;pounds (Don&#39;t you love the English system?) " alt="" coords="311,31,393,57"/>
+</map>

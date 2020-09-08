@@ -1,0 +1,821 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/atmosphere/FGStandardAtmosphere.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/atmosphere</a> - FGStandardAtmosphere.cpp<span style="font-size: 80%;"> (source / <a href="FGStandardAtmosphere.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">191</td>
+            <td class="headerCovTableEntry">314</td>
+            <td class="headerCovTableEntryLo">60.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntry">40</td>
+            <td class="headerCovTableEntryLo">57.5 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGStandardAtmosphere.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt, Tony Peden
+<span class="lineNum">       5 </span>            :  Date started: 5/2011
+<span class="lineNum">       6 </span>            :  Purpose:      Models the 1976 U.S. Standard Atmosphere
+<span class="lineNum">       7 </span>            :  Called by:    FGFDMExec
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 2011  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      13 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      14 </span>            :  later version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      22 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      23 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      26 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : HISTORY
+<span class="lineNum">      33 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      36 </span>            : COMMENTS, REFERENCES,  and NOTES
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : [1]   Anderson, John D. &quot;Introduction to Flight, Third Edition&quot;, McGraw-Hill,
+<span class="lineNum">      39 </span>            :       1989, ISBN 0-07-001641-0
+<span class="lineNum">      40 </span>            : [2]   Sonntag, D. &quot;Important New Values of the Physical Constants of 1986,
+<span class="lineNum">      41 </span>            :       Vapour Pressure Formulations based on the IST-90 and Psychrometer
+<span class="lineNum">      42 </span>            :       Formulae&quot;, Z. Meteorol., 70 (5), pp. 340-344, 1990
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      45 </span>            : INCLUDES
+<span class="lineNum">      46 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      51 </span>            : #include &quot;FGStandardAtmosphere.h&quot;
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : namespace JSBSim {
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      56 </span>            : CLASS IMPLEMENTATION
+<a name="57"><span class="lineNum">      57 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span><span class="lineCov">          8 : FGStandardAtmosphere::FGStandardAtmosphere(FGFDMExec* fdmex)</span>
+<span class="lineNum">      60 </span>            :   : FGAtmosphere(fdmex), StdSLpressure(StdDaySLpressure), TemperatureBias(0.0),
+<span class="lineNum">      61 </span>            :     TemperatureDeltaGradient(0.0), VaporMassFraction(0.0),
+<span class="lineNum">      62 </span>            :     SaturatedVaporPressure(0.0), StdAtmosTemperatureTable(9),
+<span class="lineNum">      63 </span><span class="lineCov">          8 :     MaxVaporMassFraction(10)</span>
+<span class="lineNum">      64 </span>            : {
+<span class="lineNum">      65 </span><span class="lineCov">          8 :   Name = &quot;FGStandardAtmosphere&quot;;</span>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            :   // This is the U.S. Standard Atmosphere table for temperature in degrees
+<span class="lineNum">      68 </span>            :   // Rankine, based on geometric altitude. The table values are often given
+<span class="lineNum">      69 </span>            :   // in literature relative to geopotential altitude. 
+<span class="lineNum">      70 </span>            :   //
+<span class="lineNum">      71 </span>            :   //                        GeoMet Alt    Temp      GeoPot Alt  GeoMet Alt
+<span class="lineNum">      72 </span>            :   //                           (ft)      (deg R)      (km)        (km)
+<span class="lineNum">      73 </span>            :   //                         --------   --------    ----------  ----------
+<span class="lineNum">      74 </span>            :   //StdAtmosTemperatureTable &lt;&lt;      0.00 &lt;&lt; 518.67  //    0.000       0.000
+<span class="lineNum">      75 </span>            :   //                         &lt;&lt;  36151.80 &lt;&lt; 389.97  //   11.000      11.019
+<span class="lineNum">      76 </span>            :   //                         &lt;&lt;  65823.90 &lt;&lt; 389.97  //   20.000      20.063
+<span class="lineNum">      77 </span>            :   //                         &lt;&lt; 105518.06 &lt;&lt; 411.60  //   32.000      32.162
+<span class="lineNum">      78 </span>            :   //                         &lt;&lt; 155348.07 &lt;&lt; 487.20  //   47.000      47.350
+<span class="lineNum">      79 </span>            :   //                         &lt;&lt; 168676.12 &lt;&lt; 487.20  //   51.000      51.413
+<span class="lineNum">      80 </span>            :   //                         &lt;&lt; 235570.77 &lt;&lt; 386.40  //   71.000      71.802
+<span class="lineNum">      81 </span>            :   //                         &lt;&lt; 282152.08 &lt;&lt; 336.50  //   84.852      86.000
+<span class="lineNum">      82 </span>            :   //                         &lt;&lt; 298556.40 &lt;&lt; 336.50; //               91.000 - First layer in high altitude regime 
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :   //                            GeoPot Alt    Temp       GeoPot Alt  GeoMet Alt
+<span class="lineNum">      85 </span>            :   //                               (ft)      (deg R)        (km)        (km)
+<span class="lineNum">      86 </span>            :   //                           -----------   --------     ----------  ----------
+<span class="lineNum">      87 </span><span class="lineCov">          8 :   StdAtmosTemperatureTable &lt;&lt;      0.0000 &lt;&lt; 518.67  //    0.000       0.000</span>
+<span class="lineNum">      88 </span><span class="lineCov">          8 :                            &lt;&lt;  36089.2388 &lt;&lt; 389.97  //   11.000      11.019</span>
+<span class="lineNum">      89 </span><span class="lineCov">          8 :                            &lt;&lt;  65616.7979 &lt;&lt; 389.97  //   20.000      20.063</span>
+<span class="lineNum">      90 </span><span class="lineCov">          8 :                            &lt;&lt; 104986.8766 &lt;&lt; 411.57  //   32.000      32.162</span>
+<span class="lineNum">      91 </span><span class="lineCov">          8 :                            &lt;&lt; 154199.4751 &lt;&lt; 487.17  //   47.000      47.350</span>
+<span class="lineNum">      92 </span><span class="lineCov">          8 :                            &lt;&lt; 167322.8346 &lt;&lt; 487.17  //   51.000      51.413</span>
+<span class="lineNum">      93 </span><span class="lineCov">          8 :                            &lt;&lt; 232939.6325 &lt;&lt; 386.37  //   71.000      71.802</span>
+<span class="lineNum">      94 </span><span class="lineCov">          8 :                            &lt;&lt; 278385.8268 &lt;&lt; 336.5028  // 84.852      86.000</span>
+<span class="lineNum">      95 </span><span class="lineCov">          8 :                            &lt;&lt; 298556.4304 &lt;&lt; 336.5028; //             91.000 - First layer in high altitude regime</span>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :   // This is the maximum water vapor mass fraction in ppm (parts per million) of
+<span class="lineNum">      99 </span>            :   // dry air measured in the atmosphere according to the ISA 1976 document.
+<span class="lineNum">     100 </span>            :   // Values at altitude below 8 km are record high. All other values are 1%
+<span class="lineNum">     101 </span>            :   // high.
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span>            :   //                      Geopot Alt    Water     Geopot Alt
+<span class="lineNum">     104 </span>            :   //                         (ft)       (ppm)        (km)
+<span class="lineNum">     105 </span>            :   //                      ----------    -----     ----------
+<span class="lineNum">     106 </span><span class="lineCov">          8 :   MaxVaporMassFraction &lt;&lt;     0.0000 &lt;&lt; 35000.  //  0.0000 - Record high</span>
+<span class="lineNum">     107 </span><span class="lineCov">          8 :                        &lt;&lt;  3280.8399 &lt;&lt; 31000.  //  1.0000</span>
+<span class="lineNum">     108 </span><span class="lineCov">          8 :                        &lt;&lt;  6561.6798 &lt;&lt; 28000.  //  2.0000</span>
+<span class="lineNum">     109 </span><span class="lineCov">          8 :                        &lt;&lt; 13123.3596 &lt;&lt; 22000.  //  4.0000</span>
+<span class="lineNum">     110 </span><span class="lineCov">          8 :                        &lt;&lt; 19685.0394 &lt;&lt;  8900.  //  6.0000</span>
+<span class="lineNum">     111 </span><span class="lineCov">          8 :                        &lt;&lt; 26246.7192 &lt;&lt;  4700.  //  8.0000 - Record high</span>
+<span class="lineNum">     112 </span><span class="lineCov">          8 :                        &lt;&lt; 32808.3990 &lt;&lt;  1300.  // 10.0000 - 1% high</span>
+<span class="lineNum">     113 </span><span class="lineCov">          8 :                        &lt;&lt; 39370.0787 &lt;&lt;   230.  // 12.0000</span>
+<span class="lineNum">     114 </span><span class="lineCov">          8 :                        &lt;&lt; 45931.7585 &lt;&lt;    48.  // 14.0000</span>
+<span class="lineNum">     115 </span><span class="lineCov">          8 :                        &lt;&lt; 52493.4383 &lt;&lt;    38.; // 16.0000 - 1% high</span>
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span><span class="lineCov">          8 :   unsigned int numRows = StdAtmosTemperatureTable.GetNumRows();</span>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :   // Initialize the standard atmosphere lapse rates.
+<span class="lineNum">     120 </span><span class="lineCov">          8 :   CalculateLapseRates();</span>
+<span class="lineNum">     121 </span><span class="lineCov">          8 :   StdLapseRates = LapseRates;</span>
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :   // Assume the altitude to fade out the gradient at is at the highest
+<span class="lineNum">     124 </span>            :   // altitude in the table. Above that, other functions are used to
+<span class="lineNum">     125 </span>            :   // calculate temperature.
+<span class="lineNum">     126 </span><span class="lineCov">          8 :   GradientFadeoutAltitude = StdAtmosTemperatureTable(numRows, 0);</span>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            :   // Initialize the standard atmosphere pressure break points.
+<span class="lineNum">     129 </span><span class="lineCov">          8 :   PressureBreakpoints.resize(numRows);</span>
+<span class="lineNum">     130 </span><span class="lineCov">          8 :   CalculatePressureBreakpoints(StdSLpressure);</span>
+<span class="lineNum">     131 </span><span class="lineCov">          8 :   StdPressureBreakpoints = PressureBreakpoints;</span>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span><span class="lineCov">          8 :   StdSLtemperature = StdAtmosTemperatureTable(1, 1);</span>
+<span class="lineNum">     134 </span><span class="lineCov">          8 :   StdSLdensity     = StdSLpressure / (Rdry * StdSLtemperature);</span>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineCov">          8 :   CalculateStdDensityBreakpoints();</span>
+<span class="lineNum">     137 </span><span class="lineCov">          8 :   StdSLsoundspeed = sqrt(SHRatio*Rdry*StdSLtemperature);</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineCov">          8 :   bind();</span>
+<span class="lineNum">     140 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">     141 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     142 </span>            : 
+<a name="143"><span class="lineNum">     143 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span><span class="lineCov">         24 : FGStandardAtmosphere::~FGStandardAtmosphere()</span>
+<span class="lineNum">     146 </span>            : {
+<span class="lineNum">     147 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">     148 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">     149 </span>            : 
+<a name="150"><span class="lineNum">     150 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span><span class="lineCov">          8 : bool FGStandardAtmosphere::InitModel(void)</span>
+<span class="lineNum">     153 </span>            : {
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span>            :   // Assume the altitude to fade out the gradient at is at the highest
+<span class="lineNum">     156 </span>            :   // altitude in the table. Above that, other functions are used to
+<span class="lineNum">     157 </span>            :   // calculate temperature.
+<span class="lineNum">     158 </span><span class="lineCov">          8 :   GradientFadeoutAltitude = StdAtmosTemperatureTable(StdAtmosTemperatureTable.GetNumRows(), 0);</span>
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span><span class="lineCov">          8 :   TemperatureDeltaGradient = 0.0;</span>
+<span class="lineNum">     161 </span><span class="lineCov">          8 :   TemperatureBias = 0.0;</span>
+<span class="lineNum">     162 </span><span class="lineCov">          8 :   LapseRates = StdLapseRates;</span>
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span><span class="lineCov">          8 :   PressureBreakpoints = StdPressureBreakpoints;</span>
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span><span class="lineCov">          8 :   SLpressure    = StdSLpressure;</span>
+<span class="lineNum">     167 </span><span class="lineCov">          8 :   SLtemperature = StdSLtemperature;</span>
+<span class="lineNum">     168 </span><span class="lineCov">          8 :   SLdensity     = StdSLdensity;</span>
+<span class="lineNum">     169 </span><span class="lineCov">          8 :   SLsoundspeed  = StdSLsoundspeed;</span>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span><span class="lineCov">          8 :   Calculate(0.0);</span>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            : //  PrintStandardAtmosphereTable();
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineCov">          8 :   return true;</span>
+<span class="lineNum">     176 </span>            : }
+<a name="177"><span class="lineNum">     177 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span><span class="lineCov">          8 : void FGStandardAtmosphere::Calculate(double altitude)</span>
+<span class="lineNum">     180 </span>            : {
+<span class="lineNum">     181 </span><span class="lineCov">          8 :   FGAtmosphere::Calculate(altitude);</span>
+<span class="lineNum">     182 </span><span class="lineCov">          8 :   SaturatedVaporPressure = CalculateVaporPressure(Temperature);</span>
+<span class="lineNum">     183 </span><span class="lineCov">          8 :   ValidateVaporMassFraction(altitude);</span>
+<span class="lineNum">     184 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     187 </span>            : // Get the actual pressure as modeled at a specified altitude
+<span class="lineNum">     188 </span>            : // These calculations are from equations 33a and 33b in the U.S. Standard
+<a name="189"><span class="lineNum">     189 </span>            : // Atmosphere document referenced in the documentation for this code.</a>
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span><span class="lineCov">     827658 : double FGStandardAtmosphere::GetPressure(double altitude) const</span>
+<span class="lineNum">     192 </span>            : {
+<span class="lineNum">     193 </span><span class="lineCov">     827658 :   double GeoPotAlt = GeopotentialAltitude(altitude);</span>
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            :   // Iterate through the altitudes to find the current Base Altitude
+<span class="lineNum">     196 </span>            :   // in the table. That is, if the current altitude (the argument passed in)
+<span class="lineNum">     197 </span>            :   // is 20000 ft, then the base altitude from the table is 0.0. If the
+<span class="lineNum">     198 </span>            :   // passed-in altitude is 40000 ft, the base altitude is 36089.2388 ft (and
+<span class="lineNum">     199 </span>            :   // the index &quot;b&quot; is 2 - the second entry in the table).
+<span class="lineNum">     200 </span><span class="lineCov">     827658 :   double BaseAlt = StdAtmosTemperatureTable(1,0);</span>
+<span class="lineNum">     201 </span><span class="lineCov">     827658 :   unsigned int numRows = StdAtmosTemperatureTable.GetNumRows();</span>
+<span class="lineNum">     202 </span>            :   unsigned int b;
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span><span class="lineCov">    4816812 :   for (b=0; b &lt; numRows-2; ++b) {</span>
+<span class="lineNum">     205 </span><span class="lineCov">    4336634 :     double testAlt = StdAtmosTemperatureTable(b+2,0);</span>
+<span class="lineNum">     206 </span><span class="lineCov">    4336634 :     if (GeoPotAlt &lt; testAlt)</span>
+<span class="lineNum">     207 </span><span class="lineCov">     347480 :       break;</span>
+<span class="lineNum">     208 </span><span class="lineCov">    3989154 :     BaseAlt = testAlt;</span>
+<span class="lineNum">     209 </span>            :   }
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span><span class="lineCov">     827658 :   double Tmb = GetTemperature(GeometricAltitude(BaseAlt));</span>
+<span class="lineNum">     212 </span><span class="lineCov">     827658 :   double deltaH = GeoPotAlt - BaseAlt;</span>
+<span class="lineNum">     213 </span><span class="lineCov">     827658 :   double Lmb = LapseRates[b];</span>
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span><span class="lineCov">     827658 :   if (Lmb != 0.0) {</span>
+<span class="lineNum">     216 </span><span class="lineCov">     320778 :     double Exp = g0 / (Rdry*Lmb);</span>
+<span class="lineNum">     217 </span><span class="lineCov">     320778 :     double factor = Tmb/(Tmb + Lmb*deltaH);</span>
+<span class="lineNum">     218 </span><span class="lineCov">     320778 :     return PressureBreakpoints[b]*pow(factor, Exp);</span>
+<span class="lineNum">     219 </span>            :   } else
+<span class="lineNum">     220 </span><span class="lineCov">     506880 :     return PressureBreakpoints[b]*exp(-g0*deltaH/(Rdry*Tmb));</span>
+<span class="lineNum">     221 </span>            : }
+<span class="lineNum">     222 </span>            : 
+<a name="223"><span class="lineNum">     223 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetPressureSL(ePressure unit, double pressure)</span>
+<span class="lineNum">     226 </span>            : {
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :   SLpressure = ConvertToPSF(pressure, unit);</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :   CalculateSLDensity();</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :   CalculatePressureBreakpoints(SLpressure);</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     231 </span>            : 
+<a name="232"><span class="lineNum">     232 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::CalculateSLSoundSpeedAndDensity(void)</span>
+<span class="lineNum">     235 </span>            : {
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :   SLsoundspeed = sqrt(SHRatio*Reng*SLtemperature);</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :   CalculateSLDensity();</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     241 </span>            : // Get the modeled temperature at a specified altitude, including any bias or gradient
+<a name="242"><span class="lineNum">     242 </span>            : // effects.</a>
+<span class="lineNum">     243 </span>            : 
+<span class="lineNum">     244 </span><span class="lineCov">    1655325 : double FGStandardAtmosphere::GetTemperature(double altitude) const</span>
+<span class="lineNum">     245 </span>            : {
+<span class="lineNum">     246 </span><span class="lineCov">    1655325 :   double GeoPotAlt = GeopotentialAltitude(altitude);</span>
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :   double T;
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span><span class="lineCov">    1655325 :   if (GeoPotAlt &gt;= 0.0) {</span>
+<span class="lineNum">     251 </span><span class="lineCov">    1587365 :     T = StdAtmosTemperatureTable.GetValue(GeoPotAlt);</span>
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span><span class="lineCov">    1587365 :     if (GeoPotAlt &lt;= GradientFadeoutAltitude)</span>
+<span class="lineNum">     254 </span><span class="lineCov">    1120525 :       T -= TemperatureDeltaGradient * GeoPotAlt;</span>
+<span class="lineNum">     255 </span>            :   }
+<span class="lineNum">     256 </span>            :   else {
+<span class="lineNum">     257 </span>            :     // We don't need to add TemperatureDeltaGradient*GeoPotAlt here because
+<span class="lineNum">     258 </span>            :     // the lapse rate vector already accounts for the temperature gradient.
+<span class="lineNum">     259 </span><span class="lineCov">      67960 :     T = StdAtmosTemperatureTable.GetValue(0.0) + GeoPotAlt*LapseRates[0];</span>
+<span class="lineNum">     260 </span>            :   }
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span><span class="lineCov">    1655325 :   T += TemperatureBias;</span>
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span><span class="lineCov">    1655325 :   if (GeoPotAlt &lt;= GradientFadeoutAltitude)</span>
+<span class="lineNum">     265 </span><span class="lineCov">    1188485 :     T += TemperatureDeltaGradient * GradientFadeoutAltitude;</span>
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span><span class="lineCov">    1655325 :   return T;</span>
+<span class="lineNum">     268 </span>            : }
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="271"><span class="lineNum">     271 </span>            : // Retrieves the standard temperature at a particular altitude.</a>
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 : double FGStandardAtmosphere::GetStdTemperature(double altitude) const</span>
+<span class="lineNum">     274 </span>            : {
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :   double GeoPotAlt = GeopotentialAltitude(altitude);</span>
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :   if (GeoPotAlt &gt;= 0.0)</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :     return StdAtmosTemperatureTable.GetValue(GeoPotAlt);</span>
+<span class="lineNum">     279 </span>            :   else
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :     return StdAtmosTemperatureTable.GetValue(0.0) + GeoPotAlt*LapseRates[0];</span>
+<span class="lineNum">     281 </span>            : }
+<span class="lineNum">     282 </span>            : 
+<a name="283"><span class="lineNum">     283 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     284 </span>            : 
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 : double FGStandardAtmosphere::GetStdPressure(double altitude) const</span>
+<span class="lineNum">     286 </span>            : {
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :   double GeoPotAlt = GeopotentialAltitude(altitude);</span>
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span>            :   // Iterate through the altitudes to find the current Base Altitude
+<span class="lineNum">     290 </span>            :   // in the table. That is, if the current altitude (the argument passed in)
+<span class="lineNum">     291 </span>            :   // is 20000 ft, then the base altitude from the table is 0.0. If the
+<span class="lineNum">     292 </span>            :   // passed-in altitude is 40000 ft, the base altitude is 36089.2388 ft (and
+<span class="lineNum">     293 </span>            :   // the index &quot;b&quot; is 2 - the second entry in the table).
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :   double BaseAlt = StdAtmosTemperatureTable(1,0);</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :   unsigned int numRows = StdAtmosTemperatureTable.GetNumRows();</span>
+<span class="lineNum">     296 </span>            :   unsigned int b;
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :   for (b=0; b &lt; numRows-2; ++b) {</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :     double testAlt = StdAtmosTemperatureTable(b+2,0);</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :     if (GeoPotAlt &lt; testAlt)</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :     BaseAlt = testAlt;</span>
+<span class="lineNum">     303 </span>            :   }
+<span class="lineNum">     304 </span>            : 
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :   double Tmb = GetStdTemperature(GeometricAltitude(BaseAlt));</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :   double deltaH = GeoPotAlt - BaseAlt;</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :   double Lmb = LapseRates[b];</span>
+<span class="lineNum">     308 </span>            : 
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :   if (Lmb != 0.0) {</span>
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :     double Exp = g0 / (Rdry*Lmb);</span>
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :     double factor = Tmb/(Tmb + Lmb*deltaH);</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :     return StdPressureBreakpoints[b]*pow(factor, Exp);</span>
+<span class="lineNum">     313 </span>            :   } else
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :     return StdPressureBreakpoints[b]*exp(-g0*deltaH/(Rdry*Tmb));</span>
+<span class="lineNum">     315 </span>            : }
+<span class="lineNum">     316 </span>            : 
+<span class="lineNum">     317 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="318"><span class="lineNum">     318 </span>            : // Get the standard density at a specified altitude</a>
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 : double FGStandardAtmosphere::GetStdDensity(double altitude) const</span>
+<span class="lineNum">     321 </span>            : {
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :   return GetStdPressure(altitude)/(Rdry * GetStdTemperature(altitude));</span>
+<span class="lineNum">     323 </span>            : }
+<span class="lineNum">     324 </span>            : 
+<a name="325"><span class="lineNum">     325 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     326 </span>            : 
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetTemperature(double t, double h, eTemperature unit)</span>
+<span class="lineNum">     328 </span>            : {
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :   double targetTemp = ConvertToRankine(t, unit);</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :   double GeoPotAlt = GeopotentialAltitude(h);</span>
+<span class="lineNum">     331 </span>            : 
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :   TemperatureBias = targetTemp - GetStdTemperature(h);</span>
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :   if (GeoPotAlt &lt;= GradientFadeoutAltitude)</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :     TemperatureBias -= TemperatureDeltaGradient * (GradientFadeoutAltitude - GeoPotAlt);</span>
+<span class="lineNum">     336 </span>            : 
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :   CalculatePressureBreakpoints(SLpressure);</span>
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :   SLtemperature = GetTemperature(0.0);</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   CalculateSLSoundSpeedAndDensity();</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     342 </span>            : 
+<a name="343"><span class="lineNum">     343 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetTemperatureBias(eTemperature unit, double t)</span>
+<span class="lineNum">     346 </span>            : {
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :   if (unit == eCelsius || unit == eKelvin)</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :     t *= 1.80; // If temp delta &quot;t&quot; is given in metric, scale up to English</span>
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :   TemperatureBias = t;</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :   CalculatePressureBreakpoints(SLpressure);</span>
+<span class="lineNum">     352 </span>            : 
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :   SLtemperature = GetTemperature(0.0);</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :   CalculateSLSoundSpeedAndDensity();</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     356 </span>            : 
+<span class="lineNum">     357 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     358 </span>            : // This function calculates a bias based on the supplied temperature for sea
+<span class="lineNum">     359 </span>            : // level. The bias is applied to the entire temperature profile at all altitudes.
+<span class="lineNum">     360 </span>            : // Internally, the Rankine scale is used for calculations, so any temperature
+<a name="361"><span class="lineNum">     361 </span>            : // supplied must be converted to that unit.</a>
+<span class="lineNum">     362 </span>            : 
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetTemperatureSL(double t, eTemperature unit)</span>
+<span class="lineNum">     364 </span>            : {
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :   SetTemperature(t, 0.0, unit);</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="369"><span class="lineNum">     369 </span>            : // Sets a Sea Level temperature delta that is ramped out by 86 km (282,152 ft).</a>
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetSLTemperatureGradedDelta(eTemperature unit, double deltemp)</span>
+<span class="lineNum">     372 </span>            : {
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :   SetTemperatureGradedDelta(deltemp, 0.0, unit);</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     375 </span>            : 
+<span class="lineNum">     376 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     377 </span>            : // Sets a temperature delta at the supplied altitude that is ramped out by 86 km.
+<span class="lineNum">     378 </span>            : // After this calculation is performed, the lapse rates and pressure breakpoints
+<span class="lineNum">     379 </span>            : // must be recalculated. Since we are calculating a delta here and not an actual
+<span class="lineNum">     380 </span>            : // temperature, we only need to be concerned about a scale factor and not
+<a name="381"><span class="lineNum">     381 </span>            : // the actual temperature itself.</a>
+<span class="lineNum">     382 </span>            : 
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetTemperatureGradedDelta(double deltemp, double h, eTemperature unit)</span>
+<span class="lineNum">     384 </span>            : {
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :   if (unit == eCelsius || unit == eKelvin)</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :     deltemp *= 1.80; // If temp delta &quot;t&quot; is given in metric, scale up to English</span>
+<span class="lineNum">     387 </span>            : 
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :   TemperatureDeltaGradient = deltemp/(GradientFadeoutAltitude - GeopotentialAltitude(h));</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :   CalculateLapseRates();</span>
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :   CalculatePressureBreakpoints(SLpressure);</span>
+<span class="lineNum">     391 </span>            : 
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :   SLtemperature = GetTemperature(0.0);</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :   CalculateSLSoundSpeedAndDensity();</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     395 </span>            : 
+<a name="396"><span class="lineNum">     396 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :   void FGStandardAtmosphere::PrintStandardAtmosphereTable()</span>
+<span class="lineNum">     399 </span>            : {
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :   std::cout &lt;&lt; &quot;Altitude (ft)   Temp (F)   Pressure (psf)   Density (sl/ft3)&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :   std::cout &lt;&lt; &quot;-------------   --------   --------------   ----------------&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :   for (int i=0; i&lt;280000; i+=1000) {</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :     Calculate(i);</span>
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :     std::cout  &lt;&lt; std::setw(12) &lt;&lt; std::setprecision(2) &lt;&lt; i</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :        &lt;&lt; &quot;  &quot; &lt;&lt; std::setw(9)  &lt;&lt; std::setprecision(2) &lt;&lt; Temperature - 459.67</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :        &lt;&lt; &quot;  &quot; &lt;&lt; std::setw(13) &lt;&lt; std::setprecision(4) &lt;&lt; Pressure</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :        &lt;&lt; &quot;  &quot; &lt;&lt; std::setw(18) &lt;&lt; std::setprecision(8) &lt;&lt; Density</span>
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :        &lt;&lt; std::endl;</span>
+<span class="lineNum">     409 </span>            :   }
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            :   // Re-execute the Run() method to reset the calculated values
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :   Run(false);</span>
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     414 </span>            : 
+<span class="lineNum">     415 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     416 </span>            : // This function calculates (or recalculates) the lapse rate over an altitude range
+<span class="lineNum">     417 </span>            : // where the &quot;bh&quot; in this case refers to the index of the base height in the 
+<span class="lineNum">     418 </span>            : // StdAtmosTemperatureTable table. This function should be called anytime the 
+<span class="lineNum">     419 </span>            : // temperature table is altered, such as when a gradient is applied across the 
+<a name="420"><span class="lineNum">     420 </span>            : // temperature table for a range of altitudes.</a>
+<span class="lineNum">     421 </span>            : 
+<span class="lineNum">     422 </span><span class="lineCov">          8 : void FGStandardAtmosphere::CalculateLapseRates()</span>
+<span class="lineNum">     423 </span>            : {
+<span class="lineNum">     424 </span><span class="lineCov">          8 :   unsigned int numRows = StdAtmosTemperatureTable.GetNumRows();</span>
+<span class="lineNum">     425 </span><span class="lineCov">          8 :   LapseRates.clear();</span>
+<span class="lineNum">     426 </span>            : 
+<span class="lineNum">     427 </span><span class="lineCov">         72 :   for (unsigned int bh=0; bh &lt; numRows-1; bh++)</span>
+<span class="lineNum">     428 </span>            :   {
+<span class="lineNum">     429 </span><span class="lineCov">         64 :     double t0 = StdAtmosTemperatureTable(bh+1,1);</span>
+<span class="lineNum">     430 </span><span class="lineCov">         64 :     double t1 = StdAtmosTemperatureTable(bh+2,1);</span>
+<span class="lineNum">     431 </span><span class="lineCov">         64 :     double h0 = StdAtmosTemperatureTable(bh+1,0);</span>
+<span class="lineNum">     432 </span><span class="lineCov">         64 :     double h1 = StdAtmosTemperatureTable(bh+2,0);</span>
+<span class="lineNum">     433 </span><span class="lineCov">         64 :     LapseRates.push_back((t1 - t0) / (h1 - h0) - TemperatureDeltaGradient);</span>
+<span class="lineNum">     434 </span>            :   }
+<span class="lineNum">     435 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     436 </span>            : 
+<a name="437"><span class="lineNum">     437 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     438 </span>            : 
+<span class="lineNum">     439 </span><span class="lineCov">          8 : void FGStandardAtmosphere::CalculatePressureBreakpoints(double SLpress)</span>
+<span class="lineNum">     440 </span>            : {
+<span class="lineNum">     441 </span><span class="lineCov">          8 :   PressureBreakpoints[0] = SLpress;</span>
+<span class="lineNum">     442 </span>            : 
+<span class="lineNum">     443 </span><span class="lineCov">         72 :   for (unsigned int b=0; b&lt;PressureBreakpoints.size()-1; b++) {</span>
+<span class="lineNum">     444 </span><span class="lineCov">         64 :     double BaseTemp = StdAtmosTemperatureTable(b+1,1);</span>
+<span class="lineNum">     445 </span><span class="lineCov">         64 :     double BaseAlt = StdAtmosTemperatureTable(b+1,0);</span>
+<span class="lineNum">     446 </span><span class="lineCov">         64 :     double UpperAlt = StdAtmosTemperatureTable(b+2,0);</span>
+<span class="lineNum">     447 </span><span class="lineCov">         64 :     double deltaH = UpperAlt - BaseAlt;</span>
+<span class="lineNum">     448 </span><span class="lineCov">         64 :     double Tmb = BaseTemp</span>
+<span class="lineNum">     449 </span><span class="lineCov">         64 :                  + TemperatureBias </span>
+<span class="lineNum">     450 </span><span class="lineCov">         64 :                  + (GradientFadeoutAltitude - BaseAlt)*TemperatureDeltaGradient;</span>
+<span class="lineNum">     451 </span><span class="lineCov">         64 :     if (LapseRates[b] != 0.00) {</span>
+<span class="lineNum">     452 </span><span class="lineCov">         40 :       double Lmb = LapseRates[b];</span>
+<span class="lineNum">     453 </span><span class="lineCov">         40 :       double Exp = g0 / (Rdry*Lmb);</span>
+<span class="lineNum">     454 </span><span class="lineCov">         40 :       double factor = Tmb/(Tmb + Lmb*deltaH);</span>
+<span class="lineNum">     455 </span><span class="lineCov">         40 :       PressureBreakpoints[b+1] = PressureBreakpoints[b]*pow(factor, Exp);</span>
+<span class="lineNum">     456 </span>            :     } else {
+<span class="lineNum">     457 </span><span class="lineCov">         24 :       PressureBreakpoints[b+1] = PressureBreakpoints[b]*exp(-g0*deltaH/(Rdry*Tmb));</span>
+<span class="lineNum">     458 </span>            :     }
+<span class="lineNum">     459 </span>            :   }
+<span class="lineNum">     460 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     461 </span>            : 
+<a name="462"><span class="lineNum">     462 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     463 </span>            : 
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::ResetSLTemperature()</span>
+<span class="lineNum">     465 </span>            : {
+<span class="lineNum">     466 </span><span class="lineNoCov">          0 :   TemperatureBias = TemperatureDeltaGradient = 0.0;</span>
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :   CalculateLapseRates();</span>
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :   CalculatePressureBreakpoints(SLpressure);</span>
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :   SLtemperature = StdSLtemperature;</span>
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :   CalculateSLSoundSpeedAndDensity();</span>
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     473 </span>            : 
+<a name="474"><span class="lineNum">     474 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     475 </span>            : 
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::ResetSLPressure()</span>
+<span class="lineNum">     477 </span>            : {
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :   SLpressure  = StdSLpressure;</span>
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :   CalculateSLDensity();</span>
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :   CalculatePressureBreakpoints(StdSLpressure);</span>
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     482 </span>            : 
+<a name="483"><span class="lineNum">     483 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     484 </span>            : 
+<span class="lineNum">     485 </span><span class="lineCov">          8 : void FGStandardAtmosphere::CalculateStdDensityBreakpoints()</span>
+<span class="lineNum">     486 </span>            : {
+<span class="lineNum">     487 </span><span class="lineCov">          8 :   StdDensityBreakpoints.clear();</span>
+<span class="lineNum">     488 </span><span class="lineCov">         80 :   for (unsigned int i = 0; i &lt; StdPressureBreakpoints.size(); i++)</span>
+<span class="lineNum">     489 </span><span class="lineCov">         72 :     StdDensityBreakpoints.push_back(StdPressureBreakpoints[i] / (Rdry * StdAtmosTemperatureTable(i + 1, 1)));</span>
+<span class="lineNum">     490 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     491 </span>            : 
+<a name="492"><span class="lineNum">     492 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     493 </span>            : 
+<span class="lineNum">     494 </span><span class="lineCov">          8 : double FGStandardAtmosphere::CalculateDensityAltitude(double density, double geometricAlt)</span>
+<span class="lineNum">     495 </span>            : {
+<span class="lineNum">     496 </span>            :   // Work out which layer we're dealing with
+<span class="lineNum">     497 </span><span class="lineCov">          8 :   unsigned int b = 0;</span>
+<span class="lineNum">     498 </span><span class="lineCov">          8 :   for (; b &lt; StdDensityBreakpoints.size() - 2; b++) {</span>
+<span class="lineNum">     499 </span><span class="lineCov">          8 :     if (density &gt;= StdDensityBreakpoints[b + 1])</span>
+<span class="lineNum">     500 </span><span class="lineCov">          8 :       break;</span>
+<span class="lineNum">     501 </span>            :   }
+<span class="lineNum">     502 </span>            : 
+<span class="lineNum">     503 </span>            :   // Get layer properties
+<span class="lineNum">     504 </span><span class="lineCov">          8 :   double Tmb = StdAtmosTemperatureTable(b + 1, 1);</span>
+<span class="lineNum">     505 </span><span class="lineCov">          8 :   double Hb = StdAtmosTemperatureTable(b + 1, 0);</span>
+<span class="lineNum">     506 </span><span class="lineCov">          8 :   double Lmb = StdLapseRates[b];</span>
+<span class="lineNum">     507 </span><span class="lineCov">          8 :   double pb = StdDensityBreakpoints[b];</span>
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span><span class="lineCov">          8 :   double density_altitude = 0.0;</span>
+<span class="lineNum">     510 </span>            : 
+<span class="lineNum">     511 </span>            :   // https://en.wikipedia.org/wiki/Barometric_formula for density solved for H
+<span class="lineNum">     512 </span><span class="lineCov">          8 :   if (Lmb != 0.0) {</span>
+<span class="lineNum">     513 </span><span class="lineCov">          8 :     double Exp = -1.0 / (1.0 + g0/(Rdry*Lmb));</span>
+<span class="lineNum">     514 </span><span class="lineCov">          8 :     density_altitude = Hb + (Tmb / Lmb) * (pow(density / pb, Exp) - 1);</span>
+<span class="lineNum">     515 </span>            :   } else {
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :     double Factor = -Rdry*Tmb / g0;</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :     density_altitude = Hb + Factor * log(density / pb);</span>
+<span class="lineNum">     518 </span>            :   }
+<span class="lineNum">     519 </span>            : 
+<span class="lineNum">     520 </span><span class="lineCov">          8 :   return GeometricAltitude(density_altitude);</span>
+<span class="lineNum">     521 </span>            : }
+<span class="lineNum">     522 </span>            : 
+<a name="523"><span class="lineNum">     523 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     524 </span>            : 
+<span class="lineNum">     525 </span><span class="lineCov">          8 : double FGStandardAtmosphere::CalculatePressureAltitude(double pressure, double geometricAlt)</span>
+<span class="lineNum">     526 </span>            : {
+<span class="lineNum">     527 </span>            :   // Work out which layer we're dealing with
+<span class="lineNum">     528 </span><span class="lineCov">          8 :   unsigned int b = 0;</span>
+<span class="lineNum">     529 </span><span class="lineCov">          8 :   for (; b &lt; StdPressureBreakpoints.size() - 2; b++) {</span>
+<span class="lineNum">     530 </span><span class="lineCov">          8 :     if (pressure &gt;= StdPressureBreakpoints[b + 1])</span>
+<span class="lineNum">     531 </span><span class="lineCov">          8 :       break;</span>
+<span class="lineNum">     532 </span>            :   }
+<span class="lineNum">     533 </span>            : 
+<span class="lineNum">     534 </span>            :   // Get layer properties
+<span class="lineNum">     535 </span><span class="lineCov">          8 :   double Tmb = StdAtmosTemperatureTable(b + 1, 1);</span>
+<span class="lineNum">     536 </span><span class="lineCov">          8 :   double Hb = StdAtmosTemperatureTable(b + 1, 0);</span>
+<span class="lineNum">     537 </span><span class="lineCov">          8 :   double Lmb = StdLapseRates[b];</span>
+<span class="lineNum">     538 </span><span class="lineCov">          8 :   double Pb = StdPressureBreakpoints[b];</span>
+<span class="lineNum">     539 </span>            : 
+<span class="lineNum">     540 </span><span class="lineCov">          8 :   double pressure_altitude = 0.0;</span>
+<span class="lineNum">     541 </span>            : 
+<span class="lineNum">     542 </span><span class="lineCov">          8 :   if (Lmb != 0.00) {</span>
+<span class="lineNum">     543 </span>            :     // Equation 33(a) from ISA document solved for H
+<span class="lineNum">     544 </span><span class="lineCov">          8 :     double Exp = -Rdry*Lmb / g0;</span>
+<span class="lineNum">     545 </span><span class="lineCov">          8 :     pressure_altitude = Hb + (Tmb / Lmb) * (pow(pressure / Pb, Exp) - 1);</span>
+<span class="lineNum">     546 </span>            :   } else {
+<span class="lineNum">     547 </span>            :     // Equation 33(b) from ISA document solved for H
+<span class="lineNum">     548 </span><span class="lineNoCov">          0 :     double Factor = -Rdry*Tmb / g0;</span>
+<span class="lineNum">     549 </span><span class="lineNoCov">          0 :     pressure_altitude = Hb + Factor * log(pressure / Pb);</span>
+<span class="lineNum">     550 </span>            :   }
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span><span class="lineCov">          8 :   return GeometricAltitude(pressure_altitude);</span>
+<span class="lineNum">     553 </span>            : }
+<span class="lineNum">     554 </span>            : 
+<a name="555"><span class="lineNum">     555 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     556 </span>            : 
+<span class="lineNum">     557 </span><span class="lineCov">          8 : double FGStandardAtmosphere::CalculateVaporPressure(double temperature)</span>
+<span class="lineNum">     558 </span>            : {
+<span class="lineNum">     559 </span><span class="lineCov">          8 :   double temperature_degC = RankineToCelsius(temperature);</span>
+<span class="lineNum">     560 </span><span class="lineCov">          8 :   return a*exp(b*temperature_degC/(c+temperature_degC));</span>
+<span class="lineNum">     561 </span>            : }
+<span class="lineNum">     562 </span>            : 
+<a name="563"><span class="lineNum">     563 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     564 </span>            : 
+<span class="lineNum">     565 </span><span class="lineCov">          8 : void FGStandardAtmosphere::ValidateVaporMassFraction(double h)</span>
+<span class="lineNum">     566 </span>            : {
+<span class="lineNum">     567 </span><span class="lineCov">          8 :   if (SaturatedVaporPressure &lt; Pressure) {</span>
+<span class="lineNum">     568 </span><span class="lineCov">          8 :     double VaporPressure = Pressure*VaporMassFraction / (VaporMassFraction+Rdry/Rwater);</span>
+<span class="lineNum">     569 </span><span class="lineCov">          8 :     if (VaporPressure &gt; SaturatedVaporPressure)</span>
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :       VaporMassFraction = Rdry * SaturatedVaporPressure / (Rwater * (Pressure - SaturatedVaporPressure));</span>
+<span class="lineNum">     571 </span>            :   }
+<span class="lineNum">     572 </span>            : 
+<span class="lineNum">     573 </span><span class="lineCov">          8 :   double GeoPotAlt = GeopotentialAltitude(h);</span>
+<span class="lineNum">     574 </span><span class="lineCov">          8 :   double maxFraction = 1E-6*MaxVaporMassFraction.GetValue(GeoPotAlt);</span>
+<span class="lineNum">     575 </span>            : 
+<span class="lineNum">     576 </span><span class="lineCov">          8 :   if ((VaporMassFraction &gt; maxFraction) || (VaporMassFraction &lt; 0.0))</span>
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :     VaporMassFraction = maxFraction;</span>
+<span class="lineNum">     578 </span>            : 
+<span class="lineNum">     579 </span>            :   // Update the gas constant factor
+<span class="lineNum">     580 </span><span class="lineCov">          8 :   Reng = (VaporMassFraction*Rwater + Rdry)/(1.0 + VaporMassFraction);</span>
+<span class="lineNum">     581 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     582 </span>            : 
+<a name="583"><span class="lineNum">     583 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     584 </span>            : 
+<span class="lineNum">     585 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetDewPoint(eTemperature unit, double dewpoint)</span>
+<span class="lineNum">     586 </span>            : {
+<span class="lineNum">     587 </span><span class="lineNoCov">          0 :   double altitude = CalculatePressureAltitude(Pressure, 0.0);</span>
+<span class="lineNum">     588 </span><span class="lineNoCov">          0 :   double VaporPressure = CalculateVaporPressure(ConvertToRankine(dewpoint, unit));</span>
+<span class="lineNum">     589 </span><span class="lineNoCov">          0 :   VaporMassFraction = Rdry * VaporPressure / (Rwater * (Pressure - VaporPressure));</span>
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 :   ValidateVaporMassFraction(altitude);</span>
+<span class="lineNum">     591 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     592 </span>            : 
+<a name="593"><span class="lineNum">     593 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span><span class="lineCov">          8 : double FGStandardAtmosphere::GetDewPoint(eTemperature to) const</span>
+<span class="lineNum">     596 </span>            : {
+<span class="lineNum">     597 </span>            :   double dewpoint_degC;
+<span class="lineNum">     598 </span><span class="lineCov">          8 :   double VaporPressure = Pressure*VaporMassFraction / (VaporMassFraction+Rdry/Rwater);</span>
+<span class="lineNum">     599 </span>            : 
+<span class="lineNum">     600 </span><span class="lineCov">          8 :   if (VaporPressure &lt;= 0.0)</span>
+<span class="lineNum">     601 </span><span class="lineCov">          8 :     dewpoint_degC = -c;</span>
+<span class="lineNum">     602 </span>            :   else {
+<span class="lineNum">     603 </span><span class="lineNoCov">          0 :     double x = log(VaporPressure/a);</span>
+<span class="lineNum">     604 </span><span class="lineNoCov">          0 :     dewpoint_degC = c*x / (b - x);</span>
+<span class="lineNum">     605 </span>            :   }
+<span class="lineNum">     606 </span>            : 
+<span class="lineNum">     607 </span><span class="lineCov">          8 :   return ConvertFromRankine(1.8*(dewpoint_degC + 273.15), to);</span>
+<span class="lineNum">     608 </span>            : }
+<span class="lineNum">     609 </span>            : 
+<a name="610"><span class="lineNum">     610 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     611 </span>            : 
+<span class="lineNum">     612 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetVaporPressure(ePressure unit, double Pa)</span>
+<span class="lineNum">     613 </span>            : {
+<span class="lineNum">     614 </span><span class="lineNoCov">          0 :   double altitude = CalculatePressureAltitude(Pressure, 0.0);</span>
+<span class="lineNum">     615 </span><span class="lineNoCov">          0 :   double VaporPressure = ConvertToPSF(Pa, unit);</span>
+<span class="lineNum">     616 </span><span class="lineNoCov">          0 :   VaporMassFraction = Rdry * VaporPressure / (Rwater * (Pressure - VaporPressure));</span>
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :   ValidateVaporMassFraction(altitude);</span>
+<span class="lineNum">     618 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     619 </span>            : 
+<a name="620"><span class="lineNum">     620 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     621 </span>            : 
+<span class="lineNum">     622 </span><span class="lineCov">          8 : double FGStandardAtmosphere::GetVaporPressure(ePressure to) const</span>
+<span class="lineNum">     623 </span>            : {
+<span class="lineNum">     624 </span><span class="lineCov">          8 :   double VaporPressure = Pressure*VaporMassFraction / (VaporMassFraction+Rdry/Rwater);</span>
+<span class="lineNum">     625 </span><span class="lineCov">          8 :   return ConvertFromPSF(VaporPressure, to);</span>
+<span class="lineNum">     626 </span>            : }
+<span class="lineNum">     627 </span>            : 
+<a name="628"><span class="lineNum">     628 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     629 </span>            : 
+<span class="lineNum">     630 </span><span class="lineCov">          8 : double FGStandardAtmosphere::GetSaturatedVaporPressure(ePressure to) const</span>
+<span class="lineNum">     631 </span>            : {
+<span class="lineNum">     632 </span><span class="lineCov">          8 :   return ConvertFromPSF(SaturatedVaporPressure, to);</span>
+<span class="lineNum">     633 </span>            : }
+<span class="lineNum">     634 </span>            : 
+<a name="635"><span class="lineNum">     635 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     636 </span>            : 
+<span class="lineNum">     637 </span><span class="lineCov">          8 : double FGStandardAtmosphere::GetRelativeHumidity(void) const</span>
+<span class="lineNum">     638 </span>            : {
+<span class="lineNum">     639 </span><span class="lineCov">          8 :   double VaporPressure = Pressure*VaporMassFraction / (VaporMassFraction+Rdry/Rwater);</span>
+<span class="lineNum">     640 </span><span class="lineCov">          8 :   return 100.0*VaporPressure/SaturatedVaporPressure;</span>
+<span class="lineNum">     641 </span>            : }
+<span class="lineNum">     642 </span>            : 
+<a name="643"><span class="lineNum">     643 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     644 </span>            : 
+<span class="lineNum">     645 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetRelativeHumidity(double RH)</span>
+<span class="lineNum">     646 </span>            : {
+<span class="lineNum">     647 </span><span class="lineNoCov">          0 :   double altitude = CalculatePressureAltitude(Pressure, 0.0);</span>
+<span class="lineNum">     648 </span><span class="lineNoCov">          0 :   double VaporPressure = 0.01*RH*SaturatedVaporPressure;</span>
+<span class="lineNum">     649 </span><span class="lineNoCov">          0 :   VaporMassFraction = Rdry * VaporPressure / (Rwater * (Pressure - VaporPressure));</span>
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 :   ValidateVaporMassFraction(altitude);</span>
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     652 </span>            : 
+<a name="653"><span class="lineNum">     653 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     654 </span>            : 
+<span class="lineNum">     655 </span><span class="lineCov">          8 : double FGStandardAtmosphere::GetVaporMassFractionPPM(void) const</span>
+<span class="lineNum">     656 </span>            : {
+<span class="lineNum">     657 </span><span class="lineCov">          8 :   return VaporMassFraction*1E6;</span>
+<span class="lineNum">     658 </span>            : }
+<span class="lineNum">     659 </span>            : 
+<a name="660"><span class="lineNum">     660 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     661 </span>            : 
+<span class="lineNum">     662 </span><span class="lineNoCov">          0 : void FGStandardAtmosphere::SetVaporMassFractionPPM(double frac)</span>
+<span class="lineNum">     663 </span>            : {
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 :   double altitude = CalculatePressureAltitude(Pressure, 0.0);</span>
+<span class="lineNum">     665 </span><span class="lineNoCov">          0 :   VaporMassFraction = frac*1E-6;</span>
+<span class="lineNum">     666 </span><span class="lineNoCov">          0 :   ValidateVaporMassFraction(altitude);</span>
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     668 </span>            : 
+<a name="669"><span class="lineNum">     669 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     670 </span>            : 
+<span class="lineNum">     671 </span><span class="lineCov">          8 : void FGStandardAtmosphere::bind(void)</span>
+<span class="lineNum">     672 </span>            : {
+<span class="lineNum">     673 </span>            :   typedef double (FGStandardAtmosphere::*PMFi)(int) const;
+<span class="lineNum">     674 </span>            :   typedef void (FGStandardAtmosphere::*PMF)(int, double);
+<span class="lineNum">     675 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/delta-T&quot;, this, eRankine,</span>
+<span class="lineNum">     676 </span>            :                                     (PMFi)&amp;FGStandardAtmosphere::GetTemperatureBias,
+<span class="lineNum">     677 </span>            :                                     (PMF)&amp;FGStandardAtmosphere::SetTemperatureBias);
+<span class="lineNum">     678 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/SL-graded-delta-T&quot;, this, eRankine,</span>
+<span class="lineNum">     679 </span>            :                                     (PMFi)&amp;FGStandardAtmosphere::GetTemperatureDeltaGradient,
+<span class="lineNum">     680 </span>            :                                     (PMF)&amp;FGStandardAtmosphere::SetSLTemperatureGradedDelta);
+<span class="lineNum">     681 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/P-sl-psf&quot;, this, ePSF,</span>
+<span class="lineNum">     682 </span>            :                                    (PMFi)&amp;FGStandardAtmosphere::GetPressureSL,
+<span class="lineNum">     683 </span>            :                                    (PMF)&amp;FGStandardAtmosphere::SetPressureSL);
+<span class="lineNum">     684 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/dew-point-R&quot;, this, eRankine,</span>
+<span class="lineNum">     685 </span>            :                        (PMFi)&amp;FGStandardAtmosphere::GetDewPoint,
+<span class="lineNum">     686 </span>            :                        (PMF)&amp;FGStandardAtmosphere::SetDewPoint);
+<span class="lineNum">     687 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/vapor-pressure-psf&quot;, this, ePSF,</span>
+<span class="lineNum">     688 </span>            :                        (PMFi)&amp;FGStandardAtmosphere::GetVaporPressure,
+<span class="lineNum">     689 </span>            :                        (PMF)&amp;FGStandardAtmosphere::SetVaporPressure);
+<span class="lineNum">     690 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/saturated-vapor-pressure-psf&quot;, this, ePSF,</span>
+<span class="lineNum">     691 </span>            :                        (PMFi)&amp;FGStandardAtmosphere::GetSaturatedVaporPressure);
+<span class="lineNum">     692 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/RH&quot;, this,</span>
+<span class="lineNum">     693 </span>            :                        &amp;FGStandardAtmosphere::GetRelativeHumidity,
+<span class="lineNum">     694 </span>            :                        &amp;FGStandardAtmosphere::SetRelativeHumidity);
+<span class="lineNum">     695 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;atmosphere/vapor-fraction-ppm&quot;, this,</span>
+<span class="lineNum">     696 </span>            :                        &amp;FGStandardAtmosphere::GetVaporMassFractionPPM,
+<span class="lineNum">     697 </span>            :                        &amp;FGStandardAtmosphere::SetVaporMassFractionPPM);
+<span class="lineNum">     698 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     699 </span>            : 
+<span class="lineNum">     700 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     701 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     702 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     703 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     704 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     705 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     706 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     707 </span>            : //       whatsoever.
+<span class="lineNum">     708 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     709 </span>            : //       startup messages
+<span class="lineNum">     710 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     711 </span>            : //       a class is instantiated
+<span class="lineNum">     712 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     713 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     714 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     715 </span>            : //       are printed out periodically
+<span class="lineNum">     716 </span>            : //    16: When set various parameters are sanity checked and
+<a name="717"><span class="lineNum">     717 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     718 </span>            : 
+<span class="lineNum">     719 </span><span class="lineCov">         16 : void FGStandardAtmosphere::Debug(int from)</span>
+<span class="lineNum">     720 </span>            : {
+<span class="lineNum">     721 </span><span class="lineCov">         16 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     722 </span>            : 
+<span class="lineNum">     723 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     724 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     725 </span>            :     }
+<span class="lineNum">     726 </span>            :   }
+<span class="lineNum">     727 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     728 </span><span class="lineNoCov">          0 :     if (from == 0) std::cout &lt;&lt; &quot;Instantiated: FGStandardAtmosphere&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :     if (from == 1) std::cout &lt;&lt; &quot;Destroyed:    FGStandardAtmosphere&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     730 </span>            :   }
+<span class="lineNum">     731 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     732 </span>            :   }
+<span class="lineNum">     733 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     734 </span>            :   }
+<span class="lineNum">     735 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     736 </span>            :   }
+<span class="lineNum">     737 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 128) { // </span>
+<span class="lineNum">     738 </span>            :   }
+<span class="lineNum">     739 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     740 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     741 </span>            :     }
+<span class="lineNum">     742 </span>            :   }
+<a name="743"><span class="lineNum">     743 </span>            : }</a>
+<span class="lineNum">     744 </span>            : 
+<span class="lineNum">     745 </span><span class="lineCov">         12 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

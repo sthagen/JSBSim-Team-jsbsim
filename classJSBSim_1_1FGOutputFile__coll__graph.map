@@ -1,0 +1,17 @@
+<map id="FGOutputFile" name="FGOutputFile">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutputType.html" title="Abstract class to provide functions generic to all the output directives. " alt="" coords="483,410,591,437"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGModel.html" title="Base class for all scheduled JSBSim models. " alt="" coords="5,357,80,384"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGExternalReactions.html" title="Manages the external and/or arbitrary forces and moments. " alt="" coords="153,82,299,109"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGPropagate.html" title="Models the EOM and integration/propagation of state. " alt="" coords="177,133,275,160"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGAccelerations.html" title="Handles the calculation of accelerations. " alt="" coords="167,184,285,210"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGFCS.html" title="Encapsulates the Flight Control System (FCS) functionality. " alt="" coords="193,234,259,261"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGAtmosphere.html" title="Models an empty, abstract base atmosphere class. " alt="" coords="171,285,281,312"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGBuoyantForces.html" title="Encapsulates the Buoyant forces calculations. " alt="" coords="162,336,290,362"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGGroundReactions.html" title="Manages ground reactions modeling. " alt="" coords="155,386,297,413"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGPropulsion.html" title="Propulsion management class. " alt="" coords="175,437,277,464"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGAircraft.html" title="Encapsulates an Aircraft and its systems. " alt="" coords="185,488,267,514"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGAuxiliary.html" title="Encapsulates various uncategorized scheduled functions. " alt="" coords="181,538,271,565"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGAerodynamics.html" title="Encapsulates the aerodynamic calculations. " alt="" coords="165,589,287,616"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1FGMassBalance.html" title="Models weight, balance and moment of inertia information. " alt="" coords="167,640,285,666"/>
+<area shape="rect" id="node18" href="$classJSBSim_1_1FGWinds.html" title="Models atmospheric disturbances: winds, gusts, turbulence, downbursts, etc. " alt="" coords="187,690,265,717"/>
+</map>

@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGGroundCallback.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGGroundCallback.h<span style="font-size: 80%;"> (source / <a href="FGGroundCallback.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntryLo">64.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryLo">58.3 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGGroundCallback.h
+<span class="lineNum">       4 </span>            :  Author:       Mathias Froehlich
+<span class="lineNum">       5 </span>            :  Date started: 05/21/04
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------ Copyright (C) 2004 Mathias Froehlich (Mathias.Froehlich@web.de) -------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : -------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 05/21/00   MF   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGGROUNDCALLBACK_H
+<span class="lineNum">      35 </span>            : #define FGGROUNDCALLBACK_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : namespace JSBSim {
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : class FGLocation;
+<span class="lineNum">      44 </span>            : class FGColumnVector3;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      47 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      48 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /** This class provides callback slots to get ground specific data.
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            :     The default implementation returns values for a
+<span class="lineNum">      53 </span>            :     ball formed earth with an adjustable terrain elevation.
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            :     @author Mathias Froehlich
+<span class="lineNum">      56 </span>            : */
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      59 </span>            : CLASS DECLARATION
+<span class="lineNum">      60 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : class FGGroundCallback
+<span class="lineNum">      63 </span>            : {
+<a name="64"><span class="lineNum">      64 </span>            : public:</a>
+<a name="65"><span class="lineNum">      65 </span>            : </a>
+<span class="lineNum">      66 </span><span class="lineCov">         14 :   FGGroundCallback() : time(0.0) {}</span>
+<span class="lineNum">      67 </span><span class="lineCov">         14 :   virtual ~FGGroundCallback() {}</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            :   /** Compute the altitude above ground.
+<span class="lineNum">      70 </span>            :       The altitude depends on time t and location l.
+<span class="lineNum">      71 </span>            :       @param t simulation time
+<span class="lineNum">      72 </span>            :       @param l location
+<span class="lineNum">      73 </span>            :       @param contact Contact point location below the location l
+<span class="lineNum">      74 </span>            :       @param normal Normal vector at the contact point
+<span class="lineNum">      75 </span>            :       @param v Linear velocity at the contact point
+<span class="lineNum">      76 </span>            :       @param w Angular velocity at the contact point
+<span class="lineNum">      77 </span>            :       @return altitude above ground
+<span class="lineNum">      78 </span>            :    */
+<span class="lineNum">      79 </span>            :   virtual double GetAGLevel(double t, const FGLocation&amp; location,
+<span class="lineNum">      80 </span>            :                             FGLocation&amp; contact,
+<span class="lineNum">      81 </span>            :                             FGColumnVector3&amp; normal, FGColumnVector3&amp; v,
+<span class="lineNum">      82 </span>            :                             FGColumnVector3&amp; w) const = 0;
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :   /** Compute the altitude above ground.
+<span class="lineNum">      85 </span>            :       The altitude depends on location l.
+<span class="lineNum">      86 </span>            :       @param l location
+<span class="lineNum">      87 </span>            :       @param contact Contact point location below the location l
+<span class="lineNum">      88 </span>            :       @param normal Normal vector at the contact point
+<span class="lineNum">      89 </span>            :       @param v Linear velocity at the contact point
+<span class="lineNum">      90 </span>            :       @param w Angular velocity at the contact point
+<a name="91"><span class="lineNum">      91 </span>            :       @return altitude above ground</a>
+<span class="lineNum">      92 </span>            :    */
+<span class="lineNum">      93 </span><span class="lineCov">     871149 :   virtual double GetAGLevel(const FGLocation&amp; location, FGLocation&amp; contact,</span>
+<span class="lineNum">      94 </span>            :                             FGColumnVector3&amp; normal, FGColumnVector3&amp; v,
+<span class="lineNum">      95 </span>            :                             FGColumnVector3&amp; w) const
+<span class="lineNum">      96 </span><span class="lineCov">     871149 :   { return GetAGLevel(time, location, contact, normal, v, w); }</span>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :   /** Set the terrain elevation.
+<span class="lineNum">      99 </span>            :       Only needs to be implemented if JSBSim should be allowed
+<a name="100"><span class="lineNum">     100 </span>            :       to modify the local terrain radius (see the default implementation)</a>
+<span class="lineNum">     101 </span>            :    */
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :   virtual void SetTerrainElevation(double h) {}</span>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            :   /** Set the planet semimajor and semiminor axes.
+<span class="lineNum">     105 </span>            :       Only needs to be implemented if JSBSim should be allowed to modify
+<a name="106"><span class="lineNum">     106 </span>            :       the planet dimensions.</a>
+<span class="lineNum">     107 </span>            :    */
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :   virtual void SetEllipse(double semimajor, double semiminor) {}</span>
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            :   /** Set the simulation time.
+<span class="lineNum">     111 </span>            :       The elapsed time can be used by the ground callbck to assess the planet
+<span class="lineNum">     112 </span>            :       rotation or the movement of objects.
+<a name="113"><span class="lineNum">     113 </span>            :       @param _time elapsed time in seconds since the simulation started.</a>
+<span class="lineNum">     114 </span>            :    */
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :   void SetTime(double _time) { time = _time; }</span>
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span>            : protected:
+<span class="lineNum">     118 </span>            :   double time;
+<span class="lineNum">     119 </span>            : };
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     122 </span>            : // The default sphere earth implementation:
+<a name="123"><span class="lineNum">     123 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span><span class="lineCov">         28 : class FGDefaultGroundCallback : public FGGroundCallback</span>
+<a name="126"><span class="lineNum">     126 </span>            : {</a>
+<span class="lineNum">     127 </span>            : public:
+<span class="lineNum">     128 </span><span class="lineCov">         14 :   explicit FGDefaultGroundCallback(double semiMajor, double semiMinor) :</span>
+<span class="lineNum">     129 </span><span class="lineCov">         14 :     a(semiMajor), b(semiMinor) {}</span>
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            :   double GetAGLevel(double t, const FGLocation&amp; location,
+<span class="lineNum">     132 </span>            :                     FGLocation&amp; contact,
+<span class="lineNum">     133 </span>            :                     FGColumnVector3&amp; normal, FGColumnVector3&amp; v,
+<a name="134"><span class="lineNum">     134 </span>            :                     FGColumnVector3&amp; w) const override;</a>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineCov">          3 :   void SetTerrainElevation(double h) override</span>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          3 :   { mTerrainElevation = h; }</span></a>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :   void SetEllipse(double semimajor, double semiminor) override</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   { a = semimajor; b = semiminor; }</span>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            : private:
+<span class="lineNum">     143 </span>            :   double a, b;
+<span class="lineNum">     144 </span>            :   double mTerrainElevation = 0.0;
+<span class="lineNum">     145 </span>            : };
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            : }
+<span class="lineNum">     148 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     149 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

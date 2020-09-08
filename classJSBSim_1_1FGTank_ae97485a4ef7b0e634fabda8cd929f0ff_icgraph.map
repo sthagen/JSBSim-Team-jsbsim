@@ -1,0 +1,5 @@
+<map id="GetType" name="GetType">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropulsion.html#a764e8c6d39b827d2ad03f570a2fc37e6" title="Executes the propulsion model. " alt="" coords="125,5,315,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropulsion.html#a0b8d108c40ce8b06c3c849824ab18397" title="Loads the propulsion system (engine[s] and tank[s]). " alt="" coords="141,57,299,98"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFDMExec.html#ae3203eea8354c1b3caf53395a0a5f6a7" title="Loads an aircraft model. " alt="" coords="363,57,525,98"/>
+</map>

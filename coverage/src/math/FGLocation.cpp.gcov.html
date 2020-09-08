@@ -1,0 +1,515 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/math/FGLocation.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/math</a> - FGLocation.cpp<span style="font-size: 80%;"> (source / <a href="FGLocation.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">188</td>
+            <td class="headerCovTableEntry">199</td>
+            <td class="headerCovTableEntryHi">94.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryHi">94.1 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGLocation.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 04/04/2004
+<span class="lineNum">       6 </span>            :  Purpose:      Store an arbitrary location on the globe
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) ------------------
+<span class="lineNum">       9 </span>            :  -------           (C) 2004  Mathias Froehlich (Mathias.Froehlich@web.de) ----
+<span class="lineNum">      10 </span>            :  -------           (C) 2011  Ola Røer Thorsen (ola@silentwings.no) -----------
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      13 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      14 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      15 </span>            :  later version.
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      18 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      19 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      20 </span>            :  details.
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      23 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      24 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      27 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      30 </span>            : ------------------------------------------------------------------------------
+<span class="lineNum">      31 </span>            : This class encapsulates an arbitrary position in the globe with its accessors.
+<span class="lineNum">      32 </span>            : It has vector properties, so you can add multiply ....
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : HISTORY
+<span class="lineNum">      35 </span>            : ------------------------------------------------------------------------------
+<span class="lineNum">      36 </span>            : 04/04/2004   MF    Created
+<span class="lineNum">      37 </span>            : 11/01/2011   ORT   Encapsulated ground callback code in FGLocation and removed
+<span class="lineNum">      38 </span>            :                    it from FGFDMExec.
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      41 </span>            : INCLUDES
+<span class="lineNum">      42 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #include &quot;FGLocation.h&quot;
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : namespace JSBSim {
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      51 </span>            : CLASS IMPLEMENTATION
+<a name="52"><span class="lineNum">      52 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span><span class="lineCov">     870843 : FGLocation::FGLocation(void)</span>
+<span class="lineNum">      55 </span><span class="lineCov">     870843 :   : mECLoc(1.0, 0.0, 0.0), mCacheValid(false)</span>
+<span class="lineNum">      56 </span>            : {
+<span class="lineNum">      57 </span><span class="lineCov">     870843 :   e2 = c = 0.0;</span>
+<span class="lineNum">      58 </span><span class="lineCov">     870843 :   a = ec = ec2 = 1.0;</span>
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span><span class="lineCov">     870843 :   mLon = mLat = mRadius = 0.0;</span>
+<span class="lineNum">      61 </span><span class="lineCov">     870843 :   mGeodLat = GeodeticAltitude = 0.0;</span>
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span><span class="lineCov">     870843 :   mTl2ec.InitMatrix();</span>
+<span class="lineNum">      64 </span><span class="lineCov">     870843 :   mTec2l.InitMatrix();</span>
+<span class="lineNum">      65 </span><span class="lineCov">     870843 : }</span>
+<span class="lineNum">      66 </span>            : 
+<a name="67"><span class="lineNum">      67 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineCov">        190 : FGLocation::FGLocation(double lon, double lat, double radius)</span>
+<span class="lineNum">      70 </span><span class="lineCov">        190 :   : mCacheValid(false)</span>
+<span class="lineNum">      71 </span>            : {
+<span class="lineNum">      72 </span><span class="lineCov">        190 :   e2 = c = 0.0;</span>
+<span class="lineNum">      73 </span><span class="lineCov">        190 :   a = ec = ec2 = 1.0;</span>
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span><span class="lineCov">        190 :   mLon = mLat = mRadius = 0.0;</span>
+<span class="lineNum">      76 </span><span class="lineCov">        190 :   mGeodLat = GeodeticAltitude = 0.0;</span>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineCov">        190 :   mTl2ec.InitMatrix();</span>
+<span class="lineNum">      79 </span><span class="lineCov">        190 :   mTec2l.InitMatrix();</span>
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span><span class="lineCov">        190 :   double sinLat = sin(lat);</span>
+<span class="lineNum">      82 </span><span class="lineCov">        190 :   double cosLat = cos(lat);</span>
+<span class="lineNum">      83 </span><span class="lineCov">        190 :   double sinLon = sin(lon);</span>
+<span class="lineNum">      84 </span><span class="lineCov">        190 :   double cosLon = cos(lon);</span>
+<span class="lineNum">      85 </span><span class="lineCov">        760 :   mECLoc = { radius*cosLat*cosLon,</span>
+<span class="lineNum">      86 </span><span class="lineCov">        190 :              radius*cosLat*sinLon,</span>
+<span class="lineNum">      87 </span><span class="lineCov">        380 :              radius*sinLat };</span>
+<span class="lineNum">      88 </span><span class="lineCov">        190 : }</span>
+<span class="lineNum">      89 </span>            : 
+<a name="90"><span class="lineNum">      90 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span><span class="lineCov">        272 : FGLocation::FGLocation(const FGColumnVector3&amp; lv)</span>
+<span class="lineNum">      93 </span><span class="lineCov">        272 :   : mECLoc(lv), mCacheValid(false)</span>
+<span class="lineNum">      94 </span>            : {
+<span class="lineNum">      95 </span><span class="lineCov">        272 :   e2 = c = 0.0;</span>
+<span class="lineNum">      96 </span><span class="lineCov">        272 :   a = ec = ec2 = 1.0;</span>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span><span class="lineCov">        272 :   mLon = mLat = mRadius = 0.0;</span>
+<span class="lineNum">      99 </span><span class="lineCov">        272 :   mGeodLat = GeodeticAltitude = 0.0;</span>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineCov">        272 :   mTl2ec.InitMatrix();</span>
+<span class="lineNum">     102 </span><span class="lineCov">        272 :   mTec2l.InitMatrix();</span>
+<span class="lineNum">     103 </span><span class="lineCov">        272 : }</span>
+<span class="lineNum">     104 </span>            : 
+<a name="105"><span class="lineNum">     105 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span><span class="lineCov">     871363 : FGLocation::FGLocation(const FGLocation&amp; l)</span>
+<span class="lineNum">     108 </span><span class="lineCov">     871363 :   : mECLoc(l.mECLoc), mCacheValid(l.mCacheValid)</span>
+<span class="lineNum">     109 </span>            : {
+<span class="lineNum">     110 </span><span class="lineCov">     871363 :   a = l.a;</span>
+<span class="lineNum">     111 </span><span class="lineCov">     871363 :   e2 = l.e2;</span>
+<span class="lineNum">     112 </span><span class="lineCov">     871363 :   c = l.c;</span>
+<span class="lineNum">     113 </span><span class="lineCov">     871363 :   ec = l.ec;</span>
+<span class="lineNum">     114 </span><span class="lineCov">     871363 :   ec2 = l.ec2;</span>
+<span class="lineNum">     115 </span><span class="lineCov">     871363 :   mEllipseSet = l.mEllipseSet;</span>
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span>            :   /*ag
+<span class="lineNum">     118 </span>            :    * if the cache is not valid, all of the following values are unset.
+<span class="lineNum">     119 </span>            :    * They will be calculated once ComputeDerivedUnconditional is called.
+<span class="lineNum">     120 </span>            :    * If unset, they may possibly contain NaN and could thus trigger floating
+<span class="lineNum">     121 </span>            :    * point exceptions.
+<span class="lineNum">     122 </span>            :    */
+<span class="lineNum">     123 </span><span class="lineCov">     871363 :   if (!mCacheValid) return;</span>
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span><span class="lineCov">     226539 :   mLon = l.mLon;</span>
+<span class="lineNum">     126 </span><span class="lineCov">     226539 :   mLat = l.mLat;</span>
+<span class="lineNum">     127 </span><span class="lineCov">     226539 :   mRadius = l.mRadius;</span>
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span><span class="lineCov">     226539 :   mTl2ec = l.mTl2ec;</span>
+<span class="lineNum">     130 </span><span class="lineCov">     226539 :   mTec2l = l.mTec2l;</span>
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span><span class="lineCov">     226539 :   mGeodLat = l.mGeodLat;</span>
+<span class="lineNum">     133 </span><span class="lineCov">     226539 :   GeodeticAltitude = l.GeodeticAltitude;</span>
+<span class="lineNum">     134 </span>            : }
+<span class="lineNum">     135 </span>            : 
+<a name="136"><span class="lineNum">     136 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span><span class="lineCov">        228 : FGLocation&amp; FGLocation::operator=(const FGLocation&amp; l)</span>
+<span class="lineNum">     139 </span>            : {
+<span class="lineNum">     140 </span><span class="lineCov">        228 :   mECLoc = l.mECLoc;</span>
+<span class="lineNum">     141 </span><span class="lineCov">        228 :   mCacheValid = l.mCacheValid;</span>
+<span class="lineNum">     142 </span><span class="lineCov">        228 :   mEllipseSet = l.mEllipseSet;</span>
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span><span class="lineCov">        228 :   a = l.a;</span>
+<span class="lineNum">     145 </span><span class="lineCov">        228 :   e2 = l.e2;</span>
+<span class="lineNum">     146 </span><span class="lineCov">        228 :   c = l.c;</span>
+<span class="lineNum">     147 </span><span class="lineCov">        228 :   ec = l.ec;</span>
+<span class="lineNum">     148 </span><span class="lineCov">        228 :   ec2 = l.ec2;</span>
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :   //ag See comment in constructor above
+<span class="lineNum">     151 </span><span class="lineCov">        228 :   if (!mCacheValid) return *this;</span>
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span><span class="lineCov">         17 :   mLon = l.mLon;</span>
+<span class="lineNum">     154 </span><span class="lineCov">         17 :   mLat = l.mLat;</span>
+<span class="lineNum">     155 </span><span class="lineCov">         17 :   mRadius = l.mRadius;</span>
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span><span class="lineCov">         17 :   mTl2ec = l.mTl2ec;</span>
+<span class="lineNum">     158 </span><span class="lineCov">         17 :   mTec2l = l.mTec2l;</span>
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span><span class="lineCov">         17 :   mGeodLat = l.mGeodLat;</span>
+<span class="lineNum">     161 </span><span class="lineCov">         17 :   GeodeticAltitude = l.GeodeticAltitude;</span>
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineCov">         17 :   return *this;</span>
+<span class="lineNum">     164 </span>            : }
+<span class="lineNum">     165 </span>            : 
+<a name="166"><span class="lineNum">     166 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span><span class="lineCov">        200 : void FGLocation::SetLongitude(double longitude)</span>
+<span class="lineNum">     169 </span>            : {
+<span class="lineNum">     170 </span><span class="lineCov">        200 :   double rtmp = mECLoc.Magnitude(eX, eY);</span>
+<span class="lineNum">     171 </span>            :   // Check if we have zero radius.
+<span class="lineNum">     172 </span>            :   // If so set it to 1, so that we can set a position
+<span class="lineNum">     173 </span><span class="lineCov">        200 :   if (0.0 == mECLoc.Magnitude())</span>
+<span class="lineNum">     174 </span><span class="lineCov">          1 :     rtmp = 1.0;</span>
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            :   // Fast return if we are on the north or south pole ...
+<span class="lineNum">     177 </span><span class="lineCov">        200 :   if (rtmp == 0.0)</span>
+<span class="lineNum">     178 </span><span class="lineCov">          2 :     return;</span>
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span><span class="lineCov">        198 :   mCacheValid = false;</span>
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span><span class="lineCov">        198 :   mECLoc(eX) = rtmp*cos(longitude);</span>
+<span class="lineNum">     183 </span><span class="lineCov">        198 :   mECLoc(eY) = rtmp*sin(longitude);</span>
+<span class="lineNum">     184 </span>            : }
+<span class="lineNum">     185 </span>            : 
+<a name="186"><span class="lineNum">     186 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineCov">      75351 : void FGLocation::SetLatitude(double latitude)</span>
+<span class="lineNum">     189 </span>            : {
+<span class="lineNum">     190 </span><span class="lineCov">      75351 :   mCacheValid = false;</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span><span class="lineCov">      75351 :   double r = mECLoc.Magnitude();</span>
+<span class="lineNum">     193 </span><span class="lineCov">      75351 :   if (r == 0.0) {</span>
+<span class="lineNum">     194 </span><span class="lineCov">          1 :     mECLoc(eX) = 1.0;</span>
+<span class="lineNum">     195 </span><span class="lineCov">          1 :     r = 1.0;</span>
+<span class="lineNum">     196 </span>            :   }
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span><span class="lineCov">      75351 :   double rtmp = mECLoc.Magnitude(eX, eY);</span>
+<span class="lineNum">     199 </span><span class="lineCov">      75351 :   if (rtmp != 0.0) {</span>
+<span class="lineNum">     200 </span><span class="lineCov">      75349 :     double fac = r/rtmp*cos(latitude);</span>
+<span class="lineNum">     201 </span><span class="lineCov">      75349 :     mECLoc(eX) *= fac;</span>
+<span class="lineNum">     202 </span><span class="lineCov">      75349 :     mECLoc(eY) *= fac;</span>
+<span class="lineNum">     203 </span>            :   } else {
+<span class="lineNum">     204 </span><span class="lineCov">          2 :     mECLoc(eX) = r*cos(latitude);</span>
+<span class="lineNum">     205 </span><span class="lineCov">          2 :     mECLoc(eY) = 0.0;</span>
+<span class="lineNum">     206 </span>            :   }
+<span class="lineNum">     207 </span><span class="lineCov">      75351 :   mECLoc(eZ) = r*sin(latitude);</span>
+<span class="lineNum">     208 </span><span class="lineCov">      75351 : }</span>
+<span class="lineNum">     209 </span>            : 
+<a name="210"><span class="lineNum">     210 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span><span class="lineCov">      51599 : void FGLocation::SetRadius(double radius)</span>
+<span class="lineNum">     213 </span>            : {
+<span class="lineNum">     214 </span><span class="lineCov">      51599 :   mCacheValid = false;</span>
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span><span class="lineCov">      51599 :   double rold = mECLoc.Magnitude();</span>
+<span class="lineNum">     217 </span><span class="lineCov">      51599 :   if (rold == 0.0)</span>
+<span class="lineNum">     218 </span><span class="lineCov">          1 :     mECLoc(eX) = radius;</span>
+<span class="lineNum">     219 </span>            :   else
+<span class="lineNum">     220 </span><span class="lineCov">      51598 :     mECLoc *= radius/rold;</span>
+<span class="lineNum">     221 </span><span class="lineCov">      51599 : }</span>
+<span class="lineNum">     222 </span>            : 
+<a name="223"><span class="lineNum">     223 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span><span class="lineCov">        223 : void FGLocation::SetPosition(double lon, double lat, double radius)</span>
+<span class="lineNum">     226 </span>            : {
+<span class="lineNum">     227 </span><span class="lineCov">        223 :   mCacheValid = false;</span>
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span><span class="lineCov">        223 :   double sinLat = sin(lat);</span>
+<span class="lineNum">     230 </span><span class="lineCov">        223 :   double cosLat = cos(lat);</span>
+<span class="lineNum">     231 </span><span class="lineCov">        223 :   double sinLon = sin(lon);</span>
+<span class="lineNum">     232 </span><span class="lineCov">        223 :   double cosLon = cos(lon);</span>
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span><span class="lineCov">        892 :   mECLoc = { radius*cosLat*cosLon,</span>
+<span class="lineNum">     235 </span><span class="lineCov">        223 :              radius*cosLat*sinLon,</span>
+<span class="lineNum">     236 </span><span class="lineCov">        446 :              radius*sinLat };</span>
+<span class="lineNum">     237 </span><span class="lineCov">        223 : }</span>
+<span class="lineNum">     238 </span>            : 
+<a name="239"><span class="lineNum">     239 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span><span class="lineCov">    1646190 : void FGLocation::SetPositionGeodetic(double lon, double lat, double height)</span>
+<span class="lineNum">     242 </span>            : {
+<span class="lineNum">     243 </span><span class="lineCov">    1646190 :   assert(mEllipseSet);</span>
+<span class="lineNum">     244 </span><span class="lineCov">    1646190 :   mCacheValid = false;</span>
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span><span class="lineCov">    1646190 :   double slat = sin(lat);</span>
+<span class="lineNum">     247 </span><span class="lineCov">    1646190 :   double clat = cos(lat);</span>
+<span class="lineNum">     248 </span><span class="lineCov">    1646190 :   double RN = a / sqrt(1.0 - e2*slat*slat);</span>
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span><span class="lineCov">    1646190 :   mECLoc(eX) = (RN + height)*clat*cos(lon);</span>
+<span class="lineNum">     251 </span><span class="lineCov">    1646190 :   mECLoc(eY) = (RN + height)*clat*sin(lon);</span>
+<span class="lineNum">     252 </span><span class="lineCov">    1646190 :   mECLoc(eZ) = ((1 - e2)*RN + height)*slat;</span>
+<span class="lineNum">     253 </span><span class="lineCov">    1646190 : }</span>
+<span class="lineNum">     254 </span>            : 
+<a name="255"><span class="lineNum">     255 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span><span class="lineCov">    1742468 : void FGLocation::SetEllipse(double semimajor, double semiminor)</span>
+<span class="lineNum">     258 </span>            : {
+<span class="lineNum">     259 </span><span class="lineCov">    1742468 :   mCacheValid = false;</span>
+<span class="lineNum">     260 </span><span class="lineCov">    1742468 :   mEllipseSet = true;</span>
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span><span class="lineCov">    1742468 :   a = semimajor;</span>
+<span class="lineNum">     263 </span><span class="lineCov">    1742468 :   ec = semiminor/a;</span>
+<span class="lineNum">     264 </span><span class="lineCov">    1742468 :   ec2 = ec * ec;</span>
+<span class="lineNum">     265 </span><span class="lineCov">    1742468 :   e2 = 1.0 - ec2;</span>
+<span class="lineNum">     266 </span><span class="lineCov">    1742468 :   c = a * e2;</span>
+<span class="lineNum">     267 </span><span class="lineCov">    1742468 : }</span>
+<span class="lineNum">     268 </span>            : 
+<a name="269"><span class="lineNum">     269 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span><span class="lineCov">     537566 : double FGLocation::GetSeaLevelRadius(void) const</span>
+<span class="lineNum">     272 </span>            : {
+<span class="lineNum">     273 </span><span class="lineCov">     537566 :   assert(mEllipseSet);</span>
+<span class="lineNum">     274 </span><span class="lineCov">     537566 :   ComputeDerived();</span>
+<span class="lineNum">     275 </span><span class="lineCov">     537566 :   double cosLat = cos(mLat);</span>
+<span class="lineNum">     276 </span><span class="lineCov">     537566 :   return a*ec/sqrt(1.0-e2*cosLat*cosLat);</span>
+<span class="lineNum">     277 </span>            : }
+<span class="lineNum">     278 </span>            : 
+<a name="279"><span class="lineNum">     279 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span><span class="lineCov">    1283378 : void FGLocation::ComputeDerivedUnconditional(void) const</span>
+<span class="lineNum">     282 </span>            : {
+<span class="lineNum">     283 </span>            :   // The radius is just the Euclidean norm of the vector.
+<span class="lineNum">     284 </span><span class="lineCov">    1283378 :   mRadius = mECLoc.Magnitude();</span>
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            :   // The distance of the location to the Z-axis, which is the axis
+<span class="lineNum">     287 </span>            :   // through the poles.
+<span class="lineNum">     288 </span><span class="lineCov">    1283378 :   double rxy = mECLoc.Magnitude(eX, eY);</span>
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span>            :   // Compute the longitude and its sin/cos values.
+<span class="lineNum">     291 </span>            :   double sinLon, cosLon;
+<span class="lineNum">     292 </span><span class="lineCov">    1283378 :   if (rxy == 0.0) {</span>
+<span class="lineNum">     293 </span><span class="lineCov">          5 :     sinLon = 0.0;</span>
+<span class="lineNum">     294 </span><span class="lineCov">          5 :     cosLon = 1.0;</span>
+<span class="lineNum">     295 </span><span class="lineCov">          5 :     mLon = 0.0;</span>
+<span class="lineNum">     296 </span>            :   } else {
+<span class="lineNum">     297 </span><span class="lineCov">    1283373 :     sinLon = mECLoc(eY)/rxy;</span>
+<span class="lineNum">     298 </span><span class="lineCov">    1283373 :     cosLon = mECLoc(eX)/rxy;</span>
+<span class="lineNum">     299 </span><span class="lineCov">    1283373 :     mLon = atan2(mECLoc(eY), mECLoc(eX));</span>
+<span class="lineNum">     300 </span>            :   }
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span>            :   // Compute the geocentric &amp; geodetic latitudes.
+<span class="lineNum">     303 </span>            :   double sinLat, cosLat;
+<span class="lineNum">     304 </span><span class="lineCov">    1283378 :   if (mRadius == 0.0)  {</span>
+<span class="lineNum">     305 </span><span class="lineCov">          1 :     mLat = 0.0;</span>
+<span class="lineNum">     306 </span><span class="lineCov">          1 :     sinLat = 0.0;</span>
+<span class="lineNum">     307 </span><span class="lineCov">          1 :     cosLat = 1.0;</span>
+<span class="lineNum">     308 </span><span class="lineCov">          1 :     if (mEllipseSet) {</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :       mGeodLat = 0.0;</span>
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :       GeodeticAltitude = -a;</span>
+<span class="lineNum">     311 </span>            :     }
+<span class="lineNum">     312 </span>            :   }
+<span class="lineNum">     313 </span>            :   else {
+<span class="lineNum">     314 </span><span class="lineCov">    1283377 :     mLat = atan2( mECLoc(eZ), rxy );</span>
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span>            :     // Calculate the geodetic latitude based on &quot;Transformation from Cartesian to
+<span class="lineNum">     317 </span>            :     // geodetic coordinates accelerated by Halley's method&quot;, Fukushima T. (2006)
+<span class="lineNum">     318 </span>            :     // Journal of Geodesy, Vol. 79, pp. 689-693
+<span class="lineNum">     319 </span>            :     // Unlike I. Sofair's method which uses a closed form solution, Fukushima's
+<span class="lineNum">     320 </span>            :     // method is an iterative method whose convergence is so fast that only one
+<span class="lineNum">     321 </span>            :     // iteration suffices. In addition, Fukushima's method has a much better
+<span class="lineNum">     322 </span>            :     // numerical stability over Sofair's method at the North and South poles and
+<span class="lineNum">     323 </span>            :     // it also gives the correct result for a spherical Earth.
+<span class="lineNum">     324 </span><span class="lineCov">    1283377 :     if (mEllipseSet) {</span>
+<span class="lineNum">     325 </span><span class="lineCov">    1282940 :       double s0 = fabs(mECLoc(eZ));</span>
+<span class="lineNum">     326 </span><span class="lineCov">    1282940 :       double zc = ec * s0;</span>
+<span class="lineNum">     327 </span><span class="lineCov">    1282940 :       double c0 = ec * rxy;</span>
+<span class="lineNum">     328 </span><span class="lineCov">    1282940 :       double c02 = c0 * c0;</span>
+<span class="lineNum">     329 </span><span class="lineCov">    1282940 :       double s02 = s0 * s0;</span>
+<span class="lineNum">     330 </span><span class="lineCov">    1282940 :       double a02 = c02 + s02;</span>
+<span class="lineNum">     331 </span><span class="lineCov">    1282940 :       double a0 = sqrt(a02);</span>
+<span class="lineNum">     332 </span><span class="lineCov">    1282940 :       double a03 = a02 * a0;</span>
+<span class="lineNum">     333 </span><span class="lineCov">    1282940 :       double s1 = zc*a03 + c*s02*s0;</span>
+<span class="lineNum">     334 </span><span class="lineCov">    1282940 :       double c1 = rxy*a03 - c*c02*c0;</span>
+<span class="lineNum">     335 </span><span class="lineCov">    1282940 :       double cs0c0 = c*c0*s0;</span>
+<span class="lineNum">     336 </span><span class="lineCov">    1282940 :       double b0 = 1.5*cs0c0*((rxy*s0-zc*c0)*a0-cs0c0);</span>
+<span class="lineNum">     337 </span><span class="lineCov">    1282940 :       s1 = s1*a03-b0*s0;</span>
+<span class="lineNum">     338 </span><span class="lineCov">    1282940 :       double cc = ec*(c1*a03-b0*c0);</span>
+<span class="lineNum">     339 </span><span class="lineCov">    1282940 :       mGeodLat = sign(mECLoc(eZ))*atan(s1 / cc);</span>
+<span class="lineNum">     340 </span><span class="lineCov">    1282940 :       double s12 = s1 * s1;</span>
+<span class="lineNum">     341 </span><span class="lineCov">    1282940 :       double cc2 = cc * cc;</span>
+<span class="lineNum">     342 </span><span class="lineCov">    1282940 :       double norm = sqrt(s12 + cc2);</span>
+<span class="lineNum">     343 </span><span class="lineCov">    1282940 :       cosLat = cc / norm;</span>
+<span class="lineNum">     344 </span><span class="lineCov">    1282940 :       sinLat = sign(mECLoc(eZ)) * s1 / norm;</span>
+<span class="lineNum">     345 </span><span class="lineCov">    1282940 :       GeodeticAltitude = (rxy*cc + s0*s1 - a*sqrt(ec2*s12 + cc2)) / norm;</span>
+<span class="lineNum">     346 </span>            :     }
+<span class="lineNum">     347 </span>            :     else {
+<span class="lineNum">     348 </span><span class="lineCov">        437 :       sinLat = mECLoc(eZ)/mRadius;</span>
+<span class="lineNum">     349 </span><span class="lineCov">        437 :       cosLat = rxy/mRadius;</span>
+<span class="lineNum">     350 </span>            :     }
+<span class="lineNum">     351 </span>            :   }
+<span class="lineNum">     352 </span>            : 
+<span class="lineNum">     353 </span>            :   // Compute the transform matrices from and to the earth centered frame.
+<span class="lineNum">     354 </span>            :   // See Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;, Second Edition,
+<span class="lineNum">     355 </span>            :   // Eqn. 1.4-13, page 40. In Stevens and Lewis notation, this is C_n/e - the
+<span class="lineNum">     356 </span>            :   // orientation of the navigation (local) frame relative to the ECEF frame,
+<span class="lineNum">     357 </span>            :   // and a transformation from ECEF to nav (local) frame.
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span><span class="lineCov">    7700268 :   mTec2l = { -cosLon*sinLat, -sinLon*sinLat,  cosLat,</span>
+<span class="lineNum">     360 </span><span class="lineCov">    1283378 :                  -sinLon   ,     cosLon    ,    0.0 ,</span>
+<span class="lineNum">     361 </span><span class="lineCov">    5133512 :              -cosLon*cosLat, -sinLon*cosLat, -sinLat  };</span>
+<span class="lineNum">     362 </span>            : 
+<span class="lineNum">     363 </span>            :   // In Stevens and Lewis notation, this is C_e/n - the
+<span class="lineNum">     364 </span>            :   // orientation of the ECEF frame relative to the nav (local) frame,
+<span class="lineNum">     365 </span>            :   // and a transformation from nav (local) to ECEF frame.
+<span class="lineNum">     366 </span>            : 
+<span class="lineNum">     367 </span><span class="lineCov">    1283378 :   mTl2ec = mTec2l.Transposed();</span>
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span>            :   // Mark the cached values as valid
+<span class="lineNum">     370 </span><span class="lineCov">    1283378 :   mCacheValid = true;</span>
+<span class="lineNum">     371 </span><span class="lineCov">    1283378 : }</span>
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     374 </span>            : //  The calculations, below, implement the Haversine formulas to calculate
+<span class="lineNum">     375 </span>            : //  heading and distance to a set of lat/long coordinates from the current
+<span class="lineNum">     376 </span>            : //  position.
+<span class="lineNum">     377 </span>            : //
+<span class="lineNum">     378 </span>            : //  The basic equations are (lat1, long1 are source positions; lat2
+<span class="lineNum">     379 </span>            : //  long2 are target positions):
+<span class="lineNum">     380 </span>            : //
+<span class="lineNum">     381 </span>            : //  R = earth’s radius
+<span class="lineNum">     382 </span>            : //  Δlat = lat2 − lat1
+<span class="lineNum">     383 </span>            : //  Δlong = long2 − long1
+<span class="lineNum">     384 </span>            : //
+<span class="lineNum">     385 </span>            : //  For the waypoint distance calculation:
+<span class="lineNum">     386 </span>            : //
+<span class="lineNum">     387 </span>            : //  a = sin²(Δlat/2) + cos(lat1)∙cos(lat2)∙sin²(Δlong/2)
+<span class="lineNum">     388 </span>            : //  c = 2∙atan2(√a, √(1−a))
+<a name="389"><span class="lineNum">     389 </span>            : //  d = R∙c</a>
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span><span class="lineCov">         24 : double FGLocation::GetDistanceTo(double target_longitude,</span>
+<span class="lineNum">     392 </span>            :                                  double target_latitude) const
+<span class="lineNum">     393 </span>            : {
+<span class="lineNum">     394 </span><span class="lineCov">         24 :   ComputeDerived();</span>
+<span class="lineNum">     395 </span><span class="lineCov">         24 :   double delta_lat_rad = target_latitude  - mLat;</span>
+<span class="lineNum">     396 </span><span class="lineCov">         24 :   double delta_lon_rad = target_longitude - mLon;</span>
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span><span class="lineCov">         24 :   double distance_a = pow(sin(0.5*delta_lat_rad), 2.0)</span>
+<span class="lineNum">     399 </span><span class="lineCov">         24 :     + (cos(mLat) * cos(target_latitude)</span>
+<span class="lineNum">     400 </span><span class="lineCov">         24 :        * (pow(sin(0.5*delta_lon_rad), 2.0)));</span>
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span><span class="lineCov">         24 :   return 2.0 * GetRadius() * atan2(sqrt(distance_a), sqrt(1.0 - distance_a));</span>
+<span class="lineNum">     403 </span>            : }
+<span class="lineNum">     404 </span>            : 
+<span class="lineNum">     405 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     406 </span>            : //  The calculations, below, implement the Haversine formulas to calculate
+<span class="lineNum">     407 </span>            : //  heading and distance to a set of lat/long coordinates from the current
+<span class="lineNum">     408 </span>            : //  position.
+<span class="lineNum">     409 </span>            : //
+<span class="lineNum">     410 </span>            : //  The basic equations are (lat1, long1 are source positions; lat2
+<span class="lineNum">     411 </span>            : //  long2 are target positions):
+<span class="lineNum">     412 </span>            : //
+<span class="lineNum">     413 </span>            : //  R = earth’s radius
+<span class="lineNum">     414 </span>            : //  Δlat = lat2 − lat1
+<span class="lineNum">     415 </span>            : //  Δlong = long2 − long1
+<span class="lineNum">     416 </span>            : //
+<span class="lineNum">     417 </span>            : //  For the heading angle calculation:
+<span class="lineNum">     418 </span>            : //
+<a name="419"><span class="lineNum">     419 </span>            : //  θ = atan2(sin(Δlong)∙cos(lat2), cos(lat1)∙sin(lat2) − sin(lat1)∙cos(lat2)∙cos(Δlong))</a>
+<span class="lineNum">     420 </span>            : 
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 : double FGLocation::GetHeadingTo(double target_longitude,</span>
+<span class="lineNum">     422 </span>            :                                 double target_latitude) const
+<span class="lineNum">     423 </span>            : {
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :   ComputeDerived();</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :   double delta_lon_rad = target_longitude - mLon;</span>
+<span class="lineNum">     426 </span>            : 
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :   double Y = sin(delta_lon_rad) * cos(target_latitude);</span>
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :   double X = cos(mLat) * sin(target_latitude)</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :     - sin(mLat) * cos(target_latitude) * cos(delta_lon_rad);</span>
+<span class="lineNum">     430 </span>            : 
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :   double heading_to_waypoint_rad = atan2(Y, X);</span>
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :   if (heading_to_waypoint_rad &lt; 0) heading_to_waypoint_rad += 2.0*M_PI;</span>
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :   return heading_to_waypoint_rad;</span>
+<span class="lineNum">     435 </span>            : }
+<span class="lineNum">     436 </span>            : 
+<a name="437"><span class="lineNum">     437 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     438 </span>            : 
+<span class="lineNum">     439 </span><span class="lineCov">         18 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

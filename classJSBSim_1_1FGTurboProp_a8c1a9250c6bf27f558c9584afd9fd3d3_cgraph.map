@@ -1,0 +1,4 @@
+<map id="CalcFuelNeed" name="CalcFuelNeed">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGTurboProp.html#a308031836dd2661401a194f63483bdf6" title="Calculates the thrust of the engine, and other engine functions. " alt="" coords="231,5,308,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="159,56,380,83"/>
+</map>

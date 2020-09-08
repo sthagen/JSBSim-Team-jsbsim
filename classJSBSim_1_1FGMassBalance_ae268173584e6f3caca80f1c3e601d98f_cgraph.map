@@ -1,0 +1,5 @@
+<map id="GetPointmassInertia" name="GetPointmassInertia">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGMassBalance.html#ac676bdc18d8b00dbcee4d135cd24a003" title="Conversion from the structural frame to the body frame. " alt="" coords="195,31,317,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="365,5,587,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGMassBalance.html#ab074489b3390646d6abb7324b011195a" title="Returns the coordinates of the center of gravity expressed in the structural frame. " alt="" coords="435,56,517,83"/>
+</map>

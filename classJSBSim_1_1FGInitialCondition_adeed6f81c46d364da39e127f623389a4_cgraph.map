@@ -1,0 +1,6 @@
+<map id="GetVtrueKtsIC" name="GetVtrueKtsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a8576d36700cec35ab3aafe6b4591a354" title="Gets the initial mach. " alt="" coords="161,64,251,91"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a346a168487e721ed793f896774dbc12c" title="Gets the initial altitude above sea level. " alt="" coords="313,5,451,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGAtmosphere.html#a9279f5c904e49a436c68665f57ab6be9" title="Returns the speed of sound in ft/sec. " alt="" coords="299,57,465,98"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGQuaternion.html#a4c650fa69b797cb5d122b7b19c70d380" title="Transformation matrix. " alt="" coords="303,122,461,163"/>
+</map>

@@ -1,0 +1,932 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/initialization/FGTrim.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/initialization</a> - FGTrim.cpp<span style="font-size: 80%;"> (source / <a href="FGTrim.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">473</td>
+            <td class="headerCovTableEntryLo">0.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntryLo">9.1 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGTrim.cpp
+<span class="lineNum">       4 </span>            :  Author:       Tony Peden
+<span class="lineNum">       5 </span>            :  Date started: 9/8/99
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  --------- Copyright (C) 1999  Anthony K. Peden (apeden@earthlink.net) ---------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            :  HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 9/8/99   TP   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      31 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : This class takes the given set of IC's and finds the angle of attack, elevator,
+<span class="lineNum">      34 </span>            : and throttle setting required to fly steady level. This is currently for in-air
+<span class="lineNum">      35 </span>            : conditions only.  It is implemented using an iterative, one-axis-at-a-time
+<span class="lineNum">      36 </span>            : scheme. */
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : //  !!!!!!! BEWARE ALL YE WHO ENTER HERE !!!!!!!
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      41 </span>            : INCLUDES
+<span class="lineNum">      42 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      45 </span>            : #include &quot;FGTrim.h&quot;
+<span class="lineNum">      46 </span>            : #include &quot;models/FGInertial.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;models/FGAccelerations.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;models/FGMassBalance.h&quot;
+<span class="lineNum">      49 </span>            : #include &quot;models/FGFCS.h&quot;
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : #if _MSC_VER
+<span class="lineNum">      52 </span>            : #pragma warning (disable : 4786 4788)
+<span class="lineNum">      53 </span>            : #endif
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : using namespace std;
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : namespace JSBSim {
+<span class="lineNum">      58 </span>            : 
+<a name="59"><span class="lineNum">      59 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 : FGTrim::FGTrim(FGFDMExec *FDMExec,TrimMode tt)</span>
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :   : fgic(FDMExec)</span>
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :   Nsub=0;</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :   max_iterations=60;</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :   max_sub_iterations=100;</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   Tolerance=1E-3;</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   A_Tolerance = Tolerance / 10;</span>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :   Debug=0;DebugLevel=0;</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :   fdmex=FDMExec;</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   fgic = *fdmex-&gt;GetIC();</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :   total_its=0;</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :   gamma_fallback=false;</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :   mode=tt;</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   xlo=xhi=alo=ahi=0.0;</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :   targetNlf=fgic.GetTargetNlfIC();</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   debug_axis=tAll;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :   SetMode(tt);</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2) cout &lt;&lt; &quot;Instantiated: FGTrim&quot; &lt;&lt; endl;</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      83 </span>            : 
+<a name="84"><span class="lineNum">      84 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 : FGTrim::~FGTrim(void) {</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2) cout &lt;&lt; &quot;Destroyed:    FGTrim&quot; &lt;&lt; endl;</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      89 </span>            : 
+<a name="90"><span class="lineNum">      90 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 : void FGTrim::TrimStats() {</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :   int run_sum=0;</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :   cout &lt;&lt; endl &lt;&lt; &quot;  Trim Statistics: &quot; &lt;&lt; endl;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    Total Iterations: &quot; &lt;&lt; total_its &lt;&lt; endl;</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :   if( total_its &gt; 0) {</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;    Sub-iterations:&quot; &lt;&lt; endl;</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :     for (unsigned int current_axis=0; current_axis&lt;TrimAxes.size(); current_axis++) {</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :       run_sum += TrimAxes[current_axis].GetRunCount();</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;   &quot; &lt;&lt; setw(5) &lt;&lt; TrimAxes[current_axis].GetStateName().c_str()</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :            &lt;&lt; &quot;: &quot; &lt;&lt; setprecision(3) &lt;&lt; sub_iterations[current_axis]</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :            &lt;&lt; &quot; average: &quot; &lt;&lt; setprecision(5) &lt;&lt; sub_iterations[current_axis]/double(total_its)</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :            &lt;&lt; &quot;  successful:  &quot; &lt;&lt; setprecision(3) &lt;&lt; successful[current_axis]</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :            &lt;&lt; &quot;  stability: &quot; &lt;&lt; setprecision(5) &lt;&lt; TrimAxes[current_axis].GetAvgStability()</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :            &lt;&lt; endl;</span>
+<span class="lineNum">     106 </span>            :     }
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;    Run Count: &quot; &lt;&lt; run_sum &lt;&lt; endl;</span>
+<span class="lineNum">     108 </span>            :   }
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     110 </span>            : 
+<a name="111"><span class="lineNum">     111 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 : void FGTrim::Report(void) {</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;  Trim Results: &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :   for(unsigned int current_axis=0; current_axis&lt;TrimAxes.size(); current_axis++)</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :     TrimAxes[current_axis].AxisReport();</span>
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     119 </span>            : 
+<a name="120"><span class="lineNum">     120 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 : void FGTrim::ClearStates(void) {</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :     mode=tCustom;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :     TrimAxes.clear();</span>
+<span class="lineNum">     125 </span>            :     //cout &lt;&lt; &quot;TrimAxes.size(): &quot; &lt;&lt; TrimAxes.size() &lt;&lt; endl;
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     127 </span>            : 
+<a name="128"><span class="lineNum">     128 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     129 </span>            : 
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 : bool FGTrim::AddState( State state, Control control ) {</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :   mode = tCustom;</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :   vector &lt;FGTrimAxis&gt;::iterator iAxes = TrimAxes.begin();</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :   for (; iAxes != TrimAxes.end(); ++iAxes) {</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :     if (iAxes-&gt;GetStateType() == state)</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :       return false;</span>
+<span class="lineNum">     136 </span>            :   }
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :   TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,state,control));</span>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :   sub_iterations.resize(TrimAxes.size());</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   successful.resize(TrimAxes.size());</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :   solution.resize(TrimAxes.size());</span>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     144 </span>            : }
+<span class="lineNum">     145 </span>            : 
+<a name="146"><span class="lineNum">     146 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 : bool FGTrim::RemoveState( State state ) {</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :   bool result=false;</span>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :   mode = tCustom;</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :   vector &lt;FGTrimAxis&gt;::iterator iAxes = TrimAxes.begin();</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :   while (iAxes != TrimAxes.end()) {</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :       if( iAxes-&gt;GetStateType() == state ) {</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :         iAxes = TrimAxes.erase(iAxes);</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :         result=true;</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :         continue;</span>
+<span class="lineNum">     158 </span>            :       }
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :       ++iAxes;</span>
+<span class="lineNum">     160 </span>            :   }
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :   if(result) {</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :     sub_iterations.resize(TrimAxes.size());</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :     successful.resize(TrimAxes.size());</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     solution.resize(TrimAxes.size());</span>
+<span class="lineNum">     165 </span>            :   }
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :   return result;</span>
+<span class="lineNum">     167 </span>            : }
+<span class="lineNum">     168 </span>            : 
+<a name="169"><span class="lineNum">     169 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 : bool FGTrim::EditState( State state, Control new_control ){</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :   mode = tCustom;</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :   vector &lt;FGTrimAxis&gt;::iterator iAxes = TrimAxes.begin();</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :   while (iAxes != TrimAxes.end()) {</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :       if( iAxes-&gt;GetStateType() == state ) {</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :         *iAxes = FGTrimAxis(fdmex,&amp;fgic,state,new_control);</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :         return true;</span>
+<span class="lineNum">     178 </span>            :       }
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :       ++iAxes;</span>
+<span class="lineNum">     180 </span>            :   }
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     182 </span>            : }
+<span class="lineNum">     183 </span>            : 
+<a name="184"><span class="lineNum">     184 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 : bool FGTrim::DoTrim(void) {</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :   bool trim_failed=false;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :   unsigned int N = 0;</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :   unsigned int axis_count = 0;</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :   FGFCS *FCS = fdmex-&gt;GetFCS();</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :   vector&lt;double&gt; throttle0 = FCS-&gt;GetThrottleCmd();</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :   double elevator0 = FCS-&gt;GetDeCmd();</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :   double aileron0 = FCS-&gt;GetDaCmd();</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :   double rudder0 = FCS-&gt;GetDrCmd();</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :   double PitchTrim0 = FCS-&gt;GetPitchTrimCmd();</span>
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :   for(int i=0;i &lt; fdmex-&gt;GetGroundReactions()-&gt;GetNumGearUnits();i++)</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :     fdmex-&gt;GetGroundReactions()-&gt;GetGearUnit(i)-&gt;SetReport(false);</span>
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :   fdmex-&gt;SetTrimStatus(true);</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :   fdmex-&gt;SuspendIntegration();</span>
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :   fgic.SetPRadpsIC(0.0);</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :   fgic.SetQRadpsIC(0.0);</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :   fgic.SetRRadpsIC(0.0);</span>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :   if (mode == tGround) {</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :     fdmex-&gt;Initialize(&amp;fgic);</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :     fdmex-&gt;Run();</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :     trimOnGround();</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :     double theta = fgic.GetThetaRadIC();</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :     double phi = fgic.GetPhiRadIC();</span>
+<span class="lineNum">     213 </span>            :     // Take opportunity of the first approx. found by trimOnGround() to
+<span class="lineNum">     214 </span>            :     // refine the control limits.
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     TrimAxes[0].SetControlLimits(0., fgic.GetAltitudeAGLFtIC());</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :     TrimAxes[1].SetControlLimits(theta - 5.0 * degtorad, theta + 5.0 * degtorad);</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :     TrimAxes[2].SetControlLimits(phi - 30.0 * degtorad, phi + 30.0 * degtorad);</span>
+<span class="lineNum">     218 </span>            :   }
+<span class="lineNum">     219 </span>            : 
+<span class="lineNum">     220 </span>            :   //clear the sub iterations counts &amp; zero out the controls
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   for(unsigned int current_axis=0;current_axis&lt;TrimAxes.size();current_axis++) {</span>
+<span class="lineNum">     222 </span>            :     //cout &lt;&lt; current_axis &lt;&lt; &quot;  &quot; &lt;&lt; TrimAxes[current_axis]-&gt;GetStateName()
+<span class="lineNum">     223 </span>            :     //&lt;&lt; &quot;  &quot; &lt;&lt; TrimAxes[current_axis]-&gt;GetControlName()&lt;&lt; endl;
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :     xlo=TrimAxes[current_axis].GetControlMin();</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     xhi=TrimAxes[current_axis].GetControlMax();</span>
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :     TrimAxes[current_axis].SetControl((xlo+xhi)/2);</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :     TrimAxes[current_axis].Run();</span>
+<span class="lineNum">     228 </span>            :     //TrimAxes[current_axis].AxisReport();
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :     sub_iterations[current_axis]=0;</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :     successful[current_axis]=0;</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :     solution[current_axis]=false;</span>
+<span class="lineNum">     232 </span>            :   }
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :   if(mode == tPullup ) {</span>
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;Setting pitch rate and nlf... &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :     setupPullup();</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;pitch rate done ... &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :     TrimAxes[0].SetStateTarget(targetNlf);</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;nlf done&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :   } else if (mode == tTurn) {</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :     setupTurn();</span>
+<span class="lineNum">     242 </span>            :     //TrimAxes[0].SetStateTarget(targetNlf);
+<span class="lineNum">     243 </span>            :   }
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :   do {</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :     axis_count=0;</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :     for(unsigned int current_axis=0;current_axis&lt;TrimAxes.size();current_axis++) {</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :       setDebug(TrimAxes[current_axis]);</span>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :       updateRates();</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :       Nsub=0;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :       if(!solution[current_axis]) {</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :         if(checkLimits(TrimAxes[current_axis])) {</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :           solution[current_axis]=true;</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :           solve(TrimAxes[current_axis]);</span>
+<span class="lineNum">     255 </span>            :         }
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :       } else if(findInterval(TrimAxes[current_axis])) {</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :         solve(TrimAxes[current_axis]);</span>
+<span class="lineNum">     258 </span>            :       } else {
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :         solution[current_axis]=false;</span>
+<span class="lineNum">     260 </span>            :       }
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :       sub_iterations[current_axis]+=Nsub;</span>
+<span class="lineNum">     262 </span>            :     }
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :     for(unsigned int current_axis=0;current_axis&lt;TrimAxes.size();current_axis++) {</span>
+<span class="lineNum">     264 </span>            :       //these checks need to be done after all the axes have run
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :       if(Debug &gt; 0) TrimAxes[current_axis].AxisReport();</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :       if(TrimAxes[current_axis].InTolerance()) {</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :         axis_count++;</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :         successful[current_axis]++;</span>
+<span class="lineNum">     269 </span>            :       }
+<span class="lineNum">     270 </span>            :     }
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :     if((axis_count == TrimAxes.size()-1) &amp;&amp; (TrimAxes.size() &gt; 1)) {</span>
+<span class="lineNum">     273 </span>            :       //cout &lt;&lt; TrimAxes.size()-1 &lt;&lt; &quot; out of &quot; &lt;&lt; TrimAxes.size() &lt;&lt; &quot;!&quot; &lt;&lt; endl;
+<span class="lineNum">     274 </span>            :       //At this point we can check the input limits of the failed axis
+<span class="lineNum">     275 </span>            :       //and declare the trim failed if there is no sign change. If there
+<span class="lineNum">     276 </span>            :       //is, keep going until success or max iteration count
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span>            :       //Oh, well: two out of three ain't bad
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :       for(unsigned int current_axis=0;current_axis&lt;TrimAxes.size();current_axis++) {</span>
+<span class="lineNum">     280 </span>            :         //these checks need to be done after all the axes have run
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :         if(!TrimAxes[current_axis].InTolerance()) {</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :           if(!checkLimits(TrimAxes[current_axis])) {</span>
+<span class="lineNum">     283 </span>            :             // special case this for now -- if other cases arise proper
+<span class="lineNum">     284 </span>            :             // support can be added to FGTrimAxis
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :             if( (gamma_fallback) &amp;&amp;</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :                 (TrimAxes[current_axis].GetStateType() == tUdot) &amp;&amp;</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :                 (TrimAxes[current_axis].GetControlType() == tThrottle)) {</span>
+<span class="lineNum">     288 </span>            :               cout &lt;&lt; &quot;  Can't trim udot with throttle, trying flight&quot;
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :               &lt;&lt; &quot; path angle. (&quot; &lt;&lt; N &lt;&lt; &quot;)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :               if(TrimAxes[current_axis].GetState() &gt; 0)</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :                 TrimAxes[current_axis].SetControlToMin();</span>
+<span class="lineNum">     292 </span>            :               else
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :                 TrimAxes[current_axis].SetControlToMax();</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :               TrimAxes[current_axis].Run();</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :               TrimAxes[current_axis]=FGTrimAxis(fdmex,&amp;fgic,tUdot,tGamma);</span>
+<span class="lineNum">     296 </span>            :             } else {
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :               cout &lt;&lt; &quot;  Sorry, &quot; &lt;&lt; TrimAxes[current_axis].GetStateName()</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :               &lt;&lt; &quot; doesn't appear to be trimmable&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     299 </span>            :               //total_its=k;
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :               trim_failed=true; //force the trim to fail</span>
+<span class="lineNum">     301 </span>            :             } //gamma_fallback
+<span class="lineNum">     302 </span>            :           }
+<span class="lineNum">     303 </span>            :         } //solution check
+<span class="lineNum">     304 </span>            :       } //for loop
+<span class="lineNum">     305 </span>            :     } //all-but-one check
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :     N++;</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :     if(N &gt; max_iterations)</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :       trim_failed=true;</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :   } while((axis_count &lt; TrimAxes.size()) &amp;&amp; (!trim_failed));</span>
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :   if((!trim_failed) &amp;&amp; (axis_count &gt;= TrimAxes.size())) {</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :     total_its=N;</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :     if (debug_lvl &gt; 0)</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl &lt;&lt; &quot;  Trim successful&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     315 </span>            :   } else { // The trim has failed
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :     total_its=N;</span>
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            :     // Restore the aircraft parameters to their initial values
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :     fgic = *fdmex-&gt;GetIC();</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :     FCS-&gt;SetDeCmd(elevator0);</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :     FCS-&gt;SetDaCmd(aileron0);</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :     FCS-&gt;SetDrCmd(rudder0);</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :     FCS-&gt;SetPitchTrimCmd(PitchTrim0);</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :     for (unsigned int i=0; i &lt; throttle0.size(); i++)</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :       FCS-&gt;SetThrottleCmd(i, throttle0[i]);</span>
+<span class="lineNum">     326 </span>            : 
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :     fdmex-&gt;Initialize(&amp;fgic);</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :     fdmex-&gt;Run();</span>
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            :     // If WOW is true we must make sure there are no gears into the ground.
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :     if (fdmex-&gt;GetGroundReactions()-&gt;GetWOW())</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :       trimOnGround();</span>
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :     if (debug_lvl &gt; 0)</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :         cout &lt;&lt; endl &lt;&lt; &quot;  Trim failed&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     336 </span>            :   }
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :   fdmex-&gt;GetPropagate()-&gt;InitializeDerivatives();</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :   fdmex-&gt;ResumeIntegration();</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   fdmex-&gt;SetTrimStatus(false);</span>
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :   for(int i=0;i &lt; fdmex-&gt;GetGroundReactions()-&gt;GetNumGearUnits();i++)</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :     fdmex-&gt;GetGroundReactions()-&gt;GetGearUnit(i)-&gt;SetReport(true);</span>
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :   return !trim_failed;</span>
+<span class="lineNum">     346 </span>            : }
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     349 </span>            : // Trim the aircraft on the ground. The algorithm is looking for a stable
+<span class="lineNum">     350 </span>            : // position of the aicraft. Assuming the aircaft is a rigid body and the ground
+<span class="lineNum">     351 </span>            : // a plane: we need to find the translations and rotations of the aircraft that
+<span class="lineNum">     352 </span>            : // will move 3 non-colinear points in contact with the ground.
+<span class="lineNum">     353 </span>            : // The algorithm proceeds in three stages (one for each point):
+<span class="lineNum">     354 </span>            : // 1. Look for the contact point closer to or deeper into the ground. Move the
+<span class="lineNum">     355 </span>            : //    aircraft along the vertical direction so that only this contact point
+<span class="lineNum">     356 </span>            : //    remains in contact with the ground.
+<span class="lineNum">     357 </span>            : // 2. The forces applied on the aircraft (most likely the gravity) will generate
+<span class="lineNum">     358 </span>            : //    a moment on the aircraft around the point in contact. The rotation axis is
+<span class="lineNum">     359 </span>            : //    therefore the moment axis. The 2nd stage thus consists in determining the
+<span class="lineNum">     360 </span>            : //    minimum rotation angle around the first point in contact that will place a
+<span class="lineNum">     361 </span>            : //    second contact point on the ground.
+<span class="lineNum">     362 </span>            : // 3. At this stage, 2 points are in contact with the ground: the rotation axis
+<span class="lineNum">     363 </span>            : //    is therefore the vector generated by the 2 points. Like stage #2, the
+<span class="lineNum">     364 </span>            : //    rotation direction will be driven by the moment around the axis formed by
+<span class="lineNum">     365 </span>            : //    the 2 points in contact. The rotation angle is obtained similarly to stage
+<span class="lineNum">     366 </span>            : //    #2: it is the minimum angle that will place a third contact point on the
+<span class="lineNum">     367 </span>            : //    ground.
+<span class="lineNum">     368 </span>            : // The calculations below do not account for the compression of the landing
+<span class="lineNum">     369 </span>            : // gears meaning that the position found is close to the real position but not
+<a name="370"><span class="lineNum">     370 </span>            : // strictly equal to it.</a>
+<span class="lineNum">     371 </span>            : 
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 : void FGTrim::trimOnGround(void)</span>
+<span class="lineNum">     373 </span>            : {
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :   FGGroundReactions* GroundReactions = fdmex-&gt;GetGroundReactions();</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :   FGPropagate* Propagate = fdmex-&gt;GetPropagate();</span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :   FGMassBalance* MassBalance = fdmex-&gt;GetMassBalance();</span>
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :   FGAccelerations* Accelerations = fdmex-&gt;GetAccelerations();</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :   vector&lt;ContactPoints&gt; contacts;</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :   FGLocation CGLocation = Propagate-&gt;GetLocation();</span>
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :   FGMatrix33 Tec2b = Propagate-&gt;GetTec2b();</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :   FGMatrix33 Tb2l = Propagate-&gt;GetTb2l();</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :   double hmin = 1E+10;</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :   int contactRef = -1;</span>
+<span class="lineNum">     384 </span>            : 
+<span class="lineNum">     385 </span>            :   // Build the list of the aircraft contact points and take opportunity of the
+<span class="lineNum">     386 </span>            :   // loop to find which one is closer to (or deeper into) the ground.
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :   for (int i = 0; i &lt; GroundReactions-&gt;GetNumGearUnits(); ++i) {</span>
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :     ContactPoints c;</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :     FGLGear* gear = GroundReactions-&gt;GetGearUnit(i);</span>
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span>            :     // Skip the retracted landing gears
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :     if (!gear-&gt;GetGearUnitDown())</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :       continue;</span>
+<span class="lineNum">     394 </span>            : 
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :     c.location = gear-&gt;GetBodyLocation();</span>
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :     FGLocation gearLoc = CGLocation.LocalToLocation(Tb2l * c.location);</span>
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :     FGColumnVector3 normal, vDummy;</span>
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :     FGLocation lDummy;</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :     double height = fdmex-&gt;GetInertial()-&gt;GetContactPoint(gearLoc, lDummy,</span>
+<span class="lineNum">     401 </span>            :                                                           normal, vDummy,
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :                                                           vDummy);</span>
+<span class="lineNum">     403 </span>            : 
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :     if (gear-&gt;IsBogey() &amp;&amp; !GroundReactions-&gt;GetSolid())</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :       continue;</span>
+<span class="lineNum">     406 </span>            : 
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :     c.normal = Tec2b * normal;</span>
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :     contacts.push_back(c);</span>
+<span class="lineNum">     409 </span>            : 
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :     if (height &lt; hmin) {</span>
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :       hmin = height;</span>
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :       contactRef = contacts.size() - 1;</span>
+<span class="lineNum">     413 </span>            :     }
+<span class="lineNum">     414 </span>            :   }
+<span class="lineNum">     415 </span>            : 
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :   if (contacts.size() &lt; 3)</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :     return;</span>
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span>            :   // Remove the contact point that is closest to the ground from the list:
+<span class="lineNum">     420 </span>            :   // the rotation axis will be going thru this point so we need to remove it
+<span class="lineNum">     421 </span>            :   // to avoid divisions by zero that could result from the computation of
+<span class="lineNum">     422 </span>            :   // the rotations.
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :   FGColumnVector3 contact0 = contacts[contactRef].location;</span>
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :   contacts.erase(contacts.begin() + contactRef);</span>
+<span class="lineNum">     425 </span>            : 
+<span class="lineNum">     426 </span>            :   // Update the initial conditions: this should remove the forces generated
+<span class="lineNum">     427 </span>            :   // by overcompressed landing gears
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :   fgic.SetAltitudeASLFtIC(fgic.GetAltitudeASLFtIC() - hmin);</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :   fdmex-&gt;Initialize(&amp;fgic);</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :   fdmex-&gt;Run();</span>
+<span class="lineNum">     431 </span>            : 
+<span class="lineNum">     432 </span>            :   // Compute the rotation axis: it is obtained from the direction of the
+<span class="lineNum">     433 </span>            :   // moment measured at the contact point 'contact0'
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :   FGColumnVector3 force = MassBalance-&gt;GetMass() * Accelerations-&gt;GetUVWdot();</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :   FGColumnVector3 moment = MassBalance-&gt;GetJ() * Accelerations-&gt;GetPQRdot()</span>
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :     + force * contact0;</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :   FGColumnVector3 rotationAxis = moment.Normalize();</span>
+<span class="lineNum">     438 </span>            : 
+<span class="lineNum">     439 </span>            :   // Compute the rotation parameters: angle and the first point to come into
+<span class="lineNum">     440 </span>            :   // contact with the ground when the rotation is applied.
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :   RotationParameters rParam = calcRotation(contacts, rotationAxis, contact0);</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :   FGQuaternion q0(rParam.angleMin, rotationAxis);</span>
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span>            :   // Apply the computed rotation to all the contact points
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :   FGMatrix33 rot = q0.GetTInv();</span>
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :   vector&lt;ContactPoints&gt;::iterator iter;</span>
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :   for (iter = contacts.begin(); iter != contacts.end(); ++iter)</span>
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 :     iter-&gt;location = contact0 + rot * (iter-&gt;location - contact0);</span>
+<span class="lineNum">     449 </span>            : 
+<span class="lineNum">     450 </span>            :   // Remove the second point to come in contact with the ground from the list.
+<span class="lineNum">     451 </span>            :   // The reason is the same than above: avoid divisions by zero when the next
+<span class="lineNum">     452 </span>            :   // rotation will be computed.
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :   FGColumnVector3 contact1 = rParam.contactRef-&gt;location;</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :   contacts.erase(rParam.contactRef);</span>
+<span class="lineNum">     455 </span>            : 
+<span class="lineNum">     456 </span>            :   // Compute the rotation axis: now there are 2 points in contact with the
+<span class="lineNum">     457 </span>            :   // ground so the only option for the aircraft is to rotate around the axis
+<span class="lineNum">     458 </span>            :   // generated by these 2 points.
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :   rotationAxis = contact1 - contact0;</span>
+<span class="lineNum">     460 </span>            :   // Make sure that the rotation orientation is consistent with the moment.
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :   if (DotProduct(rotationAxis, moment) &lt; 0.0)</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :     rotationAxis = contact0 - contact1;</span>
+<span class="lineNum">     463 </span>            : 
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :   rotationAxis.Normalize();</span>
+<span class="lineNum">     465 </span>            : 
+<span class="lineNum">     466 </span>            :   // Compute the rotation parameters
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :   rParam = calcRotation(contacts, rotationAxis, contact0);</span>
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :   FGQuaternion q1(rParam.angleMin, rotationAxis);</span>
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span>            :   // Update the aircraft orientation
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :   FGColumnVector3 euler = (fgic.GetOrientation() * q0 * q1).GetEuler();</span>
+<span class="lineNum">     472 </span>            : 
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :   fgic.SetPhiRadIC(euler(1));</span>
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :   fgic.SetThetaRadIC(euler(2));</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :   fgic.SetPsiRadIC(euler(3));</span>
+<span class="lineNum">     476 </span>            : }
+<span class="lineNum">     477 </span>            : 
+<span class="lineNum">     478 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     479 </span>            : // Given a set of points and a rotation axis, this routine computes for each
+<span class="lineNum">     480 </span>            : // point the rotation angle that would drive the point in contact with the
+<span class="lineNum">     481 </span>            : // plane. It returns the minimum angle as well as the point with which this
+<span class="lineNum">     482 </span>            : // angle has been obtained.
+<span class="lineNum">     483 </span>            : // The rotation axis is defined by a vector 'u' and a point 'M0' on the axis.
+<span class="lineNum">     484 </span>            : // Since we are in the body frame, the position if 'M0' is measured from the CG
+<a name="485"><span class="lineNum">     485 </span>            : // hence the name 'GM0'.</a>
+<span class="lineNum">     486 </span>            : 
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 : FGTrim::RotationParameters FGTrim::calcRotation(vector&lt;ContactPoints&gt;&amp; contacts,</span>
+<span class="lineNum">     488 </span>            :                                                 const FGColumnVector3&amp; u,
+<span class="lineNum">     489 </span>            :                                                 const FGColumnVector3&amp; GM0)
+<span class="lineNum">     490 </span>            : {
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :   RotationParameters rParam;</span>
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :   vector&lt;ContactPoints&gt;::iterator iter;</span>
+<span class="lineNum">     493 </span>            : 
+<span class="lineNum">     494 </span><span class="lineNoCov">          0 :   rParam.angleMin = 3.0 * M_PI;</span>
+<span class="lineNum">     495 </span>            : 
+<span class="lineNum">     496 </span><span class="lineNoCov">          0 :   for (iter = contacts.begin(); iter != contacts.end(); ++iter) {</span>
+<span class="lineNum">     497 </span>            :     // Below the processed contact point is named 'M'
+<span class="lineNum">     498 </span>            :     // Construct an orthonormal basis (u, v, t). The ground normal is obtained
+<span class="lineNum">     499 </span>            :     // from iter-&gt;normal.
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :     FGColumnVector3 t = u * iter-&gt;normal;</span>
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :     double length = t.Magnitude();</span>
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :     t /= length; // Normalize the tangent</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :     FGColumnVector3 v = t * u;</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :     FGColumnVector3 MM0 = GM0 - iter-&gt;location;</span>
+<span class="lineNum">     505 </span>            :     // d0 is the distance from the circle center 'C' to the reference point 'M0'
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 :     double d0 = DotProduct(MM0, u);</span>
+<span class="lineNum">     507 </span>            :     // Compute the square of the circle radius i.e. the square of the distance
+<span class="lineNum">     508 </span>            :     // between 'C' and 'M'.
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :     double sqrRadius = DotProduct(MM0, MM0) - d0 * d0;</span>
+<span class="lineNum">     510 </span>            :     // Compute the distance from the circle center 'C' to the line made by the
+<span class="lineNum">     511 </span>            :     // intersection between the ground and the plane that contains the circle.
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :     double DistPlane = d0 * DotProduct(u, iter-&gt;normal) / length;</span>
+<span class="lineNum">     513 </span>            :     // The coordinate of the point of intersection 'P' between the circle and
+<span class="lineNum">     514 </span>            :     // the ground is (0, DistPlane, alpha) in the basis (u, v, t)
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :     double mag = sqrRadius - DistPlane * DistPlane;</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :     if (mag &lt; 0) {</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;FGTrim::calcRotation DistPlane^2 larger than sqrRadius&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     518 </span>            :     }
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :     double alpha = sqrt(max(mag, 0.0));</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :     FGColumnVector3 CP = alpha * t + DistPlane * v;</span>
+<span class="lineNum">     521 </span>            :     // The transformation is now constructed: we can extract the angle using the
+<span class="lineNum">     522 </span>            :     // classical formulas (cosine is obtained from the dot product and sine from
+<span class="lineNum">     523 </span>            :     // the cross product).
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :     double cosine = -DotProduct(MM0, CP) / sqrRadius;</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :     double sine = DotProduct(MM0 * u, CP) / sqrRadius;</span>
+<span class="lineNum">     526 </span><span class="lineNoCov">          0 :     double angle = atan2(sine, cosine);</span>
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :     if (angle &lt; 0.0) angle += 2.0 * M_PI;</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :     if (angle &lt; rParam.angleMin) {</span>
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :       rParam.angleMin = angle;</span>
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :       rParam.contactRef = iter;</span>
+<span class="lineNum">     531 </span>            :     }
+<span class="lineNum">     532 </span>            :   }
+<span class="lineNum">     533 </span>            : 
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :   return rParam;</span>
+<span class="lineNum">     535 </span>            : }
+<span class="lineNum">     536 </span>            : 
+<a name="537"><span class="lineNum">     537 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     538 </span>            : 
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 : bool FGTrim::solve(FGTrimAxis&amp; axis) {</span>
+<span class="lineNum">     540 </span>            : 
+<span class="lineNum">     541 </span>            :   double x1,x2,x3,f1,f2,f3,d,d0;
+<span class="lineNum">     542 </span><span class="lineNoCov">          0 :   const double relax =0.9;</span>
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :   double eps=axis.GetSolverEps();</span>
+<span class="lineNum">     544 </span>            : 
+<span class="lineNum">     545 </span><span class="lineNoCov">          0 :   x1=x2=x3=0;</span>
+<span class="lineNum">     546 </span><span class="lineNoCov">          0 :   d=1;</span>
+<span class="lineNum">     547 </span><span class="lineNoCov">          0 :   bool success=false;</span>
+<span class="lineNum">     548 </span>            :   //initializations
+<span class="lineNum">     549 </span><span class="lineNoCov">          0 :   if( solutionDomain != 0) {</span>
+<span class="lineNum">     550 </span>            :    /* if(ahi &gt; alo) { */
+<span class="lineNum">     551 </span><span class="lineNoCov">          0 :       x1=xlo;f1=alo;</span>
+<span class="lineNum">     552 </span><span class="lineNoCov">          0 :       x3=xhi;f3=ahi;</span>
+<span class="lineNum">     553 </span>            :    /* } else {
+<span class="lineNum">     554 </span>            :       x1=xhi;f1=ahi;
+<span class="lineNum">     555 </span>            :       x3=xlo;f3=alo;
+<span class="lineNum">     556 </span>            :     }   */
+<span class="lineNum">     557 </span><span class="lineNoCov">          0 :     d0=fabs(x3-x1);</span>
+<span class="lineNum">     558 </span>            :     //iterations
+<span class="lineNum">     559 </span>            :     //max_sub_iterations=axis.GetIterationLimit();
+<span class="lineNum">     560 </span><span class="lineNoCov">          0 :     while ( (axis.InTolerance() == false )</span>
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :              &amp;&amp; (fabs(d) &gt; eps) &amp;&amp; (Nsub &lt; max_sub_iterations)) {</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :       Nsub++;</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :       d=(x3-x1)/d0;</span>
+<span class="lineNum">     564 </span><span class="lineNoCov">          0 :       x2=x1-d*d0*f1/(f3-f1);</span>
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :       axis.SetControl(x2);</span>
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :       axis.Run();</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :       f2=axis.GetState();</span>
+<span class="lineNum">     568 </span><span class="lineNoCov">          0 :       if(Debug &gt; 1) {</span>
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;FGTrim::solve Nsub,x1,x2,x3: &quot; &lt;&lt; Nsub &lt;&lt; &quot;, &quot; &lt;&lt; x1</span>
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :         &lt;&lt; &quot;, &quot; &lt;&lt; x2 &lt;&lt; &quot;, &quot; &lt;&lt; x3 &lt;&lt; endl;</span>
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;                             &quot; &lt;&lt; f1 &lt;&lt; &quot;, &quot; &lt;&lt; f2 &lt;&lt; &quot;, &quot; &lt;&lt; f3 &lt;&lt; endl;</span>
+<span class="lineNum">     572 </span>            :       }
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :       if(f1*f2 &lt;= 0.0) {</span>
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :         x3=x2;</span>
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :         f3=f2;</span>
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :         f1=relax*f1;</span>
+<span class="lineNum">     577 </span>            :         //cout &lt;&lt; &quot;Solution is between x1 and x2&quot; &lt;&lt; endl;
+<span class="lineNum">     578 </span>            :       }
+<span class="lineNum">     579 </span><span class="lineNoCov">          0 :       else if(f2*f3 &lt;= 0.0) {</span>
+<span class="lineNum">     580 </span><span class="lineNoCov">          0 :         x1=x2;</span>
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 :         f1=f2;</span>
+<span class="lineNum">     582 </span><span class="lineNoCov">          0 :         f3=relax*f3;</span>
+<span class="lineNum">     583 </span>            :         //cout &lt;&lt; &quot;Solution is between x2 and x3&quot; &lt;&lt; endl;
+<span class="lineNum">     584 </span>            : 
+<span class="lineNum">     585 </span>            :       }
+<span class="lineNum">     586 </span>            :       //cout &lt;&lt; i &lt;&lt; endl;
+<span class="lineNum">     587 </span>            : 
+<span class="lineNum">     588 </span>            : 
+<span class="lineNum">     589 </span>            :     }//end while
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 :     if(Nsub &lt; max_sub_iterations) success=true;</span>
+<span class="lineNum">     591 </span>            :   }
+<span class="lineNum">     592 </span><span class="lineNoCov">          0 :   return success;</span>
+<span class="lineNum">     593 </span>            : }
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     596 </span>            : /*
+<span class="lineNum">     597 </span>            :  produces an interval (xlo..xhi) on one side or the other of the current
+<span class="lineNum">     598 </span>            :  control value in which a solution exists.  This domain is, hopefully,
+<span class="lineNum">     599 </span>            :  smaller than xmin..0 or 0..xmax and the solver will require fewer iterations
+<span class="lineNum">     600 </span>            :  to find the solution. This is, hopefully, more efficient than having the
+<span class="lineNum">     601 </span>            :  solver start from scratch every time. Maybe it isn't though...
+<span class="lineNum">     602 </span>            :  This tries to take advantage of the idea that the changes from iteration to
+<span class="lineNum">     603 </span>            :  iteration will be small after the first one or two top-level iterations.
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span>            :  assumes that changing the control will a produce significant change in the
+<span class="lineNum">     606 </span>            :  accel i.e. checkLimits() has already been called.
+<span class="lineNum">     607 </span>            : 
+<span class="lineNum">     608 </span>            :  if a solution is found above the current control, the function returns true
+<span class="lineNum">     609 </span>            :  and xlo is set to the current control, xhi to the interval max it found, and
+<span class="lineNum">     610 </span>            :  solutionDomain is set to 1.
+<span class="lineNum">     611 </span>            :  if the solution lies below the current control, then the function returns
+<span class="lineNum">     612 </span>            :  true and xlo is set to the interval min it found and xmax to the current
+<span class="lineNum">     613 </span>            :  control. if no solution is found, then the function returns false.
+<span class="lineNum">     614 </span>            : 
+<span class="lineNum">     615 </span>            : 
+<span class="lineNum">     616 </span>            :  in all cases, alo=accel(xlo) and ahi=accel(xhi) after the function exits.
+<span class="lineNum">     617 </span>            :  no assumptions about the state of the sim after this function has run
+<a name="618"><span class="lineNum">     618 </span>            :  can be made.</a>
+<span class="lineNum">     619 </span>            : */
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 : bool FGTrim::findInterval(FGTrimAxis&amp; axis) {</span>
+<span class="lineNum">     621 </span><span class="lineNoCov">          0 :   bool found=false;</span>
+<span class="lineNum">     622 </span>            :   double step;
+<span class="lineNum">     623 </span><span class="lineNoCov">          0 :   double current_control=axis.GetControl();</span>
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :   double current_accel=axis.GetState();;</span>
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :   double xmin=axis.GetControlMin();</span>
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :   double xmax=axis.GetControlMax();</span>
+<span class="lineNum">     627 </span>            :   double lastxlo,lastxhi,lastalo,lastahi;
+<span class="lineNum">     628 </span>            : 
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :   step=0.025*fabs(xmax);</span>
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :   xlo=xhi=current_control;</span>
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 :   alo=ahi=current_accel;</span>
+<span class="lineNum">     632 </span><span class="lineNoCov">          0 :   lastxlo=xlo;lastxhi=xhi;</span>
+<span class="lineNum">     633 </span><span class="lineNoCov">          0 :   lastalo=alo;lastahi=ahi;</span>
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :   do {</span>
+<span class="lineNum">     635 </span>            : 
+<span class="lineNum">     636 </span><span class="lineNoCov">          0 :     Nsub++;</span>
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :     step*=2;</span>
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 :     xlo-=step;</span>
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 :     if(xlo &lt; xmin) xlo=xmin;</span>
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :     xhi+=step;</span>
+<span class="lineNum">     641 </span><span class="lineNoCov">          0 :     if(xhi &gt; xmax) xhi=xmax;</span>
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 :     axis.SetControl(xlo);</span>
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :     axis.Run();</span>
+<span class="lineNum">     644 </span><span class="lineNoCov">          0 :     alo=axis.GetState();</span>
+<span class="lineNum">     645 </span><span class="lineNoCov">          0 :     axis.SetControl(xhi);</span>
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :     axis.Run();</span>
+<span class="lineNum">     647 </span><span class="lineNoCov">          0 :     ahi=axis.GetState();</span>
+<span class="lineNum">     648 </span><span class="lineNoCov">          0 :     if(fabs(ahi-alo) &lt;= axis.GetTolerance()) continue;</span>
+<span class="lineNum">     649 </span><span class="lineNoCov">          0 :     if(alo*ahi &lt;=0) {  //found interval with root</span>
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 :       found=true;</span>
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :       if(alo*current_accel &lt;= 0) { //narrow interval down a bit</span>
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 :         solutionDomain=-1;</span>
+<span class="lineNum">     653 </span><span class="lineNoCov">          0 :         xhi=lastxlo;</span>
+<span class="lineNum">     654 </span><span class="lineNoCov">          0 :         ahi=lastalo;</span>
+<span class="lineNum">     655 </span>            :         //xhi=current_control;
+<span class="lineNum">     656 </span>            :         //ahi=current_accel;
+<span class="lineNum">     657 </span>            :       } else {
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :         solutionDomain=1;</span>
+<span class="lineNum">     659 </span><span class="lineNoCov">          0 :         xlo=lastxhi;</span>
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :         alo=lastahi;</span>
+<span class="lineNum">     661 </span>            :         //xlo=current_control;
+<span class="lineNum">     662 </span>            :         //alo=current_accel;
+<span class="lineNum">     663 </span>            :       }
+<span class="lineNum">     664 </span>            :     }
+<span class="lineNum">     665 </span><span class="lineNoCov">          0 :     lastxlo=xlo;lastxhi=xhi;</span>
+<span class="lineNum">     666 </span><span class="lineNoCov">          0 :     lastalo=alo;lastahi=ahi;</span>
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 :     if( !found &amp;&amp; xlo==xmin &amp;&amp; xhi==xmax ) continue;</span>
+<span class="lineNum">     668 </span><span class="lineNoCov">          0 :     if(Debug &gt; 1)</span>
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;FGTrim::findInterval: Nsub=&quot; &lt;&lt; Nsub &lt;&lt; &quot; Lo= &quot; &lt;&lt; xlo</span>
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :                            &lt;&lt; &quot; Hi= &quot; &lt;&lt; xhi &lt;&lt; &quot; alo*ahi: &quot; &lt;&lt; alo*ahi &lt;&lt; endl;</span>
+<span class="lineNum">     671 </span><span class="lineNoCov">          0 :   } while(!found &amp;&amp; (Nsub &lt;= max_sub_iterations) );</span>
+<span class="lineNum">     672 </span><span class="lineNoCov">          0 :   return found;</span>
+<span class="lineNum">     673 </span>            : }
+<span class="lineNum">     674 </span>            : 
+<span class="lineNum">     675 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     676 </span>            : //checks to see which side of the current control value the solution is on
+<span class="lineNum">     677 </span>            : //and sets solutionDomain accordingly:
+<span class="lineNum">     678 </span>            : //  1 if solution is between the current and max
+<span class="lineNum">     679 </span>            : // -1 if solution is between the min and current
+<span class="lineNum">     680 </span>            : //  0 if there is no solution
+<span class="lineNum">     681 </span>            : //
+<span class="lineNum">     682 </span>            : //if changing the control produces no significant change in the accel then
+<span class="lineNum">     683 </span>            : //solutionDomain is set to zero and the function returns false
+<span class="lineNum">     684 </span>            : //if a solution is found, then xlo and xhi are set so that they bracket
+<span class="lineNum">     685 </span>            : //the solution, alo is set to accel(xlo), and ahi is set to accel(xhi)
+<span class="lineNum">     686 </span>            : //if there is no change or no solution then xlo=xmin, alo=accel(xmin) and
+<span class="lineNum">     687 </span>            : //xhi=xmax and ahi=accel(xmax)
+<a name="688"><span class="lineNum">     688 </span>            : //in all cases the sim is left such that the control=xmax and accel=ahi</a>
+<span class="lineNum">     689 </span>            : 
+<span class="lineNum">     690 </span><span class="lineNoCov">          0 : bool FGTrim::checkLimits(FGTrimAxis&amp; axis)</span>
+<span class="lineNum">     691 </span>            : {
+<span class="lineNum">     692 </span>            :   bool solutionExists;
+<span class="lineNum">     693 </span><span class="lineNoCov">          0 :   double current_control=axis.GetControl();</span>
+<span class="lineNum">     694 </span><span class="lineNoCov">          0 :   double current_accel=axis.GetState();</span>
+<span class="lineNum">     695 </span><span class="lineNoCov">          0 :   xlo=axis.GetControlMin();</span>
+<span class="lineNum">     696 </span><span class="lineNoCov">          0 :   xhi=axis.GetControlMax();</span>
+<span class="lineNum">     697 </span>            : 
+<span class="lineNum">     698 </span><span class="lineNoCov">          0 :   axis.SetControl(xlo);</span>
+<span class="lineNum">     699 </span><span class="lineNoCov">          0 :   axis.Run();</span>
+<span class="lineNum">     700 </span><span class="lineNoCov">          0 :   alo=axis.GetState();</span>
+<span class="lineNum">     701 </span><span class="lineNoCov">          0 :   axis.SetControl(xhi);</span>
+<span class="lineNum">     702 </span><span class="lineNoCov">          0 :   axis.Run();</span>
+<span class="lineNum">     703 </span><span class="lineNoCov">          0 :   ahi=axis.GetState();</span>
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :   if(Debug &gt; 1)</span>
+<span class="lineNum">     705 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;checkLimits() xlo,xhi,alo,ahi: &quot; &lt;&lt; xlo &lt;&lt; &quot;, &quot; &lt;&lt; xhi &lt;&lt; &quot;, &quot;</span>
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :                                               &lt;&lt; alo &lt;&lt; &quot;, &quot; &lt;&lt; ahi &lt;&lt; endl;</span>
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :   solutionDomain=0;</span>
+<span class="lineNum">     708 </span><span class="lineNoCov">          0 :   solutionExists=false;</span>
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :   if(fabs(ahi-alo) &gt; axis.GetTolerance()) {</span>
+<span class="lineNum">     710 </span><span class="lineNoCov">          0 :     if(alo*current_accel &lt;= 0) {</span>
+<span class="lineNum">     711 </span><span class="lineNoCov">          0 :       solutionExists=true;</span>
+<span class="lineNum">     712 </span><span class="lineNoCov">          0 :       solutionDomain=-1;</span>
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :       xhi=current_control;</span>
+<span class="lineNum">     714 </span><span class="lineNoCov">          0 :       ahi=current_accel;</span>
+<span class="lineNum">     715 </span><span class="lineNoCov">          0 :     } else if(current_accel*ahi &lt; 0){</span>
+<span class="lineNum">     716 </span><span class="lineNoCov">          0 :       solutionExists=true;</span>
+<span class="lineNum">     717 </span><span class="lineNoCov">          0 :       solutionDomain=1;</span>
+<span class="lineNum">     718 </span><span class="lineNoCov">          0 :       xlo=current_control;</span>
+<span class="lineNum">     719 </span><span class="lineNoCov">          0 :       alo=current_accel;</span>
+<span class="lineNum">     720 </span>            :     }
+<span class="lineNum">     721 </span>            :   }
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 :   axis.SetControl(current_control);</span>
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :   axis.Run();</span>
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 :   return solutionExists;</span>
+<span class="lineNum">     725 </span>            : }
+<span class="lineNum">     726 </span>            : 
+<a name="727"><span class="lineNum">     727 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     728 </span>            : 
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 : void FGTrim::setupPullup() {</span>
+<span class="lineNum">     730 </span>            :   double g,q,cgamma;
+<span class="lineNum">     731 </span><span class="lineNoCov">          0 :   g=fdmex-&gt;GetInertial()-&gt;GetGravity().Magnitude();</span>
+<span class="lineNum">     732 </span><span class="lineNoCov">          0 :   cgamma=cos(fgic.GetFlightPathAngleRadIC());</span>
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;setPitchRateInPullup():  &quot; &lt;&lt; g &lt;&lt; &quot;, &quot; &lt;&lt; cgamma &lt;&lt; &quot;, &quot;</span>
+<span class="lineNum">     734 </span><span class="lineNoCov">          0 :        &lt;&lt; fgic.GetVtrueFpsIC() &lt;&lt; endl;</span>
+<span class="lineNum">     735 </span><span class="lineNoCov">          0 :   q=g*(targetNlf-cgamma)/fgic.GetVtrueFpsIC();</span>
+<span class="lineNum">     736 </span><span class="lineNoCov">          0 :   cout &lt;&lt; targetNlf &lt;&lt; &quot;, &quot; &lt;&lt; q &lt;&lt; endl;</span>
+<span class="lineNum">     737 </span><span class="lineNoCov">          0 :   fgic.SetQRadpsIC(q);</span>
+<span class="lineNum">     738 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;setPitchRateInPullup() complete&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     739 </span>            : 
+<span class="lineNum">     740 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     741 </span>            : 
+<a name="742"><span class="lineNum">     742 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     743 </span>            : 
+<span class="lineNum">     744 </span><span class="lineNoCov">          0 : void FGTrim::setupTurn(void){</span>
+<span class="lineNum">     745 </span>            :   double g,phi;
+<span class="lineNum">     746 </span><span class="lineNoCov">          0 :   phi = fgic.GetPhiRadIC();</span>
+<span class="lineNum">     747 </span><span class="lineNoCov">          0 :   if( fabs(phi) &gt; 0.001 &amp;&amp; fabs(phi) &lt; 1.56 ) {</span>
+<span class="lineNum">     748 </span><span class="lineNoCov">          0 :     targetNlf = 1 / cos(phi);</span>
+<span class="lineNum">     749 </span><span class="lineNoCov">          0 :     g = fdmex-&gt;GetInertial()-&gt;GetGravity().Magnitude();</span>
+<span class="lineNum">     750 </span><span class="lineNoCov">          0 :     psidot = g*tan(phi) / fgic.GetUBodyFpsIC();</span>
+<span class="lineNum">     751 </span><span class="lineNoCov">          0 :     cout &lt;&lt; targetNlf &lt;&lt; &quot;, &quot; &lt;&lt; psidot &lt;&lt; endl;</span>
+<span class="lineNum">     752 </span>            :   }
+<span class="lineNum">     753 </span>            : 
+<span class="lineNum">     754 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     755 </span>            : 
+<a name="756"><span class="lineNum">     756 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     757 </span>            : 
+<span class="lineNum">     758 </span><span class="lineNoCov">          0 : void FGTrim::updateRates(void){</span>
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :   if( mode == tTurn ) {</span>
+<span class="lineNum">     760 </span><span class="lineNoCov">          0 :     double phi = fgic.GetPhiRadIC();</span>
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 :     double g = fdmex-&gt;GetInertial()-&gt;GetGravity().Magnitude();</span>
+<span class="lineNum">     762 </span>            :     double p,q,r,theta;
+<span class="lineNum">     763 </span><span class="lineNoCov">          0 :     if(fabs(phi) &gt; 0.001 &amp;&amp; fabs(phi) &lt; 1.56 ) {</span>
+<span class="lineNum">     764 </span><span class="lineNoCov">          0 :       theta=fgic.GetThetaRadIC();</span>
+<span class="lineNum">     765 </span><span class="lineNoCov">          0 :       phi=fgic.GetPhiRadIC();</span>
+<span class="lineNum">     766 </span><span class="lineNoCov">          0 :       psidot = g*tan(phi) / fgic.GetUBodyFpsIC();</span>
+<span class="lineNum">     767 </span><span class="lineNoCov">          0 :       p=-psidot*sin(theta);</span>
+<span class="lineNum">     768 </span><span class="lineNoCov">          0 :       q=psidot*cos(theta)*sin(phi);</span>
+<span class="lineNum">     769 </span><span class="lineNoCov">          0 :       r=psidot*cos(theta)*cos(phi);</span>
+<span class="lineNum">     770 </span>            :     } else {
+<span class="lineNum">     771 </span><span class="lineNoCov">          0 :       p=q=r=0;</span>
+<span class="lineNum">     772 </span>            :     }
+<span class="lineNum">     773 </span><span class="lineNoCov">          0 :     fgic.SetPRadpsIC(p);</span>
+<span class="lineNum">     774 </span><span class="lineNoCov">          0 :     fgic.SetQRadpsIC(q);</span>
+<span class="lineNum">     775 </span><span class="lineNoCov">          0 :     fgic.SetRRadpsIC(r);</span>
+<span class="lineNum">     776 </span><span class="lineNoCov">          0 :   } else if( mode == tPullup &amp;&amp; fabs(targetNlf-1) &gt; 0.01) {</span>
+<span class="lineNum">     777 </span>            :       double g,q,cgamma;
+<span class="lineNum">     778 </span><span class="lineNoCov">          0 :       g=fdmex-&gt;GetInertial()-&gt;GetGravity().Magnitude();</span>
+<span class="lineNum">     779 </span><span class="lineNoCov">          0 :       cgamma=cos(fgic.GetFlightPathAngleRadIC());</span>
+<span class="lineNum">     780 </span><span class="lineNoCov">          0 :       q=g*(targetNlf-cgamma)/fgic.GetVtrueFpsIC();</span>
+<span class="lineNum">     781 </span><span class="lineNoCov">          0 :       fgic.SetQRadpsIC(q);</span>
+<span class="lineNum">     782 </span>            :   }
+<span class="lineNum">     783 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     784 </span>            : 
+<a name="785"><span class="lineNum">     785 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     786 </span>            : 
+<span class="lineNum">     787 </span><span class="lineNoCov">          0 : void FGTrim::setDebug(FGTrimAxis&amp; axis) {</span>
+<span class="lineNum">     788 </span><span class="lineNoCov">          0 :   if(debug_axis == tAll ||</span>
+<span class="lineNum">     789 </span><span class="lineNoCov">          0 :       axis.GetStateType() == debug_axis ) {</span>
+<span class="lineNum">     790 </span><span class="lineNoCov">          0 :     Debug=DebugLevel;</span>
+<span class="lineNum">     791 </span><span class="lineNoCov">          0 :     return;</span>
+<span class="lineNum">     792 </span>            :   } else {
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :     Debug=0;</span>
+<span class="lineNum">     794 </span><span class="lineNoCov">          0 :     return;</span>
+<span class="lineNum">     795 </span>            :   }
+<span class="lineNum">     796 </span>            : }
+<span class="lineNum">     797 </span>            : 
+<a name="798"><span class="lineNum">     798 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     799 </span>            : 
+<span class="lineNum">     800 </span><span class="lineNoCov">          0 : void FGTrim::SetMode(TrimMode tt) {</span>
+<span class="lineNum">     801 </span><span class="lineNoCov">          0 :     ClearStates();</span>
+<span class="lineNum">     802 </span><span class="lineNoCov">          0 :     mode=tt;</span>
+<span class="lineNum">     803 </span><span class="lineNoCov">          0 :     switch(tt) {</span>
+<span class="lineNum">     804 </span><span class="lineNoCov">          0 :       case tFull:</span>
+<span class="lineNum">     805 </span><span class="lineNoCov">          0 :         if (debug_lvl &gt; 0)</span>
+<span class="lineNum">     806 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  Full Trim&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     807 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tWdot,tAlpha));</span>
+<span class="lineNum">     808 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tUdot,tThrottle ));</span>
+<span class="lineNum">     809 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tQdot,tPitchTrim ));</span>
+<span class="lineNum">     810 </span>            :         //TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tHmgt,tBeta ));
+<span class="lineNum">     811 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tVdot,tPhi ));</span>
+<span class="lineNum">     812 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tPdot,tAileron ));</span>
+<span class="lineNum">     813 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tRdot,tRudder ));</span>
+<span class="lineNum">     814 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     815 </span><span class="lineNoCov">          0 :       case tLongitudinal:</span>
+<span class="lineNum">     816 </span><span class="lineNoCov">          0 :         if (debug_lvl &gt; 0)</span>
+<span class="lineNum">     817 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  Longitudinal Trim&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     818 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tWdot,tAlpha ));</span>
+<span class="lineNum">     819 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tUdot,tThrottle ));</span>
+<span class="lineNum">     820 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tQdot,tPitchTrim ));</span>
+<span class="lineNum">     821 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     822 </span><span class="lineNoCov">          0 :       case tGround:</span>
+<span class="lineNum">     823 </span><span class="lineNoCov">          0 :         if (debug_lvl &gt; 0)</span>
+<span class="lineNum">     824 </span><span class="lineNoCov">          0 :           cout &lt;&lt; &quot;  Ground Trim&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tWdot,tAltAGL ));</span>
+<span class="lineNum">     826 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tQdot,tTheta ));</span>
+<span class="lineNum">     827 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tPdot,tPhi ));</span>
+<span class="lineNum">     828 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     829 </span><span class="lineNoCov">          0 :       case tPullup:</span>
+<span class="lineNum">     830 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tNlf,tAlpha ));</span>
+<span class="lineNum">     831 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tUdot,tThrottle ));</span>
+<span class="lineNum">     832 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tQdot,tPitchTrim ));</span>
+<span class="lineNum">     833 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tHmgt,tBeta ));</span>
+<span class="lineNum">     834 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tVdot,tPhi ));</span>
+<span class="lineNum">     835 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tPdot,tAileron ));</span>
+<span class="lineNum">     836 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tRdot,tRudder ));</span>
+<span class="lineNum">     837 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     838 </span><span class="lineNoCov">          0 :       case tTurn:</span>
+<span class="lineNum">     839 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tWdot,tAlpha ));</span>
+<span class="lineNum">     840 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tUdot,tThrottle ));</span>
+<span class="lineNum">     841 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tQdot,tPitchTrim ));</span>
+<span class="lineNum">     842 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tVdot,tBeta ));</span>
+<span class="lineNum">     843 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tPdot,tAileron ));</span>
+<span class="lineNum">     844 </span><span class="lineNoCov">          0 :         TrimAxes.push_back(FGTrimAxis(fdmex,&amp;fgic,tRdot,tRudder ));</span>
+<span class="lineNum">     845 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     846 </span><span class="lineNoCov">          0 :       case tCustom:</span>
+<span class="lineNum">     847 </span>            :       case tNone:
+<span class="lineNum">     848 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     849 </span>            :     }
+<span class="lineNum">     850 </span>            :     //cout &lt;&lt; &quot;TrimAxes.size(): &quot; &lt;&lt; TrimAxes.size() &lt;&lt; endl;
+<span class="lineNum">     851 </span><span class="lineNoCov">          0 :     sub_iterations.resize(TrimAxes.size());</span>
+<span class="lineNum">     852 </span><span class="lineNoCov">          0 :     successful.resize(TrimAxes.size());</span>
+<span class="lineNum">     853 </span><span class="lineNoCov">          0 :     solution.resize(TrimAxes.size());</span>
+<a name="854"><span class="lineNum">     854 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     855 </span>            : //YOU WERE WARNED, BUT YOU DID IT ANYWAY.
+<span class="lineNum">     856 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

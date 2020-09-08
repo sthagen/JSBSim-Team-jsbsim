@@ -1,0 +1,6 @@
+<map id="GetQDot" name="GetQDot">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropagate.html#ae7bc2590ddc9fba3244495b8967fb30c" title="Sets the property forces/hold&#45;down. " alt="" coords="128,39,283,80"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGQuaternion.html#a363d4c74f45ac2ea3af0a4502427515d" title="Destructor. " alt="" coords="150,105,261,131"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#ae7bc2590ddc9fba3244495b8967fb30c" title="Sets the property forces/hold&#45;down. " alt="" coords="331,5,493,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGPropagate.html#a91cc36fa559e92d7f6b8781e8014e4ee" title="Returns the quaternion that goes from ECEF to Body. " alt="" coords="335,71,489,112"/>
+</map>

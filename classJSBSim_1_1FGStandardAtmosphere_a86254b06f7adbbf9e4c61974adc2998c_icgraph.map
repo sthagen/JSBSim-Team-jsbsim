@@ -1,0 +1,13 @@
+<map id="CalculatePressureBreakpoints" name="CalculatePressureBreakpoints">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGStandardAtmosphere.html#aac7c1e551afab2db966dea34647c5dc3" title="Constructor. " alt="" coords="265,14,427,41"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGStandardAtmosphere.html#acf0492ac3ad86f4f24e8a4b987d1bf39" title="Sets the sea level pressure for modeling an off&#45;standard pressure profile. " alt="" coords="535,14,645,41"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGStandardAtmosphere.html#a80e5e0f5f758fe6c0c9a19e16245bf55" title="Sets the temperature at the supplied altitude, if it is to be different than the standard temperature..." alt="" coords="533,217,647,244"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGStandardAtmosphere.html#ab2239a97c1d62b0a27b4c94cc7c03e76" title="Sets the temperature bias to be added to the standard temperature at all altitudes. " alt="" coords="519,65,661,92"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGStandardAtmosphere.html#a8e31ff522ecbbf9cfaf78b61b85dc8fc" title="Sets the temperature delta value at the supplied altitude/elevation above sea level, to be added to the standard temperature and ramped out by 86 km. " alt="" coords="252,166,440,193"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGStandardAtmosphere.html#aed830675db14a50dd538b130c193fb83" title="This function resets the model to apply no bias or delta gradient to the temperature. " alt="" coords="759,318,905,345"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGStandardAtmosphere.html#a9c26652a9d08c22d3b6378dd75a8a0cd" title="Resets the sea level to the Standard sea level pressure, and recalculates dependent parameters so tha..." alt="" coords="283,356,409,382"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGStandardAtmosphere.html#ae2ea4c880e365482c78e2b0579fd2922" title="Sets the vapor mass per million of dry air mass units. " alt="" coords="740,65,924,92"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGStandardAtmosphere.html#a35789c83cd390c95759e43ac7814e228" title="Returns the temperature gradient to be applied on top of the standard temperature gradient..." alt="" coords="972,141,1168,168"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGStandardAtmosphere.html#ad56cd84161ea889f17e5cf8971eab3b2" title="Sets the Sea Level temperature, if it is to be different than the standard. " alt="" coords="767,268,897,294"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGStandardAtmosphere.html#ae1ec723136d5b58e3b3d4fcb966d0c12" title="Sets a Sea Level temperature delta that is ramped out by 86 km. " alt="" coords="488,116,692,142"/>
+</map>

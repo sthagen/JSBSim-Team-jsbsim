@@ -1,0 +1,8 @@
+<map id="GetAGLevel" name="GetAGLevel">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGLocation.html#a0697137d8c02a8b84f695d12317347a6" title="Sets the semimajor and semiminor axis lengths for this planet. " alt="" coords="150,5,295,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGLocation.html#a7331ed56fdad41129ef4e74dcc2eff82" title="Get the GEODETIC latitude in radians. " alt="" coords="147,71,299,112"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGLocation.html#a804f3713901ade7ce31549d97d197583" title="Get the longitude. " alt="" coords="150,136,295,177"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGLocation.html#af0f103b7c1f4c5c8cdceb15a55305fe2" title="Sets the longitude, latitude and the distance above the reference spheroid. " alt="" coords="148,201,297,243"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGLocation.html#ad6d787090b71419e91678ceb91c6ef1f" title="Gets the geodetic altitude in feet. " alt="" coords="150,267,295,308"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGLocation.html#ab0d754a471a7ec7280549a1ae1f93331" title="Get the sea level radius in feet below the current location. " alt="" coords="347,267,493,308"/>
+</map>

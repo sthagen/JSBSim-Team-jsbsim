@@ -1,0 +1,4 @@
+<map id="GetEarthPositionAngleDeg" name="GetEarthPositionAngleDeg">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropagate.html#a269d067d10ad81cf2b04e951dc1af761" title="Retrieves the Euler angles (in degrees) that define the vehicle orientation. " alt="" coords="232,5,329,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropagate.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles that define the vehicle orientation. " alt="" coords="377,5,451,32"/>
+</map>

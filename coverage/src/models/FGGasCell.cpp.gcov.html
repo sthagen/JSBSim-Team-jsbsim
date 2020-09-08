@@ -1,0 +1,913 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGGasCell.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGGasCell.cpp<span style="font-size: 80%;"> (source / <a href="FGGasCell.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">436</td>
+            <td class="headerCovTableEntryLo">0.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryLo">16.7 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGGasCell.h
+<span class="lineNum">       4 </span>            :  Author:       Anders Gidenstam
+<span class="lineNum">       5 </span>            :  Date started: 01/21/2006
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ----- Copyright (C) 2006 - 2013  Anders Gidenstam (anders(at)gidenstam.org) --
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : See header file.
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : HISTORY
+<span class="lineNum">      31 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      32 </span>            : 01/21/2006  AG   Created
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      35 </span>            : INCLUDES
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      39 </span>            : #include &quot;models/FGMassBalance.h&quot;
+<span class="lineNum">      40 </span>            : #include &quot;FGGasCell.h&quot;
+<span class="lineNum">      41 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : using std::cerr;
+<span class="lineNum">      44 </span>            : using std::endl;
+<span class="lineNum">      45 </span>            : using std::cout;
+<span class="lineNum">      46 </span>            : using std::string;
+<span class="lineNum">      47 </span>            : using std::max;
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : namespace JSBSim {
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      52 </span>            : CLASS IMPLEMENTATION
+<span class="lineNum">      53 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      54 </span>            : /* Constants. */
+<span class="lineNum">      55 </span>            : const double FGGasCell::R = 3.4071;              // [lbf ft/(mol Rankine)]
+<span class="lineNum">      56 </span>            : const double FGGasCell::M_air = 0.0019186;       // [slug/mol]
+<span class="lineNum">      57 </span>            : const double FGGasCell::M_hydrogen = 0.00013841; // [slug/mol]
+<a name="58"><span class="lineNum">      58 </span>            : const double FGGasCell::M_helium = 0.00027409;   // [slug/mol]</a>
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 : FGGasCell::FGGasCell(FGFDMExec* exec, Element* el, unsigned int num,</span>
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :                      const struct Inputs&amp; input)</span>
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :   : FGForce(exec), in(input)</span>
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :   string token;</span>
+<span class="lineNum">      65 </span>            :   Element* element;
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :   FGPropertyManager* PropertyManager = exec-&gt;GetPropertyManager();</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   MassBalance = exec-&gt;GetMassBalance();</span>
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :   Buoyancy = MaxVolume = MaxOverpressure = Temperature = Pressure =</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :     Contents = Volume = dVolumeIdeal = 0.0;</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :   Xradius = Yradius = Zradius = Xwidth = Ywidth = Zwidth = 0.0;</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   ValveCoefficient = ValveOpen = 0.0;</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :   CellNum = num;</span>
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :   // NOTE: In the local system X points north, Y points east and Z points down.
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   SetTransformType(FGForce::tLocalBody);</span>
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   type = el-&gt;GetAttributeValue(&quot;type&quot;);</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :   if      (type == &quot;HYDROGEN&quot;) Type = ttHYDROGEN;</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :   else if (type == &quot;HELIUM&quot;)   Type = ttHELIUM;</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :   else if (type == &quot;AIR&quot;)      Type = ttAIR;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   else                         Type = ttUNKNOWN;</span>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :   element = el-&gt;FindElement(&quot;location&quot;);</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   if (element) {</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :     vXYZ = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">      88 </span>            :   } else {
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;Fatal Error: No location found for this gas cell.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :     exit(-1);</span>
+<span class="lineNum">      91 </span>            :   }
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :   if ((el-&gt;FindElement(&quot;x_radius&quot;) || el-&gt;FindElement(&quot;x_width&quot;)) &amp;&amp;</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :       (el-&gt;FindElement(&quot;y_radius&quot;) || el-&gt;FindElement(&quot;y_width&quot;)) &amp;&amp;</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :       (el-&gt;FindElement(&quot;z_radius&quot;) || el-&gt;FindElement(&quot;z_width&quot;))) {</span>
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;x_radius&quot;)) {</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :       Xradius = el-&gt;FindElementValueAsNumberConvertTo(&quot;x_radius&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">      98 </span>            :     }
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;y_radius&quot;)) {</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :       Yradius = el-&gt;FindElementValueAsNumberConvertTo(&quot;y_radius&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     101 </span>            :     }
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;z_radius&quot;)) {</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :       Zradius = el-&gt;FindElementValueAsNumberConvertTo(&quot;z_radius&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     104 </span>            :     }
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;x_width&quot;)) {</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :       Xwidth = el-&gt;FindElementValueAsNumberConvertTo(&quot;x_width&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     108 </span>            :     }
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;y_width&quot;)) {</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :       Ywidth = el-&gt;FindElementValueAsNumberConvertTo(&quot;y_width&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     111 </span>            :     }
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;z_width&quot;)) {</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :       Zwidth = el-&gt;FindElementValueAsNumberConvertTo(&quot;z_width&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     114 </span>            :     }
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            :     // The volume is a (potentially) extruded ellipsoid.
+<span class="lineNum">     117 </span>            :     // However, currently only a few combinations of radius and width are
+<span class="lineNum">     118 </span>            :     // fully supported.
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :     if ((Xradius != 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :         (Xwidth  == 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     121 </span>            :       // Ellipsoid volume.
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :       MaxVolume = 4.0  * M_PI * Xradius * Yradius * Zradius / 3.0;</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :     } else if  ((Xradius == 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                 (Xwidth  != 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     125 </span>            :       // Cylindrical volume.
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :       MaxVolume = M_PI * Yradius * Zradius * Xwidth;</span>
+<span class="lineNum">     127 </span>            :     } else {
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;Warning: Unsupported gas cell shape.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :       MaxVolume = </span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         (4.0  * M_PI * Xradius * Yradius * Zradius / 3.0 +</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :          M_PI * Yradius * Zradius * Xwidth +</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :          M_PI * Xradius * Zradius * Ywidth +</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :          M_PI * Xradius * Yradius * Zwidth +</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :          2.0  * Xradius * Ywidth * Zwidth +</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :          2.0  * Yradius * Xwidth * Zwidth +</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :          2.0  * Zradius * Xwidth * Ywidth +</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :          Xwidth * Ywidth * Zwidth);</span>
+<span class="lineNum">     138 </span>            :     }
+<span class="lineNum">     139 </span>            :   } else {
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;Fatal Error: Gas cell shape must be given.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :     exit(-1);</span>
+<span class="lineNum">     142 </span>            :   }
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;max_overpressure&quot;)) {</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     MaxOverpressure = el-&gt;FindElementValueAsNumberConvertTo(&quot;max_overpressure&quot;,</span>
+<span class="lineNum">     145 </span>            :                                                             &quot;LBS/FT2&quot;);
+<span class="lineNum">     146 </span>            :   }
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;fullness&quot;)) {</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     const double Fullness = el-&gt;FindElementValueAsNumber(&quot;fullness&quot;);</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :     if (0 &lt;= Fullness) { </span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :       Volume = Fullness * MaxVolume; </span>
+<span class="lineNum">     151 </span>            :     } else {
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;Warning: Invalid initial gas cell fullness value.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     153 </span>            :     }
+<span class="lineNum">     154 </span>            :   }  
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;valve_coefficient&quot;)) {</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :     ValveCoefficient =</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :       el-&gt;FindElementValueAsNumberConvertTo(&quot;valve_coefficient&quot;,</span>
+<span class="lineNum">     158 </span>            :                                             &quot;FT4*SEC/SLUG&quot;);
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :     ValveCoefficient = max(ValveCoefficient, 0.0);</span>
+<span class="lineNum">     160 </span>            :   }
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span>            :   // Initialize state
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :   SetLocation(vXYZ);</span>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :   if (Temperature == 0.0) {</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :     Temperature = in.Temperature;</span>
+<span class="lineNum">     167 </span>            :   }
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :   if (Pressure == 0.0) {</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :     Pressure = in.Pressure;</span>
+<span class="lineNum">     170 </span>            :   }
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :   if (Volume != 0.0) {</span>
+<span class="lineNum">     172 </span>            :     // Calculate initial gas content.
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :     Contents = Pressure * Volume / (R * Temperature);</span>
+<span class="lineNum">     174 </span>            :     
+<span class="lineNum">     175 </span>            :     // Clip to max allowed value.
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :     const double IdealPressure = Contents * R * Temperature / MaxVolume;</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :     if (IdealPressure &gt; Pressure + MaxOverpressure) {</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :       Contents = (Pressure + MaxOverpressure) * MaxVolume / (R * Temperature);</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :       Pressure = Pressure + MaxOverpressure;</span>
+<span class="lineNum">     180 </span>            :     } else {
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :       Pressure = max(IdealPressure, Pressure);</span>
+<span class="lineNum">     182 </span>            :     }
+<span class="lineNum">     183 </span>            :   } else {
+<span class="lineNum">     184 </span>            :     // Calculate initial gas content.
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :     Contents = Pressure * MaxVolume / (R * Temperature);</span>
+<span class="lineNum">     186 </span>            :   }
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :   Volume = Contents * R * Temperature / Pressure;</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :   Mass = Contents * M_gas();</span>
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :   // Bind relevant properties
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :   string property_name, base_property_name;</span>
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :   base_property_name = CreateIndexedPropertyName(&quot;buoyant_forces/gas-cell&quot;, CellNum);</span>
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/max_volume-ft3&quot;;</span>
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;MaxVolume, false );</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;GetNode()-&gt;SetWritable( property_name, false );</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/temp-R&quot;;</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;Temperature, false );</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/pressure-psf&quot;;</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;Pressure, false );</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/volume-ft3&quot;;</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;Volume, false );</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/buoyancy-lbs&quot;;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;Buoyancy, false );</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/contents-mol&quot;;</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;Contents, false );</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/valve_open&quot;;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;ValveOpen, false );</span>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :   Debug(0);</span>
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span>            :   // Read heat transfer coefficients
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :   if (Element* heat = el-&gt;FindElement(&quot;heat&quot;)) {</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :     Element* function_element = heat-&gt;FindElement(&quot;function&quot;);</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :     while (function_element) {</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :       HeatTransferCoeff.push_back(new FGFunction(exec, function_element));</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :       function_element = heat-&gt;FindNextElement(&quot;function&quot;);</span>
+<span class="lineNum">     220 </span>            :     }
+<span class="lineNum">     221 </span>            :   }
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            :   // Load ballonets if there are any
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :   if (Element* ballonet_element = el-&gt;FindElement(&quot;ballonet&quot;)) {</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     while (ballonet_element) {</span>
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :       Ballonet.push_back(new FGBallonet(exec,</span>
+<span class="lineNum">     227 </span>            :                                         ballonet_element,
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :                                         Ballonet.size(),</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :                                         this, in));</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :       ballonet_element = el-&gt;FindNextElement(&quot;ballonet&quot;);</span>
+<span class="lineNum">     231 </span>            :     }
+<span class="lineNum">     232 </span>            :   }
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     235 </span>            : 
+<a name="236"><span class="lineNum">     236 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 : FGGasCell::~FGGasCell()</span>
+<span class="lineNum">     239 </span>            : {
+<span class="lineNum">     240 </span>            :   unsigned int i;
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; HeatTransferCoeff.size(); i++) delete HeatTransferCoeff[i];</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :   HeatTransferCoeff.clear();</span>
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; Ballonet.size(); i++) delete Ballonet[i];</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   Ballonet.clear();</span>
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :   Debug(1);</span>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     250 </span>            : 
+<a name="251"><span class="lineNum">     251 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 : void FGGasCell::Calculate(double dt)</span>
+<span class="lineNum">     254 </span>            : {
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :   const double AirTemperature = in.Temperature;  // [Rankine]</span>
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :   const double AirPressure    = in.Pressure;     // [lbs/ft^2]</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :   const double AirDensity     = in.Density;      // [slug/ft^3]</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   const double g = in.gravity;                   // [lbs/slug]</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :   const double OldTemperature = Temperature;</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :   const double OldPressure    = Pressure;</span>
+<span class="lineNum">     262 </span>            :   unsigned int i;
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :   const size_t no_ballonets = Ballonet.size();</span>
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            :   //-- Read ballonet state --
+<span class="lineNum">     266 </span>            :   // NOTE: This model might need a more proper integration technique. 
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :   double BallonetsVolume = 0.0;</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :   double BallonetsHeatFlow = 0.0;</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; no_ballonets; i++) {</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :     BallonetsVolume   += Ballonet[i]-&gt;GetVolume();</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :     BallonetsHeatFlow += Ballonet[i]-&gt;GetHeatFlow();</span>
+<span class="lineNum">     272 </span>            :   }
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :   //-- Gas temperature --
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :   if (HeatTransferCoeff.size() &gt; 0) {</span>
+<span class="lineNum">     277 </span>            :     // The model is based on the ideal gas law.
+<span class="lineNum">     278 </span>            :     // However, it does look a bit fishy. Please verify.
+<span class="lineNum">     279 </span>            :     //   dT/dt = dU / (Cv n R)
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :     double dU = 0.0;</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :     for (i = 0; i &lt; HeatTransferCoeff.size(); i++) {</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :       dU += HeatTransferCoeff[i]-&gt;GetValue();</span>
+<span class="lineNum">     283 </span>            :     }
+<span class="lineNum">     284 </span>            :     // Don't include dt when accounting for adiabatic expansion/contraction.
+<span class="lineNum">     285 </span>            :     // The rate of adiabatic cooling looks about right: ~5.4 Rankine/1000ft. 
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :     if (Contents &gt; 0) {</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :       Temperature +=</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :         (dU * dt - Pressure * dVolumeIdeal - BallonetsHeatFlow) /</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :         (Cv_gas() * Contents * R);</span>
+<span class="lineNum">     290 </span>            :     } else {
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :       Temperature = AirTemperature;</span>
+<span class="lineNum">     292 </span>            :     }
+<span class="lineNum">     293 </span>            :   } else {
+<span class="lineNum">     294 </span>            :     // No simulation of complex temperature changes.
+<span class="lineNum">     295 </span>            :     // Note: Making the gas cell behave adiabatically might be a better
+<span class="lineNum">     296 </span>            :     // option.
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :     Temperature = AirTemperature;</span>
+<span class="lineNum">     298 </span>            :   }
+<span class="lineNum">     299 </span>            : 
+<span class="lineNum">     300 </span>            :   //-- Pressure --
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :   const double IdealPressure =</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :     Contents * R * Temperature / (MaxVolume - BallonetsVolume);</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :   if (IdealPressure &gt; AirPressure + MaxOverpressure) {</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :     Pressure = AirPressure + MaxOverpressure;</span>
+<span class="lineNum">     305 </span>            :   } else {
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :     Pressure = max(IdealPressure, AirPressure);</span>
+<span class="lineNum">     307 </span>            :   }
+<span class="lineNum">     308 </span>            : 
+<span class="lineNum">     309 </span>            :   //-- Manual valving --
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :   // FIXME: Presently the effect of manual valving is computed using
+<span class="lineNum">     312 </span>            :   //        an ad hoc formula which might not be a good representation
+<span class="lineNum">     313 </span>            :   //        of reality.
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :   if ((ValveCoefficient &gt; 0.0) &amp;&amp; (ValveOpen &gt; 0.0)) {</span>
+<span class="lineNum">     315 </span>            :     // First compute the difference in pressure between the gas in the
+<span class="lineNum">     316 </span>            :     // cell and the air above it.
+<span class="lineNum">     317 </span>            :     // FixMe: CellHeight should depend on current volume.
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :     const double CellHeight = 2 * Zradius + Zwidth;                   // [ft]</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :     const double GasMass    = Contents * M_gas();                     // [slug]</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :     const double GasVolume  = Contents * R * Temperature / Pressure;  // [ft^3]</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :     const double GasDensity = GasMass / GasVolume;</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :     const double DeltaPressure =</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :       Pressure + CellHeight * g * (AirDensity - GasDensity) - AirPressure;</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :     const double VolumeValved =</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :       ValveOpen * ValveCoefficient * DeltaPressure * dt;</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :     Contents =</span>
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :       max(0.0, Contents - Pressure * VolumeValved / (R * Temperature));</span>
+<span class="lineNum">     328 </span>            :   }
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            :   //-- Update ballonets. --
+<span class="lineNum">     331 </span>            :   // Doing that here should give them the opportunity to react to the
+<span class="lineNum">     332 </span>            :   // new pressure.
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :   BallonetsVolume = 0.0;</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; no_ballonets; i++) {</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :     Ballonet[i]-&gt;Calculate(dt);</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :     BallonetsVolume += Ballonet[i]-&gt;GetVolume();</span>
+<span class="lineNum">     337 </span>            :   }
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span>            :   //-- Automatic safety valving. --
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   if (Contents * R * Temperature / (MaxVolume - BallonetsVolume) &gt;</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :       AirPressure + MaxOverpressure) {</span>
+<span class="lineNum">     342 </span>            :     // Gas is automatically valved. Valving capacity is assumed to be infinite.
+<span class="lineNum">     343 </span>            :     // FIXME: This could/should be replaced by damage to the gas cell envelope.
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :     Contents =</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :       (AirPressure + MaxOverpressure) *</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :       (MaxVolume - BallonetsVolume) / (R * Temperature);</span>
+<span class="lineNum">     347 </span>            :   }
+<span class="lineNum">     348 </span>            : 
+<span class="lineNum">     349 </span>            :   //-- Volume --
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :   Volume = Contents * R * Temperature / Pressure + BallonetsVolume;</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :   dVolumeIdeal =</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :     Contents * R * (Temperature / Pressure - OldTemperature / OldPressure);</span>
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span>            :   //-- Current buoyancy --
+<span class="lineNum">     355 </span>            :   // The buoyancy is computed using the atmospheres local density.
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :   Buoyancy = Volume * AirDensity * g;</span>
+<span class="lineNum">     357 </span>            :   
+<span class="lineNum">     358 </span>            :   // Note: This is gross buoyancy. The weight of the gas itself and
+<span class="lineNum">     359 </span>            :   // any ballonets is not deducted here as the effects of the gas mass
+<span class="lineNum">     360 </span>            :   // is handled by FGMassBalance.
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :   vFn = {0.0, 0.0, - Buoyancy};</span>
+<span class="lineNum">     362 </span>            : 
+<span class="lineNum">     363 </span>            :   // Compute the inertia of the gas cell.
+<span class="lineNum">     364 </span>            :   // Consider the gas cell as a shape of uniform density.
+<span class="lineNum">     365 </span>            :   // FIXME: If the cell isn't ellipsoid or cylindrical the inertia will
+<span class="lineNum">     366 </span>            :   //        be wrong.
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :   gasCellJ.InitMatrix();</span>
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 :   const double mass = Contents * M_gas();</span>
+<span class="lineNum">     369 </span>            :   double Ixx, Iyy, Izz;
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :   if ((Xradius != 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :       (Xwidth  == 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     372 </span>            :     // Ellipsoid volume.
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :     Ixx = (1.0 / 5.0) * mass * (Yradius*Yradius + Zradius*Zradius);</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :     Iyy = (1.0 / 5.0) * mass * (Xradius*Xradius + Zradius*Zradius);</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :     Izz = (1.0 / 5.0) * mass * (Xradius*Xradius + Yradius*Yradius);     </span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :   } else if  ((Xradius == 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :               (Xwidth  != 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     378 </span>            :     // Cylindrical volume (might not be valid with an elliptical cross-section).
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :     Ixx = (1.0 / 2.0) * mass * Yradius * Zradius;</span>
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :     Iyy =</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :       (1.0 / 4.0) * mass * Yradius * Zradius +</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :       (1.0 / 12.0) * mass * Xwidth * Xwidth;</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :     Izz =</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :       (1.0 / 4.0) * mass * Yradius * Zradius +</span>
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :       (1.0 / 12.0) * mass * Xwidth * Xwidth;</span>
+<span class="lineNum">     386 </span>            :   } else {
+<span class="lineNum">     387 </span>            :     // Not supported. Revert to pointmass model.
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :     Ixx = Iyy = Izz = 0.0;</span>
+<span class="lineNum">     389 </span>            :   }
+<span class="lineNum">     390 </span>            :   // The volume is symmetric, so Ixy = Ixz = Iyz = 0.
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :   gasCellJ(1,1) = Ixx;</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :   gasCellJ(2,2) = Iyy;</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :   gasCellJ(3,3) = Izz;</span>
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 :   Mass = mass;</span>
+<span class="lineNum">     395 </span>            :   // Transform the moments of inertia to the body frame.
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :   gasCellJ += MassBalance-&gt;GetPointmassInertia(Mass, GetXYZ());</span>
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :   gasCellM.InitMatrix();</span>
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :   gasCellM(eX) +=</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :     GetXYZ(eX) * Mass*slugtolb;</span>
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :   gasCellM(eY) +=</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :     GetXYZ(eY) * Mass*slugtolb;</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :   gasCellM(eZ) +=</span>
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :     GetXYZ(eZ) * Mass*slugtolb;</span>
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :   if (no_ballonets &gt; 0) {</span>
+<span class="lineNum">     407 </span>            :     // Add the mass, moment and inertia of any ballonets.
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :     for (i = 0; i &lt; no_ballonets; i++) {</span>
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :       Mass += Ballonet[i]-&gt;GetMass();</span>
+<span class="lineNum">     410 </span>            :        
+<span class="lineNum">     411 </span>            :       // Add ballonet moments due to mass (in the structural frame).
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :       gasCellM(eX) +=</span>
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :         Ballonet[i]-&gt;GetXYZ(eX) * Ballonet[i]-&gt;GetMass()*slugtolb;</span>
+<span class="lineNum">     414 </span><span class="lineNoCov">          0 :       gasCellM(eY) +=</span>
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :         Ballonet[i]-&gt;GetXYZ(eY) * Ballonet[i]-&gt;GetMass()*slugtolb;</span>
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :       gasCellM(eZ) +=</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :         Ballonet[i]-&gt;GetXYZ(eZ) * Ballonet[i]-&gt;GetMass()*slugtolb;</span>
+<span class="lineNum">     418 </span>            :       
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :       gasCellJ += Ballonet[i]-&gt;GetInertia();</span>
+<span class="lineNum">     420 </span>            :     }
+<span class="lineNum">     421 </span>            :   }
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     425 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     426 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     427 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     428 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     429 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     430 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     431 </span>            : //       whatsoever.
+<span class="lineNum">     432 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     433 </span>            : //       startup messages
+<span class="lineNum">     434 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     435 </span>            : //       a class is instantiated
+<span class="lineNum">     436 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     437 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     438 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     439 </span>            : //       are printed out periodically
+<span class="lineNum">     440 </span>            : //    16: When set various parameters are sanity checked and
+<a name="441"><span class="lineNum">     441 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     442 </span>            : 
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 : void FGGasCell::Debug(int from)</span>
+<span class="lineNum">     444 </span>            : {
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 :     if (from == 0) { // Constructor</span>
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    Gas cell holds &quot; &lt;&lt; Contents &lt;&lt; &quot; mol &quot; &lt;&lt;</span>
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :         type &lt;&lt; endl;</span>
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Cell location (X, Y, Z) (in.): &quot; &lt;&lt; vXYZ(eX) &lt;&lt; &quot;, &quot; &lt;&lt;</span>
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 :         vXYZ(eY) &lt;&lt; &quot;, &quot; &lt;&lt; vXYZ(eZ) &lt;&lt; endl;</span>
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Maximum volume: &quot; &lt;&lt; MaxVolume &lt;&lt; &quot; ft3&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Relief valve release pressure: &quot; &lt;&lt; MaxOverpressure &lt;&lt; </span>
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :         &quot; lbs/ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Manual valve coefficient: &quot; &lt;&lt; ValveCoefficient &lt;&lt; </span>
+<span class="lineNum">     457 </span><span class="lineNoCov">          0 :         &quot; ft4*sec/slug&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Initial temperature: &quot; &lt;&lt; Temperature &lt;&lt; &quot; Rankine&quot; &lt;&lt;</span>
+<span class="lineNum">     459 </span>            :         endl;
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Initial pressure: &quot; &lt;&lt; Pressure &lt;&lt; &quot; lbs/ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Initial volume: &quot; &lt;&lt; Volume &lt;&lt; &quot; ft3&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Initial mass: &quot; &lt;&lt; GetMass() &lt;&lt; &quot; slug mass&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Initial weight: &quot; &lt;&lt; GetMass()*slugtolb &lt;&lt; &quot; lbs force&quot; &lt;&lt;</span>
+<span class="lineNum">     464 </span>            :         endl;
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Heat transfer: &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     466 </span>            :     }
+<span class="lineNum">     467 </span>            :   }
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGGasCell&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGGasCell&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     471 </span>            :   }
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     473 </span>            :   }
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 8 ) { // Runtime state variables    </span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      &quot; &lt;&lt; type &lt;&lt; &quot; cell holds &quot; &lt;&lt; Contents &lt;&lt; &quot; mol &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Temperature: &quot; &lt;&lt; Temperature &lt;&lt; &quot; Rankine&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Pressure: &quot; &lt;&lt; Pressure &lt;&lt; &quot; lbs/ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Volume: &quot; &lt;&lt; Volume &lt;&lt; &quot; ft3&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Mass: &quot; &lt;&lt; GetMass() &lt;&lt; &quot; slug mass&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Weight: &quot; &lt;&lt; GetMass()*slugtolb &lt;&lt; &quot; lbs force&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     481 </span>            :   }
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     483 </span>            :   }
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     485 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     486 </span>            :     }
+<span class="lineNum">     487 </span>            :   }
+<span class="lineNum">     488 </span>            : }
+<span class="lineNum">     489 </span>            : 
+<span class="lineNum">     490 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     491 </span>            : CLASS IMPLEMENTATION
+<span class="lineNum">     492 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     493 </span>            : const double FGBallonet::R = 3.4071;              // [lbs ft/(mol Rankine)]
+<span class="lineNum">     494 </span>            : const double FGBallonet::M_air = 0.0019186;       // [slug/mol]
+<a name="495"><span class="lineNum">     495 </span>            : const double FGBallonet::Cv_air = 5.0/2.0;        // [??]</a>
+<span class="lineNum">     496 </span>            : 
+<span class="lineNum">     497 </span><span class="lineNoCov">          0 : FGBallonet::FGBallonet(FGFDMExec* exec, Element* el, unsigned int num,</span>
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 :                        FGGasCell* parent, const struct FGGasCell::Inputs&amp; input)</span>
+<span class="lineNum">     499 </span><span class="lineNoCov">          0 :   : in(input)</span>
+<span class="lineNum">     500 </span>            : {
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :   string token;</span>
+<span class="lineNum">     502 </span>            :   Element* element;
+<span class="lineNum">     503 </span>            : 
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :   FGPropertyManager* PropertyManager = exec-&gt;GetPropertyManager();</span>
+<span class="lineNum">     505 </span><span class="lineNoCov">          0 :   MassBalance = exec-&gt;GetMassBalance();</span>
+<span class="lineNum">     506 </span>            : 
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 :   MaxVolume = MaxOverpressure = Temperature = Pressure =</span>
+<span class="lineNum">     508 </span><span class="lineNoCov">          0 :     Contents = Volume = dVolumeIdeal = dU = 0.0;</span>
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :   Xradius = Yradius = Zradius = Xwidth = Ywidth = Zwidth = 0.0;</span>
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :   ValveCoefficient = ValveOpen = 0.0;</span>
+<span class="lineNum">     511 </span><span class="lineNoCov">          0 :   BlowerInput = NULL;</span>
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :   CellNum = num;</span>
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :   Parent = parent;</span>
+<span class="lineNum">     514 </span>            : 
+<span class="lineNum">     515 </span>            :   // NOTE: In the local system X points north, Y points east and Z points down.
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :   element = el-&gt;FindElement(&quot;location&quot;);</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :   if (element) {</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :     vXYZ = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">     519 </span>            :   } else {
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;Fatal Error: No location found for this ballonet.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :     exit(-1);</span>
+<span class="lineNum">     522 </span>            :   }
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :   if ((el-&gt;FindElement(&quot;x_radius&quot;) || el-&gt;FindElement(&quot;x_width&quot;)) &amp;&amp;</span>
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :       (el-&gt;FindElement(&quot;y_radius&quot;) || el-&gt;FindElement(&quot;y_width&quot;)) &amp;&amp;</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :       (el-&gt;FindElement(&quot;z_radius&quot;) || el-&gt;FindElement(&quot;z_width&quot;))) {</span>
+<span class="lineNum">     526 </span>            : 
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;x_radius&quot;)) {</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :       Xradius = el-&gt;FindElementValueAsNumberConvertTo(&quot;x_radius&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     529 </span>            :     }
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;y_radius&quot;)) {</span>
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :       Yradius = el-&gt;FindElementValueAsNumberConvertTo(&quot;y_radius&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     532 </span>            :     }
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;z_radius&quot;)) {</span>
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :       Zradius = el-&gt;FindElementValueAsNumberConvertTo(&quot;z_radius&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     535 </span>            :     }
+<span class="lineNum">     536 </span>            : 
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;x_width&quot;)) {</span>
+<span class="lineNum">     538 </span><span class="lineNoCov">          0 :       Xwidth = el-&gt;FindElementValueAsNumberConvertTo(&quot;x_width&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     539 </span>            :     }
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;y_width&quot;)) {</span>
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :       Ywidth = el-&gt;FindElementValueAsNumberConvertTo(&quot;y_width&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     542 </span>            :     }
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;z_width&quot;)) {</span>
+<span class="lineNum">     544 </span><span class="lineNoCov">          0 :       Zwidth = el-&gt;FindElementValueAsNumberConvertTo(&quot;z_width&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     545 </span>            :     }
+<span class="lineNum">     546 </span>            : 
+<span class="lineNum">     547 </span>            :     // The volume is a (potentially) extruded ellipsoid.
+<span class="lineNum">     548 </span>            :     // FIXME: However, currently only a few combinations of radius and
+<span class="lineNum">     549 </span>            :     //        width are fully supported.
+<span class="lineNum">     550 </span><span class="lineNoCov">          0 :     if ((Xradius != 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     551 </span><span class="lineNoCov">          0 :         (Xwidth  == 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     552 </span>            :       // Ellipsoid volume.
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :       MaxVolume = 4.0  * M_PI * Xradius * Yradius * Zradius / 3.0;</span>
+<span class="lineNum">     554 </span><span class="lineNoCov">          0 :     } else if  ((Xradius == 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     555 </span><span class="lineNoCov">          0 :                 (Xwidth  != 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     556 </span>            :       // Cylindrical volume.
+<span class="lineNum">     557 </span><span class="lineNoCov">          0 :       MaxVolume = M_PI * Yradius * Zradius * Xwidth;</span>
+<span class="lineNum">     558 </span>            :     } else {
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;Warning: Unsupported ballonet shape.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     560 </span><span class="lineNoCov">          0 :       MaxVolume = </span>
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :         (4.0  * M_PI * Xradius * Yradius * Zradius / 3.0 +</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :          M_PI * Yradius * Zradius * Xwidth +</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :          M_PI * Xradius * Zradius * Ywidth +</span>
+<span class="lineNum">     564 </span><span class="lineNoCov">          0 :          M_PI * Xradius * Yradius * Zwidth +</span>
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :          2.0  * Xradius * Ywidth * Zwidth +</span>
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :          2.0  * Yradius * Xwidth * Zwidth +</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :          2.0  * Zradius * Xwidth * Ywidth +</span>
+<span class="lineNum">     568 </span><span class="lineNoCov">          0 :          Xwidth * Ywidth * Zwidth);</span>
+<span class="lineNum">     569 </span>            :     }
+<span class="lineNum">     570 </span>            :   } else {
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;Fatal Error: Ballonet shape must be given.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :     exit(-1);</span>
+<span class="lineNum">     573 </span>            :   }
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;max_overpressure&quot;)) {</span>
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :     MaxOverpressure = el-&gt;FindElementValueAsNumberConvertTo(&quot;max_overpressure&quot;,</span>
+<span class="lineNum">     576 </span>            :                                                             &quot;LBS/FT2&quot;);
+<span class="lineNum">     577 </span>            :   }
+<span class="lineNum">     578 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;fullness&quot;)) {</span>
+<span class="lineNum">     579 </span><span class="lineNoCov">          0 :     const double Fullness = el-&gt;FindElementValueAsNumber(&quot;fullness&quot;);</span>
+<span class="lineNum">     580 </span><span class="lineNoCov">          0 :     if (0 &lt;= Fullness) { </span>
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 :       Volume = Fullness * MaxVolume; </span>
+<span class="lineNum">     582 </span>            :     } else {
+<span class="lineNum">     583 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;Warning: Invalid initial ballonet fullness value.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     584 </span>            :     }
+<span class="lineNum">     585 </span>            :   }  
+<span class="lineNum">     586 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;valve_coefficient&quot;)) {</span>
+<span class="lineNum">     587 </span><span class="lineNoCov">          0 :     ValveCoefficient =</span>
+<span class="lineNum">     588 </span><span class="lineNoCov">          0 :       el-&gt;FindElementValueAsNumberConvertTo(&quot;valve_coefficient&quot;,</span>
+<span class="lineNum">     589 </span>            :                                             &quot;FT4*SEC/SLUG&quot;);
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 :     ValveCoefficient = max(ValveCoefficient, 0.0);</span>
+<span class="lineNum">     591 </span>            :   }
+<span class="lineNum">     592 </span>            : 
+<span class="lineNum">     593 </span>            :   // Initialize state
+<span class="lineNum">     594 </span><span class="lineNoCov">          0 :   if (Temperature == 0.0) {</span>
+<span class="lineNum">     595 </span><span class="lineNoCov">          0 :     Temperature = Parent-&gt;GetTemperature();</span>
+<span class="lineNum">     596 </span>            :   }
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :   if (Pressure == 0.0) {</span>
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 :     Pressure = Parent-&gt;GetPressure();</span>
+<span class="lineNum">     599 </span>            :   }
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :   if (Volume != 0.0) {</span>
+<span class="lineNum">     601 </span>            :     // Calculate initial air content.
+<span class="lineNum">     602 </span><span class="lineNoCov">          0 :     Contents = Pressure * Volume / (R * Temperature);</span>
+<span class="lineNum">     603 </span>            :     
+<span class="lineNum">     604 </span>            :     // Clip to max allowed value.
+<span class="lineNum">     605 </span><span class="lineNoCov">          0 :     const double IdealPressure = Contents * R * Temperature / MaxVolume;</span>
+<span class="lineNum">     606 </span><span class="lineNoCov">          0 :     if (IdealPressure &gt; Pressure + MaxOverpressure) {</span>
+<span class="lineNum">     607 </span><span class="lineNoCov">          0 :       Contents = (Pressure + MaxOverpressure) * MaxVolume / (R * Temperature);</span>
+<span class="lineNum">     608 </span><span class="lineNoCov">          0 :       Pressure = Pressure + MaxOverpressure;</span>
+<span class="lineNum">     609 </span>            :     } else {
+<span class="lineNum">     610 </span><span class="lineNoCov">          0 :       Pressure = max(IdealPressure, Pressure);</span>
+<span class="lineNum">     611 </span>            :     }
+<span class="lineNum">     612 </span>            :   } else {
+<span class="lineNum">     613 </span>            :     // Calculate initial air content.
+<span class="lineNum">     614 </span><span class="lineNoCov">          0 :     Contents = Pressure * MaxVolume / (R * Temperature);</span>
+<span class="lineNum">     615 </span>            :   }
+<span class="lineNum">     616 </span>            : 
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :   Volume = Contents * R * Temperature / Pressure;</span>
+<span class="lineNum">     618 </span>            : 
+<span class="lineNum">     619 </span>            :   // Bind relevant properties
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 :   string property_name, base_property_name;</span>
+<span class="lineNum">     621 </span><span class="lineNoCov">          0 :   base_property_name = CreateIndexedPropertyName(&quot;buoyant_forces/gas-cell&quot;, Parent-&gt;GetIndex());</span>
+<span class="lineNum">     622 </span><span class="lineNoCov">          0 :   base_property_name = CreateIndexedPropertyName(base_property_name + &quot;/ballonet&quot;, CellNum);</span>
+<span class="lineNum">     623 </span>            : 
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/max_volume-ft3&quot;;</span>
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name, &amp;MaxVolume, false );</span>
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;GetNode()-&gt;SetWritable( property_name, false );</span>
+<span class="lineNum">     627 </span>            : 
+<span class="lineNum">     628 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/temp-R&quot;;</span>
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name, &amp;Temperature, false );</span>
+<span class="lineNum">     630 </span>            : 
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/pressure-psf&quot;;</span>
+<span class="lineNum">     632 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name, &amp;Pressure, false );</span>
+<span class="lineNum">     633 </span>            : 
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/volume-ft3&quot;;</span>
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name, &amp;Volume, false );</span>
+<span class="lineNum">     636 </span>            : 
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/contents-mol&quot;;</span>
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name, &amp;Contents, false );</span>
+<span class="lineNum">     639 </span>            : 
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/valve_open&quot;;</span>
+<span class="lineNum">     641 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name, &amp;ValveOpen, false );</span>
+<span class="lineNum">     642 </span>            : 
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :   Debug(0);</span>
+<span class="lineNum">     644 </span>            : 
+<span class="lineNum">     645 </span>            :   // Read heat transfer coefficients
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :   if (Element* heat = el-&gt;FindElement(&quot;heat&quot;)) {</span>
+<span class="lineNum">     647 </span><span class="lineNoCov">          0 :     Element* function_element = heat-&gt;FindElement(&quot;function&quot;);</span>
+<span class="lineNum">     648 </span><span class="lineNoCov">          0 :     while (function_element) {</span>
+<span class="lineNum">     649 </span><span class="lineNoCov">          0 :       HeatTransferCoeff.push_back(new FGFunction(exec, function_element));</span>
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 :       function_element = heat-&gt;FindNextElement(&quot;function&quot;);</span>
+<span class="lineNum">     651 </span>            :     }
+<span class="lineNum">     652 </span>            :   }
+<span class="lineNum">     653 </span>            :   // Read blower input function
+<span class="lineNum">     654 </span><span class="lineNoCov">          0 :   if (Element* blower = el-&gt;FindElement(&quot;blower_input&quot;)) {</span>
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :     Element* function_element = blower-&gt;FindElement(&quot;function&quot;);</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :     BlowerInput = new FGFunction(exec, function_element);</span>
+<span class="lineNum">     657 </span>            :   }
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     659 </span>            : 
+<a name="660"><span class="lineNum">     660 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     661 </span>            : 
+<span class="lineNum">     662 </span><span class="lineNoCov">          0 : FGBallonet::~FGBallonet()</span>
+<span class="lineNum">     663 </span>            : {
+<span class="lineNum">     664 </span>            :   unsigned int i;
+<span class="lineNum">     665 </span>            : 
+<span class="lineNum">     666 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; HeatTransferCoeff.size(); i++) delete HeatTransferCoeff[i];</span>
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 :   HeatTransferCoeff.clear();</span>
+<span class="lineNum">     668 </span>            : 
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :   delete BlowerInput;</span>
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :   BlowerInput = NULL;</span>
+<span class="lineNum">     671 </span>            : 
+<span class="lineNum">     672 </span><span class="lineNoCov">          0 :   Debug(1);</span>
+<span class="lineNum">     673 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     674 </span>            : 
+<a name="675"><span class="lineNum">     675 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     676 </span>            : 
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 : void FGBallonet::Calculate(double dt)</span>
+<span class="lineNum">     678 </span>            : {
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :   const double ParentPressure = Parent-&gt;GetPressure(); // [lbs/ft^2]</span>
+<span class="lineNum">     680 </span><span class="lineNoCov">          0 :   const double AirPressure    = in.Pressure;           // [lbs/ft^2]</span>
+<span class="lineNum">     681 </span>            : 
+<span class="lineNum">     682 </span><span class="lineNoCov">          0 :   const double OldTemperature = Temperature;</span>
+<span class="lineNum">     683 </span><span class="lineNoCov">          0 :   const double OldPressure    = Pressure;</span>
+<span class="lineNum">     684 </span>            :   unsigned int i;
+<span class="lineNum">     685 </span>            : 
+<span class="lineNum">     686 </span>            :   //-- Gas temperature --
+<span class="lineNum">     687 </span>            : 
+<span class="lineNum">     688 </span>            :   // The model is based on the ideal gas law.
+<span class="lineNum">     689 </span>            :   // However, it does look a bit fishy. Please verify.
+<span class="lineNum">     690 </span>            :   //   dT/dt = dU / (Cv n R)
+<span class="lineNum">     691 </span><span class="lineNoCov">          0 :   dU = 0.0;</span>
+<span class="lineNum">     692 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; HeatTransferCoeff.size(); i++) {</span>
+<span class="lineNum">     693 </span><span class="lineNoCov">          0 :     dU += HeatTransferCoeff[i]-&gt;GetValue();</span>
+<span class="lineNum">     694 </span>            :   }
+<span class="lineNum">     695 </span>            :   // dt is already accounted for in dVolumeIdeal.
+<span class="lineNum">     696 </span><span class="lineNoCov">          0 :   if (Contents &gt; 0) {</span>
+<span class="lineNum">     697 </span><span class="lineNoCov">          0 :     Temperature +=</span>
+<span class="lineNum">     698 </span><span class="lineNoCov">          0 :       (dU * dt - Pressure * dVolumeIdeal) / (Cv_air * Contents * R);</span>
+<span class="lineNum">     699 </span>            :   } else {
+<span class="lineNum">     700 </span><span class="lineNoCov">          0 :     Temperature = Parent-&gt;GetTemperature();</span>
+<span class="lineNum">     701 </span>            :   }
+<span class="lineNum">     702 </span>            : 
+<span class="lineNum">     703 </span>            :   //-- Pressure --
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :   const double IdealPressure = Contents * R * Temperature / MaxVolume;</span>
+<span class="lineNum">     705 </span>            :   // The pressure is at least that of the parent gas cell.
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :   Pressure = max(IdealPressure, ParentPressure);</span>
+<span class="lineNum">     707 </span>            : 
+<span class="lineNum">     708 </span>            :   //-- Blower input --
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :   if (BlowerInput) {</span>
+<span class="lineNum">     710 </span><span class="lineNoCov">          0 :     const double AddedVolume = BlowerInput-&gt;GetValue() * dt;</span>
+<span class="lineNum">     711 </span><span class="lineNoCov">          0 :     if (AddedVolume &gt; 0.0) {</span>
+<span class="lineNum">     712 </span><span class="lineNoCov">          0 :       Contents += Pressure * AddedVolume / (R * Temperature);</span>
+<span class="lineNum">     713 </span>            :     }
+<span class="lineNum">     714 </span>            :   }
+<span class="lineNum">     715 </span>            : 
+<span class="lineNum">     716 </span>            :   //-- Pressure relief and manual valving --
+<span class="lineNum">     717 </span>            :   // FIXME: Presently the effect of valving is computed using
+<span class="lineNum">     718 </span>            :   //        an ad hoc formula which might not be a good representation
+<span class="lineNum">     719 </span>            :   //        of reality.
+<span class="lineNum">     720 </span><span class="lineNoCov">          0 :   if ((ValveCoefficient &gt; 0.0) &amp;&amp;</span>
+<span class="lineNum">     721 </span><span class="lineNoCov">          0 :       ((ValveOpen &gt; 0.0) || (Pressure &gt; AirPressure + MaxOverpressure))) {</span>
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 :     const double DeltaPressure = Pressure - AirPressure;</span>
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :     const double VolumeValved =</span>
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 :       ((Pressure &gt; AirPressure + MaxOverpressure) ? 1.0 : ValveOpen) *</span>
+<span class="lineNum">     725 </span><span class="lineNoCov">          0 :       ValveCoefficient * DeltaPressure * dt;</span>
+<span class="lineNum">     726 </span>            :     // FIXME: Too small values of Contents sometimes leads to NaN.
+<span class="lineNum">     727 </span>            :     //        Currently the minimum is restricted to a safe value.
+<span class="lineNum">     728 </span><span class="lineNoCov">          0 :     Contents =</span>
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :       max(1.0, Contents - Pressure * VolumeValved / (R * Temperature));</span>
+<span class="lineNum">     730 </span>            :   }
+<span class="lineNum">     731 </span>            : 
+<span class="lineNum">     732 </span>            :   //-- Volume --
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :   Volume = Contents * R * Temperature / Pressure;</span>
+<span class="lineNum">     734 </span><span class="lineNoCov">          0 :   dVolumeIdeal =</span>
+<span class="lineNum">     735 </span><span class="lineNoCov">          0 :     Contents * R * (Temperature / Pressure - OldTemperature / OldPressure);</span>
+<span class="lineNum">     736 </span>            : 
+<span class="lineNum">     737 </span>            :   // Compute the inertia of the ballonet.
+<span class="lineNum">     738 </span>            :   // Consider the ballonet as a shape of uniform density.
+<span class="lineNum">     739 </span>            :   // FIXME: If the ballonet isn't ellipsoid or cylindrical the inertia will
+<span class="lineNum">     740 </span>            :   //        be wrong.
+<span class="lineNum">     741 </span><span class="lineNoCov">          0 :   ballonetJ.InitMatrix();</span>
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :   const double mass = Contents * M_air;</span>
+<span class="lineNum">     743 </span>            :   double Ixx, Iyy, Izz;
+<span class="lineNum">     744 </span><span class="lineNoCov">          0 :   if ((Xradius != 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 :       (Xwidth  == 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     746 </span>            :     // Ellipsoid volume.
+<span class="lineNum">     747 </span><span class="lineNoCov">          0 :     Ixx = (1.0 / 5.0) * mass * (Yradius*Yradius + Zradius*Zradius);</span>
+<span class="lineNum">     748 </span><span class="lineNoCov">          0 :     Iyy = (1.0 / 5.0) * mass * (Xradius*Xradius + Zradius*Zradius);</span>
+<span class="lineNum">     749 </span><span class="lineNoCov">          0 :     Izz = (1.0 / 5.0) * mass * (Xradius*Xradius + Yradius*Yradius);     </span>
+<span class="lineNum">     750 </span><span class="lineNoCov">          0 :   } else if  ((Xradius == 0.0) &amp;&amp; (Yradius != 0.0) &amp;&amp; (Zradius != 0.0) &amp;&amp;</span>
+<span class="lineNum">     751 </span><span class="lineNoCov">          0 :               (Xwidth  != 0.0) &amp;&amp; (Ywidth  == 0.0) &amp;&amp; (Zwidth  == 0.0)) {</span>
+<span class="lineNum">     752 </span>            :     // Cylindrical volume (might not be valid with an elliptical cross-section).
+<span class="lineNum">     753 </span><span class="lineNoCov">          0 :     Ixx = (1.0 / 2.0) * mass * Yradius * Zradius;</span>
+<span class="lineNum">     754 </span><span class="lineNoCov">          0 :     Iyy =</span>
+<span class="lineNum">     755 </span><span class="lineNoCov">          0 :       (1.0 / 4.0) * mass * Yradius * Zradius +</span>
+<span class="lineNum">     756 </span><span class="lineNoCov">          0 :       (1.0 / 12.0) * mass * Xwidth * Xwidth;</span>
+<span class="lineNum">     757 </span><span class="lineNoCov">          0 :     Izz =</span>
+<span class="lineNum">     758 </span><span class="lineNoCov">          0 :       (1.0 / 4.0) * mass * Yradius * Zradius +</span>
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :       (1.0 / 12.0) * mass * Xwidth * Xwidth;</span>
+<span class="lineNum">     760 </span>            :   } else {
+<span class="lineNum">     761 </span>            :     // Not supported. Revert to pointmass model.
+<span class="lineNum">     762 </span><span class="lineNoCov">          0 :     Ixx = Iyy = Izz = 0.0;</span>
+<span class="lineNum">     763 </span>            :   }
+<span class="lineNum">     764 </span>            :   // The volume is symmetric, so Ixy = Ixz = Iyz = 0.
+<span class="lineNum">     765 </span><span class="lineNoCov">          0 :   ballonetJ(1,1) = Ixx;</span>
+<span class="lineNum">     766 </span><span class="lineNoCov">          0 :   ballonetJ(2,2) = Iyy;</span>
+<span class="lineNum">     767 </span><span class="lineNoCov">          0 :   ballonetJ(3,3) = Izz;</span>
+<span class="lineNum">     768 </span>            :   // Transform the moments of inertia to the body frame.
+<span class="lineNum">     769 </span><span class="lineNoCov">          0 :   ballonetJ += MassBalance-&gt;GetPointmassInertia(GetMass(), GetXYZ());</span>
+<span class="lineNum">     770 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     771 </span>            : 
+<span class="lineNum">     772 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     773 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     774 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     775 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     776 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     777 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     778 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     779 </span>            : //       whatsoever.
+<span class="lineNum">     780 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     781 </span>            : //       startup messages
+<span class="lineNum">     782 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     783 </span>            : //       a class is instantiated
+<span class="lineNum">     784 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     785 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     786 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     787 </span>            : //       are printed out periodically
+<span class="lineNum">     788 </span>            : //    16: When set various parameters are sanity checked and
+<a name="789"><span class="lineNum">     789 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     790 </span>            : 
+<span class="lineNum">     791 </span><span class="lineNoCov">          0 : void FGBallonet::Debug(int from)</span>
+<span class="lineNum">     792 </span>            : {
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     794 </span>            : 
+<span class="lineNum">     795 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     796 </span><span class="lineNoCov">          0 :     if (from == 0) { // Constructor</span>
+<span class="lineNum">     797 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Ballonet holds &quot; &lt;&lt; Contents &lt;&lt; &quot; mol air&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     798 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Location (X, Y, Z) (in.): &quot; &lt;&lt; vXYZ(eX) &lt;&lt; &quot;, &quot; &lt;&lt;</span>
+<span class="lineNum">     799 </span><span class="lineNoCov">          0 :         vXYZ(eY) &lt;&lt; &quot;, &quot; &lt;&lt; vXYZ(eZ) &lt;&lt; endl;</span>
+<span class="lineNum">     800 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Maximum volume: &quot; &lt;&lt; MaxVolume &lt;&lt; &quot; ft3&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     801 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Relief valve release pressure: &quot; &lt;&lt; MaxOverpressure &lt;&lt; </span>
+<span class="lineNum">     802 </span><span class="lineNoCov">          0 :         &quot; lbs/ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     803 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Relief valve coefficient: &quot; &lt;&lt; ValveCoefficient &lt;&lt; </span>
+<span class="lineNum">     804 </span><span class="lineNoCov">          0 :         &quot; ft4*sec/slug&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     805 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Initial temperature: &quot; &lt;&lt; Temperature &lt;&lt; &quot; Rankine&quot; &lt;&lt;</span>
+<span class="lineNum">     806 </span>            :         endl;
+<span class="lineNum">     807 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Initial pressure: &quot; &lt;&lt; Pressure &lt;&lt; &quot; lbs/ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     808 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Initial volume: &quot; &lt;&lt; Volume &lt;&lt; &quot; ft3&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     809 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Initial mass: &quot; &lt;&lt; GetMass() &lt;&lt; &quot; slug mass&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     810 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Initial weight: &quot; &lt;&lt; GetMass()*slugtolb &lt;&lt;</span>
+<span class="lineNum">     811 </span><span class="lineNoCov">          0 :         &quot; lbs force&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     812 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Heat transfer: &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     813 </span>            :     }
+<span class="lineNum">     814 </span>            :   }
+<span class="lineNum">     815 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     816 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGBallonet&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     817 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGBallonet&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     818 </span>            :   }
+<span class="lineNum">     819 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     820 </span>            :   }
+<span class="lineNum">     821 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 8 ) { // Runtime state variables    </span>
+<span class="lineNum">     822 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Ballonet holds &quot; &lt;&lt; Contents &lt;&lt;</span>
+<span class="lineNum">     823 </span><span class="lineNoCov">          0 :         &quot; mol air&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     824 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Temperature: &quot; &lt;&lt; Temperature &lt;&lt; &quot; Rankine&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Pressure: &quot; &lt;&lt; Pressure &lt;&lt; &quot; lbs/ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     826 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Volume: &quot; &lt;&lt; Volume &lt;&lt; &quot; ft3&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     827 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Mass: &quot; &lt;&lt; GetMass() &lt;&lt; &quot; slug mass&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     828 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;        Weight: &quot; &lt;&lt; GetMass()*slugtolb &lt;&lt; &quot; lbs force&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     829 </span>            :   }
+<span class="lineNum">     830 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     831 </span>            :   }
+<span class="lineNum">     832 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     833 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     834 </span>            :     }
+<a name="835"><span class="lineNum">     835 </span>            :   }</a>
+<span class="lineNum">     836 </span>            : }
+<span class="lineNum">     837 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

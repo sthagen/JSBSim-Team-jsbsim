@@ -1,0 +1,13 @@
+<map id="ResetToInitialConditions" name="ResetToInitialConditions">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutput.html#a28d17b45a2154a183a48860732e650ba" title="Reset the output prior to a restart of the simulation. " alt="" coords="219,129,409,171"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#a84bc4234d96a91bce12201e7c0a6e3f0" title="Sets the current sim time. " alt="" coords="267,195,361,222"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html#afaf93cada78d011829d409d0b250120b" title="Initializes the sim from the initial condition object and executes each scheduled model without integ..." alt="" coords="284,246,344,273"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInertial.html#ab21d7facec6ebc3cbb460f48c061f1c6" title="Set the simulation time. " alt="" coords="481,5,616,47"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGFDMExec.html#adf760b99f286a726dde5b47a377fe243" title="Suspends the simulation and sets the delta T to zero. " alt="" coords="481,187,616,214"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGFDMExec.html#a1580c9edd024a31c38a13d9b40fa8914" title="Initializes the simulation with initial conditions. " alt="" coords="513,406,584,433"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGFDMExec.html#aa83769769c700eba0b0b82a5c62dbc71" title="This function executes each scheduled model in succession. " alt="" coords="743,406,790,433"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGFDMExec.html#afb4e8e8c83a51c804cfc50d9d90f65a5" title="Resumes the simulation by resetting delta T to the correct value. " alt="" coords="483,355,615,382"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGPropulsion.html#af9836eb91cc0c0c2bcb426f49415d7bc" title="Retrieves the number of engines defined for the aircraft. " alt="" coords="688,184,845,225"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGInitialCondition.html#a76e234292060a4da48f96057d57195d4" title="Is an engine running ? " alt="" coords="457,71,640,112"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGPropulsion.html#ac7ae9e5bb74b9fd27bd191d81e8749b2" title="Sets up the engines as running. " alt="" coords="470,239,627,280"/>
+</map>

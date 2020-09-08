@@ -1,0 +1,750 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGPropagate.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGPropagate.h<span style="font-size: 80%;"> (source / <a href="FGPropagate.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">44</td>
+            <td class="headerCovTableEntry">67</td>
+            <td class="headerCovTableEntryLo">65.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">44</td>
+            <td class="headerCovTableEntry">58</td>
+            <td class="headerCovTableEntryMed">75.9 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGPropagate.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 1/5/99
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 01/05/99   JSB   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGPROPAGATE_H
+<span class="lineNum">      35 </span>            : #define FGPROPAGATE_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &quot;models/FGModel.h&quot;
+<span class="lineNum">      42 </span>            : #include &quot;math/FGLocation.h&quot;
+<span class="lineNum">      43 </span>            : #include &quot;math/FGQuaternion.h&quot;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      46 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      47 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : namespace JSBSim {
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : class FGInitialCondition;
+<span class="lineNum">      52 </span>            : class FGInertial;
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      55 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      56 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : /** Models the EOM and integration/propagation of state.
+<span class="lineNum">      59 </span>            :     The Equations of Motion (EOM) for JSBSim are integrated to propagate the
+<span class="lineNum">      60 </span>            :     state of the vehicle given the forces and moments that act on it. The
+<span class="lineNum">      61 </span>            :     integration accounts for a rotating Earth.
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            :     Integration of rotational and translation position and rate can be
+<span class="lineNum">      64 </span>            :     customized as needed or frozen by the selection of no integrator. The
+<span class="lineNum">      65 </span>            :     selection of which integrator to use is done through the setting of
+<span class="lineNum">      66 </span>            :     the associated property. There are four properties which can be set:
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            :     @code
+<span class="lineNum">      69 </span>            :     simulation/integrator/rate/rotational
+<span class="lineNum">      70 </span>            :     simulation/integrator/rate/translational
+<span class="lineNum">      71 </span>            :     simulation/integrator/position/rotational
+<span class="lineNum">      72 </span>            :     simulation/integrator/position/translational
+<span class="lineNum">      73 </span>            :     @endcode
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            :     Each of the integrators listed above can be set to one of the following values:
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :     @code
+<span class="lineNum">      78 </span>            :     0: No integrator (Freeze)
+<span class="lineNum">      79 </span>            :     1: Rectangular Euler
+<span class="lineNum">      80 </span>            :     2: Trapezoidal
+<span class="lineNum">      81 </span>            :     3: Adams Bashforth 2
+<span class="lineNum">      82 </span>            :     4: Adams Bashforth 3
+<span class="lineNum">      83 </span>            :     5: Adams Bashforth 4
+<span class="lineNum">      84 </span>            :     @endcode
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            :     @author Jon S. Berndt, Mathias Froehlich, Bertrand Coconnier
+<span class="lineNum">      87 </span>            :   */
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      90 </span>            : CLASS DECLARATION
+<span class="lineNum">      91 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            : class FGPropagate : public FGModel {
+<span class="lineNum">      94 </span>            : public:
+<span class="lineNum">      95 </span>            : 
+<a name="96"><span class="lineNum">      96 </span>            :   /** The current vehicle state vector structure contains the translational and</a>
+<span class="lineNum">      97 </span>            :     angular position, and the translational and angular velocity. */
+<span class="lineNum">      98 </span><span class="lineCov">         16 :   struct VehicleState {</span>
+<span class="lineNum">      99 </span>            :     /** Represents the current location of the vehicle in Earth centered Earth
+<span class="lineNum">     100 </span>            :         fixed (ECEF) frame.
+<span class="lineNum">     101 </span>            :         units ft */
+<span class="lineNum">     102 </span>            :     FGLocation vLocation;
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            :     /** The velocity vector of the vehicle with respect to the ECEF frame,
+<span class="lineNum">     105 </span>            :         expressed in the body system.
+<span class="lineNum">     106 </span>            :         units ft/sec */
+<span class="lineNum">     107 </span>            :     FGColumnVector3 vUVW;
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            :     /** The angular velocity vector for the vehicle relative to the ECEF frame,
+<span class="lineNum">     110 </span>            :         expressed in the body frame.
+<span class="lineNum">     111 </span>            :         units rad/sec */
+<span class="lineNum">     112 </span>            :     FGColumnVector3 vPQR;
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :     /** The angular velocity vector for the vehicle body frame relative to the
+<span class="lineNum">     115 </span>            :         ECI frame, expressed in the body frame.
+<span class="lineNum">     116 </span>            :         units rad/sec */
+<span class="lineNum">     117 </span>            :     FGColumnVector3 vPQRi;
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :     /** The current orientation of the vehicle, that is, the orientation of the
+<span class="lineNum">     120 </span>            :         body frame relative to the local, NED frame. */
+<span class="lineNum">     121 </span>            :     FGQuaternion qAttitudeLocal;
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :     /** The current orientation of the vehicle, that is, the orientation of the
+<span class="lineNum">     124 </span>            :         body frame relative to the inertial (ECI) frame. */
+<span class="lineNum">     125 </span>            :     FGQuaternion qAttitudeECI;
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :     FGQuaternion vQtrndot;
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span>            :     FGColumnVector3 vInertialVelocity;
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            :     FGColumnVector3 vInertialPosition;
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            :     std::deque &lt;FGColumnVector3&gt; dqPQRidot;
+<span class="lineNum">     134 </span>            :     std::deque &lt;FGColumnVector3&gt; dqUVWidot;
+<span class="lineNum">     135 </span>            :     std::deque &lt;FGColumnVector3&gt; dqInertialVelocity;
+<span class="lineNum">     136 </span>            :     std::deque &lt;FGQuaternion&gt;    dqQtrndot;
+<span class="lineNum">     137 </span>            :   };
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            :   /** Constructor.
+<span class="lineNum">     140 </span>            :       The constructor initializes several variables, and sets the initial set
+<span class="lineNum">     141 </span>            :       of integrators to use as follows:
+<span class="lineNum">     142 </span>            :       - integrator, rotational rate = Adams Bashforth 2
+<span class="lineNum">     143 </span>            :       - integrator, translational rate = Adams Bashforth 2
+<span class="lineNum">     144 </span>            :       - integrator, rotational position = Trapezoidal
+<span class="lineNum">     145 </span>            :       - integrator, translational position = Trapezoidal
+<span class="lineNum">     146 </span>            :       @param Executive a pointer to the parent executive object */
+<span class="lineNum">     147 </span>            :   explicit FGPropagate(FGFDMExec* Executive);
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span>            :   /// Destructor
+<span class="lineNum">     150 </span>            :   ~FGPropagate();
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            :   /// These define the indices use to select the various integrators.
+<span class="lineNum">     153 </span>            :   enum eIntegrateType {eNone = 0, eRectEuler, eTrapezoidal, eAdamsBashforth2,
+<span class="lineNum">     154 </span>            :                        eAdamsBashforth3, eAdamsBashforth4, eBuss1, eBuss2, eLocalLinearization, eAdamsBashforth5};
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            :   /** Initializes the FGPropagate class after instantiation and prior to first execution.
+<span class="lineNum">     157 </span>            :       The base class FGModel::InitModel is called first, initializing pointers to the
+<span class="lineNum">     158 </span>            :       other FGModel objects (and others).  */
+<span class="lineNum">     159 </span>            :   bool InitModel(void);
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :   void InitializeDerivatives();
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :   /** Runs the state propagation model; called by the Executive
+<span class="lineNum">     164 </span>            :       Can pass in a value indicating if the executive is directing the simulation to Hold.
+<span class="lineNum">     165 </span>            :       @param Holding if true, the executive has been directed to hold the sim from
+<span class="lineNum">     166 </span>            :                      advancing time. Some models may ignore this flag, such as the Input
+<span class="lineNum">     167 </span>            :                      model, which may need to be active to listen on a socket for the
+<span class="lineNum">     168 </span>            :                      &quot;Resume&quot; command to be given.
+<span class="lineNum">     169 </span>            :       @return false if no error */
+<span class="lineNum">     170 </span>            :   bool Run(bool Holding);
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :   /** Retrieves the velocity vector.
+<span class="lineNum">     173 </span>            :       The vector returned is represented by an FGColumnVector reference. The vector
+<span class="lineNum">     174 </span>            :       for the velocity in Local frame is organized (Vnorth, Veast, Vdown). The vector
+<span class="lineNum">     175 </span>            :       is 1-based, so that the first element can be retrieved using the &quot;()&quot; operator.
+<span class="lineNum">     176 </span>            :       In other words, vVel(1) is Vnorth. Various convenience enumerators are defined
+<span class="lineNum">     177 </span>            :       in FGJSBBase. The relevant enumerators for the vector returned by this call are,
+<span class="lineNum">     178 </span>            :       eNorth=1, eEast=2, eDown=3.
+<span class="lineNum">     179 </span>            :       units ft/sec
+<span class="lineNum">     180 </span>            :       @return The vehicle velocity vector with respect to the Earth centered frame,
+<a name="181"><span class="lineNum">     181 </span>            :               expressed in Local horizontal frame.</a>
+<span class="lineNum">     182 </span>            :   */
+<span class="lineNum">     183 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetVel(void) const { return vVel; }</span>
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span>            :   /** Retrieves the body frame vehicle velocity vector.
+<span class="lineNum">     186 </span>            :       The vector returned is represented by an FGColumnVector3 reference. The vector
+<span class="lineNum">     187 </span>            :       for the velocity in Body frame is organized (Vx, Vy, Vz). The vector
+<span class="lineNum">     188 </span>            :       is 1-based, so that the first element can be retrieved using the &quot;()&quot; operator.
+<span class="lineNum">     189 </span>            :       In other words, vUVW(1) is Vx. Various convenience enumerators are defined
+<span class="lineNum">     190 </span>            :       in FGJSBBase. The relevant enumerators for the vector returned by this call are,
+<span class="lineNum">     191 </span>            :       eX=1, eY=2, eZ=3.
+<span class="lineNum">     192 </span>            :       units ft/sec
+<a name="193"><span class="lineNum">     193 </span>            :       @return The body frame vehicle velocity vector in ft/sec.</a>
+<span class="lineNum">     194 </span>            :   */
+<span class="lineNum">     195 </span><span class="lineCov">         24 :   const FGColumnVector3&amp; GetUVW(void) const { return VState.vUVW; }</span>
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            :   /** Retrieves the body angular rates vector, relative to the ECEF frame.
+<span class="lineNum">     198 </span>            :       Retrieves the body angular rates (p, q, r), which are calculated by integration
+<span class="lineNum">     199 </span>            :       of the angular acceleration.
+<span class="lineNum">     200 </span>            :       The vector returned is represented by an FGColumnVector3 reference. The vector
+<span class="lineNum">     201 </span>            :       for the angular velocity in Body frame is organized (P, Q, R). The vector
+<span class="lineNum">     202 </span>            :       is 1-based, so that the first element can be retrieved using the &quot;()&quot; operator.
+<span class="lineNum">     203 </span>            :       In other words, vPQR(1) is P. Various convenience enumerators are defined
+<span class="lineNum">     204 </span>            :       in FGJSBBase. The relevant enumerators for the vector returned by this call are,
+<span class="lineNum">     205 </span>            :       eP=1, eQ=2, eR=3.
+<span class="lineNum">     206 </span>            :       units rad/sec
+<a name="207"><span class="lineNum">     207 </span>            :       @return The body frame angular rates in rad/sec.</a>
+<span class="lineNum">     208 </span>            :   */
+<span class="lineNum">     209 </span><span class="lineCov">         24 :   const FGColumnVector3&amp; GetPQR(void) const {return VState.vPQR;}</span>
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span>            :   /** Retrieves the body angular rates vector, relative to the ECI (inertial) frame.
+<span class="lineNum">     212 </span>            :       Retrieves the body angular rates (p, q, r), which are calculated by integration
+<span class="lineNum">     213 </span>            :       of the angular acceleration.
+<span class="lineNum">     214 </span>            :       The vector returned is represented by an FGColumnVector reference. The vector
+<span class="lineNum">     215 </span>            :       for the angular velocity in Body frame is organized (P, Q, R). The vector
+<span class="lineNum">     216 </span>            :       is 1-based, so that the first element can be retrieved using the &quot;()&quot; operator.
+<span class="lineNum">     217 </span>            :       In other words, vPQR(1) is P. Various convenience enumerators are defined
+<span class="lineNum">     218 </span>            :       in FGJSBBase. The relevant enumerators for the vector returned by this call are,
+<span class="lineNum">     219 </span>            :       eP=1, eQ=2, eR=3.
+<span class="lineNum">     220 </span>            :       units rad/sec
+<a name="221"><span class="lineNum">     221 </span>            :       @return The body frame inertial angular rates in rad/sec.</a>
+<span class="lineNum">     222 </span>            :   */
+<span class="lineNum">     223 </span><span class="lineCov">         24 :   const FGColumnVector3&amp; GetPQRi(void) const {return VState.vPQRi;}</span>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            :   /** Retrieves the time derivative of the body orientation quaternion.
+<span class="lineNum">     226 </span>            :       Retrieves the time derivative of the body orientation quaternion based on
+<span class="lineNum">     227 </span>            :       the rate of change of the orientation between the body and the ECI frame.
+<span class="lineNum">     228 </span>            :       The quaternion returned is represented by an FGQuaternion reference. The
+<span class="lineNum">     229 </span>            :       quaternion is 1-based, so that the first element can be retrieved using
+<span class="lineNum">     230 </span>            :       the &quot;()&quot; operator.
+<span class="lineNum">     231 </span>            :       units rad/sec^2
+<span class="lineNum">     232 </span>            :       @return The time derivative of the body orientation quaternion.
+<span class="lineNum">     233 </span>            :   */
+<span class="lineNum">     234 </span>            :   const FGQuaternion&amp; GetQuaterniondot(void) const {return VState.vQtrndot;}
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :   /** Retrieves the Euler angles that define the vehicle orientation.
+<span class="lineNum">     237 </span>            :       Extracts the Euler angles from the quaternion that stores the orientation
+<span class="lineNum">     238 </span>            :       in the Local frame. The order of rotation used is Yaw-Pitch-Roll. The
+<span class="lineNum">     239 </span>            :       vector returned is represented by an FGColumnVector reference. The vector
+<span class="lineNum">     240 </span>            :       for the Euler angles is organized (Phi, Theta, Psi). The vector
+<span class="lineNum">     241 </span>            :       is 1-based, so that the first element can be retrieved using the &quot;()&quot; operator.
+<span class="lineNum">     242 </span>            :       In other words, the returned vector item with subscript (1) is Phi.
+<span class="lineNum">     243 </span>            :       Various convenience enumerators are defined in FGJSBBase. The relevant
+<span class="lineNum">     244 </span>            :       enumerators for the vector returned by this call are, ePhi=1, eTht=2, ePsi=3.
+<span class="lineNum">     245 </span>            :       units radians
+<span class="lineNum">     246 </span>            :       @return The Euler angle vector, where the first item in the
+<span class="lineNum">     247 </span>            :               vector is the angle about the X axis, the second is the
+<span class="lineNum">     248 </span>            :               angle about the Y axis, and the third item is the angle
+<a name="249"><span class="lineNum">     249 </span>            :               about the Z axis (Phi, Theta, Psi).</a>
+<span class="lineNum">     250 </span>            :   */
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :   const FGColumnVector3&amp; GetEuler(void) const { return VState.qAttitudeLocal.GetEuler(); }</span>
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            :   /** Retrieves the Euler angles (in degrees) that define the vehicle orientation.
+<span class="lineNum">     254 </span>            :       Extracts the Euler angles from the quaternion that stores the orientation
+<span class="lineNum">     255 </span>            :       in the Local frame. The order of rotation used is Yaw-Pitch-Roll. The
+<span class="lineNum">     256 </span>            :       vector returned is represented by an FGColumnVector reference. The vector
+<span class="lineNum">     257 </span>            :       for the Euler angles is organized (Phi, Theta, Psi). The vector
+<span class="lineNum">     258 </span>            :       is 1-based, so that the first element can be retrieved using the &quot;()&quot; operator.
+<span class="lineNum">     259 </span>            :       In other words, the returned vector item with subscript (1) is Phi.
+<span class="lineNum">     260 </span>            :       Various convenience enumerators are defined in FGJSBBase. The relevant
+<span class="lineNum">     261 </span>            :       enumerators for the vector returned by this call are, ePhi=1, eTht=2, ePsi=3.
+<span class="lineNum">     262 </span>            :       units degrees
+<span class="lineNum">     263 </span>            :       @return The Euler angle vector, where the first item in the
+<span class="lineNum">     264 </span>            :               vector is the angle about the X axis, the second is the
+<span class="lineNum">     265 </span>            :               angle about the Y axis, and the third item is the angle
+<span class="lineNum">     266 </span>            :               about the Z axis (Phi, Theta, Psi).
+<span class="lineNum">     267 </span>            :   */
+<span class="lineNum">     268 </span>            :   FGColumnVector3 GetEulerDeg(void) const;
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            :   /** Retrieves a body frame velocity component.
+<span class="lineNum">     271 </span>            :       Retrieves a body frame velocity component. The velocity returned is
+<span class="lineNum">     272 </span>            :       extracted from the vUVW vector (an FGColumnVector). The vector for the
+<span class="lineNum">     273 </span>            :       velocity in Body frame is organized (Vx, Vy, Vz). The vector is 1-based.
+<span class="lineNum">     274 </span>            :       In other words, GetUVW(1) returns Vx. Various convenience enumerators
+<span class="lineNum">     275 </span>            :       are defined in FGJSBBase. The relevant enumerators for the velocity
+<span class="lineNum">     276 </span>            :       returned by this call are, eX=1, eY=2, eZ=3.
+<span class="lineNum">     277 </span>            :       units ft/sec
+<span class="lineNum">     278 </span>            :       @param idx the index of the velocity component desired (1-based).
+<a name="279"><span class="lineNum">     279 </span>            :       @return The body frame velocity component.</a>
+<span class="lineNum">     280 </span>            :   */
+<span class="lineNum">     281 </span><span class="lineCov">         24 :   double GetUVW(int idx) const { return VState.vUVW(idx); }</span>
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span>            :   /** Retrieves a Local frame velocity component.
+<span class="lineNum">     284 </span>            :       Retrieves a Local frame velocity component. The velocity returned is
+<span class="lineNum">     285 </span>            :       extracted from the vVel vector (an FGColumnVector). The vector for the
+<span class="lineNum">     286 </span>            :       velocity in Local frame is organized (Vnorth, Veast, Vdown). The vector
+<span class="lineNum">     287 </span>            :       is 1-based. In other words, GetVel(1) returns Vnorth. Various convenience
+<span class="lineNum">     288 </span>            :       enumerators are defined in FGJSBBase. The relevant enumerators for the
+<span class="lineNum">     289 </span>            :       velocity returned by this call are, eNorth=1, eEast=2, eDown=3.
+<span class="lineNum">     290 </span>            :       units ft/sec
+<span class="lineNum">     291 </span>            :       @param idx the index of the velocity component desired (1-based).
+<a name="292"><span class="lineNum">     292 </span>            :       @return The body frame velocity component.</a>
+<span class="lineNum">     293 </span>            :   */
+<span class="lineNum">     294 </span><span class="lineCov">         24 :   double GetVel(int idx) const { return vVel(idx); }</span>
+<span class="lineNum">     295 </span>            : 
+<a name="296"><span class="lineNum">     296 </span>            :   /** Retrieves the total inertial velocity in ft/sec.</a>
+<span class="lineNum">     297 </span>            :   */
+<span class="lineNum">     298 </span><span class="lineCov">          8 :   double GetInertialVelocityMagnitude(void) const { return VState.vInertialVelocity.Magnitude(); }</span>
+<span class="lineNum">     299 </span>            : 
+<a name="300"><span class="lineNum">     300 </span>            :   /** Retrieves the total local NED velocity in ft/sec.</a>
+<span class="lineNum">     301 </span>            :   */
+<span class="lineNum">     302 </span><span class="lineCov">          8 :   double GetNEDVelocityMagnitude(void) const { return VState.vUVW.Magnitude(); }</span>
+<span class="lineNum">     303 </span>            : 
+<a name="304"><span class="lineNum">     304 </span>            :   /** Retrieves the inertial velocity vector in ft/sec.</a>
+<a name="305"><span class="lineNum">     305 </span>            :   */</a>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :   const FGColumnVector3&amp; GetInertialVelocity(void) const { return VState.vInertialVelocity; }</span>
+<span class="lineNum">     307 </span><span class="lineCov">         24 :   double GetInertialVelocity(int i) const { return VState.vInertialVelocity(i); }</span>
+<span class="lineNum">     308 </span>            : 
+<a name="309"><span class="lineNum">     309 </span>            :   /** Retrieves the inertial position vector.</a>
+<a name="310"><span class="lineNum">     310 </span>            :   */</a>
+<span class="lineNum">     311 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetInertialPosition(void) const { return VState.vInertialPosition; }</span>
+<span class="lineNum">     312 </span><span class="lineCov">         24 :   double GetInertialPosition(int i) const { return VState.vInertialPosition(i); }</span>
+<span class="lineNum">     313 </span>            : 
+<a name="314"><span class="lineNum">     314 </span>            :   /** Calculates and retrieves the velocity vector relative to the earth centered earth fixed (ECEF) frame.</a>
+<span class="lineNum">     315 </span>            :   */
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :   FGColumnVector3 GetECEFVelocity(void) const {return Tb2ec * VState.vUVW; }</span>
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            :   /** Calculates and retrieves the velocity vector relative to the earth centered earth fixed (ECEF) frame
+<span class="lineNum">     319 </span>            :       for a particular axis.
+<span class="lineNum">     320 </span>            :   */
+<span class="lineNum">     321 </span>            :   double GetECEFVelocity(int idx) const {return (Tb2ec * VState.vUVW)(idx); }
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span>            :   /** Returns the current altitude above sea level.
+<span class="lineNum">     324 </span>            :       This function returns the altitude above sea level.
+<span class="lineNum">     325 </span>            :       units ft
+<span class="lineNum">     326 </span>            :       @return The current altitude above sea level in feet.
+<span class="lineNum">     327 </span>            :   */
+<span class="lineNum">     328 </span>            :   double GetAltitudeASL(void) const;
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            :   /** Returns the current altitude above sea level.
+<span class="lineNum">     331 </span>            :       This function returns the altitude above sea level.
+<span class="lineNum">     332 </span>            :       units meters
+<a name="333"><span class="lineNum">     333 </span>            :       @return The current altitude above sea level in meters.</a>
+<span class="lineNum">     334 </span>            :   */
+<span class="lineNum">     335 </span><span class="lineCov">          8 :   double GetAltitudeASLmeters(void) const { return GetAltitudeASL()*fttom;}</span>
+<span class="lineNum">     336 </span>            : 
+<span class="lineNum">     337 </span>            :   /** Retrieves a body frame angular velocity component relative to the ECEF frame.
+<span class="lineNum">     338 </span>            :       Retrieves a body frame angular velocity component. The angular velocity
+<span class="lineNum">     339 </span>            :       returned is extracted from the vPQR vector (an FGColumnVector). The vector
+<span class="lineNum">     340 </span>            :       for the angular velocity in Body frame is organized (P, Q, R). The vector
+<span class="lineNum">     341 </span>            :       is 1-based. In other words, GetPQR(1) returns P (roll rate). Various
+<span class="lineNum">     342 </span>            :       convenience enumerators are defined in FGJSBBase. The relevant enumerators
+<span class="lineNum">     343 </span>            :       for the angular velocity returned by this call are, eP=1, eQ=2, eR=3.
+<span class="lineNum">     344 </span>            :       units rad/sec
+<span class="lineNum">     345 </span>            :       @param axis the index of the angular velocity component desired (1-based).
+<a name="346"><span class="lineNum">     346 </span>            :       @return The body frame angular velocity component.</a>
+<span class="lineNum">     347 </span>            :   */
+<span class="lineNum">     348 </span><span class="lineCov">         24 :   double GetPQR(int axis) const {return VState.vPQR(axis);}</span>
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span>            :   /** Retrieves a body frame angular velocity component relative to the ECI (inertial) frame.
+<span class="lineNum">     351 </span>            :       Retrieves a body frame angular velocity component. The angular velocity
+<span class="lineNum">     352 </span>            :       returned is extracted from the vPQR vector (an FGColumnVector). The vector
+<span class="lineNum">     353 </span>            :       for the angular velocity in Body frame is organized (P, Q, R). The vector
+<span class="lineNum">     354 </span>            :       is 1-based. In other words, GetPQR(1) returns P (roll rate). Various
+<span class="lineNum">     355 </span>            :       convenience enumerators are defined in FGJSBBase. The relevant enumerators
+<span class="lineNum">     356 </span>            :       for the angular velocity returned by this call are, eP=1, eQ=2, eR=3.
+<span class="lineNum">     357 </span>            :       units rad/sec
+<span class="lineNum">     358 </span>            :       @param axis the index of the angular velocity component desired (1-based).
+<a name="359"><span class="lineNum">     359 </span>            :       @return The body frame angular velocity component.</a>
+<span class="lineNum">     360 </span>            :   */
+<span class="lineNum">     361 </span><span class="lineCov">         24 :   double GetPQRi(int axis) const {return VState.vPQRi(axis);}</span>
+<span class="lineNum">     362 </span>            : 
+<span class="lineNum">     363 </span>            :   /** Retrieves a vehicle Euler angle component.
+<span class="lineNum">     364 </span>            :       Retrieves an Euler angle (Phi, Theta, or Psi) from the quaternion that
+<span class="lineNum">     365 </span>            :       stores the vehicle orientation relative to the Local frame. The order of
+<span class="lineNum">     366 </span>            :       rotations used is Yaw-Pitch-Roll. The Euler angle with subscript (1) is
+<span class="lineNum">     367 </span>            :       Phi. Various convenience enumerators are defined in FGJSBBase. The
+<span class="lineNum">     368 </span>            :       relevant enumerators for the Euler angle returned by this call are,
+<span class="lineNum">     369 </span>            :       ePhi=1, eTht=2, ePsi=3 (e.g. GetEuler(eTht) returns Theta).
+<span class="lineNum">     370 </span>            :       units radians
+<a name="371"><span class="lineNum">     371 </span>            :       @return An Euler angle.</a>
+<span class="lineNum">     372 </span>            :   */
+<span class="lineNum">     373 </span><span class="lineCov">         48 :   double GetEuler(int axis) const { return VState.qAttitudeLocal.GetEuler(axis); }</span>
+<span class="lineNum">     374 </span>            : 
+<span class="lineNum">     375 </span>            :   /** Retrieves a vehicle Euler angle component in degrees.
+<span class="lineNum">     376 </span>            :       Retrieves an Euler angle (Phi, Theta, or Psi) from the quaternion that
+<span class="lineNum">     377 </span>            :       stores the vehicle orientation relative to the Local frame. The order of
+<span class="lineNum">     378 </span>            :       rotations used is Yaw-Pitch-Roll. The Euler angle with subscript (1) is
+<span class="lineNum">     379 </span>            :       Phi. Various convenience enumerators are defined in FGJSBBase. The
+<span class="lineNum">     380 </span>            :       relevant enumerators for the Euler angle returned by this call are,
+<span class="lineNum">     381 </span>            :       ePhi=1, eTht=2, ePsi=3 (e.g. GetEuler(eTht) returns Theta).
+<span class="lineNum">     382 </span>            :       units degrees
+<a name="383"><span class="lineNum">     383 </span>            :       @return An Euler angle in degrees.</a>
+<span class="lineNum">     384 </span>            :   */
+<span class="lineNum">     385 </span><span class="lineCov">         24 :   double GetEulerDeg(int axis) const { return VState.qAttitudeLocal.GetEuler(axis) * radtodeg; }</span>
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span>            :   /** Retrieves the cosine of a vehicle Euler angle component.
+<span class="lineNum">     388 </span>            :       Retrieves the cosine of an Euler angle (Phi, Theta, or Psi) from the
+<span class="lineNum">     389 </span>            :       quaternion that stores the vehicle orientation relative to the Local frame.
+<span class="lineNum">     390 </span>            :       The order of rotations used is Yaw-Pitch-Roll. The Euler angle
+<span class="lineNum">     391 </span>            :       with subscript (1) is Phi. Various convenience enumerators are defined in
+<span class="lineNum">     392 </span>            :       FGJSBBase. The relevant enumerators for the Euler angle referred to in this
+<span class="lineNum">     393 </span>            :       call are, ePhi=1, eTht=2, ePsi=3 (e.g. GetCosEuler(eTht) returns cos(theta)).
+<span class="lineNum">     394 </span>            :       units none
+<a name="395"><span class="lineNum">     395 </span>            :       @return The cosine of an Euler angle.</a>
+<span class="lineNum">     396 </span>            :   */
+<span class="lineNum">     397 </span><span class="lineCov">         16 :   double GetCosEuler(int idx) const { return VState.qAttitudeLocal.GetCosEuler(idx); }</span>
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span>            :   /** Retrieves the sine of a vehicle Euler angle component.
+<span class="lineNum">     400 </span>            :       Retrieves the sine of an Euler angle (Phi, Theta, or Psi) from the
+<span class="lineNum">     401 </span>            :       quaternion that stores the vehicle orientation relative to the Local frame.
+<span class="lineNum">     402 </span>            :       The order of rotations used is Yaw-Pitch-Roll. The Euler angle
+<span class="lineNum">     403 </span>            :       with subscript (1) is Phi. Various convenience enumerators are defined in
+<span class="lineNum">     404 </span>            :       FGJSBBase. The relevant enumerators for the Euler angle referred to in this
+<span class="lineNum">     405 </span>            :       call are, ePhi=1, eTht=2, ePsi=3 (e.g. GetSinEuler(eTht) returns sin(theta)).
+<span class="lineNum">     406 </span>            :       units none
+<a name="407"><span class="lineNum">     407 </span>            :       @return The sine of an Euler angle.</a>
+<span class="lineNum">     408 </span>            :   */
+<span class="lineNum">     409 </span><span class="lineCov">         16 :   double GetSinEuler(int idx) const { return VState.qAttitudeLocal.GetSinEuler(idx); }</span>
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            :   /** Returns the current altitude rate.
+<span class="lineNum">     412 </span>            :       Returns the current altitude rate (rate of climb).
+<span class="lineNum">     413 </span>            :       units ft/sec
+<a name="414"><span class="lineNum">     414 </span>            :       @return The current rate of change in altitude.</a>
+<span class="lineNum">     415 </span>            :   */
+<span class="lineNum">     416 </span><span class="lineCov">          8 :   double Gethdot(void) const { return -vVel(eDown); }</span>
+<span class="lineNum">     417 </span>            : 
+<span class="lineNum">     418 </span>            :   /** Returns the &quot;constant&quot; LocalTerrainRadius.
+<span class="lineNum">     419 </span>            :       The LocalTerrainRadius parameter is set by the calling application or set to
+<span class="lineNum">     420 </span>            :       sea level + terrain elevation if JSBSim is running in standalone mode.
+<span class="lineNum">     421 </span>            :       units feet
+<span class="lineNum">     422 </span>            :       @return distance of the local terrain from the center of the earth.
+<span class="lineNum">     423 </span>            :       */
+<span class="lineNum">     424 </span>            :   double GetLocalTerrainRadius(void) const;
+<span class="lineNum">     425 </span>            : 
+<span class="lineNum">     426 </span>            :   /** Returns the Earth position angle.
+<a name="427"><span class="lineNum">     427 </span>            :       @return Earth position angle in radians.</a>
+<span class="lineNum">     428 </span>            :    */
+<span class="lineNum">     429 </span><span class="lineCov">          8 :   double GetEarthPositionAngle(void) const { return epa; }</span>
+<span class="lineNum">     430 </span>            : 
+<span class="lineNum">     431 </span>            :   /** Returns the Earth position angle in degrees.
+<a name="432"><span class="lineNum">     432 </span>            :       @return Earth position angle in degrees.</a>
+<span class="lineNum">     433 </span>            :   */
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :   double GetEarthPositionAngleDeg(void) const { return epa*radtodeg;}</span></a>
+<a name="435"><span class="lineNum">     435 </span>            : </a>
+<span class="lineNum">     436 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetTerrainVelocity(void) const { return LocalTerrainVelocity; }</span>
+<span class="lineNum">     437 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetTerrainAngularVelocity(void) const { return LocalTerrainAngularVelocity; }</span>
+<span class="lineNum">     438 </span>            :   void RecomputeLocalTerrainVelocity();
+<span class="lineNum">     439 </span>            : 
+<span class="lineNum">     440 </span>            :   double GetTerrainElevation(void) const;
+<a name="441"><span class="lineNum">     441 </span>            :   double GetDistanceAGL(void)  const;</a>
+<span class="lineNum">     442 </span>            :   double GetDistanceAGLKm(void)  const;
+<span class="lineNum">     443 </span><span class="lineCov">          8 :   double GetRadius(void) const {</span>
+<span class="lineNum">     444 </span><span class="lineCov">          8 :       if (VState.vLocation.GetRadius() == 0) return 1.0;</span>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">          8 :       else return VState.vLocation.GetRadius();</span></a>
+<a name="446"><span class="lineNum">     446 </span>            :   }</a>
+<span class="lineNum">     447 </span><span class="lineCov">          8 :   double GetLongitude(void) const { return VState.vLocation.GetLongitude(); }</span>
+<a name="448"><span class="lineNum">     448 </span><span class="lineCov">          8 :   double GetLatitude(void) const { return VState.vLocation.GetLatitude(); }</span></a>
+<a name="449"><span class="lineNum">     449 </span>            : </a>
+<span class="lineNum">     450 </span><span class="lineCov">          8 :   double GetGeodLatitudeRad(void) const { return VState.vLocation.GetGeodLatitudeRad(); }</span>
+<a name="451"><span class="lineNum">     451 </span><span class="lineCov">          8 :   double GetGeodLatitudeDeg(void) const { return VState.vLocation.GetGeodLatitudeDeg(); }</span></a>
+<a name="452"><span class="lineNum">     452 </span>            : </a>
+<span class="lineNum">     453 </span><span class="lineCov">          8 :   double GetGeodeticAltitude(void) const { return VState.vLocation.GetGeodAltitude(); }</span>
+<a name="454"><span class="lineNum">     454 </span><span class="lineCov">          8 :   double GetGeodeticAltitudeKm(void) const { return VState.vLocation.GetGeodAltitude()*0.0003048; }</span></a>
+<a name="455"><span class="lineNum">     455 </span>            : </a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineCov">          8 :   double GetLongitudeDeg(void) const { return VState.vLocation.GetLongitudeDeg(); }</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineCov">          8 :   double GetLatitudeDeg(void) const { return VState.vLocation.GetLatitudeDeg(); }</span></a>
+<span class="lineNum">     458 </span><span class="lineCov">         24 :   const FGLocation&amp; GetLocation(void) const { return VState.vLocation; }</span>
+<span class="lineNum">     459 </span><span class="lineCov">         24 :   double GetLocation(int i) const { return VState.vLocation(i); }</span>
+<span class="lineNum">     460 </span>            : 
+<span class="lineNum">     461 </span>            :   /** Retrieves the local-to-body transformation matrix.
+<span class="lineNum">     462 </span>            :       The quaternion class, being the means by which the orientation of the
+<a name="463"><span class="lineNum">     463 </span>            :       vehicle is stored, manages the local-to-body transformation matrix.</a>
+<span class="lineNum">     464 </span>            :       @return a reference to the local-to-body transformation matrix.  */
+<span class="lineNum">     465 </span><span class="lineCov">         16 :   const FGMatrix33&amp; GetTl2b(void) const { return Tl2b; }</span>
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span>            :   /** Retrieves the body-to-local transformation matrix.
+<span class="lineNum">     468 </span>            :       The quaternion class, being the means by which the orientation of the
+<a name="469"><span class="lineNum">     469 </span>            :       vehicle is stored, manages the body-to-local transformation matrix.</a>
+<span class="lineNum">     470 </span>            :       @return a reference to the body-to-local matrix.  */
+<span class="lineNum">     471 </span><span class="lineCov">         16 :   const FGMatrix33&amp; GetTb2l(void) const { return Tb2l; }</span>
+<span class="lineNum">     472 </span>            : 
+<a name="473"><span class="lineNum">     473 </span>            :   /** Retrieves the ECEF-to-body transformation matrix.</a>
+<span class="lineNum">     474 </span>            :       @return a reference to the ECEF-to-body transformation matrix.  */
+<span class="lineNum">     475 </span><span class="lineCov">         16 :   const FGMatrix33&amp; GetTec2b(void) const { return Tec2b; }</span>
+<span class="lineNum">     476 </span>            : 
+<span class="lineNum">     477 </span>            :   /** Retrieves the body-to-ECEF transformation matrix.
+<span class="lineNum">     478 </span>            :       @return a reference to the body-to-ECEF matrix.  */
+<span class="lineNum">     479 </span>            :   const FGMatrix33&amp; GetTb2ec(void) const { return Tb2ec; }
+<span class="lineNum">     480 </span>            : 
+<a name="481"><span class="lineNum">     481 </span>            :   /** Retrieves the ECI-to-body transformation matrix.</a>
+<span class="lineNum">     482 </span>            :       @return a reference to the ECI-to-body transformation matrix.  */
+<span class="lineNum">     483 </span><span class="lineCov">          8 :   const FGMatrix33&amp; GetTi2b(void) const { return Ti2b; }</span>
+<span class="lineNum">     484 </span>            : 
+<a name="485"><span class="lineNum">     485 </span>            :   /** Retrieves the body-to-ECI transformation matrix.</a>
+<span class="lineNum">     486 </span>            :       @return a reference to the body-to-ECI matrix.  */
+<span class="lineNum">     487 </span><span class="lineCov">          8 :   const FGMatrix33&amp; GetTb2i(void) const { return Tb2i; }</span>
+<span class="lineNum">     488 </span>            : 
+<span class="lineNum">     489 </span>            :   /** Retrieves the ECEF-to-ECI transformation matrix.
+<a name="490"><span class="lineNum">     490 </span>            :       @return a reference to the ECEF-to-ECI transformation matrix.</a>
+<span class="lineNum">     491 </span>            :       @see SetEarthPositionAngle */
+<span class="lineNum">     492 </span><span class="lineCov">          8 :   const FGMatrix33&amp; GetTec2i(void) const { return Tec2i; }</span>
+<span class="lineNum">     493 </span>            : 
+<span class="lineNum">     494 </span>            :   /** Retrieves the ECI-to-ECEF transformation matrix.
+<span class="lineNum">     495 </span>            :       @return a reference to the ECI-to-ECEF matrix.
+<span class="lineNum">     496 </span>            :       @see SetEarthPositionAngle */
+<span class="lineNum">     497 </span>            :   const FGMatrix33&amp; GetTi2ec(void) const { return Ti2ec; }
+<span class="lineNum">     498 </span>            : 
+<span class="lineNum">     499 </span>            :   /** Retrieves the ECEF-to-local transformation matrix.
+<span class="lineNum">     500 </span>            :       Retrieves the ECEF-to-local transformation matrix. Note that the so-called
+<a name="501"><span class="lineNum">     501 </span>            :       local from is also know as the NED frame (for North, East, Down).</a>
+<span class="lineNum">     502 </span>            :       @return a reference to the ECEF-to-local matrix.  */
+<span class="lineNum">     503 </span><span class="lineCov">          8 :   const FGMatrix33&amp; GetTec2l(void) const { return Tec2l; }</span>
+<span class="lineNum">     504 </span>            : 
+<span class="lineNum">     505 </span>            :   /** Retrieves the local-to-ECEF transformation matrix.
+<span class="lineNum">     506 </span>            :       Retrieves the local-to-ECEF transformation matrix. Note that the so-called
+<span class="lineNum">     507 </span>            :       local from is also know as the NED frame (for North, East, Down).
+<span class="lineNum">     508 </span>            :       @return a reference to the local-to-ECEF matrix.  */
+<span class="lineNum">     509 </span>            :   const FGMatrix33&amp; GetTl2ec(void) const { return Tl2ec; }
+<span class="lineNum">     510 </span>            : 
+<span class="lineNum">     511 </span>            :   /** Retrieves the local-to-inertial transformation matrix.
+<span class="lineNum">     512 </span>            :       @return a reference to the local-to-inertial transformation matrix.
+<span class="lineNum">     513 </span>            :       @see SetEarthPositionAngle */
+<span class="lineNum">     514 </span>            :   const FGMatrix33&amp; GetTl2i(void) const { return Tl2i; }
+<span class="lineNum">     515 </span>            : 
+<span class="lineNum">     516 </span>            :   /** Retrieves the inertial-to-local transformation matrix.
+<span class="lineNum">     517 </span>            :       @return a reference to the inertial-to-local matrix.
+<span class="lineNum">     518 </span>            :       @see SetEarthPositionAngle */
+<a name="519"><span class="lineNum">     519 </span>            :   const FGMatrix33&amp; GetTi2l(void) const { return Ti2l; }</a>
+<span class="lineNum">     520 </span>            : 
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :   const VehicleState&amp; GetVState(void) const { return VState; }</span>
+<span class="lineNum">     522 </span>            : 
+<span class="lineNum">     523 </span>            :   void SetVState(const VehicleState&amp; vstate);
+<span class="lineNum">     524 </span>            : 
+<span class="lineNum">     525 </span>            :   /** Sets the Earth position angle.
+<span class="lineNum">     526 </span>            :       This is the relative angle around the Z axis of the ECEF frame with
+<span class="lineNum">     527 </span>            :       respect to the inertial frame.
+<span class="lineNum">     528 </span>            :       @param EPA Earth position angle in radians.
+<span class="lineNum">     529 </span>            :    */
+<span class="lineNum">     530 </span>            :   void SetEarthPositionAngle(double EPA) {epa = EPA;}
+<span class="lineNum">     531 </span>            : 
+<span class="lineNum">     532 </span>            :   void SetInertialOrientation(const FGQuaternion&amp; Qi);
+<span class="lineNum">     533 </span>            :   void SetInertialVelocity(const FGColumnVector3&amp; Vi);
+<span class="lineNum">     534 </span>            :   void SetInertialRates(const FGColumnVector3&amp; vRates);
+<a name="535"><span class="lineNum">     535 </span>            : </a>
+<span class="lineNum">     536 </span>            :   /** Returns the quaternion that goes from Local to Body. */
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :   const FGQuaternion GetQuaternion(void) const { return VState.qAttitudeLocal; }</span>
+<a name="538"><span class="lineNum">     538 </span>            : </a>
+<span class="lineNum">     539 </span>            :   /** Returns the quaternion that goes from ECI to Body. */
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 :   const FGQuaternion GetQuaternionECI(void) const { return VState.qAttitudeECI; }</span>
+<a name="541"><span class="lineNum">     541 </span>            : </a>
+<span class="lineNum">     542 </span>            :   /** Returns the quaternion that goes from ECEF to Body. */
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :   const FGQuaternion GetQuaternionECEF(void) const { return Qec2b; }</span>
+<span class="lineNum">     544 </span>            : 
+<span class="lineNum">     545 </span>            :   void SetPQR(unsigned int i, double val) {
+<span class="lineNum">     546 </span>            :     VState.vPQR(i) = val;
+<span class="lineNum">     547 </span>            :     VState.vPQRi = VState.vPQR + Ti2b * in.vOmegaPlanet;
+<span class="lineNum">     548 </span>            :   }
+<span class="lineNum">     549 </span>            : 
+<span class="lineNum">     550 </span>            :   void SetUVW(unsigned int i, double val) {
+<span class="lineNum">     551 </span>            :     VState.vUVW(i) = val;
+<span class="lineNum">     552 </span>            :     CalculateInertialVelocity();
+<span class="lineNum">     553 </span>            :   }
+<span class="lineNum">     554 </span>            : 
+<a name="555"><span class="lineNum">     555 </span>            : // SET functions</a>
+<span class="lineNum">     556 </span>            : 
+<span class="lineNum">     557 </span><span class="lineNoCov">          0 :   void SetLongitude(double lon)</span>
+<span class="lineNum">     558 </span>            :   {
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 :     VState.vLocation.SetLongitude(lon);</span>
+<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 :     UpdateVehicleState();</span></a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :   }</span></a>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :   void SetLongitudeDeg(double lon) { SetLongitude(lon*degtorad); }</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :   void SetLatitude(double lat)</span>
+<span class="lineNum">     564 </span>            :   {
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :     VState.vLocation.SetLatitude(lat);</span>
+<a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :     UpdateVehicleState();</span></a>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">     568 </span><span class="lineNoCov">          0 :   void SetLatitudeDeg(double lat) { SetLatitude(lat*degtorad); }</span>
+<span class="lineNum">     569 </span>            :   void SetRadius(double r)
+<span class="lineNum">     570 </span>            :   {
+<span class="lineNum">     571 </span>            :     VState.vLocation.SetRadius(r);
+<span class="lineNum">     572 </span>            :     VState.vInertialPosition = Tec2i * VState.vLocation;
+<span class="lineNum">     573 </span>            :   }
+<a name="574"><span class="lineNum">     574 </span>            : </a>
+<span class="lineNum">     575 </span>            :   void SetAltitudeASL(double altASL);
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :   void SetAltitudeASLmeters(double altASL) { SetAltitudeASL(altASL/fttom); }</span>
+<span class="lineNum">     577 </span>            : 
+<span class="lineNum">     578 </span>            :   void SetTerrainElevation(double tt);
+<span class="lineNum">     579 </span>            :   void SetDistanceAGL(double tt);
+<span class="lineNum">     580 </span>            :   void SetDistanceAGLKm(double tt);
+<span class="lineNum">     581 </span>            : 
+<span class="lineNum">     582 </span>            :   void SetInitialState(const FGInitialCondition*);
+<span class="lineNum">     583 </span>            :   void SetLocation(const FGLocation&amp; l);
+<span class="lineNum">     584 </span>            :   void SetLocation(const FGColumnVector3&amp; lv)
+<span class="lineNum">     585 </span>            :   {
+<span class="lineNum">     586 </span>            :       FGLocation l = FGLocation(lv);
+<span class="lineNum">     587 </span>            :       SetLocation(l);
+<span class="lineNum">     588 </span>            :   }
+<span class="lineNum">     589 </span>            :   void SetPosition(const double Lon, const double Lat, const double Radius)
+<span class="lineNum">     590 </span>            :   {
+<span class="lineNum">     591 </span>            :       FGLocation l = FGLocation(Lon, Lat, Radius);
+<span class="lineNum">     592 </span>            :       SetLocation(l);
+<a name="593"><span class="lineNum">     593 </span>            :   }</a>
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span><span class="lineNoCov">          0 :   void NudgeBodyLocation(const FGColumnVector3&amp; deltaLoc) {</span>
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :     VState.vInertialPosition -= Tb2i*deltaLoc;</span>
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :     VState.vLocation -= Tb2ec*deltaLoc;</span>
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">     599 </span>            : 
+<span class="lineNum">     600 </span>            :   /** Sets the property forces/hold-down. This allows to do hard 'hold-down'
+<span class="lineNum">     601 </span>            :       such as for rockets on a launch pad with engines ignited.
+<span class="lineNum">     602 </span>            :       @param hd enables the 'hold-down' function if non-zero
+<span class="lineNum">     603 </span>            :   */
+<span class="lineNum">     604 </span>            :   void SetHoldDown(bool hd);
+<span class="lineNum">     605 </span>            : 
+<a name="606"><span class="lineNum">     606 </span>            :   void DumpState(void);</a>
+<span class="lineNum">     607 </span>            : 
+<span class="lineNum">     608 </span><span class="lineCov">         16 :   struct Inputs {</span>
+<span class="lineNum">     609 </span>            :     FGColumnVector3 vPQRidot;
+<span class="lineNum">     610 </span>            :     FGColumnVector3 vUVWidot;
+<span class="lineNum">     611 </span>            :     FGColumnVector3 vOmegaPlanet;
+<span class="lineNum">     612 </span>            :     double SemiMajor;
+<span class="lineNum">     613 </span>            :     double SemiMinor;
+<span class="lineNum">     614 </span>            :     double DeltaT;
+<span class="lineNum">     615 </span>            :   } in;
+<span class="lineNum">     616 </span>            : 
+<span class="lineNum">     617 </span>            : private:
+<span class="lineNum">     618 </span>            : 
+<span class="lineNum">     619 </span>            : // state vector
+<span class="lineNum">     620 </span>            : 
+<span class="lineNum">     621 </span>            :   struct VehicleState VState;
+<span class="lineNum">     622 </span>            : 
+<span class="lineNum">     623 </span>            :   FGInertial* Inertial = nullptr;
+<span class="lineNum">     624 </span>            :   FGColumnVector3 vVel;
+<span class="lineNum">     625 </span>            :   FGMatrix33 Tec2b;
+<span class="lineNum">     626 </span>            :   FGMatrix33 Tb2ec;
+<span class="lineNum">     627 </span>            :   FGMatrix33 Tl2b;   // local to body frame matrix copy for immediate local use
+<span class="lineNum">     628 </span>            :   FGMatrix33 Tb2l;   // body to local frame matrix copy for immediate local use
+<span class="lineNum">     629 </span>            :   FGMatrix33 Tl2ec;  // local to ECEF matrix copy for immediate local use
+<span class="lineNum">     630 </span>            :   FGMatrix33 Tec2l;  // ECEF to local frame matrix copy for immediate local use
+<span class="lineNum">     631 </span>            :   FGMatrix33 Tec2i;  // ECEF to ECI frame matrix copy for immediate local use
+<span class="lineNum">     632 </span>            :   FGMatrix33 Ti2ec;  // ECI to ECEF frame matrix copy for immediate local use
+<span class="lineNum">     633 </span>            :   FGMatrix33 Ti2b;   // ECI to body frame rotation matrix
+<span class="lineNum">     634 </span>            :   FGMatrix33 Tb2i;   // body to ECI frame rotation matrix
+<span class="lineNum">     635 </span>            :   FGMatrix33 Ti2l;
+<span class="lineNum">     636 </span>            :   FGMatrix33 Tl2i;
+<span class="lineNum">     637 </span>            :   double epa;        // Earth Position Angle
+<span class="lineNum">     638 </span>            : 
+<span class="lineNum">     639 </span>            :   FGQuaternion Qec2b;
+<span class="lineNum">     640 </span>            : 
+<span class="lineNum">     641 </span>            :   FGColumnVector3 LocalTerrainVelocity, LocalTerrainAngularVelocity;
+<span class="lineNum">     642 </span>            : 
+<span class="lineNum">     643 </span>            :   eIntegrateType integrator_rotational_rate;
+<span class="lineNum">     644 </span>            :   eIntegrateType integrator_translational_rate;
+<span class="lineNum">     645 </span>            :   eIntegrateType integrator_rotational_position;
+<span class="lineNum">     646 </span>            :   eIntegrateType integrator_translational_position;
+<span class="lineNum">     647 </span>            : 
+<span class="lineNum">     648 </span>            :   void CalculateInertialVelocity(void);
+<span class="lineNum">     649 </span>            :   void CalculateUVW(void);
+<span class="lineNum">     650 </span>            :   void CalculateQuatdot(void);
+<span class="lineNum">     651 </span>            : 
+<span class="lineNum">     652 </span>            :   void Integrate( FGColumnVector3&amp; Integrand,
+<span class="lineNum">     653 </span>            :                   FGColumnVector3&amp; Val,
+<span class="lineNum">     654 </span>            :                   std::deque &lt;FGColumnVector3&gt;&amp; ValDot,
+<span class="lineNum">     655 </span>            :                   double dt,
+<span class="lineNum">     656 </span>            :                   eIntegrateType integration_type);
+<span class="lineNum">     657 </span>            : 
+<span class="lineNum">     658 </span>            :   void Integrate( FGQuaternion&amp; Integrand,
+<span class="lineNum">     659 </span>            :                   FGQuaternion&amp; Val,
+<span class="lineNum">     660 </span>            :                   std::deque &lt;FGQuaternion&gt;&amp; ValDot,
+<span class="lineNum">     661 </span>            :                   double dt,
+<span class="lineNum">     662 </span>            :                   eIntegrateType integration_type);
+<span class="lineNum">     663 </span>            : 
+<span class="lineNum">     664 </span>            :   void UpdateLocationMatrices(void);
+<span class="lineNum">     665 </span>            :   void UpdateBodyMatrices(void);
+<span class="lineNum">     666 </span>            :   void UpdateVehicleState(void);
+<span class="lineNum">     667 </span>            : 
+<span class="lineNum">     668 </span>            :   void WriteStateFile(int num);
+<span class="lineNum">     669 </span>            :   void bind(void);
+<span class="lineNum">     670 </span>            :   void Debug(int from);
+<span class="lineNum">     671 </span>            : };
+<span class="lineNum">     672 </span>            : }
+<span class="lineNum">     673 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     674 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

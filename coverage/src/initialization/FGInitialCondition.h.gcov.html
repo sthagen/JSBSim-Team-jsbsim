@@ -1,0 +1,804 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/initialization/FGInitialCondition.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/initialization</a> - FGInitialCondition.h<span style="font-size: 80%;"> (source / <a href="FGInitialCondition.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">68</td>
+            <td class="headerCovTableEntry">90</td>
+            <td class="headerCovTableEntryMed">75.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntry">74</td>
+            <td class="headerCovTableEntryLo">73.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGInitialCondition.h
+<span class="lineNum">       4 </span>            :  Author:       Tony Peden
+<span class="lineNum">       5 </span>            :  Date started: 7/1/99
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  --------- Copyright (C) 1999  Anthony K. Peden (apeden@earthlink.net) ---------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            :  HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 7/1/99   TP   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      31 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : The purpose of this class is to take a set of initial conditions and provide a
+<span class="lineNum">      34 </span>            : kinematically consistent set of body axis velocity components, euler angles, and
+<span class="lineNum">      35 </span>            : altitude. This class does not attempt to trim the model i.e. the sim will most
+<span class="lineNum">      36 </span>            : likely start in a very dynamic state (unless, of course, you have chosen your
+<span class="lineNum">      37 </span>            : IC's wisely) even after setting it up with this class.
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      40 </span>            : SENTRY
+<span class="lineNum">      41 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : #ifndef FGINITIALCONDITION_H
+<span class="lineNum">      44 </span>            : #define FGINITIALCONDITION_H
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      47 </span>            : INCLUDES
+<span class="lineNum">      48 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : #include &quot;math/FGLocation.h&quot;
+<span class="lineNum">      51 </span>            : #include &quot;math/FGQuaternion.h&quot;
+<span class="lineNum">      52 </span>            : #include &quot;simgear/misc/sg_path.hxx&quot;
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      55 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      56 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : namespace JSBSim {
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : class FGFDMExec;
+<span class="lineNum">      61 </span>            : class FGMatrix33;
+<span class="lineNum">      62 </span>            : class FGColumnVector3;
+<span class="lineNum">      63 </span>            : class FGAtmosphere;
+<span class="lineNum">      64 </span>            : class FGAircraft;
+<span class="lineNum">      65 </span>            : class FGPropertyManager;
+<span class="lineNum">      66 </span>            : class Element;
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            : typedef enum { setvt, setvc, setve, setmach, setuvw, setned, setvg } speedset;
+<span class="lineNum">      69 </span>            : typedef enum { setasl, setagl } altitudeset;
+<span class="lineNum">      70 </span>            : typedef enum { setgeoc, setgeod } latitudeset;
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      73 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      74 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            : /** Initializes the simulation run.
+<span class="lineNum">      77 </span>            :     Takes a set of initial conditions (IC) and provide a kinematically
+<span class="lineNum">      78 </span>            :     consistent set of body axis velocity components, euler angles, and altitude.
+<span class="lineNum">      79 </span>            :     This class does not attempt to trim the model i.e. the sim will most likely
+<span class="lineNum">      80 </span>            :     start in a very dynamic state (unless, of course, you have chosen your IC's
+<span class="lineNum">      81 </span>            :     wisely, or started on the ground) even after setting it up with this class.
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            :    &lt;h3&gt;Usage Notes&lt;/h3&gt;
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :    With a valid object of FGFDMExec and an aircraft model loaded:
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            :    @code
+<span class="lineNum">      88 </span>            :    FGInitialCondition* fgic = FDMExec-&gt;GetIC();
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            :    // Reset the initial conditions and set VCAS and altitude
+<span class="lineNum">      91 </span>            :    fgic-&gt;InitializeIC();
+<span class="lineNum">      92 </span>            :    fgic-&gt;SetVcalibratedKtsIC(vcas);
+<span class="lineNum">      93 </span>            :    fgic-&gt;SetAltitudeAGLFtIC(altitude);
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :    // directly into Run
+<span class="lineNum">      96 </span>            :    FDMExec-&gt;GetPropagate()-&gt;SetInitialState(fgic);
+<span class="lineNum">      97 </span>            :    delete fgic;
+<span class="lineNum">      98 </span>            :    FDMExec-&gt;Run();
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :    //or to loop the sim w/o integrating
+<span class="lineNum">     101 </span>            :    FDMExec-&gt;RunIC();
+<span class="lineNum">     102 </span>            :    @endcode
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            :    Alternatively, you can load initial conditions from an XML file:
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :    @code
+<span class="lineNum">     107 </span>            :    FGInitialCondition* fgic = FDMExec-&gt;GetIC();
+<span class="lineNum">     108 </span>            :    fgic-&gt;Load(IC_file);
+<span class="lineNum">     109 </span>            :    @endcode
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            :    &lt;h3&gt;Speed&lt;/h3&gt;
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            :    Since vc, ve, vt, and mach all represent speed, the remaining
+<span class="lineNum">     114 </span>            :    three are recalculated each time one of them is set (using the
+<span class="lineNum">     115 </span>            :    current altitude).  The most recent speed set is remembered so
+<span class="lineNum">     116 </span>            :    that if and when altitude is reset, the last set speed is used
+<span class="lineNum">     117 </span>            :    to recalculate the remaining three. Setting any of the body
+<span class="lineNum">     118 </span>            :    components forces a recalculation of vt and vt then becomes the
+<span class="lineNum">     119 </span>            :    most recent speed set.
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            :    &lt;h3&gt;Alpha,Gamma, and Theta&lt;/h3&gt;
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :    This class assumes that it will be used to set up the sim for a
+<span class="lineNum">     124 </span>            :    steady, zero pitch rate condition. Since any two of those angles
+<span class="lineNum">     125 </span>            :    specifies the third gamma (flight path angle) is favored when setting
+<span class="lineNum">     126 </span>            :    alpha and theta and alpha is favored when setting gamma. i.e.
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            :    - set alpha : recalculate theta using gamma as currently set
+<span class="lineNum">     129 </span>            :    - set theta : recalculate alpha using gamma as currently set
+<span class="lineNum">     130 </span>            :    - set gamma : recalculate theta using alpha as currently set
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span>            :    The idea being that gamma is most interesting to pilots (since it
+<span class="lineNum">     133 </span>            :    is indicative of climb rate).
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :    Setting climb rate is, for the purpose of this discussion,
+<span class="lineNum">     136 </span>            :    considered equivalent to setting gamma.
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            :    These are the items that can be set in an initialization file:
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            :    - ubody (velocity, ft/sec)
+<span class="lineNum">     141 </span>            :    - vbody (velocity, ft/sec)
+<span class="lineNum">     142 </span>            :    - wbody (velocity, ft/sec)
+<span class="lineNum">     143 </span>            :    - vnorth (velocity, ft/sec)
+<span class="lineNum">     144 </span>            :    - veast (velocity, ft/sec)
+<span class="lineNum">     145 </span>            :    - vdown (velocity, ft/sec)
+<span class="lineNum">     146 </span>            :    - latitude (position, degrees)
+<span class="lineNum">     147 </span>            :    - longitude (position, degrees)
+<span class="lineNum">     148 </span>            :    - phi (orientation, degrees)
+<span class="lineNum">     149 </span>            :    - theta (orientation, degrees)
+<span class="lineNum">     150 </span>            :    - psi (orientation, degrees)
+<span class="lineNum">     151 </span>            :    - alpha (angle, degrees)
+<span class="lineNum">     152 </span>            :    - beta (angle, degrees)
+<span class="lineNum">     153 </span>            :    - gamma (angle, degrees)
+<span class="lineNum">     154 </span>            :    - roc (vertical velocity, ft/sec)
+<span class="lineNum">     155 </span>            :    - elevation (local terrain elevation, ft)
+<span class="lineNum">     156 </span>            :    - altitude (altitude AGL, ft)
+<span class="lineNum">     157 </span>            :    - altitudeAGL (altitude AGL, ft)
+<span class="lineNum">     158 </span>            :    - altitudeMSL (altitude MSL, ft)
+<span class="lineNum">     159 </span>            :    - winddir (wind from-angle, degrees)
+<span class="lineNum">     160 </span>            :    - vwind (magnitude wind speed, ft/sec)
+<span class="lineNum">     161 </span>            :    - hwind (headwind speed, knots)
+<span class="lineNum">     162 </span>            :    - xwind (crosswind speed, knots)
+<span class="lineNum">     163 </span>            :    - vc (calibrated airspeed, ft/sec)
+<span class="lineNum">     164 </span>            :    - mach (mach)
+<span class="lineNum">     165 </span>            :    - vground (ground speed, ft/sec)
+<span class="lineNum">     166 </span>            :    - trim (0 for no trim, 1 for ground trim, 'Longitudinal', 'Full', 'Ground', 'Pullup', 'Custom', 'Turn')
+<span class="lineNum">     167 </span>            :    - running (-1 for all engines, 0 ... n-1 for specific engines)
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            :    &lt;h3&gt;Properties&lt;/h3&gt;
+<span class="lineNum">     170 </span>            :    @property ic/vc-kts (read/write) Calibrated airspeed initial condition in knots
+<span class="lineNum">     171 </span>            :    @property ic/ve-kts (read/write) Knots equivalent airspeed initial condition
+<span class="lineNum">     172 </span>            :    @property ic/vg-kts (read/write) Ground speed initial condition in knots
+<span class="lineNum">     173 </span>            :    @property ic/vt-kts (read/write) True airspeed initial condition in knots
+<span class="lineNum">     174 </span>            :    @property ic/mach (read/write) Mach initial condition
+<span class="lineNum">     175 </span>            :    @property ic/roc-fpm (read/write) Rate of climb initial condition in feet/minute
+<span class="lineNum">     176 </span>            :    @property ic/gamma-deg (read/write) Flightpath angle initial condition in degrees
+<span class="lineNum">     177 </span>            :    @property ic/alpha-deg (read/write) Angle of attack initial condition in degrees
+<span class="lineNum">     178 </span>            :    @property ic/beta-deg (read/write) Angle of sideslip initial condition in degrees
+<span class="lineNum">     179 </span>            :    @property ic/theta-deg (read/write) Pitch angle initial condition in degrees
+<span class="lineNum">     180 </span>            :    @property ic/phi-deg (read/write) Roll angle initial condition in degrees
+<span class="lineNum">     181 </span>            :    @property ic/psi-true-deg (read/write) Heading angle initial condition in degrees
+<span class="lineNum">     182 </span>            :    @property ic/lat-gc-deg (read/write) Latitude initial condition in degrees
+<span class="lineNum">     183 </span>            :    @property ic/long-gc-deg (read/write) Longitude initial condition in degrees
+<span class="lineNum">     184 </span>            :    @property ic/h-sl-ft (read/write) Height above sea level initial condition in feet
+<span class="lineNum">     185 </span>            :    @property ic/h-agl-ft (read/write) Height above ground level initial condition in feet
+<span class="lineNum">     186 </span>            :    @property ic/sea-level-radius-ft (read/write) Radius of planet at sea level in feet
+<span class="lineNum">     187 </span>            :    @property ic/terrain-elevation-ft (read/write) Terrain elevation above sea level in feet
+<span class="lineNum">     188 </span>            :    @property ic/vg-fps (read/write) Ground speed initial condition in feet/second
+<span class="lineNum">     189 </span>            :    @property ic/vt-fps (read/write) True airspeed initial condition in feet/second
+<span class="lineNum">     190 </span>            :    @property ic/vw-bx-fps (read/write) Wind velocity initial condition in Body X frame in feet/second
+<span class="lineNum">     191 </span>            :    @property ic/vw-by-fps (read/write) Wind velocity initial condition in Body Y frame in feet/second
+<span class="lineNum">     192 </span>            :    @property ic/vw-bz-fps (read/write) Wind velocity initial condition in Body Z frame in feet/second
+<span class="lineNum">     193 </span>            :    @property ic/vw-north-fps (read/write) Wind northward velocity initial condition in feet/second
+<span class="lineNum">     194 </span>            :    @property ic/vw-east-fps (read/write) Wind eastward velocity initial condition in feet/second
+<span class="lineNum">     195 </span>            :    @property ic/vw-down-fps (read/write) Wind downward velocity initial condition in feet/second
+<span class="lineNum">     196 </span>            :    @property ic/vw-mag-fps (read/write) Wind velocity magnitude initial condition in feet/sec.
+<span class="lineNum">     197 </span>            :    @property ic/vw-dir-deg (read/write) Wind direction initial condition, in degrees from north
+<span class="lineNum">     198 </span>            :    @property ic/roc-fps (read/write) Rate of climb initial condition, in feet/second
+<span class="lineNum">     199 </span>            :    @property ic/u-fps (read/write) Body frame x-axis velocity initial condition in feet/second
+<span class="lineNum">     200 </span>            :    @property ic/v-fps (read/write) Body frame y-axis velocity initial condition in feet/second
+<span class="lineNum">     201 </span>            :    @property ic/w-fps (read/write) Body frame z-axis velocity initial condition in feet/second
+<span class="lineNum">     202 </span>            :    @property ic/vn-fps (read/write) Local frame x-axis (north) velocity initial condition in feet/second
+<span class="lineNum">     203 </span>            :    @property ic/ve-fps (read/write) Local frame y-axis (east) velocity initial condition in feet/second
+<span class="lineNum">     204 </span>            :    @property ic/vd-fps (read/write) Local frame z-axis (down) velocity initial condition in feet/second
+<span class="lineNum">     205 </span>            :    @property ic/gamma-rad (read/write) Flight path angle initial condition in radians
+<span class="lineNum">     206 </span>            :    @property ic/alpha-rad (read/write) Angle of attack initial condition in radians
+<span class="lineNum">     207 </span>            :    @property ic/theta-rad (read/write) Pitch angle initial condition in radians
+<span class="lineNum">     208 </span>            :    @property ic/beta-rad (read/write) Angle of sideslip initial condition in radians
+<span class="lineNum">     209 </span>            :    @property ic/phi-rad (read/write) Roll angle initial condition in radians
+<span class="lineNum">     210 </span>            :    @property ic/psi-true-rad (read/write) Heading angle initial condition in radians
+<span class="lineNum">     211 </span>            :    @property ic/lat-gc-rad (read/write) Geocentric latitude initial condition in radians
+<span class="lineNum">     212 </span>            :    @property ic/long-gc-rad (read/write) Longitude initial condition in radians
+<span class="lineNum">     213 </span>            :    @property ic/p-rad_sec (read/write) Roll rate initial condition in radians/second
+<span class="lineNum">     214 </span>            :    @property ic/q-rad_sec (read/write) Pitch rate initial condition in radians/second
+<span class="lineNum">     215 </span>            :    @property ic/r-rad_sec (read/write) Yaw rate initial condition in radians/second
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            :    @author Tony Peden
+<span class="lineNum">     218 </span>            : */
+<span class="lineNum">     219 </span>            : 
+<span class="lineNum">     220 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     221 </span>            : CLASS DECLARATION
+<a name="222"><span class="lineNum">     222 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 : class FGInitialCondition : public FGJSBBase</span>
+<span class="lineNum">     225 </span>            : {
+<span class="lineNum">     226 </span>            : public:
+<span class="lineNum">     227 </span>            :   /// Constructor
+<span class="lineNum">     228 </span>            :   explicit FGInitialCondition(FGFDMExec *fdmex);
+<span class="lineNum">     229 </span>            :   /// Destructor
+<span class="lineNum">     230 </span>            :   ~FGInitialCondition();
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :   /** Set calibrated airspeed initial condition in knots.
+<span class="lineNum">     233 </span>            :       @param vc Calibrated airspeed in knots  */
+<span class="lineNum">     234 </span>            :   void SetVcalibratedKtsIC(double vc);
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :   /** Set equivalent airspeed initial condition in knots.
+<span class="lineNum">     237 </span>            :       @param ve Equivalent airspeed in knots  */
+<span class="lineNum">     238 </span>            :   void SetVequivalentKtsIC(double ve);
+<span class="lineNum">     239 </span>            : 
+<a name="240"><span class="lineNum">     240 </span>            :   /** Set true airspeed initial condition in knots.</a>
+<span class="lineNum">     241 </span>            :       @param vtrue True airspeed in knots  */
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :   void SetVtrueKtsIC(double vtrue) { SetVtrueFpsIC(vtrue*ktstofps); }</span>
+<span class="lineNum">     243 </span>            : 
+<a name="244"><span class="lineNum">     244 </span>            :   /** Set ground speed initial condition in knots.</a>
+<span class="lineNum">     245 </span>            :       @param vg Ground speed in knots  */
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   void SetVgroundKtsIC(double vg) { SetVgroundFpsIC(vg*ktstofps); }</span>
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :   /** Set mach initial condition.
+<span class="lineNum">     249 </span>            :       @param mach Mach number  */
+<span class="lineNum">     250 </span>            :   void SetMachIC(double mach);
+<span class="lineNum">     251 </span>            : 
+<a name="252"><span class="lineNum">     252 </span>            :   /** Sets angle of attack initial condition in degrees.</a>
+<span class="lineNum">     253 </span>            :       @param a Alpha in degrees */
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   void SetAlphaDegIC(double a) { SetAlphaRadIC(a*degtorad); }</span>
+<span class="lineNum">     255 </span>            : 
+<a name="256"><span class="lineNum">     256 </span>            :   /** Sets angle of sideslip initial condition in degrees.</a>
+<span class="lineNum">     257 </span>            :       @param B Beta in degrees */
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   void SetBetaDegIC(double b) { SetBetaRadIC(b*degtorad);}</span>
+<span class="lineNum">     259 </span>            : 
+<a name="260"><span class="lineNum">     260 </span>            :   /** Sets pitch angle initial condition in degrees.</a>
+<span class="lineNum">     261 </span>            :       @param theta Theta (pitch) angle in degrees */
+<span class="lineNum">     262 </span><span class="lineCov">         19 :   void SetThetaDegIC(double theta) { SetThetaRadIC(theta*degtorad); }</span>
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span>            :   /** Resets the IC data structure to new values
+<span class="lineNum">     265 </span>            :       @param u, v, w, ... **/
+<span class="lineNum">     266 </span>            :   void ResetIC(double u0, double v0, double w0, double p0, double q0, double r0,
+<span class="lineNum">     267 </span>            :                double alpha0, double beta0, double phi0, double theta0, double psi0,
+<span class="lineNum">     268 </span>            :                double latitudeRad0, double longitudeRad0, double altitudeAGL0,
+<span class="lineNum">     269 </span>            :                double gamma0);
+<span class="lineNum">     270 </span>            : 
+<a name="271"><span class="lineNum">     271 </span>            :   /** Sets the roll angle initial condition in degrees.</a>
+<span class="lineNum">     272 </span>            :       @param phi roll angle in degrees */
+<span class="lineNum">     273 </span><span class="lineCov">         38 :   void SetPhiDegIC(double phi)  { SetPhiRadIC(phi*degtorad);}</span>
+<span class="lineNum">     274 </span>            : 
+<a name="275"><span class="lineNum">     275 </span>            :   /** Sets the heading angle initial condition in degrees.</a>
+<span class="lineNum">     276 </span>            :       @param psi Heading angle in degrees */
+<span class="lineNum">     277 </span><span class="lineCov">         37 :   void SetPsiDegIC(double psi){ SetPsiRadIC(psi*degtorad); }</span>
+<span class="lineNum">     278 </span>            : 
+<a name="279"><span class="lineNum">     279 </span>            :   /** Sets the climb rate initial condition in feet/minute.</a>
+<span class="lineNum">     280 </span>            :       @param roc Rate of Climb in feet/minute  */
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :   void SetClimbRateFpmIC(double roc) { SetClimbRateFpsIC(roc/60.0); }</span>
+<span class="lineNum">     282 </span>            : 
+<a name="283"><span class="lineNum">     283 </span>            :   /** Sets the flight path angle initial condition in degrees.</a>
+<span class="lineNum">     284 </span>            :       @param gamma Flight path angle in degrees  */
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :   void SetFlightPathAngleDegIC(double gamma)</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :   { SetClimbRateFpsIC(vt*sin(gamma*degtorad)); }</span>
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span>            :   /** Sets the altitude above sea level initial condition in feet.
+<span class="lineNum">     289 </span>            :       @param altitudeASL Altitude above sea level in feet */
+<span class="lineNum">     290 </span>            :   void SetAltitudeASLFtIC(double altitudeASL);
+<span class="lineNum">     291 </span>            : 
+<span class="lineNum">     292 </span>            :   /** Sets the initial Altitude above ground level.
+<span class="lineNum">     293 </span>            :       @param agl Altitude above ground level in feet */
+<span class="lineNum">     294 </span>            :   void SetAltitudeAGLFtIC(double agl);
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span>            :   /** Sets the initial terrain elevation.
+<span class="lineNum">     297 </span>            :       @param elev Initial terrain elevation in feet */
+<span class="lineNum">     298 </span>            :   void SetTerrainElevationFtIC(double elev);
+<span class="lineNum">     299 </span>            : 
+<a name="300"><span class="lineNum">     300 </span>            :   /** Sets the initial latitude.</a>
+<span class="lineNum">     301 </span>            :       @param lat Initial latitude in degrees */
+<span class="lineNum">     302 </span><span class="lineCov">      75335 :   void SetLatitudeDegIC(double lat) { SetLatitudeRadIC(lat*degtorad); }</span>
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            :   /** Sets the initial geodetic latitude.
+<span class="lineNum">     305 </span>            :       This method modifies the geodetic altitude in order to keep the altitude
+<a name="306"><span class="lineNum">     306 </span>            :       above sea level unchanged.</a>
+<span class="lineNum">     307 </span>            :       @param glat Initial geodetic latitude in degrees */
+<span class="lineNum">     308 </span><span class="lineCov">      50388 :   void SetGeodLatitudeDegIC(double glat)</span>
+<span class="lineNum">     309 </span><span class="lineCov">      50388 :   { SetGeodLatitudeRadIC(glat*degtorad); }</span>
+<span class="lineNum">     310 </span>            : 
+<a name="311"><span class="lineNum">     311 </span>            :   /** Sets the initial longitude.</a>
+<span class="lineNum">     312 </span>            :       @param lon Initial longitude in degrees */
+<span class="lineNum">     313 </span><span class="lineCov">         52 :   void SetLongitudeDegIC(double lon) { SetLongitudeRadIC(lon*degtorad); }</span>
+<span class="lineNum">     314 </span>            : 
+<span class="lineNum">     315 </span>            :   /** Gets the initial calibrated airspeed.
+<span class="lineNum">     316 </span>            :       @return Initial calibrated airspeed in knots */
+<span class="lineNum">     317 </span>            :   double GetVcalibratedKtsIC(void) const;
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span>            :   /** Gets the initial equivalent airspeed.
+<span class="lineNum">     320 </span>            :       @return Initial equivalent airspeed in knots */
+<span class="lineNum">     321 </span>            :   double GetVequivalentKtsIC(void) const;
+<span class="lineNum">     322 </span>            : 
+<a name="323"><span class="lineNum">     323 </span>            :   /** Gets the initial ground speed.</a>
+<span class="lineNum">     324 </span>            :       @return Initial ground speed in knots */
+<span class="lineNum">     325 </span><span class="lineCov">          8 :   double GetVgroundKtsIC(void) const { return GetVgroundFpsIC() * fpstokts; }</span>
+<span class="lineNum">     326 </span>            : 
+<a name="327"><span class="lineNum">     327 </span>            :   /** Gets the initial true velocity.</a>
+<span class="lineNum">     328 </span>            :       @return Initial true airspeed in knots. */
+<span class="lineNum">     329 </span><span class="lineCov">          8 :   double GetVtrueKtsIC(void) const { return vt*fpstokts; }</span>
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span>            :   /** Gets the initial mach.
+<span class="lineNum">     332 </span>            :       @return Initial mach number */
+<span class="lineNum">     333 </span>            :   double GetMachIC(void) const;
+<span class="lineNum">     334 </span>            : 
+<a name="335"><span class="lineNum">     335 </span>            :   /** Gets the initial climb rate.</a>
+<span class="lineNum">     336 </span>            :       @return Initial climb rate in feet/minute */
+<span class="lineNum">     337 </span><span class="lineCov">          8 :   double GetClimbRateFpmIC(void) const</span>
+<span class="lineNum">     338 </span><span class="lineCov">          8 :   { return GetClimbRateFpsIC()*60; }</span>
+<span class="lineNum">     339 </span>            : 
+<a name="340"><span class="lineNum">     340 </span>            :   /** Gets the initial flight path angle.</a>
+<span class="lineNum">     341 </span>            :       @return Initial flight path angle in degrees */
+<span class="lineNum">     342 </span><span class="lineCov">          9 :   double GetFlightPathAngleDegIC(void) const</span>
+<span class="lineNum">     343 </span><span class="lineCov">          9 :   { return GetFlightPathAngleRadIC()*radtodeg; }</span>
+<span class="lineNum">     344 </span>            : 
+<a name="345"><span class="lineNum">     345 </span>            :   /** Gets the initial angle of attack.</a>
+<span class="lineNum">     346 </span>            :       @return Initial alpha in degrees */
+<span class="lineNum">     347 </span><span class="lineCov">        103 :   double GetAlphaDegIC(void) const { return alpha*radtodeg; }</span>
+<span class="lineNum">     348 </span>            : 
+<a name="349"><span class="lineNum">     349 </span>            :   /** Gets the initial sideslip angle.</a>
+<span class="lineNum">     350 </span>            :       @return Initial beta in degrees */
+<span class="lineNum">     351 </span><span class="lineCov">        104 :   double GetBetaDegIC(void) const  { return beta*radtodeg; }</span>
+<span class="lineNum">     352 </span>            : 
+<a name="353"><span class="lineNum">     353 </span>            :   /** Gets the initial pitch angle.</a>
+<span class="lineNum">     354 </span>            :       @return Initial pitch angle in degrees */
+<span class="lineNum">     355 </span><span class="lineCov">        102 :   double GetThetaDegIC(void) const { return orientation.GetEulerDeg(eTht); }</span>
+<span class="lineNum">     356 </span>            : 
+<a name="357"><span class="lineNum">     357 </span>            :   /** Gets the initial roll angle.</a>
+<span class="lineNum">     358 </span>            :       @return Initial phi in degrees */
+<span class="lineNum">     359 </span><span class="lineCov">        102 :   double GetPhiDegIC(void) const { return orientation.GetEulerDeg(ePhi); }</span>
+<span class="lineNum">     360 </span>            : 
+<a name="361"><span class="lineNum">     361 </span>            :   /** Gets the initial heading angle.</a>
+<span class="lineNum">     362 </span>            :       @return Initial psi in degrees */
+<span class="lineNum">     363 </span><span class="lineCov">        102 :   double GetPsiDegIC(void) const { return orientation.GetEulerDeg(ePsi); }</span>
+<span class="lineNum">     364 </span>            : 
+<a name="365"><span class="lineNum">     365 </span>            :   /** Gets the initial latitude.</a>
+<span class="lineNum">     366 </span>            :       @return Initial geocentric latitude in degrees */
+<span class="lineNum">     367 </span><span class="lineCov">     124744 :   double GetLatitudeDegIC(void) const { return position.GetLatitudeDeg(); }</span>
+<span class="lineNum">     368 </span>            : 
+<a name="369"><span class="lineNum">     369 </span>            :   /** Gets the initial geodetic latitude.</a>
+<span class="lineNum">     370 </span>            :       @return Initial geodetic latitude in degrees */
+<span class="lineNum">     371 </span><span class="lineCov">      99797 :   double GetGeodLatitudeDegIC(void) const</span>
+<span class="lineNum">     372 </span><span class="lineCov">      99797 :   { return position.GetGeodLatitudeDeg(); }</span>
+<span class="lineNum">     373 </span>            : 
+<a name="374"><span class="lineNum">     374 </span>            :   /** Gets the initial longitude.</a>
+<span class="lineNum">     375 </span>            :       @return Initial longitude in degrees */
+<span class="lineNum">     376 </span><span class="lineCov">     224532 :   double GetLongitudeDegIC(void) const { return position.GetLongitudeDeg(); }</span>
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            :   /** Gets the initial altitude above sea level.
+<span class="lineNum">     379 </span>            :       @return Initial altitude in feet. */
+<span class="lineNum">     380 </span>            :   double GetAltitudeASLFtIC(void) const;
+<span class="lineNum">     381 </span>            : 
+<span class="lineNum">     382 </span>            :   /** Gets the initial altitude above ground level.
+<span class="lineNum">     383 </span>            :       @return Initial altitude AGL in feet */
+<span class="lineNum">     384 </span>            :   double GetAltitudeAGLFtIC(void) const;
+<span class="lineNum">     385 </span>            : 
+<span class="lineNum">     386 </span>            :   /** Gets the initial terrain elevation.
+<span class="lineNum">     387 </span>            :       @return Initial terrain elevation in feet */
+<span class="lineNum">     388 </span>            :   double GetTerrainElevationFtIC(void) const;
+<span class="lineNum">     389 </span>            : 
+<a name="390"><span class="lineNum">     390 </span>            :   /** Gets the initial Earth position angle.</a>
+<span class="lineNum">     391 </span>            :       @return Initial Earth position angle in radians. */
+<span class="lineNum">     392 </span><span class="lineCov">          1 :   double GetEarthPositionAngleIC(void) const { return epa; }</span>
+<span class="lineNum">     393 </span>            : 
+<span class="lineNum">     394 </span>            :   /** Sets the initial ground speed.
+<span class="lineNum">     395 </span>            :       @param vg Initial ground speed in feet/second */
+<span class="lineNum">     396 </span>            :   void SetVgroundFpsIC(double vg);
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span>            :   /** Sets the initial true airspeed.
+<span class="lineNum">     399 </span>            :       @param vt Initial true airspeed in feet/second */
+<span class="lineNum">     400 </span>            :   void SetVtrueFpsIC(double vt);
+<span class="lineNum">     401 </span>            : 
+<a name="402"><span class="lineNum">     402 </span>            :   /** Sets the initial body axis X velocity.</a>
+<span class="lineNum">     403 </span>            :       @param ubody Initial X velocity in feet/second */
+<span class="lineNum">     404 </span><span class="lineCov">          1 :   void SetUBodyFpsIC(double ubody) { SetBodyVelFpsIC(eU, ubody); }</span>
+<span class="lineNum">     405 </span>            : 
+<a name="406"><span class="lineNum">     406 </span>            :   /** Sets the initial body axis Y velocity.</a>
+<span class="lineNum">     407 </span>            :       @param vbody Initial Y velocity in feet/second */
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :   void SetVBodyFpsIC(double vbody) { SetBodyVelFpsIC(eV, vbody); }</span>
+<span class="lineNum">     409 </span>            : 
+<a name="410"><span class="lineNum">     410 </span>            :   /** Sets the initial body axis Z velocity.</a>
+<span class="lineNum">     411 </span>            :       @param wbody Initial Z velocity in feet/second */
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :   void SetWBodyFpsIC(double wbody) { SetBodyVelFpsIC(eW, wbody); }</span>
+<span class="lineNum">     413 </span>            : 
+<a name="414"><span class="lineNum">     414 </span>            :   /** Sets the initial local axis north velocity.</a>
+<span class="lineNum">     415 </span>            :       @param vn Initial north velocity in feet/second */
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :   void SetVNorthFpsIC(double vn) { SetNEDVelFpsIC(eU, vn); }</span>
+<span class="lineNum">     417 </span>            : 
+<a name="418"><span class="lineNum">     418 </span>            :   /** Sets the initial local axis east velocity.</a>
+<span class="lineNum">     419 </span>            :       @param ve Initial east velocity in feet/second */
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :   void SetVEastFpsIC(double ve) { SetNEDVelFpsIC(eV, ve); }</span>
+<span class="lineNum">     421 </span>            : 
+<a name="422"><span class="lineNum">     422 </span>            :   /** Sets the initial local axis down velocity.</a>
+<span class="lineNum">     423 </span>            :       @param vd Initial down velocity in feet/second */
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :   void SetVDownFpsIC(double vd) { SetNEDVelFpsIC(eW, vd); }</span>
+<span class="lineNum">     425 </span>            : 
+<a name="426"><span class="lineNum">     426 </span>            :   /** Sets the initial body axis roll rate.</a>
+<span class="lineNum">     427 </span>            :       @param P Initial roll rate in radians/second */
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :   void SetPRadpsIC(double P)  { vPQR_body(eP) = P; }</span>
+<span class="lineNum">     429 </span>            : 
+<a name="430"><span class="lineNum">     430 </span>            :   /** Sets the initial body axis pitch rate.</a>
+<span class="lineNum">     431 </span>            :       @param Q Initial pitch rate in radians/second */
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :   void SetQRadpsIC(double Q) { vPQR_body(eQ) = Q; }</span>
+<span class="lineNum">     433 </span>            : 
+<a name="434"><span class="lineNum">     434 </span>            :   /** Sets the initial body axis yaw rate.</a>
+<span class="lineNum">     435 </span>            :       @param R initial yaw rate in radians/second */
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :   void SetRRadpsIC(double R) { vPQR_body(eR) = R; }</span>
+<span class="lineNum">     437 </span>            : 
+<span class="lineNum">     438 </span>            :   /** Sets the initial wind velocity.
+<span class="lineNum">     439 </span>            :       @param wN Initial wind velocity in local north direction, feet/second
+<span class="lineNum">     440 </span>            :       @param wE Initial wind velocity in local east direction, feet/second
+<span class="lineNum">     441 </span>            :       @param wD Initial wind velocity in local down direction, feet/second   */
+<span class="lineNum">     442 </span>            :   void SetWindNEDFpsIC(double wN, double wE, double wD);
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span>            :   /** Sets the initial total wind speed.
+<span class="lineNum">     445 </span>            :       @param mag Initial wind velocity magnitude in knots */
+<span class="lineNum">     446 </span>            :   void SetWindMagKtsIC(double mag);
+<span class="lineNum">     447 </span>            : 
+<span class="lineNum">     448 </span>            :   /** Sets the initial wind direction.
+<span class="lineNum">     449 </span>            :       @param dir Initial direction wind is coming from in degrees */
+<span class="lineNum">     450 </span>            :   void SetWindDirDegIC(double dir);
+<span class="lineNum">     451 </span>            : 
+<span class="lineNum">     452 </span>            :   /** Sets the initial headwind velocity.
+<span class="lineNum">     453 </span>            :       @param head Initial headwind speed in knots */
+<span class="lineNum">     454 </span>            :   void SetHeadWindKtsIC(double head);
+<span class="lineNum">     455 </span>            : 
+<span class="lineNum">     456 </span>            :   /** Sets the initial crosswind speed.
+<span class="lineNum">     457 </span>            :       @param cross Initial crosswind speed, positive from left to right */
+<span class="lineNum">     458 </span>            :   void SetCrossWindKtsIC(double cross);
+<span class="lineNum">     459 </span>            : 
+<span class="lineNum">     460 </span>            :   /** Sets the initial wind downward speed.
+<span class="lineNum">     461 </span>            :       @param wD Initial downward wind speed in knots*/
+<span class="lineNum">     462 </span>            :   void SetWindDownKtsIC(double wD);
+<span class="lineNum">     463 </span>            : 
+<span class="lineNum">     464 </span>            :   /** Sets the initial climb rate.
+<span class="lineNum">     465 </span>            :       @param roc Initial Rate of climb in feet/second */
+<span class="lineNum">     466 </span>            :   void SetClimbRateFpsIC(double roc);
+<span class="lineNum">     467 </span>            : 
+<a name="468"><span class="lineNum">     468 </span>            :   /** Gets the initial ground velocity.</a>
+<span class="lineNum">     469 </span>            :       @return Initial ground velocity in feet/second */
+<span class="lineNum">     470 </span><span class="lineCov">        111 :   double GetVgroundFpsIC(void) const  { return vUVW_NED.Magnitude(eU, eV); }</span>
+<span class="lineNum">     471 </span>            : 
+<a name="472"><span class="lineNum">     472 </span>            :   /** Gets the initial true velocity.</a>
+<span class="lineNum">     473 </span>            :       @return Initial true velocity in feet/second */
+<span class="lineNum">     474 </span><span class="lineCov">        103 :   double GetVtrueFpsIC(void) const { return vt; }</span>
+<span class="lineNum">     475 </span>            : 
+<a name="476"><span class="lineNum">     476 </span>            :   /** Gets the initial body axis X wind velocity.</a>
+<span class="lineNum">     477 </span>            :       @return Initial body axis X wind velocity in feet/second */
+<span class="lineNum">     478 </span><span class="lineCov">          9 :   double GetWindUFpsIC(void) const { return GetBodyWindFpsIC(eU); }</span>
+<span class="lineNum">     479 </span>            : 
+<a name="480"><span class="lineNum">     480 </span>            :   /** Gets the initial body axis Y wind velocity.</a>
+<span class="lineNum">     481 </span>            :       @return Initial body axis Y wind velocity in feet/second */
+<span class="lineNum">     482 </span><span class="lineCov">          9 :   double GetWindVFpsIC(void) const { return GetBodyWindFpsIC(eV); }</span>
+<span class="lineNum">     483 </span>            : 
+<a name="484"><span class="lineNum">     484 </span>            :   /** Gets the initial body axis Z wind velocity.</a>
+<span class="lineNum">     485 </span>            :       @return Initial body axis Z wind velocity in feet/second */
+<span class="lineNum">     486 </span><span class="lineCov">          9 :   double GetWindWFpsIC(void) const { return GetBodyWindFpsIC(eW); }</span>
+<span class="lineNum">     487 </span>            : 
+<a name="488"><span class="lineNum">     488 </span>            :   /** Gets the initial wind velocity in the NED local frame</a>
+<span class="lineNum">     489 </span>            :       @return Initial wind velocity in NED frame in feet/second */
+<span class="lineNum">     490 </span><span class="lineCov">          1 :   const FGColumnVector3 GetWindNEDFpsIC(void) const {</span>
+<span class="lineNum">     491 </span><span class="lineCov">          1 :     const FGMatrix33&amp; Tb2l = orientation.GetTInv();</span>
+<span class="lineNum">     492 </span><span class="lineCov">          2 :     FGColumnVector3 _vt_NED = Tb2l * Tw2b * FGColumnVector3(vt, 0., 0.);</span>
+<span class="lineNum">     493 </span><span class="lineCov">          2 :     return _vt_NED - vUVW_NED;</span>
+<span class="lineNum">     494 </span>            :   }
+<span class="lineNum">     495 </span>            : 
+<a name="496"><span class="lineNum">     496 </span>            :   /** Gets the initial wind velocity in local frame.</a>
+<span class="lineNum">     497 </span>            :       @return Initial wind velocity toward north in feet/second */
+<span class="lineNum">     498 </span><span class="lineCov">          9 :   double GetWindNFpsIC(void) const { return GetNEDWindFpsIC(eX); }</span>
+<span class="lineNum">     499 </span>            : 
+<a name="500"><span class="lineNum">     500 </span>            :   /** Gets the initial wind velocity in local frame.</a>
+<span class="lineNum">     501 </span>            :       @return Initial wind velocity eastwards in feet/second */
+<span class="lineNum">     502 </span><span class="lineCov">          9 :   double GetWindEFpsIC(void) const { return GetNEDWindFpsIC(eY); }</span>
+<span class="lineNum">     503 </span>            : 
+<a name="504"><span class="lineNum">     504 </span>            :   /** Gets the initial wind velocity in local frame.</a>
+<span class="lineNum">     505 </span>            :       @return Initial wind velocity downwards in feet/second */
+<span class="lineNum">     506 </span><span class="lineCov">          9 :   double GetWindDFpsIC(void) const { return GetNEDWindFpsIC(eZ); }</span>
+<span class="lineNum">     507 </span>            : 
+<span class="lineNum">     508 </span>            :   /** Gets the initial total wind velocity in feet/sec.
+<span class="lineNum">     509 </span>            :       @return Initial wind velocity in feet/second */
+<span class="lineNum">     510 </span>            :   double GetWindFpsIC(void)  const;
+<span class="lineNum">     511 </span>            : 
+<span class="lineNum">     512 </span>            :   /** Gets the initial wind direction.
+<span class="lineNum">     513 </span>            :       @return Initial wind direction in feet/second */
+<span class="lineNum">     514 </span>            :   double GetWindDirDegIC(void) const;
+<span class="lineNum">     515 </span>            : 
+<a name="516"><span class="lineNum">     516 </span>            :   /** Gets the initial climb rate.</a>
+<span class="lineNum">     517 </span>            :       @return Initial rate of climb in feet/second */
+<span class="lineNum">     518 </span><span class="lineCov">         17 :   double GetClimbRateFpsIC(void) const</span>
+<span class="lineNum">     519 </span>            :   {
+<span class="lineNum">     520 </span><span class="lineCov">         17 :     const FGMatrix33&amp; Tb2l = orientation.GetTInv();</span>
+<span class="lineNum">     521 </span><span class="lineCov">         34 :     FGColumnVector3 _vt_NED = Tb2l * Tw2b * FGColumnVector3(vt, 0., 0.);</span>
+<span class="lineNum">     522 </span><span class="lineCov">         34 :     return _vt_NED(eW);</span>
+<span class="lineNum">     523 </span>            :   }
+<span class="lineNum">     524 </span>            : 
+<a name="525"><span class="lineNum">     525 </span>            :   /** Gets the initial body velocity</a>
+<span class="lineNum">     526 </span>            :       @return Initial body velocity in feet/second. */
+<span class="lineNum">     527 </span><span class="lineCov">          1 :   const FGColumnVector3 GetUVWFpsIC(void) const {</span>
+<span class="lineNum">     528 </span><span class="lineCov">          1 :     const FGMatrix33&amp; Tl2b = orientation.GetT();</span>
+<span class="lineNum">     529 </span><span class="lineCov">          1 :     return Tl2b * vUVW_NED;</span>
+<span class="lineNum">     530 </span>            :   }
+<span class="lineNum">     531 </span>            : 
+<a name="532"><span class="lineNum">     532 </span>            :   /** Gets the initial body axis X velocity.</a>
+<span class="lineNum">     533 </span>            :       @return Initial body axis X velocity in feet/second. */
+<span class="lineNum">     534 </span><span class="lineCov">        103 :   double GetUBodyFpsIC(void) const { return GetBodyVelFpsIC(eU); }</span>
+<span class="lineNum">     535 </span>            : 
+<a name="536"><span class="lineNum">     536 </span>            :   /** Gets the initial body axis Y velocity.</a>
+<span class="lineNum">     537 </span>            :       @return Initial body axis Y velocity in feet/second. */
+<span class="lineNum">     538 </span><span class="lineCov">        103 :   double GetVBodyFpsIC(void) const { return GetBodyVelFpsIC(eV); }</span>
+<span class="lineNum">     539 </span>            : 
+<a name="540"><span class="lineNum">     540 </span>            :   /** Gets the initial body axis Z velocity.</a>
+<span class="lineNum">     541 </span>            :       @return Initial body axis Z velocity in feet/second. */
+<span class="lineNum">     542 </span><span class="lineCov">        103 :   double GetWBodyFpsIC(void) const { return GetBodyVelFpsIC(eW); }</span>
+<span class="lineNum">     543 </span>            : 
+<a name="544"><span class="lineNum">     544 </span>            :   /** Gets the initial local frame X (North) velocity.</a>
+<span class="lineNum">     545 </span>            :       @return Initial local frame X (North) axis velocity in feet/second. */
+<span class="lineNum">     546 </span><span class="lineCov">         28 :   double GetVNorthFpsIC(void) const { return vUVW_NED(eU); }</span>
+<span class="lineNum">     547 </span>            : 
+<a name="548"><span class="lineNum">     548 </span>            :   /** Gets the initial local frame Y (East) velocity.</a>
+<span class="lineNum">     549 </span>            :       @return Initial local frame Y (East) axis velocity in feet/second. */
+<span class="lineNum">     550 </span><span class="lineCov">         28 :   double GetVEastFpsIC(void) const { return vUVW_NED(eV); }</span>
+<span class="lineNum">     551 </span>            : 
+<a name="552"><span class="lineNum">     552 </span>            :   /** Gets the initial local frame Z (Down) velocity.</a>
+<span class="lineNum">     553 </span>            :       @return Initial local frame Z (Down) axis velocity in feet/second. */
+<span class="lineNum">     554 </span><span class="lineCov">         28 :   double GetVDownFpsIC(void) const { return vUVW_NED(eW); }</span>
+<span class="lineNum">     555 </span>            : 
+<a name="556"><span class="lineNum">     556 </span>            :   /** Gets the initial body rotation rate</a>
+<span class="lineNum">     557 </span>            :       @return Initial body rotation rate in radians/second */
+<span class="lineNum">     558 </span><span class="lineCov">          1 :   const FGColumnVector3 GetPQRRadpsIC(void) const { return vPQR_body; }</span>
+<span class="lineNum">     559 </span>            : 
+<a name="560"><span class="lineNum">     560 </span>            :   /** Gets the initial body axis roll rate.</a>
+<span class="lineNum">     561 </span>            :       @return Initial body axis roll rate in radians/second */
+<span class="lineNum">     562 </span><span class="lineCov">          9 :   double GetPRadpsIC() const { return vPQR_body(eP); }</span>
+<span class="lineNum">     563 </span>            : 
+<a name="564"><span class="lineNum">     564 </span>            :   /** Gets the initial body axis pitch rate.</a>
+<span class="lineNum">     565 </span>            :       @return Initial body axis pitch rate in radians/second */
+<span class="lineNum">     566 </span><span class="lineCov">          9 :   double GetQRadpsIC() const { return vPQR_body(eQ); }</span>
+<span class="lineNum">     567 </span>            : 
+<a name="568"><span class="lineNum">     568 </span>            :   /** Gets the initial body axis yaw rate.</a>
+<span class="lineNum">     569 </span>            :       @return Initial body axis yaw rate in radians/second */
+<span class="lineNum">     570 </span><span class="lineCov">          9 :   double GetRRadpsIC() const { return vPQR_body(eR); }</span>
+<span class="lineNum">     571 </span>            : 
+<a name="572"><span class="lineNum">     572 </span>            :   /** Sets the initial flight path angle.</a>
+<span class="lineNum">     573 </span>            :       @param gamma Initial flight path angle in radians */
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :   void SetFlightPathAngleRadIC(double gamma)</span>
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :   { SetClimbRateFpsIC(vt*sin(gamma)); }</span>
+<span class="lineNum">     576 </span>            : 
+<span class="lineNum">     577 </span>            :   /** Sets the initial angle of attack.
+<span class="lineNum">     578 </span>            :       @param alpha Initial angle of attack in radians */
+<span class="lineNum">     579 </span>            :   void SetAlphaRadIC(double alpha);
+<span class="lineNum">     580 </span>            : 
+<span class="lineNum">     581 </span>            :   /** Sets the initial sideslip angle.
+<span class="lineNum">     582 </span>            :       @param beta Initial angle of sideslip in radians. */
+<span class="lineNum">     583 </span>            :   void SetBetaRadIC(double beta);
+<span class="lineNum">     584 </span>            : 
+<a name="585"><span class="lineNum">     585 </span>            :   /** Sets the initial roll angle.</a>
+<span class="lineNum">     586 </span>            :       @param phi Initial roll angle in radians */
+<span class="lineNum">     587 </span><span class="lineCov">         38 :   void SetPhiRadIC(double phi) { SetEulerAngleRadIC(ePhi, phi); }</span>
+<span class="lineNum">     588 </span>            : 
+<a name="589"><span class="lineNum">     589 </span>            :   /** Sets the initial pitch angle.</a>
+<span class="lineNum">     590 </span>            :       @param theta Initial pitch angle in radians */
+<span class="lineNum">     591 </span><span class="lineCov">         20 :   void SetThetaRadIC(double theta) { SetEulerAngleRadIC(eTht, theta); }</span>
+<span class="lineNum">     592 </span>            : 
+<a name="593"><span class="lineNum">     593 </span>            :   /** Sets the initial heading angle.</a>
+<span class="lineNum">     594 </span>            :       @param psi Initial heading angle in radians */
+<span class="lineNum">     595 </span><span class="lineCov">         37 :   void SetPsiRadIC(double psi) { SetEulerAngleRadIC(ePsi, psi); }</span>
+<span class="lineNum">     596 </span>            : 
+<span class="lineNum">     597 </span>            :   /** Sets the initial latitude.
+<span class="lineNum">     598 </span>            :       @param lat Initial latitude in radians */
+<span class="lineNum">     599 </span>            :   void SetLatitudeRadIC(double lat);
+<span class="lineNum">     600 </span>            : 
+<span class="lineNum">     601 </span>            :   /** Sets the initial geodetic latitude.
+<span class="lineNum">     602 </span>            :       This method modifies the geodetic altitude in order to keep the altitude
+<span class="lineNum">     603 </span>            :       above sea level unchanged.
+<span class="lineNum">     604 </span>            :       @param glat Initial geodetic latitude in radians */
+<span class="lineNum">     605 </span>            :   void SetGeodLatitudeRadIC(double glat);
+<span class="lineNum">     606 </span>            : 
+<span class="lineNum">     607 </span>            :   /** Sets the initial longitude.
+<span class="lineNum">     608 </span>            :       @param lon Initial longitude in radians */
+<span class="lineNum">     609 </span>            :   void SetLongitudeRadIC(double lon);
+<span class="lineNum">     610 </span>            : 
+<a name="611"><span class="lineNum">     611 </span>            :   /** Sets the target normal load factor.</a>
+<span class="lineNum">     612 </span>            :       @param nlf Normal load factor*/
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 :   void SetTargetNlfIC(double nlf) { targetNlfIC=nlf; }</span>
+<span class="lineNum">     614 </span>            : 
+<span class="lineNum">     615 </span>            :   /** Gets the initial flight path angle.
+<a name="616"><span class="lineNum">     616 </span>            :       If total velocity is zero, this function returns zero.</a>
+<span class="lineNum">     617 </span>            :       @return Initial flight path angle in radians */
+<span class="lineNum">     618 </span><span class="lineCov">         18 :   double GetFlightPathAngleRadIC(void) const</span>
+<span class="lineNum">     619 </span><span class="lineCov">         18 :   { return (vt == 0.0)?0.0:asin(GetClimbRateFpsIC() / vt); }</span>
+<span class="lineNum">     620 </span>            : 
+<a name="621"><span class="lineNum">     621 </span>            :   /** Gets the initial angle of attack.</a>
+<span class="lineNum">     622 </span>            :       @return Initial alpha in radians */
+<span class="lineNum">     623 </span><span class="lineCov">          9 :   double GetAlphaRadIC(void) const { return alpha; }</span>
+<span class="lineNum">     624 </span>            : 
+<a name="625"><span class="lineNum">     625 </span>            :   /** Gets the initial angle of sideslip.</a>
+<span class="lineNum">     626 </span>            :       @return Initial sideslip angle in radians */
+<span class="lineNum">     627 </span><span class="lineCov">          9 :   double GetBetaRadIC(void) const { return beta; }</span>
+<span class="lineNum">     628 </span>            : 
+<a name="629"><span class="lineNum">     629 </span>            :   /** Gets the initial position</a>
+<span class="lineNum">     630 </span>            :       @return Initial location */
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 :   const FGLocation&amp; GetPosition(void) const { return position; }</span>
+<span class="lineNum">     632 </span>            : 
+<a name="633"><span class="lineNum">     633 </span>            :   /** Gets the initial latitude.</a>
+<span class="lineNum">     634 </span>            :       @return Initial latitude in radians */
+<span class="lineNum">     635 </span><span class="lineCov">     124760 :   double GetLatitudeRadIC(void) const { return position.GetLatitude(); }</span>
+<span class="lineNum">     636 </span>            : 
+<a name="637"><span class="lineNum">     637 </span>            :   /** Gets the initial geodetic latitude.</a>
+<span class="lineNum">     638 </span>            :       @return Initial geodetic latitude in radians */
+<span class="lineNum">     639 </span><span class="lineCov">      99797 :   double GetGeodLatitudeRadIC(void) const</span>
+<span class="lineNum">     640 </span><span class="lineCov">      99797 :   { return position.GetGeodLatitudeRad(); }</span>
+<span class="lineNum">     641 </span>            : 
+<a name="642"><span class="lineNum">     642 </span>            :   /** Gets the initial longitude.</a>
+<span class="lineNum">     643 </span>            :       @return Initial longitude in radians */
+<span class="lineNum">     644 </span><span class="lineCov">     224548 :   double GetLongitudeRadIC(void) const { return position.GetLongitude(); }</span>
+<span class="lineNum">     645 </span>            : 
+<a name="646"><span class="lineNum">     646 </span>            :   /** Gets the initial orientation</a>
+<span class="lineNum">     647 </span>            :       @return Initial orientation */
+<span class="lineNum">     648 </span><span class="lineNoCov">          0 :   const FGQuaternion&amp; GetOrientation(void) const { return orientation; }</span>
+<span class="lineNum">     649 </span>            : 
+<a name="650"><span class="lineNum">     650 </span>            :   /** Gets the initial roll angle.</a>
+<span class="lineNum">     651 </span>            :       @return Initial roll angle in radians */
+<span class="lineNum">     652 </span><span class="lineCov">          9 :   double GetPhiRadIC(void) const { return orientation.GetEuler(ePhi); }</span>
+<span class="lineNum">     653 </span>            : 
+<a name="654"><span class="lineNum">     654 </span>            :   /** Gets the initial pitch angle.</a>
+<span class="lineNum">     655 </span>            :       @return Initial pitch angle in radians */
+<span class="lineNum">     656 </span><span class="lineCov">          9 :   double GetThetaRadIC(void) const { return orientation.GetEuler(eTht); }</span>
+<span class="lineNum">     657 </span>            : 
+<a name="658"><span class="lineNum">     658 </span>            :   /** Gets the initial heading angle.</a>
+<span class="lineNum">     659 </span>            :       @return Initial heading angle in radians */
+<span class="lineNum">     660 </span><span class="lineCov">          9 :   double GetPsiRadIC(void) const   { return orientation.GetEuler(ePsi); }</span>
+<span class="lineNum">     661 </span>            : 
+<span class="lineNum">     662 </span>            :   /** Gets the initial speedset.
+<span class="lineNum">     663 </span>            :       @return Initial speedset */
+<span class="lineNum">     664 </span>            :   speedset GetSpeedSet(void) const { return lastSpeedSet; }
+<span class="lineNum">     665 </span>            : 
+<a name="666"><span class="lineNum">     666 </span>            :   /** Gets the target normal load factor set from IC.</a>
+<span class="lineNum">     667 </span>            :       @return target normal load factor set from IC*/
+<span class="lineNum">     668 </span><span class="lineCov">          8 :   double GetTargetNlfIC(void) const { return targetNlfIC; }</span>
+<span class="lineNum">     669 </span>            : 
+<span class="lineNum">     670 </span>            :   /** Loads the initial conditions.
+<span class="lineNum">     671 </span>            :       @param rstname The name of an initial conditions file
+<span class="lineNum">     672 </span>            :       @param useStoredPath true if the stored path to the IC file should be used
+<span class="lineNum">     673 </span>            :       @return true if successful */
+<span class="lineNum">     674 </span>            :   bool Load(const SGPath&amp; rstname, bool useStoredPath = true );
+<span class="lineNum">     675 </span>            : 
+<span class="lineNum">     676 </span>            :   /** Is an engine running ?
+<a name="677"><span class="lineNum">     677 </span>            :       @param index of the engine to be checked</a>
+<span class="lineNum">     678 </span>            :       @return true if the engine is running. */
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :   bool IsEngineRunning(unsigned int n) const { return (enginesRunning &amp; (1 &lt;&lt; n)) != 0; }</span>
+<span class="lineNum">     680 </span>            :   
+<span class="lineNum">     681 </span>            :   /** Does initialization file call for trim ?
+<span class="lineNum">     682 </span>            :       @return Trim type, if any requested (version 1). */
+<span class="lineNum">     683 </span>            :   int TrimRequested(void) const { return trimRequested; }
+<span class="lineNum">     684 </span>            : 
+<span class="lineNum">     685 </span>            :   void bind(FGPropertyManager* pm);
+<span class="lineNum">     686 </span>            : 
+<span class="lineNum">     687 </span>            : private:
+<span class="lineNum">     688 </span>            :   FGColumnVector3 vUVW_NED;
+<span class="lineNum">     689 </span>            :   FGColumnVector3 vPQR_body;
+<span class="lineNum">     690 </span>            :   FGLocation position;
+<span class="lineNum">     691 </span>            :   FGQuaternion orientation;
+<span class="lineNum">     692 </span>            :   double vt;
+<span class="lineNum">     693 </span>            : 
+<span class="lineNum">     694 </span>            :   double targetNlfIC;
+<span class="lineNum">     695 </span>            : 
+<span class="lineNum">     696 </span>            :   FGMatrix33 Tw2b, Tb2w;
+<span class="lineNum">     697 </span>            :   double alpha, beta;
+<span class="lineNum">     698 </span>            :   double epa;
+<span class="lineNum">     699 </span>            : 
+<span class="lineNum">     700 </span>            :   speedset lastSpeedSet;
+<span class="lineNum">     701 </span>            :   altitudeset lastAltitudeSet;
+<span class="lineNum">     702 </span>            :   latitudeset lastLatitudeSet;
+<span class="lineNum">     703 </span>            :   unsigned int enginesRunning;
+<span class="lineNum">     704 </span>            :   int trimRequested;
+<span class="lineNum">     705 </span>            : 
+<span class="lineNum">     706 </span>            :   FGFDMExec *fdmex;
+<span class="lineNum">     707 </span>            :   FGAtmosphere* Atmosphere;
+<span class="lineNum">     708 </span>            :   FGAircraft* Aircraft;
+<span class="lineNum">     709 </span>            : 
+<span class="lineNum">     710 </span>            :   bool Load_v1(Element* document);
+<span class="lineNum">     711 </span>            :   bool Load_v2(Element* document);
+<span class="lineNum">     712 </span>            : 
+<span class="lineNum">     713 </span>            :   void InitializeIC(void);
+<span class="lineNum">     714 </span>            :   void SetEulerAngleRadIC(int idx, double angle);
+<span class="lineNum">     715 </span>            :   void SetBodyVelFpsIC(int idx, double vel);
+<span class="lineNum">     716 </span>            :   void SetNEDVelFpsIC(int idx, double vel);
+<span class="lineNum">     717 </span>            :   double GetBodyWindFpsIC(int idx) const;
+<span class="lineNum">     718 </span>            :   double GetNEDWindFpsIC(int idx) const;
+<span class="lineNum">     719 </span>            :   double GetBodyVelFpsIC(int idx) const;
+<span class="lineNum">     720 </span>            :   void calcAeroAngles(const FGColumnVector3&amp; _vt_BODY);
+<span class="lineNum">     721 </span>            :   void calcThetaBeta(double alfa, const FGColumnVector3&amp; _vt_NED);
+<span class="lineNum">     722 </span>            :   double ComputeGeodAltitude(double geodLatitude);
+<span class="lineNum">     723 </span>            :   bool LoadLatitude(Element* position_el);
+<span class="lineNum">     724 </span>            :   void SetTrimRequest(std::string trim);
+<span class="lineNum">     725 </span>            :   void Debug(int from);
+<span class="lineNum">     726 </span>            : };
+<span class="lineNum">     727 </span>            : }
+<span class="lineNum">     728 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

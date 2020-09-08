@@ -1,0 +1,4 @@
+<map id="Print" name="Print">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutputType.html#aa83769769c700eba0b0b82a5c62dbc71" title="Executes the output directives (implement the FGModel interface). " alt="" coords="103,5,149,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGOutputType.html#adabacbab1576ff34429a7435ee9e23b9" title="Get the name identifier to which the output will be directed. " alt="" coords="197,31,315,57"/>
+</map>

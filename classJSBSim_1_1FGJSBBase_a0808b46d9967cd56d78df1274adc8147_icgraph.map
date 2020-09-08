@@ -1,0 +1,5 @@
+<map id="EqualToRoundoff" name="EqualToRoundoff">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGJSBBase.html#a3fa3dd89c1b30f6d2b8a297006842a19" title="Finite precision comparison. " alt="" coords="203,5,325,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGKinemat.html#a95bffed7b1bb5493492feca3483ff068" title="Run method, overrides FGModel::Run(). " alt="" coords="176,56,352,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGKinemat.html#a3c3fb61af2f0206cf869d8b6132de7d7" title="Kinematic component output value. " alt="" coords="400,49,552,90"/>
+</map>

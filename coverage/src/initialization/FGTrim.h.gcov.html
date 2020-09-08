@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/initialization/FGTrim.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/initialization</a> - FGTrim.h<span style="font-size: 80%;"> (source / <a href="FGTrim.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGTrim.h
+<span class="lineNum">       4 </span>            :  Author:       Tony Peden
+<span class="lineNum">       5 </span>            :  Date started: 7/1/99
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Anthony K. Peden (apeden@earthlink.net) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      11 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      12 </span>            :  version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      20 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      21 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      24 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            :  HISTORY
+<span class="lineNum">      28 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : 9/8/99   TP   Created
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      33 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : This class takes the given set of IC's and finds the aircraft state required to
+<span class="lineNum">      36 </span>            : maintain a specified flight condition.  This flight condition can be
+<span class="lineNum">      37 </span>            : steady-level with non-zero sideslip, a steady turn, a pull-up or pushover.
+<span class="lineNum">      38 </span>            : On-ground conditions can be trimmed as well, but this is currently limited to
+<span class="lineNum">      39 </span>            : adjusting altitude and pitch angle only. It is implemented using an iterative,
+<span class="lineNum">      40 </span>            : one-axis-at-a-time scheme.
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      43 </span>            : SENTRY
+<span class="lineNum">      44 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #ifndef FGTRIM_H
+<span class="lineNum">      47 </span>            : #define FGTRIM_H
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      50 </span>            : INCLUDES
+<span class="lineNum">      51 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      54 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      55 </span>            : #include &quot;FGTrimAxis.h&quot;
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      60 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      61 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : namespace JSBSim {
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            : typedef enum { tLongitudinal=0, tFull, tGround, tPullup,
+<span class="lineNum">      66 </span>            :                tCustom, tTurn, tNone } TrimMode;
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      69 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      70 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span>            : /** The trimming routine for JSBSim.
+<span class="lineNum">      73 </span>            :     FGTrim finds the aircraft attitude and control settings needed to maintain
+<span class="lineNum">      74 </span>            :     the steady state described by the FGInitialCondition object .  It does this
+<span class="lineNum">      75 </span>            :     iteratively by assigning a control to each state and adjusting that control
+<span class="lineNum">      76 </span>            :     until the state is within a specified tolerance of zero. States include the
+<span class="lineNum">      77 </span>            :     recti-linear accelerations udot, vdot, and wdot, the angular accelerations
+<span class="lineNum">      78 </span>            :     qdot, pdot, and rdot, and the difference between heading and ground track.
+<span class="lineNum">      79 </span>            :     Controls include the usual flight deck controls available to the pilot plus
+<span class="lineNum">      80 </span>            :     angle of attack (alpha), sideslip angle(beta), flight path angle (gamma),
+<span class="lineNum">      81 </span>            :     pitch attitude(theta), roll attitude(phi), and altitude above ground.  The
+<span class="lineNum">      82 </span>            :     last three are used for on-ground trimming. The state-control pairs used in
+<span class="lineNum">      83 </span>            :     a given trim are completely user configurable and several pre-defined modes
+<span class="lineNum">      84 </span>            :     are provided as well. They are:
+<span class="lineNum">      85 </span>            :     - tLongitudinal: Trim wdot with alpha, udot with thrust, qdot with elevator
+<span class="lineNum">      86 </span>            :     - tFull: tLongitudinal + vdot with phi, pdot with aileron, rdot with rudder
+<span class="lineNum">      87 </span>            :              and heading minus ground track (hmgt) with beta
+<span class="lineNum">      88 </span>            :     - tPullup: tLongitudinal but adjust alpha to achieve load factor input
+<span class="lineNum">      89 </span>            :                with SetTargetNlf()
+<span class="lineNum">      90 </span>            :     - tGround: wdot with altitude, qdot with theta, and pdot with phi
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :     The remaining modes include &lt;b&gt;tCustom&lt;/b&gt;, which is completely user defined and
+<span class="lineNum">      93 </span>            :     &lt;b&gt;tNone&lt;/b&gt;.
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :     Note that trims can (and do) fail for reasons that are completely outside
+<span class="lineNum">      96 </span>            :     the control of the trimming routine itself. The most common problem is the
+<span class="lineNum">      97 </span>            :     initial conditions: is the model capable of steady state flight
+<span class="lineNum">      98 </span>            :     at those conditions?  Check the speed, altitude, configuration (flaps,
+<span class="lineNum">      99 </span>            :     gear, etc.), weight, cg, and anything else that may be relevant.
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :     Example usage:
+<span class="lineNum">     102 </span>            :     @code
+<span class="lineNum">     103 </span>            :     FGFDMExec* FDMExec = new FGFDMExec();
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            :     FGInitialCondition* fgic = new FGInitialCondition(FDMExec);
+<span class="lineNum">     106 </span>            :     FGTrim fgt(FDMExec, fgic, tFull);
+<span class="lineNum">     107 </span>            :     fgic-&gt;SetVcaibratedKtsIC(100);
+<span class="lineNum">     108 </span>            :     fgic-&gt;SetAltitudeFtIC(1000);
+<span class="lineNum">     109 </span>            :     fgic-&gt;SetClimbRate(500);
+<span class="lineNum">     110 </span>            :     if( !fgt.DoTrim() ) {
+<span class="lineNum">     111 </span>            :       cout &lt;&lt; &quot;Trim Failed&quot; &lt;&lt; endl;
+<span class="lineNum">     112 </span>            :     }
+<span class="lineNum">     113 </span>            :     fgt.Report();
+<span class="lineNum">     114 </span>            :     @endcode
+<span class="lineNum">     115 </span>            :     
+<span class="lineNum">     116 </span>            :     @author Tony Peden
+<span class="lineNum">     117 </span>            : */
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     120 </span>            : CLASS DECLARATION
+<span class="lineNum">     121 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            : class FGTrim : public FGJSBBase
+<span class="lineNum">     124 </span>            : {
+<span class="lineNum">     125 </span>            : private:
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :   std::vector&lt;FGTrimAxis&gt; TrimAxes;
+<span class="lineNum">     128 </span>            :   unsigned int Nsub;
+<span class="lineNum">     129 </span>            :   TrimMode mode;
+<span class="lineNum">     130 </span>            :   int DebugLevel, Debug;
+<span class="lineNum">     131 </span>            :   double Tolerance, A_Tolerance;
+<span class="lineNum">     132 </span>            :   std::vector&lt;double&gt; sub_iterations, successful;
+<span class="lineNum">     133 </span>            :   std::vector&lt;bool&gt; solution;
+<span class="lineNum">     134 </span>            :   unsigned int max_sub_iterations;
+<span class="lineNum">     135 </span>            :   unsigned int max_iterations;
+<span class="lineNum">     136 </span>            :   unsigned int total_its;
+<span class="lineNum">     137 </span>            :   bool gamma_fallback;
+<span class="lineNum">     138 </span>            :   int solutionDomain;
+<span class="lineNum">     139 </span>            :   double xlo,xhi,alo,ahi;
+<span class="lineNum">     140 </span>            :   double targetNlf;
+<span class="lineNum">     141 </span>            :   int debug_axis;
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            :   double psidot;
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            :   FGFDMExec* fdmex;
+<span class="lineNum">     146 </span>            :   FGInitialCondition fgic;
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span>            :   bool solve(FGTrimAxis&amp; axis);
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :   /** @return false if there is no change in the current axis accel
+<span class="lineNum">     151 </span>            :       between accel(control_min) and accel(control_max). If there is a
+<span class="lineNum">     152 </span>            :       change, sets solutionDomain to:
+<span class="lineNum">     153 </span>            :       0 for no sign change,
+<span class="lineNum">     154 </span>            :      -1 if sign change between accel(control_min) and accel(0)
+<span class="lineNum">     155 </span>            :       1 if sign between accel(0) and accel(control_max)
+<span class="lineNum">     156 </span>            :   */
+<span class="lineNum">     157 </span>            :   bool findInterval(FGTrimAxis&amp; axis);
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            :   bool checkLimits(FGTrimAxis&amp; axis);
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :   void setupPullup(void);
+<span class="lineNum">     162 </span>            :   void setupTurn(void);
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            :   void updateRates(void);
+<a name="165"><span class="lineNum">     165 </span>            :   void setDebug(FGTrimAxis&amp; axis);</a>
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :   struct ContactPoints {</span>
+<span class="lineNum">     168 </span>            :     FGColumnVector3 location;
+<span class="lineNum">     169 </span>            :     FGColumnVector3 normal;
+<a name="170"><span class="lineNum">     170 </span>            :   };</a>
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :   struct RotationParameters {</span>
+<span class="lineNum">     173 </span>            :     double angleMin;
+<span class="lineNum">     174 </span>            :     std::vector&lt;ContactPoints&gt;::iterator contactRef;
+<span class="lineNum">     175 </span>            :   };
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            :   void trimOnGround(void);
+<span class="lineNum">     178 </span>            :   RotationParameters calcRotation(std::vector&lt;ContactPoints&gt;&amp; contacts,
+<span class="lineNum">     179 </span>            :                                   const FGColumnVector3&amp; rotationAxis,
+<span class="lineNum">     180 </span>            :                                   const FGColumnVector3&amp; contact0);
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            : public:
+<span class="lineNum">     183 </span>            :   /** Initializes the trimming class
+<span class="lineNum">     184 </span>            :       @param FDMExec pointer to a JSBSim executive object.
+<span class="lineNum">     185 </span>            :       @param tm trim mode
+<span class="lineNum">     186 </span>            :   */
+<span class="lineNum">     187 </span>            :   FGTrim(FGFDMExec *FDMExec, TrimMode tm=tGround );
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span>            :   ~FGTrim(void);
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :   /** Execute the trim
+<span class="lineNum">     192 </span>            :   */
+<span class="lineNum">     193 </span>            :   bool DoTrim(void);
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            :   /** Print the results of the trim. For each axis trimmed, this
+<span class="lineNum">     196 </span>            :       includes the final state value, control value, and tolerance
+<span class="lineNum">     197 </span>            :       used.
+<span class="lineNum">     198 </span>            :       @return true if trim succeeds
+<span class="lineNum">     199 </span>            :   */
+<span class="lineNum">     200 </span>            :   void Report(void);
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :   /** Iteration statistics
+<span class="lineNum">     203 </span>            :   */
+<span class="lineNum">     204 </span>            :   void TrimStats();
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            :   /** Clear all state-control pairs and set a predefined trim mode
+<span class="lineNum">     207 </span>            :       @param tm the set of axes to trim. Can be:
+<span class="lineNum">     208 </span>            :              tLongitudinal, tFull, tGround, tCustom, or tNone
+<span class="lineNum">     209 </span>            :   */
+<span class="lineNum">     210 </span>            :   void SetMode(TrimMode tm);
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            :   /** Clear all state-control pairs from the current configuration.
+<span class="lineNum">     213 </span>            :       The trimming routine must have at least one state-control pair
+<span class="lineNum">     214 </span>            :       configured to be useful
+<span class="lineNum">     215 </span>            :   */
+<span class="lineNum">     216 </span>            :   void ClearStates(void);
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :   /** Add a state-control pair to the current configuration. See the enums
+<span class="lineNum">     219 </span>            :       State and Control in FGTrimAxis.h for the available options.
+<span class="lineNum">     220 </span>            :       Will fail if the given state is already configured.
+<span class="lineNum">     221 </span>            :       @param state the accel or other condition to zero
+<span class="lineNum">     222 </span>            :       @param control the control used to zero the state
+<span class="lineNum">     223 </span>            :       @return true if add is successful
+<span class="lineNum">     224 </span>            :   */
+<span class="lineNum">     225 </span>            :   bool AddState( State state, Control control );
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :   /** Remove a specific state-control pair from the current configuration
+<span class="lineNum">     228 </span>            :       @param state the state to remove
+<span class="lineNum">     229 </span>            :       @return true if removal is successful
+<span class="lineNum">     230 </span>            :   */
+<span class="lineNum">     231 </span>            :   bool RemoveState( State state );
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span>            :   /** Change the control used to zero a state previously configured
+<span class="lineNum">     234 </span>            :       @param state the accel or other condition to zero
+<span class="lineNum">     235 </span>            :       @param new_control the control used to zero the state
+<span class="lineNum">     236 </span>            :   */
+<span class="lineNum">     237 </span>            :   bool EditState( State state, Control new_control );
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            :   /** automatically switch to trimming longitudinal acceleration with
+<span class="lineNum">     240 </span>            :       flight path angle (gamma) once it becomes apparent that there
+<span class="lineNum">     241 </span>            :       is not enough/too much thrust.
+<span class="lineNum">     242 </span>            :       @param bb true to enable fallback
+<span class="lineNum">     243 </span>            :   */
+<span class="lineNum">     244 </span>            :   inline void SetGammaFallback(bool bb) { gamma_fallback=bb; }
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span>            :   /** query the fallback state
+<span class="lineNum">     247 </span>            :       @return true if fallback is enabled.
+<span class="lineNum">     248 </span>            :   */
+<span class="lineNum">     249 </span>            :   inline bool GetGammaFallback(void) { return gamma_fallback; }
+<span class="lineNum">     250 </span>            : 
+<span class="lineNum">     251 </span>            :   /** Set the iteration limit. DoTrim() will return false if limit
+<span class="lineNum">     252 </span>            :       iterations are reached before trim is achieved.  The default
+<span class="lineNum">     253 </span>            :       is 60.  This does not ordinarily need to be changed.
+<span class="lineNum">     254 </span>            :       @param ii integer iteration limit
+<span class="lineNum">     255 </span>            :   */
+<span class="lineNum">     256 </span>            :   inline void SetMaxCycles(int ii) { max_iterations = ii; }
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span>            :   /** Set the per-axis iteration limit.  Attempt to zero each state
+<span class="lineNum">     259 </span>            :       by iterating limit times before moving on to the next. The
+<span class="lineNum">     260 </span>            :       default limit is 100 and also does not ordinarily need to
+<span class="lineNum">     261 </span>            :       be changed.
+<span class="lineNum">     262 </span>            :       @param ii integer iteration limit
+<span class="lineNum">     263 </span>            :   */
+<span class="lineNum">     264 </span>            :   inline void SetMaxCyclesPerAxis(int ii) { max_sub_iterations = ii; }
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span>            :   /** Set the tolerance for declaring a state trimmed. Angular accels are
+<span class="lineNum">     267 </span>            :       held to a tolerance of 1/10th of the given.  The default is
+<span class="lineNum">     268 </span>            :       0.001 for the recti-linear accelerations and 0.0001 for the angular.
+<span class="lineNum">     269 </span>            :   */
+<span class="lineNum">     270 </span>            :   inline void SetTolerance(double tt) {
+<span class="lineNum">     271 </span>            :     Tolerance = tt;
+<span class="lineNum">     272 </span>            :     A_Tolerance = tt / 10;
+<span class="lineNum">     273 </span>            :   }
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            :   /**
+<span class="lineNum">     276 </span>            :     Debug level 1 shows results of each top-level iteration
+<span class="lineNum">     277 </span>            :     Debug level 2 shows level 1 &amp; results of each per-axis iteration
+<span class="lineNum">     278 </span>            :   */
+<span class="lineNum">     279 </span>            :   inline void SetDebug(int level) { DebugLevel = level; }
+<span class="lineNum">     280 </span>            :   inline void ClearDebug(void) { DebugLevel = 0; }
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span>            :   /**
+<span class="lineNum">     283 </span>            :     Output debug data for one of the axes
+<span class="lineNum">     284 </span>            :     The State enum is defined in FGTrimAxis.h
+<span class="lineNum">     285 </span>            :   */
+<span class="lineNum">     286 </span>            :   inline void DebugState(State state) { debug_axis=state; }
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span>            :   inline void SetTargetNlf(double nlf) { targetNlf=nlf; }
+<span class="lineNum">     289 </span>            :   inline double GetTargetNlf(void) { return targetNlf; }
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            : };
+<span class="lineNum">     292 </span>            : }
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

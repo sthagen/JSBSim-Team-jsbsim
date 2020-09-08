@@ -1,0 +1,6 @@
+<map id="SetOutputName" name="SetOutputName">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFDMExec.html#a6511ee9d17aee0854e6af102515ab45f" title="Retrieves the Root Directory. " alt="" coords="169,5,332,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGOutputFile.html#a63dfbe9b8eedbd6185df69ed7cc56b6e" title="Generate the output. " alt="" coords="226,71,275,98"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGOutputFile.html#af14d632285848c3b58607fbbd34b8e53" title="Opens the file. " alt="" coords="213,122,288,149"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#a9238b5d4e99187a0ba3db7334d459caa" title="Increments the simulation time if not in Holding mode. " alt="" coords="380,5,543,47"/>
+</map>

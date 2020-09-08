@@ -1,0 +1,385 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/simgear/misc/sg_path.hxx</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/simgear/misc</a> - sg_path.hxx<span style="font-size: 80%;"> (source / <a href="sg_path.hxx.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryLo">16.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">20.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /**</a>
+<span class="lineNum">       2 </span>            :  * \file sg_path.hxx
+<span class="lineNum">       3 </span>            :  * Routines to abstract out path separator differences between MacOS
+<span class="lineNum">       4 </span>            :  * and the rest of the world.
+<span class="lineNum">       5 </span>            :  */
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : // Written by Curtis L. Olson, started April 1999.
+<span class="lineNum">       8 </span>            : //
+<span class="lineNum">       9 </span>            : // Copyright (C) 1999  Curtis L. Olson - http://www.flightgear.org/~curt
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // This library is free software; you can redistribute it and/or
+<span class="lineNum">      12 </span>            : // modify it under the terms of the GNU Library General Public
+<span class="lineNum">      13 </span>            : // License as published by the Free Software Foundation; either
+<span class="lineNum">      14 </span>            : // version 2 of the License, or (at your option) any later version.
+<span class="lineNum">      15 </span>            : //
+<span class="lineNum">      16 </span>            : // This library is distributed in the hope that it will be useful,
+<span class="lineNum">      17 </span>            : // but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      18 </span>            : // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+<span class="lineNum">      19 </span>            : // Library General Public License for more details.
+<span class="lineNum">      20 </span>            : //
+<span class="lineNum">      21 </span>            : // You should have received a copy of the GNU General Public License
+<span class="lineNum">      22 </span>            : // along with this program; if not, write to the Free Software
+<span class="lineNum">      23 </span>            : // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+<span class="lineNum">      24 </span>            : //
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : #ifndef _SG_PATH_HXX
+<span class="lineNum">      28 </span>            : #define _SG_PATH_HXX
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : #include &lt;sys/types.h&gt;
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : #include &lt;simgear/compiler.h&gt;
+<span class="lineNum">      33 </span>            : #include &lt;string&gt;
+<span class="lineNum">      34 </span>            : #include &lt;ctime&gt;
+<span class="lineNum">      35 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : #ifdef _MSC_VER
+<span class="lineNum">      38 </span>            :   typedef int mode_t;
+<span class="lineNum">      39 </span>            : #endif
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : typedef std::vector&lt;std::string&gt; string_list;
+<span class="lineNum">      42 </span>            : typedef string_list::iterator string_list_iterator;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : /**
+<span class="lineNum">      45 </span>            :  * A class to hide path separator difference across platforms and assist
+<span class="lineNum">      46 </span>            :  * in managing file system path names.
+<span class="lineNum">      47 </span>            :  *
+<span class="lineNum">      48 </span>            :  * Paths can be input in any platform format and will be converted
+<span class="lineNum">      49 </span>            :  * automatically to the proper format.
+<span class="lineNum">      50 </span>            :  */
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : class SGPath {
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : public:
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :     // OS-dependent separator used in paths lists
+<span class="lineNum">      57 </span>            :     static const char pathListSep;
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            :     struct Permissions
+<span class="lineNum">      60 </span>            :     {
+<span class="lineNum">      61 </span>            :       bool read : 1;
+<span class="lineNum">      62 </span>            :       bool write : 1;
+<span class="lineNum">      63 </span>            :     };
+<span class="lineNum">      64 </span>            :     typedef Permissions (*PermissionChecker)(const SGPath&amp;);
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :     /** Default constructor */
+<span class="lineNum">      67 </span>            :     explicit SGPath(PermissionChecker validator = NULL);
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            :     /** Copy contructor */
+<span class="lineNum">      70 </span>            :     SGPath(const SGPath&amp; p);
+<span class="lineNum">      71 </span>            :     
+<span class="lineNum">      72 </span>            :     SGPath&amp; operator=(const SGPath&amp; p);
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :     /**
+<span class="lineNum">      75 </span>            :      * Construct a path based on the starting path provided.
+<span class="lineNum">      76 </span>            :      * @param p initial path
+<span class="lineNum">      77 </span>            :      */
+<span class="lineNum">      78 </span>            :     explicit SGPath( const std::string&amp; p, PermissionChecker validator = NULL );
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            :     explicit SGPath(const std::wstring&amp; p, PermissionChecker validator = NULL);
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :     /**
+<span class="lineNum">      83 </span>            :      * Construct a path based on the starting path provided and a relative subpath
+<span class="lineNum">      84 </span>            :      * @param p initial path
+<span class="lineNum">      85 </span>            :      * @param r relative subpath
+<span class="lineNum">      86 </span>            :      */
+<span class="lineNum">      87 </span>            :     SGPath( const SGPath&amp; p,
+<span class="lineNum">      88 </span>            :             const std::string&amp; r,
+<span class="lineNum">      89 </span>            :             PermissionChecker validator = NULL );
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            :     /** Destructor */
+<span class="lineNum">      92 </span>            :     ~SGPath();
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :     /**
+<span class="lineNum">      95 </span>            :      * Set path to a new value
+<span class="lineNum">      96 </span>            :      * @param p new path
+<a name="97"><span class="lineNum">      97 </span>            :      */</a>
+<span class="lineNum">      98 </span>            :     void set( const std::string&amp; p );
+<span class="lineNum">      99 </span><span class="lineCov">         32 :     SGPath&amp; operator= ( const char* p ) { this-&gt;set(p); return *this; }</span>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :     bool operator==(const SGPath&amp; other) const;
+<span class="lineNum">     102 </span>            :     bool operator!=(const SGPath&amp; other) const;
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            :     void setPermissionChecker(PermissionChecker validator);
+<span class="lineNum">     105 </span>            :     PermissionChecker getPermissionChecker() const;
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :     /**
+<span class="lineNum">     108 </span>            :      * Set if file information (exists, type, mod-time) is cached or
+<span class="lineNum">     109 </span>            :      * retrieved each time it is queried. Caching is enabled by default
+<span class="lineNum">     110 </span>            :      */
+<span class="lineNum">     111 </span>            :     void set_cached(bool cached);
+<span class="lineNum">     112 </span>            :     
+<span class="lineNum">     113 </span>            :     /**
+<span class="lineNum">     114 </span>            :      * Append another piece to the existing path.  Inserts a path
+<span class="lineNum">     115 </span>            :      * separator between the existing component and the new component.
+<span class="lineNum">     116 </span>            :      * @param p additional path component */
+<span class="lineNum">     117 </span>            :     void append( const std::string&amp; p );
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :     /**
+<span class="lineNum">     120 </span>            :      * Get a copy of this path with another piece appended.
+<span class="lineNum">     121 </span>            :      *
+<span class="lineNum">     122 </span>            :      * @param p additional path component
+<span class="lineNum">     123 </span>            :      */
+<span class="lineNum">     124 </span>            :     SGPath operator/( const std::string&amp; p ) const;
+<span class="lineNum">     125 </span>            : 
+<span class="lineNum">     126 </span>            :     /**
+<span class="lineNum">     127 </span>            :      * Append a new piece to the existing path.  Inserts a search path
+<span class="lineNum">     128 </span>            :      * separator to the existing path and the new patch component.
+<span class="lineNum">     129 </span>            :      * @param p additional path component */
+<span class="lineNum">     130 </span>            :     void add( const std::string&amp; p );
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span>            :     /**
+<span class="lineNum">     133 </span>            :      * Concatenate a string to the end of the path without inserting a
+<span class="lineNum">     134 </span>            :      * path separator.
+<span class="lineNum">     135 </span>            :      * @param p additional path suffix
+<span class="lineNum">     136 </span>            :      */
+<span class="lineNum">     137 </span>            :     void concat( const std::string&amp; p );
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            :     /**
+<span class="lineNum">     140 </span>            :      * Returns a path with the absolute pathname that names the same file, whose
+<span class="lineNum">     141 </span>            :      * resolution does not involve '.', '..', or symbolic links.
+<span class="lineNum">     142 </span>            :      */
+<span class="lineNum">     143 </span>            :     SGPath realpath() const;
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            :     /**
+<span class="lineNum">     146 </span>            :      * Get the file part of the path (everything after the last path sep)
+<span class="lineNum">     147 </span>            :      * @return file string
+<span class="lineNum">     148 </span>            :      */
+<span class="lineNum">     149 </span>            :     std::string file() const;
+<span class="lineNum">     150 </span>            :   
+<span class="lineNum">     151 </span>            :     /**
+<span class="lineNum">     152 </span>            :      * Get the directory part of the path.
+<span class="lineNum">     153 </span>            :      * @return directory string
+<span class="lineNum">     154 </span>            :      */
+<span class="lineNum">     155 </span>            :     std::string dir() const;
+<span class="lineNum">     156 </span>            :   
+<span class="lineNum">     157 </span>            :     /**
+<span class="lineNum">     158 </span>            :      * Get the base part of the path (everything but the final extension.)
+<span class="lineNum">     159 </span>            :      * @return the base string
+<span class="lineNum">     160 </span>            :      */
+<span class="lineNum">     161 </span>            :     std::string base() const;
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :     /**
+<span class="lineNum">     164 </span>            :      * Get the base part of the filename (everything before the first '.')
+<span class="lineNum">     165 </span>            :      * @return the base filename
+<span class="lineNum">     166 </span>            :      */
+<span class="lineNum">     167 </span>            :     std::string file_base() const;
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            :     /**
+<span class="lineNum">     170 </span>            :      * Get the extension part of the path (everything after the final &quot;.&quot;)
+<span class="lineNum">     171 </span>            :      * @return the extension string
+<span class="lineNum">     172 </span>            :      */
+<span class="lineNum">     173 </span>            :     std::string extension() const;
+<span class="lineNum">     174 </span>            :     
+<span class="lineNum">     175 </span>            :     /**
+<span class="lineNum">     176 </span>            :      * Get the path string
+<span class="lineNum">     177 </span>            :      * @return path string
+<a name="178"><span class="lineNum">     178 </span>            :      */</a>
+<span class="lineNum">     179 </span>            :     std::string str() const { return path; }
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :     std::string utf8Str() const { return path; }</span>
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            :     std::string local8BitStr() const;
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            :     std::wstring wstr() const;
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span>            :     /**
+<span class="lineNum">     187 </span>            :      * Get the path string
+<a name="188"><span class="lineNum">     188 </span>            :      * @return path in &quot;C&quot; string (ptr to char array) form.</a>
+<span class="lineNum">     189 </span>            :      */
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     const char* c_str() const { return path.c_str(); }</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            :     /**
+<span class="lineNum">     193 </span>            :      * Get the path string in OS native form
+<span class="lineNum">     194 </span>            :      */
+<span class="lineNum">     195 </span>            :     std::string str_native() const;
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            :     /**
+<span class="lineNum">     198 </span>            :      * Determine if file exists by attempting to fopen it.
+<span class="lineNum">     199 </span>            :      * @return true if file exists, otherwise returns false.
+<span class="lineNum">     200 </span>            :      */
+<span class="lineNum">     201 </span>            :     bool exists() const;
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            :     /**
+<span class="lineNum">     204 </span>            :      * Check if reading file is allowed. Readabilty does not imply the existance
+<span class="lineNum">     205 </span>            :      * of the file.
+<span class="lineNum">     206 </span>            :      *
+<span class="lineNum">     207 </span>            :      * @note By default all files will be marked as readable. No check is made
+<span class="lineNum">     208 </span>            :      *       if the operating system allows the given file to be read. Derived
+<span class="lineNum">     209 </span>            :      *       classes may actually implement custom read/write rights.
+<span class="lineNum">     210 </span>            :      */
+<span class="lineNum">     211 </span>            :     bool canRead() const;
+<span class="lineNum">     212 </span>            :     bool canWrite() const;
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span>            :     bool isFile() const;
+<span class="lineNum">     215 </span>            :     bool isDir() const;
+<span class="lineNum">     216 </span>            :     
+<span class="lineNum">     217 </span>            :     /**
+<a name="218"><span class="lineNum">     218 </span>            :      * Opposite sense to isAbsolute</a>
+<span class="lineNum">     219 </span>            :      */
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :     bool isRelative() const { return !isAbsolute(); }</span>
+<span class="lineNum">     221 </span>            :     
+<span class="lineNum">     222 </span>            :     /**
+<span class="lineNum">     223 </span>            :      * Is this an absolute path?
+<span class="lineNum">     224 </span>            :      * I.e starts with a directory seperator, or a single character + colon
+<span class="lineNum">     225 </span>            :      */
+<span class="lineNum">     226 </span>            :     bool isAbsolute() const;
+<span class="lineNum">     227 </span>            :     
+<span class="lineNum">     228 </span>            :     /**
+<span class="lineNum">     229 </span>            :      * check for default constructed path
+<span class="lineNum">     230 </span>            :      */
+<span class="lineNum">     231 </span>            :     bool isNull() const;
+<span class="lineNum">     232 </span>            :     
+<span class="lineNum">     233 </span>            :     /**
+<span class="lineNum">     234 </span>            :      * modification time of the file
+<span class="lineNum">     235 </span>            :      */
+<span class="lineNum">     236 </span>            :     time_t modTime() const;
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            :     /**
+<span class="lineNum">     239 </span>            :      *
+<span class="lineNum">     240 </span>            :      */
+<span class="lineNum">     241 </span>            :     size_t sizeInBytes() const;
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            :     /**
+<span class="lineNum">     244 </span>            :      * return the path of the parent directory of this path.
+<span class="lineNum">     245 </span>            :      */
+<span class="lineNum">     246 </span>            :     SGPath dirPath() const;
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :     /**
+<span class="lineNum">     249 </span>            :      * Get a path stored in the environment variable with the given \a name.
+<span class="lineNum">     250 </span>            :      *
+<span class="lineNum">     251 </span>            :      * @param name  Name of the environment variable
+<span class="lineNum">     252 </span>            :      * @param def   Default path to return if the environment variable does not
+<span class="lineNum">     253 </span>            :      *              exist or is empty.
+<span class="lineNum">     254 </span>            :      */
+<span class="lineNum">     255 </span>            :     static SGPath fromEnv(const char* name, const SGPath&amp; def = SGPath());
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span>            :     static SGPath fromUtf8(const std::string&amp; bytes, PermissionChecker p = NULL);
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span>            :     static SGPath fromLocal8Bit(const char* name);
+<span class="lineNum">     260 </span>            : 
+<span class="lineNum">     261 </span>            :     static std::vector&lt;SGPath&gt; pathsFromEnv(const char* name);
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span>            :     static std::vector&lt;SGPath&gt; pathsFromUtf8(const std::string&amp; paths);
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            :     static std::vector&lt;SGPath&gt; pathsFromLocal8Bit(const std::string&amp; paths);
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span>            :     static std::string join(const std::vector&lt;SGPath&gt;&amp; paths, const std::string&amp; joinWith);
+<span class="lineNum">     268 </span>            : private:
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            :     void fix();
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            :     void validate() const;
+<span class="lineNum">     273 </span>            :     void checkAccess() const;
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            :     bool permissionsAllowsWrite() const;
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span>            :     std::string path;
+<span class="lineNum">     278 </span>            :     PermissionChecker _permission_checker;
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span>            :     mutable bool _cached : 1;
+<span class="lineNum">     281 </span>            :     mutable bool _rwCached : 1;
+<span class="lineNum">     282 </span>            :     bool _cacheEnabled : 1; ///&lt; cacheing can be disbled if required
+<span class="lineNum">     283 </span>            :     mutable bool _canRead : 1;
+<span class="lineNum">     284 </span>            :     mutable bool _canWrite : 1;
+<span class="lineNum">     285 </span>            :     mutable bool _exists : 1;
+<span class="lineNum">     286 </span>            :     mutable bool _isDir : 1;
+<span class="lineNum">     287 </span>            :     mutable bool _isFile : 1;
+<span class="lineNum">     288 </span>            :     mutable time_t _modTime;
+<span class="lineNum">     289 </span>            :     mutable size_t _size;
+<span class="lineNum">     290 </span>            : };
+<span class="lineNum">     291 </span>            : 
+<span class="lineNum">     292 </span>            : /// Output to an ostream
+<span class="lineNum">     293 </span>            : template&lt;typename char_type, typename traits_type&gt;
+<a name="294"><span class="lineNum">     294 </span>            : inline</a>
+<span class="lineNum">     295 </span>            : std::basic_ostream&lt;char_type, traits_type&gt;&amp;
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 : operator&lt;&lt;(std::basic_ostream&lt;char_type, traits_type&gt;&amp; s, const SGPath&amp; p)</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 : { return s &lt;&lt; &quot;Path \&quot;&quot; &lt;&lt; p.utf8Str() &lt;&lt; &quot;\&quot;&quot;; }</span>
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span>            : /**
+<span class="lineNum">     300 </span>            :  * Split a directory string into a list of it's parent directories.
+<span class="lineNum">     301 </span>            :  */
+<span class="lineNum">     302 </span>            : string_list sgPathBranchSplit( const std::string &amp;path );
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            : /**
+<span class="lineNum">     305 </span>            :  * Split a directory search path into a vector of individual paths
+<span class="lineNum">     306 </span>            :  */
+<span class="lineNum">     307 </span>            : string_list sgPathSplit( const std::string &amp;search_path );
+<span class="lineNum">     308 </span>            : 
+<span class="lineNum">     309 </span>            : #endif // _SG_PATH_HXX
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

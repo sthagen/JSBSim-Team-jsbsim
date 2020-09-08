@@ -1,0 +1,626 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/math/FGLocation.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/math</a> - FGLocation.h<span style="font-size: 80%;"> (source / <a href="FGLocation.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">70</td>
+            <td class="headerCovTableEntry">70</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntry">32</td>
+            <td class="headerCovTableEntryHi">96.9 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGLocation.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt, Mathias Froehlich
+<span class="lineNum">       5 </span>            :  Date started: 04/04/2004
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) ------------------
+<span class="lineNum">       8 </span>            :  -------           (C) 2004  Mathias Froehlich (Mathias.Froehlich@web.de) ----
+<span class="lineNum">       9 </span>            :  -------           (C) 2011  Ola Røer Thorsen (ola@silentwings.no) -----------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      13 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      14 </span>            :  later version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      22 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      23 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      26 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : HISTORY
+<span class="lineNum">      29 </span>            : -------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : 04/04/2004   MF   Created from code previously in the old positions class.
+<span class="lineNum">      31 </span>            : 11/01/2011   ORT  Encapsulated ground callback code in FGLocation and removed
+<span class="lineNum">      32 </span>            :                   it from FGFDMExec.
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      35 </span>            : SENTRY
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : #ifndef FGLOCATION_H
+<span class="lineNum">      39 </span>            : #define FGLOCATION_H
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      42 </span>            : INCLUDES
+<span class="lineNum">      43 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : #include &lt;cassert&gt;
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;FGColumnVector3.h&quot;
+<span class="lineNum">      49 </span>            : #include &quot;FGMatrix33.h&quot;
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /* Setting the -ffast-math compilation flag is highly discouraged */
+<span class="lineNum">      52 </span>            : #ifdef __FAST_MATH__
+<span class="lineNum">      53 </span>            : #error Usage of -ffast-math is strongly discouraged
+<span class="lineNum">      54 </span>            : #endif
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      57 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      58 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : namespace JSBSim {
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      63 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      64 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : /** FGLocation holds an arbitrary location in the Earth centered Earth fixed
+<span class="lineNum">      67 </span>            :     reference frame (ECEF). The coordinate frame ECEF has its center in the
+<span class="lineNum">      68 </span>            :     middle of the earth. The X-axis points from the center of the Earth towards
+<span class="lineNum">      69 </span>            :     a location with zero latitude and longitude on the Earth surface. The Y-axis
+<span class="lineNum">      70 </span>            :     points from the center of the Earth towards a location with zero latitude
+<span class="lineNum">      71 </span>            :     and 90 deg East longitude on the Earth surface. The Z-axis points from the
+<span class="lineNum">      72 </span>            :     Earth center to the geographic north pole.
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :     This class provides access functions to set and get the location as either
+<span class="lineNum">      75 </span>            :     the simple X, Y and Z values in ft or longitude/latitude and the radial
+<span class="lineNum">      76 </span>            :     distance of the location from the Earth center.
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            :     It is common to associate a parent frame with a location. This frame is
+<span class="lineNum">      79 </span>            :     usually called the local horizontal frame or simply the local frame. It is
+<span class="lineNum">      80 </span>            :     also called the NED frame (North, East, Down), as well as the Navigation
+<span class="lineNum">      81 </span>            :     frame. This frame has its X/Y plane parallel to the surface of the Earth.
+<span class="lineNum">      82 </span>            :     The X-axis points towards north, the Y-axis points east and the Z-axis
+<span class="lineNum">      83 </span>            :     is normal to the reference spheroid (WGS84 for Earth).
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :     Since the local frame is determined by the location (and NOT by the
+<span class="lineNum">      86 </span>            :     orientation of the vehicle IN any frame), this class also provides the
+<span class="lineNum">      87 </span>            :     rotation matrices required to transform from the Earth centered (ECEF) frame
+<span class="lineNum">      88 </span>            :     to the local horizontal frame and back. This class &quot;owns&quot; the
+<span class="lineNum">      89 </span>            :     transformations that go from the ECEF frame to and from the local frame.
+<span class="lineNum">      90 </span>            :     Again, this is because the ECEF, and local frames do not involve the actual
+<span class="lineNum">      91 </span>            :     orientation of the vehicle - only the location on the Earth surface. There
+<span class="lineNum">      92 </span>            :     are conversion functions for conversion of position vectors given in the one
+<span class="lineNum">      93 </span>            :     frame to positions in the other frame.
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :     The Earth centered reference frame is NOT an inertial frame since it rotates
+<span class="lineNum">      96 </span>            :     with the Earth.
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :     The cartesian coordinates (X,Y,Z) in the Earth centered frame are the master
+<span class="lineNum">      99 </span>            :     values. All other values are computed from these master values and are
+<span class="lineNum">     100 </span>            :     cached as long as the location is changed by access through a non-const
+<span class="lineNum">     101 </span>            :     member function. Values are cached to improve performance. It is best
+<span class="lineNum">     102 </span>            :     practice to work with a natural set of master values. Other parameters that
+<span class="lineNum">     103 </span>            :     are derived from these master values are calculated only when needed, and IF
+<span class="lineNum">     104 </span>            :     they are needed and calculated, then they are cached (stored and remembered)
+<span class="lineNum">     105 </span>            :     so they do not need to be re-calculated until the master values they are
+<span class="lineNum">     106 </span>            :     derived from are themselves changed (and become stale).
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            :     Accuracy and round off
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            :     Given,
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span>            :     - that we model a vehicle near the Earth
+<span class="lineNum">     113 </span>            :     - that the Earth surface average radius is about 2*10^7, ft
+<span class="lineNum">     114 </span>            :     - that we use double values for the representation of the location
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            :     we have an accuracy of about
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span>            :     1e-16*2e7ft/1 = 2e-9 ft
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :     left. This should be sufficient for our needs. Note that this is the same
+<span class="lineNum">     121 </span>            :     relative accuracy we would have when we compute directly with
+<span class="lineNum">     122 </span>            :     lon/lat/radius. For the radius value this is clear. For the lon/lat pair
+<span class="lineNum">     123 </span>            :     this is easy to see. Take for example KSFO located at about 37.61 deg north
+<span class="lineNum">     124 </span>            :     122.35 deg west, which corresponds to 0.65642 rad north and 2.13541 rad
+<span class="lineNum">     125 </span>            :     west. Both values are of magnitude of about 1. But 1 ft corresponds to about
+<span class="lineNum">     126 </span>            :     1/(2e7*2*pi) = 7.9577e-09 rad. So the left accuracy with this representation
+<span class="lineNum">     127 </span>            :     is also about 1*1e-16/7.9577e-09 = 1.2566e-08 which is of the same magnitude
+<span class="lineNum">     128 </span>            :     as the representation chosen here.
+<span class="lineNum">     129 </span>            : 
+<span class="lineNum">     130 </span>            :     The advantage of this representation is that it is a linear space without
+<span class="lineNum">     131 </span>            :     singularities. The singularities are the north and south pole and most
+<span class="lineNum">     132 </span>            :     notably the non-steady jump at -pi to pi. It is harder to track this jump
+<span class="lineNum">     133 </span>            :     correctly especially when we need to work with error norms and derivatives
+<span class="lineNum">     134 </span>            :     of the equations of motion within the time-stepping code. Also, the rate of
+<span class="lineNum">     135 </span>            :     change is of the same magnitude for all components in this representation
+<span class="lineNum">     136 </span>            :     which is an advantage for numerical stability in implicit time-stepping.
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            :     Note: Both GEOCENTRIC and GEODETIC latitudes can be used. In order to get
+<span class="lineNum">     139 </span>            :     best matching relative to a map, geodetic latitude must be used.
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span>            :     @see Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;, Second edition
+<span class="lineNum">     142 </span>            :     @see W. C. Durham &quot;Aircraft Dynamics &amp; Control&quot;, section 2.2
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            :     @author Mathias Froehlich
+<span class="lineNum">     145 </span>            :   */
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     148 </span>            : CLASS DECLARATION
+<a name="149"><span class="lineNum">     149 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span><span class="lineCov">    1742668 : class FGLocation : public FGJSBBase</span>
+<span class="lineNum">     152 </span>            : {
+<span class="lineNum">     153 </span>            : public:
+<span class="lineNum">     154 </span>            :   /** Default constructor. */
+<span class="lineNum">     155 </span>            :   FGLocation(void);
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            :   /** Constructor to set the longitude, latitude and the distance
+<span class="lineNum">     158 </span>            :       from the center of the earth.
+<span class="lineNum">     159 </span>            :       @param lon longitude
+<span class="lineNum">     160 </span>            :       @param lat GEOCENTRIC latitude
+<span class="lineNum">     161 </span>            :       @param radius distance from center of earth to vehicle in feet*/
+<span class="lineNum">     162 </span>            :   FGLocation(double lon, double lat, double radius);
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            :   /** Constructor to initialize the location with the cartesian coordinates
+<span class="lineNum">     165 </span>            :       (X,Y,Z) contained in the input FGColumnVector3. Distances are in feet,
+<span class="lineNum">     166 </span>            :       the position is expressed in the ECEF frame.
+<span class="lineNum">     167 </span>            :       @param lv vector that contain the cartesian coordinates*/
+<span class="lineNum">     168 </span>            :   FGLocation(const FGColumnVector3&amp; lv);
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            :   /** Copy constructor. */
+<span class="lineNum">     171 </span>            :   FGLocation(const FGLocation&amp; l);
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :   /** Set the longitude.
+<span class="lineNum">     174 </span>            :       @param longitude Longitude in rad to set.
+<span class="lineNum">     175 </span>            :       Sets the longitude of the location represented with this class instance to
+<span class="lineNum">     176 </span>            :       the value of the given argument. The value is meant to be in rad. The
+<span class="lineNum">     177 </span>            :       latitude and the radius value are preserved with this call with the
+<span class="lineNum">     178 </span>            :       exception of radius being equal to zero. If the radius is previously set
+<span class="lineNum">     179 </span>            :       to zero it is changed to be equal to 1.0 past this call.
+<span class="lineNum">     180 </span>            :       Longitude is positive east and negative west.
+<span class="lineNum">     181 </span>            :       The arguments should be within the bounds of -pi &lt;= lon &lt;= pi.
+<span class="lineNum">     182 </span>            :       The behavior of this function with arguments outside this range is left as
+<span class="lineNum">     183 </span>            :       an exercise to the gentle reader ... */
+<span class="lineNum">     184 </span>            :   void SetLongitude(double longitude);
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span>            :   /** Set the GEOCENTRIC latitude.
+<span class="lineNum">     187 </span>            :       @param latitude GEOCENTRIC latitude in rad to set.
+<span class="lineNum">     188 </span>            :       Sets the latitude of the location represented with this class instance to
+<span class="lineNum">     189 </span>            :       the value of the given argument. The value is meant to be in rad. The
+<span class="lineNum">     190 </span>            :       longitude and the radius value are preserved with this call with the
+<span class="lineNum">     191 </span>            :       exception of radius being equal to zero. If the radius is previously set
+<span class="lineNum">     192 </span>            :       to zero it is changed to be equal to 1.0 past this call.
+<span class="lineNum">     193 </span>            :       Latitude is positive north and negative south.
+<span class="lineNum">     194 </span>            :       The arguments should be within the bounds of -pi/2 &lt;= lat &lt;= pi/2.
+<span class="lineNum">     195 </span>            :       The behavior of this function with arguments outside this range is left as
+<span class="lineNum">     196 </span>            :       an exercise to the gentle reader ... */
+<span class="lineNum">     197 </span>            :   void SetLatitude(double latitude);
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            :   /** Set the distance from the center of the earth.
+<span class="lineNum">     200 </span>            :       @param radius Radius in ft to set.
+<span class="lineNum">     201 </span>            :       Sets the radius of the location represented with this class instance to
+<span class="lineNum">     202 </span>            :       the value of the given argument. The value is meant to be in ft. The
+<span class="lineNum">     203 </span>            :       latitude and longitude values are preserved with this call with the
+<span class="lineNum">     204 </span>            :       exception of radius being equal to zero. If the radius is previously set
+<span class="lineNum">     205 </span>            :       to zero, latitude and longitude is set equal to zero past this call.
+<span class="lineNum">     206 </span>            :       The argument should be positive.
+<span class="lineNum">     207 </span>            :       The behavior of this function called with a negative argument is left as
+<span class="lineNum">     208 </span>            :       an exercise to the gentle reader ... */
+<span class="lineNum">     209 </span>            :   void SetRadius(double radius);
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span>            :   /** Sets the longitude, latitude and the distance from the center of the earth.
+<span class="lineNum">     212 </span>            :       @param lon longitude in radians
+<span class="lineNum">     213 </span>            :       @param lat GEOCENTRIC latitude in radians
+<span class="lineNum">     214 </span>            :       @param radius distance from center of earth to vehicle in feet*/
+<span class="lineNum">     215 </span>            :   void SetPosition(double lon, double lat, double radius);
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            :   /** Sets the longitude, latitude and the distance above the reference spheroid.
+<span class="lineNum">     218 </span>            :       @param lon longitude in radians
+<span class="lineNum">     219 </span>            :       @param lat GEODETIC latitude in radians
+<span class="lineNum">     220 </span>            :       @param height distance above the reference ellipsoid to vehicle in feet*/
+<span class="lineNum">     221 </span>            :   void SetPositionGeodetic(double lon, double lat, double height);
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            :   /** Sets the semimajor and semiminor axis lengths for this planet.
+<span class="lineNum">     224 </span>            :       The eccentricity and flattening are calculated from the semimajor
+<span class="lineNum">     225 </span>            :       and semiminor axis lengths.
+<span class="lineNum">     226 </span>            :       @param semimajor planet semi-major axis in ft.
+<span class="lineNum">     227 </span>            :       @param semiminor planet semi-minor axis in ft.*/
+<span class="lineNum">     228 </span>            :   void SetEllipse(double semimajor, double semiminor);
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            :   /** Get the longitude.
+<span class="lineNum">     231 </span>            :       @return the longitude in rad of the location represented with this
+<a name="232"><span class="lineNum">     232 </span>            :       class instance. The returned values are in the range between</a>
+<span class="lineNum">     233 </span>            :       -pi &lt;= lon &lt;= pi. Longitude is positive east and negative west. */
+<span class="lineNum">     234 </span><span class="lineCov">    1329646 :   double GetLongitude() const { ComputeDerived(); return mLon; }</span>
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :   /** Get the longitude.
+<span class="lineNum">     237 </span>            :       @return the longitude in deg of the location represented with this
+<a name="238"><span class="lineNum">     238 </span>            :       class instance. The returned values are in the range between</a>
+<span class="lineNum">     239 </span>            :       -180 &lt;= lon &lt;= 180.  Longitude is positive east and negative west. */
+<span class="lineNum">     240 </span><span class="lineCov">     224550 :   double GetLongitudeDeg() const { ComputeDerived(); return radtodeg*mLon; }</span>
+<a name="241"><span class="lineNum">     241 </span>            : </a>
+<span class="lineNum">     242 </span>            :   /** Get the sine of Longitude. */
+<span class="lineNum">     243 </span><span class="lineCov">       2707 :   double GetSinLongitude() const { ComputeDerived(); return -mTec2l(2,1); }</span>
+<a name="244"><span class="lineNum">     244 </span>            : </a>
+<span class="lineNum">     245 </span>            :   /** Get the cosine of Longitude. */
+<span class="lineNum">     246 </span><span class="lineCov">       2707 :   double GetCosLongitude() const { ComputeDerived(); return mTec2l(2,2); }</span>
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :   /** Get the GEOCENTRIC latitude in radians.
+<span class="lineNum">     249 </span>            :       @return the geocentric latitude in rad of the location represented with
+<a name="250"><span class="lineNum">     250 </span>            :       this class instance. The returned values are in the range between</a>
+<span class="lineNum">     251 </span>            :       -pi/2 &lt;= lon &lt;= pi/2. Latitude is positive north and negative south. */
+<span class="lineNum">     252 </span><span class="lineCov">     203131 :   double GetLatitude() const { ComputeDerived(); return mLat; }</span>
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span>            :   /** Get the GEODETIC latitude in radians.
+<span class="lineNum">     255 </span>            :       @return the geodetic latitude in rad of the location represented with this
+<a name="256"><span class="lineNum">     256 </span>            :       class instance. The returned values are in the range between</a>
+<span class="lineNum">     257 </span>            :       -pi/2 &lt;= lon &lt;= pi/2. Latitude is positive north and negative south. */
+<span class="lineNum">     258 </span><span class="lineCov">    1076489 :   double GetGeodLatitudeRad(void) const {</span>
+<span class="lineNum">     259 </span><span class="lineCov">    1076489 :     assert(mEllipseSet);</span>
+<span class="lineNum">     260 </span><span class="lineCov">    1076489 :     ComputeDerived(); return mGeodLat;</span>
+<span class="lineNum">     261 </span>            :   }
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span>            :   /** Get the GEOCENTRIC latitude in degrees.
+<span class="lineNum">     264 </span>            :       @return the geocentric latitude in deg of the location represented with
+<a name="265"><span class="lineNum">     265 </span>            :       this class instance. The returned value is in the range between</a>
+<span class="lineNum">     266 </span>            :       -90 &lt;= lon &lt;= 90. Latitude is positive north and negative south. */
+<span class="lineNum">     267 </span><span class="lineCov">     124762 :   double GetLatitudeDeg() const { ComputeDerived(); return radtodeg*mLat; }</span>
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span>            :   /** Get the GEODETIC latitude in degrees.
+<span class="lineNum">     270 </span>            :       @return the geodetic latitude in degrees of the location represented by
+<a name="271"><span class="lineNum">     271 </span>            :       this class instance. The returned value is in the range between</a>
+<span class="lineNum">     272 </span>            :       -90 &lt;= lon &lt;= 90. Latitude is positive north and negative south. */
+<span class="lineNum">     273 </span><span class="lineCov">      99809 :   double GetGeodLatitudeDeg(void) const {</span>
+<span class="lineNum">     274 </span><span class="lineCov">      99809 :     assert(mEllipseSet);</span>
+<span class="lineNum">     275 </span><span class="lineCov">      99809 :     ComputeDerived(); return radtodeg*mGeodLat;</span>
+<span class="lineNum">     276 </span>            :   }
+<a name="277"><span class="lineNum">     277 </span>            : </a>
+<span class="lineNum">     278 </span>            :   /** Gets the geodetic altitude in feet. */
+<span class="lineNum">     279 </span><span class="lineCov">    1105564 :   double GetGeodAltitude(void) const {</span>
+<span class="lineNum">     280 </span><span class="lineCov">    1105564 :     assert(mEllipseSet);</span>
+<span class="lineNum">     281 </span><span class="lineCov">    1105564 :     ComputeDerived(); return GeodeticAltitude;</span>
+<span class="lineNum">     282 </span>            :   }
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span>            :   /** Get the sea level radius in feet below the current location. */
+<span class="lineNum">     285 </span>            :   double GetSeaLevelRadius(void) const;
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span>            :   /** Get the distance from the center of the earth in feet.
+<span class="lineNum">     288 </span>            :       @return the distance of the location represented with this class
+<a name="289"><span class="lineNum">     289 </span>            :       instance to the center of the earth in ft. The radius value is</a>
+<span class="lineNum">     290 </span>            :       always positive. */
+<span class="lineNum">     291 </span><span class="lineCov">     486783 :   double GetRadius() const { ComputeDerived(); return mRadius; }</span>
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            :   /** Transform matrix from local horizontal to earth centered frame.
+<a name="294"><span class="lineNum">     294 </span>            :       @return a const reference to the rotation matrix of the transform from</a>
+<span class="lineNum">     295 </span>            :       the local horizontal frame to the earth centered frame. */
+<span class="lineNum">     296 </span><span class="lineCov">        439 :   const FGMatrix33&amp; GetTl2ec(void) const { ComputeDerived(); return mTl2ec; }</span>
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span>            :   /** Transform matrix from the earth centered to local horizontal frame.
+<a name="299"><span class="lineNum">     299 </span>            :       @return a const reference to the rotation matrix of the transform from</a>
+<span class="lineNum">     300 </span>            :       the earth centered frame to the local horizontal frame. */
+<span class="lineNum">     301 </span><span class="lineCov">        439 :   const FGMatrix33&amp; GetTec2l(void) const { ComputeDerived(); return mTec2l; }</span>
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            :   /** Get the geodetic distance between the current location and a given
+<span class="lineNum">     304 </span>            :       location. This corresponds to the shortest distance between the two
+<span class="lineNum">     305 </span>            :       locations. Earth curvature is taken into account.
+<span class="lineNum">     306 </span>            :       @param target_longitude the target longitude in radians
+<span class="lineNum">     307 </span>            :       @param target_latitude the target latitude in radians
+<span class="lineNum">     308 </span>            :       @return The geodetic distance between the two locations */
+<span class="lineNum">     309 </span>            :   double GetDistanceTo(double target_longitude, double target_latitude) const;
+<span class="lineNum">     310 </span>            :   
+<span class="lineNum">     311 </span>            :   /** Get the heading that should be followed from the current location to
+<span class="lineNum">     312 </span>            :       a given location along the shortest path. Earth curvature is taken into
+<span class="lineNum">     313 </span>            :       account.
+<span class="lineNum">     314 </span>            :       @param target_longitude the target longitude in radians
+<span class="lineNum">     315 </span>            :       @param target_latitude the target latitude in radians
+<span class="lineNum">     316 </span>            :       @return The heading that should be followed to reach the targeted
+<span class="lineNum">     317 </span>            :               location along the shortest path */
+<span class="lineNum">     318 </span>            :   double GetHeadingTo(double target_longitude, double target_latitude) const;
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            :   /** Conversion from Local frame coordinates to a location in the
+<span class="lineNum">     321 </span>            :       earth centered and fixed frame.
+<span class="lineNum">     322 </span>            :       This function calculates the FGLocation of an object which position
+<span class="lineNum">     323 </span>            :       relative to the vehicle is given as in input.
+<a name="324"><span class="lineNum">     324 </span>            :       @param lvec Vector in the local horizontal coordinate frame</a>
+<span class="lineNum">     325 </span>            :       @return The location in the earth centered and fixed frame */
+<span class="lineNum">     326 </span><span class="lineCov">          4 :   FGLocation LocalToLocation(const FGColumnVector3&amp; lvec) const {</span>
+<span class="lineNum">     327 </span><span class="lineCov">          4 :     ComputeDerived(); return mTl2ec*lvec + mECLoc;</span>
+<span class="lineNum">     328 </span>            :   }
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            :   /** Conversion from a location in the earth centered and fixed frame
+<span class="lineNum">     331 </span>            :       to local horizontal frame coordinates.
+<span class="lineNum">     332 </span>            :       This function calculates the relative position between the vehicle and
+<span class="lineNum">     333 </span>            :       the input vector and returns the result expressed in the local frame.
+<a name="334"><span class="lineNum">     334 </span>            :       @param ecvec Vector in the earth centered and fixed frame</a>
+<span class="lineNum">     335 </span>            :       @return The vector in the local horizontal coordinate frame */
+<span class="lineNum">     336 </span><span class="lineCov">          4 :   FGColumnVector3 LocationToLocal(const FGColumnVector3&amp; ecvec) const {</span>
+<span class="lineNum">     337 </span><span class="lineCov">          4 :     ComputeDerived(); return mTec2l*(ecvec - mECLoc);</span>
+<span class="lineNum">     338 </span>            :   }
+<span class="lineNum">     339 </span>            : 
+<span class="lineNum">     340 </span>            :   // For time-stepping, locations have vector properties...
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span>            :   /** Read access the entries of the vector.
+<span class="lineNum">     343 </span>            :       @param idx the component index.
+<span class="lineNum">     344 </span>            :       Return the value of the matrix entry at the given index.
+<a name="345"><span class="lineNum">     345 </span>            :       Indices are counted starting with 1.</a>
+<span class="lineNum">     346 </span>            :       Note that the index given in the argument is unchecked. */
+<span class="lineNum">     347 </span><span class="lineCov">       1781 :   double operator()(unsigned int idx) const { return mECLoc.Entry(idx); }</span>
+<span class="lineNum">     348 </span>            : 
+<span class="lineNum">     349 </span>            :   /** Write access the entries of the vector.
+<span class="lineNum">     350 </span>            :       @param idx the component index.
+<span class="lineNum">     351 </span>            :       @return a reference to the vector entry at the given index.
+<a name="352"><span class="lineNum">     352 </span>            :       Indices are counted starting with 1.</a>
+<span class="lineNum">     353 </span>            :       Note that the index given in the argument is unchecked. */
+<span class="lineNum">     354 </span><span class="lineCov">       6949 :   double&amp; operator()(unsigned int idx) { mCacheValid = false; return mECLoc.Entry(idx); }</span>
+<span class="lineNum">     355 </span>            : 
+<span class="lineNum">     356 </span>            :   /** Read access the entries of the vector.
+<span class="lineNum">     357 </span>            :       @param idx the component index.
+<span class="lineNum">     358 </span>            :       @return the value of the matrix entry at the given index.
+<span class="lineNum">     359 </span>            :       Indices are counted starting with 1.
+<span class="lineNum">     360 </span>            :       This function is just a shortcut for the &lt;tt&gt;double
+<span class="lineNum">     361 </span>            :       operator()(unsigned int idx) const&lt;/tt&gt; function. It is
+<a name="362"><span class="lineNum">     362 </span>            :       used internally to access the elements in a more convenient way.</a>
+<span class="lineNum">     363 </span>            :       Note that the index given in the argument is unchecked. */
+<span class="lineNum">     364 </span><span class="lineCov">         12 :   double Entry(unsigned int idx) const { return mECLoc.Entry(idx); }</span>
+<span class="lineNum">     365 </span>            : 
+<span class="lineNum">     366 </span>            :   /** Write access the entries of the vector.
+<span class="lineNum">     367 </span>            :       @param idx the component index.
+<span class="lineNum">     368 </span>            :       @return a reference to the vector entry at the given index.
+<span class="lineNum">     369 </span>            :       Indices are counted starting with 1.
+<span class="lineNum">     370 </span>            :       This function is just a shortcut for the double&amp;
+<span class="lineNum">     371 </span>            :       operator()(unsigned int idx) function. It is
+<a name="372"><span class="lineNum">     372 </span>            :       used internally to access the elements in a more convenient way.</a>
+<span class="lineNum">     373 </span>            :       Note that the index given in the argument is unchecked. */
+<span class="lineNum">     374 </span><span class="lineCov">         24 :   double&amp; Entry(unsigned int idx) {</span>
+<span class="lineNum">     375 </span><span class="lineCov">         24 :     mCacheValid = false; return mECLoc.Entry(idx);</span>
+<span class="lineNum">     376 </span>            :   }
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            :   /** Sets this location via the supplied vector.
+<span class="lineNum">     379 </span>            :       The location can be set by an Earth-centered, Earth-fixed (ECEF) frame
+<span class="lineNum">     380 </span>            :       position vector. The cache is marked as invalid, so any future requests
+<span class="lineNum">     381 </span>            :       for selected important data will cause the parameters to be calculated.
+<a name="382"><span class="lineNum">     382 </span>            :       @param v the ECEF column vector in feet.</a>
+<span class="lineNum">     383 </span>            :       @return a reference to the FGLocation object. */
+<span class="lineNum">     384 </span><span class="lineCov">         12 :   const FGLocation&amp; operator=(const FGColumnVector3&amp; v)</span>
+<span class="lineNum">     385 </span>            :   {
+<span class="lineNum">     386 </span><span class="lineCov">         12 :     mECLoc(eX) = v(eX);</span>
+<span class="lineNum">     387 </span><span class="lineCov">         12 :     mECLoc(eY) = v(eY);</span>
+<span class="lineNum">     388 </span><span class="lineCov">         12 :     mECLoc(eZ) = v(eZ);</span>
+<span class="lineNum">     389 </span><span class="lineCov">         12 :     mCacheValid = false;</span>
+<span class="lineNum">     390 </span>            :     //ComputeDerived();
+<span class="lineNum">     391 </span><span class="lineCov">         12 :     return *this;</span>
+<span class="lineNum">     392 </span>            :   }
+<span class="lineNum">     393 </span>            : 
+<span class="lineNum">     394 </span>            :   /** Sets this location via the supplied location object.
+<span class="lineNum">     395 </span>            :       @param l A location object reference.
+<span class="lineNum">     396 </span>            :       @return a reference to the FGLocation object. */
+<span class="lineNum">     397 </span>            :   FGLocation&amp; operator=(const FGLocation&amp; l);
+<span class="lineNum">     398 </span>            : 
+<a name="399"><span class="lineNum">     399 </span>            :   /** This operator returns true if the ECEF location vectors for the two</a>
+<span class="lineNum">     400 </span>            :       location objects are equal. */
+<span class="lineNum">     401 </span><span class="lineCov">          7 :   bool operator==(const FGLocation&amp; l) const {</span>
+<span class="lineNum">     402 </span><span class="lineCov">          7 :     return mECLoc == l.mECLoc;</span>
+<span class="lineNum">     403 </span>            :   }
+<span class="lineNum">     404 </span>            : 
+<span class="lineNum">     405 </span>            :   /** This operator returns true if the ECEF location vectors for the two
+<span class="lineNum">     406 </span>            :       location objects are not equal. */
+<span class="lineNum">     407 </span>            :   bool operator!=(const FGLocation&amp; l) const { return ! operator==(l); }
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span>            :   /** This operator adds the ECEF position vectors.
+<span class="lineNum">     410 </span>            :       The cartesian coordinates of the supplied vector (right side) are added to
+<a name="411"><span class="lineNum">     411 </span>            :       the ECEF position vector on the left side of the equality, and a reference</a>
+<span class="lineNum">     412 </span>            :       to this object is returned. */
+<span class="lineNum">     413 </span><span class="lineCov">          1 :   const FGLocation&amp; operator+=(const FGLocation &amp;l) {</span>
+<span class="lineNum">     414 </span><span class="lineCov">          1 :     mCacheValid = false;</span>
+<span class="lineNum">     415 </span><span class="lineCov">          1 :     mECLoc += l.mECLoc;</span>
+<span class="lineNum">     416 </span><span class="lineCov">          1 :     return *this;</span>
+<span class="lineNum">     417 </span>            :   }
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span>            :   /** This operator substracts the ECEF position vectors.
+<span class="lineNum">     420 </span>            :       The cartesian coordinates of the supplied vector (right side) are
+<a name="421"><span class="lineNum">     421 </span>            :       substracted from the ECEF position vector on the left side of the</a>
+<span class="lineNum">     422 </span>            :       equality, and a reference to this object is returned. */
+<span class="lineNum">     423 </span><span class="lineCov">          1 :   const FGLocation&amp; operator-=(const FGLocation &amp;l) {</span>
+<span class="lineNum">     424 </span><span class="lineCov">          1 :     mCacheValid = false;</span>
+<span class="lineNum">     425 </span><span class="lineCov">          1 :     mECLoc -= l.mECLoc;</span>
+<span class="lineNum">     426 </span><span class="lineCov">          1 :     return *this;</span>
+<span class="lineNum">     427 </span>            :   }
+<span class="lineNum">     428 </span>            : 
+<span class="lineNum">     429 </span>            :   /** This operator scales the ECEF position vector.
+<span class="lineNum">     430 </span>            :       The cartesian coordinates of the ECEF position vector on the left side of
+<a name="431"><span class="lineNum">     431 </span>            :       the equality are scaled by the supplied value (right side), and a</a>
+<span class="lineNum">     432 </span>            :       reference to this object is returned. */
+<span class="lineNum">     433 </span><span class="lineCov">          2 :   const FGLocation&amp; operator*=(double scalar) {</span>
+<span class="lineNum">     434 </span><span class="lineCov">          2 :     mCacheValid = false;</span>
+<span class="lineNum">     435 </span><span class="lineCov">          2 :     mECLoc *= scalar;</span>
+<span class="lineNum">     436 </span><span class="lineCov">          2 :     return *this;</span>
+<span class="lineNum">     437 </span>            :   }
+<span class="lineNum">     438 </span>            : 
+<span class="lineNum">     439 </span>            :   /** This operator scales the ECEF position vector.
+<span class="lineNum">     440 </span>            :       The cartesian coordinates of the ECEF position vector on the left side of
+<a name="441"><span class="lineNum">     441 </span>            :       the equality are scaled by the inverse of the supplied value (right side),</a>
+<span class="lineNum">     442 </span>            :       and a reference to this object is returned. */
+<span class="lineNum">     443 </span><span class="lineCov">          1 :   const FGLocation&amp; operator/=(double scalar) {</span>
+<span class="lineNum">     444 </span><span class="lineCov">          1 :     return operator*=(1.0/scalar);</span>
+<span class="lineNum">     445 </span>            :   }
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span>            :   /** This operator adds two ECEF position vectors.
+<a name="448"><span class="lineNum">     448 </span>            :       A new object is returned that defines a position which is the sum of the</a>
+<span class="lineNum">     449 </span>            :       cartesian coordinates of the two positions provided. */
+<span class="lineNum">     450 </span><span class="lineCov">          1 :   FGLocation operator+(const FGLocation&amp; l) const {</span>
+<span class="lineNum">     451 </span><span class="lineCov">          1 :     FGLocation result(mECLoc + l.mECLoc);</span>
+<span class="lineNum">     452 </span><span class="lineCov">          1 :     if (mEllipseSet) result.SetEllipse(a, ec*a);</span>
+<span class="lineNum">     453 </span><span class="lineCov">          1 :     return result;</span>
+<span class="lineNum">     454 </span>            :   }
+<span class="lineNum">     455 </span>            : 
+<span class="lineNum">     456 </span>            :   /** This operator substracts two ECEF position vectors.
+<a name="457"><span class="lineNum">     457 </span>            :       A new object is returned that defines a position which is the difference</a>
+<span class="lineNum">     458 </span>            :       of the cartesian coordinates of the two positions provided. */
+<span class="lineNum">     459 </span><span class="lineCov">        127 :   FGLocation operator-(const FGLocation&amp; l) const {</span>
+<span class="lineNum">     460 </span><span class="lineCov">        127 :     FGLocation result(mECLoc - l.mECLoc);</span>
+<span class="lineNum">     461 </span><span class="lineCov">        127 :     if (mEllipseSet) result.SetEllipse(a, ec*a);</span>
+<span class="lineNum">     462 </span><span class="lineCov">        127 :     return result;</span>
+<span class="lineNum">     463 </span>            :   }
+<span class="lineNum">     464 </span>            : 
+<span class="lineNum">     465 </span>            :   /** This operator scales an ECEF position vector.
+<span class="lineNum">     466 </span>            :       A new object is returned that defines a position made of the cartesian
+<a name="467"><span class="lineNum">     467 </span>            :       coordinates of the provided ECEF position scaled by the supplied scalar</a>
+<span class="lineNum">     468 </span>            :       value. */
+<span class="lineNum">     469 </span><span class="lineCov">          4 :   FGLocation operator*(double scalar) const {</span>
+<span class="lineNum">     470 </span><span class="lineCov">          4 :     FGLocation result(scalar*mECLoc);</span>
+<span class="lineNum">     471 </span><span class="lineCov">          4 :     if (mEllipseSet) result.SetEllipse(a, ec*a);</span>
+<span class="lineNum">     472 </span><span class="lineCov">          4 :     return result;</span>
+<span class="lineNum">     473 </span>            :   }
+<a name="474"><span class="lineNum">     474 </span>            : </a>
+<span class="lineNum">     475 </span>            :   /** Cast to a simple 3d vector */
+<span class="lineNum">     476 </span><span class="lineCov">       1397 :   operator const FGColumnVector3&amp;() const {</span>
+<span class="lineNum">     477 </span><span class="lineCov">       1397 :     return mECLoc;</span>
+<span class="lineNum">     478 </span>            :   }
+<span class="lineNum">     479 </span>            : 
+<span class="lineNum">     480 </span>            : private:
+<span class="lineNum">     481 </span>            :   /** Computation of derived values.
+<span class="lineNum">     482 </span>            :       This function re-computes the derived values like lat/lon and
+<span class="lineNum">     483 </span>            :       transformation matrices. It does this unconditionally. */
+<span class="lineNum">     484 </span>            :   void ComputeDerivedUnconditional(void) const;
+<span class="lineNum">     485 </span>            : 
+<span class="lineNum">     486 </span>            :   /** Computation of derived values.
+<span class="lineNum">     487 </span>            :       This function checks if the derived values like lat/lon and
+<a name="488"><span class="lineNum">     488 </span>            :       transformation matrices are already computed. If so, it</a>
+<span class="lineNum">     489 </span>            :       returns. If they need to be computed this is done here. */
+<span class="lineNum">     490 </span><span class="lineCov">    5194624 :   void ComputeDerived(void) const {</span>
+<span class="lineNum">     491 </span><span class="lineCov">    5194624 :     if (!mCacheValid)</span>
+<span class="lineNum">     492 </span><span class="lineCov">    1283378 :       ComputeDerivedUnconditional();</span>
+<span class="lineNum">     493 </span><span class="lineCov">    5194624 :   }</span>
+<span class="lineNum">     494 </span>            : 
+<span class="lineNum">     495 </span>            :   /** The coordinates in the earth centered frame. This is the master copy.
+<span class="lineNum">     496 </span>            :       The coordinate frame has its center in the middle of the earth.
+<span class="lineNum">     497 </span>            :       Its x-axis points from the center of the earth towards a
+<span class="lineNum">     498 </span>            :       location with zero latitude and longitude on the earths
+<span class="lineNum">     499 </span>            :       surface. The y-axis points from the center of the earth towards a
+<span class="lineNum">     500 </span>            :       location with zero latitude and 90deg longitude on the earths
+<span class="lineNum">     501 </span>            :       surface. The z-axis points from the earths center to the
+<span class="lineNum">     502 </span>            :       geographic north pole.
+<span class="lineNum">     503 </span>            :       @see W. C. Durham &quot;Aircraft Dynamics &amp; Control&quot;, section 2.2 */
+<span class="lineNum">     504 </span>            :   FGColumnVector3 mECLoc;
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span>            :   /** The cached lon/lat/radius values. */
+<span class="lineNum">     507 </span>            :   mutable double mLon;
+<span class="lineNum">     508 </span>            :   mutable double mLat;
+<span class="lineNum">     509 </span>            :   mutable double mRadius;
+<span class="lineNum">     510 </span>            :   mutable double mGeodLat;
+<span class="lineNum">     511 </span>            :   mutable double GeodeticAltitude;
+<span class="lineNum">     512 </span>            : 
+<span class="lineNum">     513 </span>            :   /** The cached rotation matrices from and to the associated frames. */
+<span class="lineNum">     514 </span>            :   mutable FGMatrix33 mTl2ec;
+<span class="lineNum">     515 </span>            :   mutable FGMatrix33 mTec2l;
+<span class="lineNum">     516 </span>            : 
+<span class="lineNum">     517 </span>            :   /* Terms for geodetic latitude calculation. Values are from WGS84 model */
+<span class="lineNum">     518 </span>            :   double a;    // Earth semimajor axis in feet
+<span class="lineNum">     519 </span>            :   double e2;   // Earth eccentricity squared
+<span class="lineNum">     520 </span>            :   double c;
+<span class="lineNum">     521 </span>            :   double ec;
+<span class="lineNum">     522 </span>            :   double ec2;
+<span class="lineNum">     523 </span>            : 
+<span class="lineNum">     524 </span>            :   /** A data validity flag.
+<span class="lineNum">     525 </span>            :       This class implements caching of the derived values like the
+<span class="lineNum">     526 </span>            :       orthogonal rotation matrices or the lon/lat/radius values. For caching we
+<span class="lineNum">     527 </span>            :       carry a flag which signals if the values are valid or not.
+<span class="lineNum">     528 </span>            :       The C++ keyword &quot;mutable&quot; tells the compiler that the data member is
+<span class="lineNum">     529 </span>            :       allowed to change during a const member function. */
+<span class="lineNum">     530 </span>            :   mutable bool mCacheValid;
+<span class="lineNum">     531 </span>            :   // Flag that checks that geodetic methods are called after SetEllipse() has
+<span class="lineNum">     532 </span>            :   // been called.
+<span class="lineNum">     533 </span>            :   bool mEllipseSet = false;
+<span class="lineNum">     534 </span>            : };
+<span class="lineNum">     535 </span>            : 
+<span class="lineNum">     536 </span>            : /** Scalar multiplication.
+<span class="lineNum">     537 </span>            : 
+<span class="lineNum">     538 </span>            :     @param scalar scalar value to multiply with.
+<span class="lineNum">     539 </span>            :     @param l Vector to multiply.
+<a name="540"><span class="lineNum">     540 </span>            : </a>
+<span class="lineNum">     541 </span>            :     Multiply the Vector with a scalar value. */
+<span class="lineNum">     542 </span><span class="lineCov">          3 : inline FGLocation operator*(double scalar, const FGLocation&amp; l)</span>
+<span class="lineNum">     543 </span>            : {
+<span class="lineNum">     544 </span><span class="lineCov">          3 :   return l.operator*(scalar);</span>
+<span class="lineNum">     545 </span>            : }
+<span class="lineNum">     546 </span>            : 
+<span class="lineNum">     547 </span>            : } // namespace JSBSim
+<span class="lineNum">     548 </span>            : 
+<span class="lineNum">     549 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     550 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

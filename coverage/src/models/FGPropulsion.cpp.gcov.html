@@ -1,0 +1,951 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGPropulsion.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGPropulsion.cpp<span style="font-size: 80%;"> (source / <a href="FGPropulsion.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">57</td>
+            <td class="headerCovTableEntry">450</td>
+            <td class="headerCovTableEntryLo">12.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntryLo">33.3 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGPropulsion.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 08/20/00
+<span class="lineNum">       6 </span>            :  Purpose:      Encapsulates the set of engines and tanks associated
+<span class="lineNum">       7 </span>            :                with this aircraft
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 2000  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      13 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      14 </span>            :  later version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      22 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      23 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      26 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : The Propulsion class is the container for the entire propulsion system, which is
+<span class="lineNum">      31 </span>            : comprised of engines and tanks. Once the Propulsion class gets the config file,
+<span class="lineNum">      32 </span>            : it reads in information which is specific to a type of engine. Then:
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : 1) The appropriate engine type instance is created
+<span class="lineNum">      35 </span>            : 2) At least one tank object is created, and is linked to an engine.
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : At Run time each engines Calculate() method is called.
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : HISTORY
+<span class="lineNum">      40 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      41 </span>            : 08/20/00   JSB   Created
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      44 </span>            : INCLUDES
+<span class="lineNum">      45 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      50 </span>            : #include &quot;FGPropulsion.h&quot;
+<span class="lineNum">      51 </span>            : #include &quot;models/FGMassBalance.h&quot;
+<span class="lineNum">      52 </span>            : #include &quot;models/propulsion/FGRocket.h&quot;
+<span class="lineNum">      53 </span>            : #include &quot;models/propulsion/FGTurbine.h&quot;
+<span class="lineNum">      54 </span>            : #include &quot;models/propulsion/FGPiston.h&quot;
+<span class="lineNum">      55 </span>            : #include &quot;models/propulsion/FGElectric.h&quot;
+<span class="lineNum">      56 </span>            : #include &quot;models/propulsion/FGTurboProp.h&quot;
+<span class="lineNum">      57 </span>            : #include &quot;models/propulsion/FGTank.h&quot;
+<span class="lineNum">      58 </span>            : #include &quot;input_output/FGModelLoader.h&quot;
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : using namespace std;
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : namespace JSBSim {
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            : extern short debug_lvl;
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      67 </span>            : CLASS IMPLEMENTATION
+<a name="68"><span class="lineNum">      68 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineCov">          8 : FGPropulsion::FGPropulsion(FGFDMExec* exec) : FGModel(exec)</span>
+<span class="lineNum">      71 </span>            : {
+<span class="lineNum">      72 </span><span class="lineCov">          8 :   Name = &quot;FGPropulsion&quot;;</span>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">          8 :   numSelectedFuelTanks = numSelectedOxiTanks = 0;</span>
+<span class="lineNum">      75 </span><span class="lineCov">          8 :   numTanks = numEngines = 0;</span>
+<span class="lineNum">      76 </span><span class="lineCov">          8 :   numOxiTanks = numFuelTanks = 0;</span>
+<span class="lineNum">      77 </span><span class="lineCov">          8 :   ActiveEngine = -1; // -1: ALL, 0: Engine 1, 1: Engine 2 ...</span>
+<span class="lineNum">      78 </span><span class="lineCov">          8 :   tankJ.InitMatrix();</span>
+<span class="lineNum">      79 </span><span class="lineCov">          8 :   DumpRate = 0.0; </span>
+<span class="lineNum">      80 </span><span class="lineCov">          8 :   RefuelRate = 6000.0;</span>
+<span class="lineNum">      81 </span><span class="lineCov">          8 :   FuelFreeze = false;</span>
+<span class="lineNum">      82 </span><span class="lineCov">          8 :   IsBound =</span>
+<span class="lineNum">      83 </span><span class="lineCov">          8 :   HavePistonEngine =</span>
+<span class="lineNum">      84 </span><span class="lineCov">          8 :   HaveTurbineEngine =</span>
+<span class="lineNum">      85 </span><span class="lineCov">          8 :   HaveRocketEngine =</span>
+<span class="lineNum">      86 </span><span class="lineCov">          8 :   HaveTurboPropEngine =</span>
+<span class="lineNum">      87 </span><span class="lineCov">          8 :   HaveElectricEngine = false;</span>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">      90 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">      91 </span>            : 
+<a name="92"><span class="lineNum">      92 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span><span class="lineCov">         24 : FGPropulsion::~FGPropulsion()</span>
+<span class="lineNum">      95 </span>            : {
+<span class="lineNum">      96 </span><span class="lineCov">          8 :   for (unsigned int i=0; i&lt;Engines.size(); i++) delete Engines[i];</span>
+<span class="lineNum">      97 </span><span class="lineCov">          8 :   Engines.clear();</span>
+<span class="lineNum">      98 </span><span class="lineCov">          8 :   for (unsigned int i=0; i&lt;Tanks.size(); i++) delete Tanks[i];</span>
+<span class="lineNum">      99 </span><span class="lineCov">          8 :   Tanks.clear();</span>
+<span class="lineNum">     100 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">     101 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">     102 </span>            : 
+<a name="103"><span class="lineNum">     103 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span><span class="lineCov">          8 : bool FGPropulsion::InitModel(void)</span>
+<span class="lineNum">     106 </span>            : {
+<span class="lineNum">     107 </span><span class="lineCov">          8 :   bool result = true;</span>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineCov">          8 :   if (!FGModel::InitModel()) return false;</span>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineCov">          8 :   vForces.InitMatrix();</span>
+<span class="lineNum">     112 </span><span class="lineCov">          8 :   vMoments.InitMatrix();</span>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span><span class="lineCov">          8 :   for (unsigned int i=0; i&lt;numTanks; i++) Tanks[i]-&gt;ResetToIC();</span>
+<span class="lineNum">     115 </span><span class="lineCov">          8 :   TotalFuelQuantity = 0.0;</span>
+<span class="lineNum">     116 </span><span class="lineCov">          8 :   TotalOxidizerQuantity = 0.0;</span>
+<span class="lineNum">     117 </span><span class="lineCov">          8 :   refuel = dump = false;</span>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span><span class="lineCov">          8 :   for (unsigned int i=0; i&lt;numEngines; i++)</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :     Engines[i]-&gt;ResetToIC();</span>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineCov">          8 :   return result;</span>
+<span class="lineNum">     123 </span>            : }
+<span class="lineNum">     124 </span>            : 
+<a name="125"><span class="lineNum">     125 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 : bool FGPropulsion::Run(bool Holding)</span>
+<span class="lineNum">     128 </span>            : {
+<span class="lineNum">     129 </span>            :   unsigned int i;
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :   if (FGModel::Run(Holding)) return true;</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :   if (Holding) return false;</span>
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :   RunPreFunctions();</span>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :   vForces.InitMatrix();</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :   vMoments.InitMatrix();</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;numEngines; i++) {</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :     Engines[i]-&gt;Calculate();</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :     ConsumeFuel(Engines[i]);</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :     vForces  += Engines[i]-&gt;GetBodyForces();  // sum body frame forces</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :     vMoments += Engines[i]-&gt;GetMoments();     // sum body frame moments</span>
+<span class="lineNum">     144 </span>            :   }
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :   TotalFuelQuantity = 0.0;</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :   TotalOxidizerQuantity = 0.0;</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;numTanks; i++) {</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :     Tanks[i]-&gt;Calculate( in.TotalDeltaT, in.TAT_c);</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :     switch (Tanks[i]-&gt;GetType()) {</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :     case FGTank::ttFUEL:</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :       TotalFuelQuantity += Tanks[i]-&gt;GetContents();</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :     case FGTank::ttOXIDIZER:</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :       TotalOxidizerQuantity += Tanks[i]-&gt;GetContents();</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     159 </span>            :     }
+<span class="lineNum">     160 </span>            :   }
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :   if (refuel.node() &amp;&amp; refuel) DoRefuel( in.TotalDeltaT );</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :   if (dump.node() &amp;&amp; dump) DumpFuel( in.TotalDeltaT );</span>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :   RunPostFunctions();</span>
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     168 </span>            : }
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     171 </span>            : //
+<span class="lineNum">     172 </span>            : // The engine can tell us how much fuel it needs, but it is up to the propulsion
+<span class="lineNum">     173 </span>            : // subsystem manager class FGPropulsion to manage fuel flow amongst tanks. Engines
+<span class="lineNum">     174 </span>            : // May burn fuel from more than one tank at a time, and may burn from one tank
+<span class="lineNum">     175 </span>            : // before another - that is, may burn from one tank until the tank is depleted,
+<span class="lineNum">     176 </span>            : // then burn from the next highest priority tank. This can be accompished
+<span class="lineNum">     177 </span>            : // by defining a fuel management system, but this way of specifying priorities
+<a name="178"><span class="lineNum">     178 </span>            : // is more automatic from a user perspective.</a>
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 : void FGPropulsion::ConsumeFuel(FGEngine* engine)</span>
+<span class="lineNum">     181 </span>            : {
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :   if (FuelFreeze) return;</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :   if (FDMExec-&gt;GetTrimStatus()) return;</span>
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :   unsigned int TanksWithFuel=0, CurrentFuelTankPriority=1;</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :   unsigned int TanksWithOxidizer=0, CurrentOxidizerTankPriority=1;</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :   vector &lt;int&gt; FeedListFuel, FeedListOxi;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :   bool Starved = true; // Initially set Starved to true. Set to false in code below.</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :   bool hasOxTanks = false;</span>
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :   // For this engine,
+<span class="lineNum">     192 </span>            :   // 1) Count how many fuel tanks with the current priority level have fuel
+<span class="lineNum">     193 </span>            :   // 2) If there none, then try next lower priority (higher number) - that is,
+<span class="lineNum">     194 </span>            :   //    increment CurrentPriority.
+<span class="lineNum">     195 </span>            :   // 3) Build the feed list.
+<span class="lineNum">     196 </span>            :   // 4) Do the same for oxidizer tanks, if needed.
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            :   // Process fuel tanks, if any
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :   while ((TanksWithFuel == 0) &amp;&amp; (CurrentFuelTankPriority &lt;= numTanks)) {</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :     for (unsigned int i=0; i&lt;engine-&gt;GetNumSourceTanks(); i++) {</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :       unsigned int TankId = engine-&gt;GetSourceTank(i);</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :       FGTank* Tank = Tanks[TankId];</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :       unsigned int TankPriority = Tank-&gt;GetPriority();</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :       if (TankPriority != 0) {</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :         switch(Tank-&gt;GetType()) {</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :         case FGTank::ttFUEL:</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :           if ((Tank-&gt;GetContents() &gt; Tank-&gt;GetUnusable()) &amp;&amp; Tank-&gt;GetSelected() &amp;&amp; (TankPriority == CurrentFuelTankPriority)) {</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :             TanksWithFuel++;</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :             Starved = false;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :             FeedListFuel.push_back(TankId);</span>
+<span class="lineNum">     211 </span>            :           } 
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :         case FGTank::ttOXIDIZER:</span>
+<span class="lineNum">     214 </span>            :           // Skip this here (done below)
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     216 </span>            :         }
+<span class="lineNum">     217 </span>            :       }
+<span class="lineNum">     218 </span>            :     }
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :     if (TanksWithFuel == 0) CurrentFuelTankPriority++; // No tanks at this priority, try next priority</span>
+<span class="lineNum">     220 </span>            :   }
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   bool FuelStarved = Starved;</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :   Starved = true;</span>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            :   // Process Oxidizer tanks, if any
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :   if (engine-&gt;GetType() == FGEngine::etRocket) {</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :     while ((TanksWithOxidizer == 0) &amp;&amp; (CurrentOxidizerTankPriority &lt;= numTanks)) {</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :       for (unsigned int i=0; i&lt;engine-&gt;GetNumSourceTanks(); i++) {</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :         unsigned int TankId = engine-&gt;GetSourceTank(i);</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :         FGTank* Tank = Tanks[TankId];</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :         unsigned int TankPriority = Tank-&gt;GetPriority();</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :         if (TankPriority != 0) {</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :           switch(Tank-&gt;GetType()) {</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :           case FGTank::ttFUEL:</span>
+<span class="lineNum">     235 </span>            :             // Skip this here (done above)
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :           case FGTank::ttOXIDIZER:</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :             hasOxTanks = true;</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :             if (Tank-&gt;GetContents() &gt; Tank-&gt;GetUnusable() &amp;&amp; Tank-&gt;GetSelected() &amp;&amp; TankPriority == CurrentOxidizerTankPriority) {</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :               TanksWithOxidizer++;</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :               if (TanksWithFuel &gt; 0) Starved = false;</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :               FeedListOxi.push_back(TankId);</span>
+<span class="lineNum">     243 </span>            :             }
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">     245 </span>            :           }
+<span class="lineNum">     246 </span>            :         }
+<span class="lineNum">     247 </span>            :       }
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :       if (TanksWithOxidizer == 0) CurrentOxidizerTankPriority++; // No tanks at this priority, try next priority</span>
+<span class="lineNum">     249 </span>            :     }
+<span class="lineNum">     250 </span>            :   }
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   bool OxiStarved = Starved;</span>
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   engine-&gt;SetStarved(FuelStarved || (hasOxTanks &amp;&amp; OxiStarved)); // Tanks can be refilled, so be sure to reset engine Starved flag here.</span>
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span>            :   // No fuel or fuel/oxidizer found at any priority!
+<span class="lineNum">     257 </span>            : //  if (Starved) return;
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   if (FuelStarved || (hasOxTanks &amp;&amp; OxiStarved)) return;</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :   double FuelToBurn = engine-&gt;CalcFuelNeed();            // How much fuel does this engine need?</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :   double FuelNeededPerTank = FuelToBurn / TanksWithFuel; // Determine fuel needed per tank.  </span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;FeedListFuel.size(); i++) {</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :     Tanks[FeedListFuel[i]]-&gt;Drain(FuelNeededPerTank); </span>
+<span class="lineNum">     264 </span>            :   }
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :   if (engine-&gt;GetType() == FGEngine::etRocket) {</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :     double OxidizerToBurn = engine-&gt;CalcOxidizerNeed();                // How much fuel does this engine need?</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :     double OxidizerNeededPerTank = 0;</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :     if (TanksWithOxidizer &gt; 0) OxidizerNeededPerTank = OxidizerToBurn / TanksWithOxidizer; // Determine fuel needed per tank.  </span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :     for (unsigned int i=0; i&lt;FeedListOxi.size(); i++) {</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :       Tanks[FeedListOxi[i]]-&gt;Drain(OxidizerNeededPerTank); </span>
+<span class="lineNum">     272 </span>            :     }
+<span class="lineNum">     273 </span>            :   }
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            : }
+<span class="lineNum">     276 </span>            : 
+<a name="277"><span class="lineNum">     277 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 : bool FGPropulsion::GetSteadyState(void)</span>
+<span class="lineNum">     280 </span>            : {
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :   double currentThrust = 0, lastThrust = -1;</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :   int steady_count = 0, j = 0;</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :   bool steady = false;</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :   bool TrimMode = FDMExec-&gt;GetTrimStatus();</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :   double TimeStep = FDMExec-&gt;GetDeltaT();</span>
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :   vForces.InitMatrix();</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :   vMoments.InitMatrix();</span>
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :   if (!FGModel::Run(false)) {</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :     FDMExec-&gt;SetTrimStatus(true);</span>
+<span class="lineNum">     292 </span>            :     // This is a time marching algorithm so it needs a non-zero time step to
+<span class="lineNum">     293 </span>            :     // reach a steady state.
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :     in.TotalDeltaT = 0.5;</span>
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :     for (unsigned int i=0; i&lt;numEngines; i++) {</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :       steady=false;</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :       steady_count=0;</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :       j=0;</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :       while (!steady &amp;&amp; j &lt; 6000) {</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :         Engines[i]-&gt;Calculate();</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :         lastThrust = currentThrust;</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :         currentThrust = Engines[i]-&gt;GetThrust();</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :         if (fabs(lastThrust-currentThrust) &lt; 0.0001) {</span>
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :           steady_count++;</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :           if (steady_count &gt; 120) {</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :             steady=true;</span>
+<span class="lineNum">     308 </span>            :           }
+<span class="lineNum">     309 </span>            :         } else {
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :           steady_count=0;</span>
+<span class="lineNum">     311 </span>            :         }
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :         j++;</span>
+<span class="lineNum">     313 </span>            :       }
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :       vForces  += Engines[i]-&gt;GetBodyForces();  // sum body frame forces</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :       vMoments += Engines[i]-&gt;GetMoments();     // sum body frame moments</span>
+<span class="lineNum">     316 </span>            :     }
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :     FDMExec-&gt;SetTrimStatus(TrimMode);</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :     in.TotalDeltaT = TimeStep;</span>
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     322 </span>            :   } else {
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     324 </span>            :   }
+<span class="lineNum">     325 </span>            : }
+<span class="lineNum">     326 </span>            : 
+<a name="327"><span class="lineNum">     327 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     328 </span>            : 
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 : void FGPropulsion::InitRunning(int n)</span>
+<span class="lineNum">     330 </span>            : {
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :   if (n &gt;= 0) { // A specific engine is supposed to be initialized</span>
+<span class="lineNum">     332 </span>            : 
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :     if (n &gt;= (int)GetNumEngines() ) {</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :       throw(string(&quot;Tried to initialize a non-existent engine!&quot;));</span>
+<span class="lineNum">     335 </span>            :     }
+<span class="lineNum">     336 </span>            : 
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :     in.ThrottleCmd[n] = in.ThrottlePos[n] = 1; // Set the throttle command and position</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :     in.MixtureCmd[n] = in.MixturePos[n] = 1;   // Set the mixture command and position</span>
+<span class="lineNum">     339 </span>            : 
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :     GetEngine(n)-&gt;InitRunning();</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :     GetSteadyState();</span>
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :   } else if (n &lt; 0) { // -1 refers to &quot;All Engines&quot;</span>
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :     for (unsigned int i=0; i&lt;GetNumEngines(); i++) {</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :       in.ThrottleCmd[i] = in.ThrottlePos[i] = 1; // Set the throttle command and position</span>
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :       in.MixtureCmd[i] = in.MixturePos[i] = 1;   // Set the mixture command and position</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :       GetEngine(i)-&gt;InitRunning();</span>
+<span class="lineNum">     349 </span>            :     }
+<span class="lineNum">     350 </span>            : 
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :     GetSteadyState();</span>
+<span class="lineNum">     352 </span>            :   }
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     354 </span>            : 
+<a name="355"><span class="lineNum">     355 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     356 </span>            : 
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 : bool FGPropulsion::Load(Element* el)</span>
+<span class="lineNum">     358 </span>            : {
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :   FGModelLoader ModelLoader(this);</span>
+<span class="lineNum">     360 </span>            : 
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :   Debug(2);</span>
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :   ReadingEngine = false;</span>
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :   double FuelDensity = 6.0;</span>
+<span class="lineNum">     364 </span>            : 
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :   Name = &quot;Propulsion Model: &quot; + el-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     366 </span>            : 
+<span class="lineNum">     367 </span>            :   // Perform base class Pre-Load
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 :   if (!FGModel::Upload(el, true))</span>
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span>            :   // Process tank definitions first to establish the number of fuel tanks
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :   Element* tank_element = el-&gt;FindElement(&quot;tank&quot;);</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :   while (tank_element) {</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :     Tanks.push_back(new FGTank(FDMExec, tank_element, numTanks));</span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :     if (Tanks.back()-&gt;GetType() == FGTank::ttFUEL) { </span>
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :       FuelDensity = Tanks[numFuelTanks]-&gt;GetDensity();</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :       numFuelTanks++;</span>
+<span class="lineNum">     379 </span>            :       }
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :     else if (Tanks.back()-&gt;GetType() == FGTank::ttOXIDIZER) numOxiTanks++;</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :     else {cerr &lt;&lt; &quot;Unknown tank type specified.&quot; &lt;&lt; endl; return false;}</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :     numTanks++;</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :     tank_element = el-&gt;FindNextElement(&quot;tank&quot;);</span>
+<span class="lineNum">     384 </span>            :   }
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :   numSelectedFuelTanks = numFuelTanks;</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :   numSelectedOxiTanks  = numOxiTanks;</span>
+<span class="lineNum">     387 </span>            : 
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :   ReadingEngine = true;</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :   Element* engine_element = el-&gt;FindElement(&quot;engine&quot;);</span>
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :   while (engine_element) {</span>
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :     if (!ModelLoader.Open(engine_element)) return false;</span>
+<span class="lineNum">     392 </span>            : 
+<span class="lineNum">     393 </span>            :     try {
+<span class="lineNum">     394 </span>            :       // Locate the thruster definition
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :       Element* thruster_element = engine_element-&gt;FindElement(&quot;thruster&quot;);</span>
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :       if (!thruster_element || !ModelLoader.Open(thruster_element))</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :         throw(&quot;No thruster definition supplied with engine definition.&quot;);</span>
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :       if (engine_element-&gt;FindElement(&quot;piston_engine&quot;)) {</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :         HavePistonEngine = true;</span>
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :         if (!IsBound) bind();</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :         Element *element = engine_element-&gt;FindElement(&quot;piston_engine&quot;);</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :         Engines.push_back(new FGPiston(FDMExec, element, numEngines, in));</span>
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :       } else if (engine_element-&gt;FindElement(&quot;turbine_engine&quot;)) {</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :         HaveTurbineEngine = true;</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :         if (!IsBound) bind();</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :         Element *element = engine_element-&gt;FindElement(&quot;turbine_engine&quot;);</span>
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :         Engines.push_back(new FGTurbine(FDMExec, element, numEngines, in));</span>
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :       } else if (engine_element-&gt;FindElement(&quot;turboprop_engine&quot;)) {</span>
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :         HaveTurboPropEngine = true;</span>
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :         if (!IsBound) bind();</span>
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :         Element *element = engine_element-&gt;FindElement(&quot;turboprop_engine&quot;);</span>
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :         Engines.push_back(new FGTurboProp(FDMExec, element, numEngines, in));</span>
+<span class="lineNum">     414 </span><span class="lineNoCov">          0 :       } else if (engine_element-&gt;FindElement(&quot;rocket_engine&quot;)) {</span>
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :         HaveRocketEngine = true;</span>
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :         if (!IsBound) bind();</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :         Element *element = engine_element-&gt;FindElement(&quot;rocket_engine&quot;);</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :         Engines.push_back(new FGRocket(FDMExec, element, numEngines, in));</span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :       } else if (engine_element-&gt;FindElement(&quot;electric_engine&quot;)) {</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :         HaveElectricEngine = true;</span>
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :         if (!IsBound) bind();</span>
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :         Element *element = engine_element-&gt;FindElement(&quot;electric_engine&quot;);</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :         Engines.push_back(new FGElectric(FDMExec, element, numEngines, in));</span>
+<span class="lineNum">     424 </span>            :       } else {
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :         cerr &lt;&lt; engine_element-&gt;ReadFrom() &lt;&lt; &quot; Unknown engine type&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :         return false;</span>
+<span class="lineNum">     427 </span>            :       }
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :     } catch (std::string&amp; str) {</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; endl &lt;&lt; fgred &lt;&lt; str &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :       return false;</span>
+<span class="lineNum">     431 </span>            :     }
+<span class="lineNum">     432 </span>            : 
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :     numEngines++;</span>
+<span class="lineNum">     434 </span>            : 
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :     engine_element = el-&gt;FindNextElement(&quot;engine&quot;);</span>
+<span class="lineNum">     436 </span>            :   }
+<span class="lineNum">     437 </span>            : 
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :   CalculateTankInertias();</span>
+<span class="lineNum">     439 </span>            : 
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;dump-rate&quot;))</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :     DumpRate = el-&gt;FindElementValueAsNumberConvertTo(&quot;dump-rate&quot;, &quot;LBS/MIN&quot;);</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;refuel-rate&quot;))</span>
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 :     RefuelRate = el-&gt;FindElementValueAsNumberConvertTo(&quot;refuel-rate&quot;, &quot;LBS/MIN&quot;);</span>
+<span class="lineNum">     444 </span>            : 
+<span class="lineNum">     445 </span>            :   unsigned int i;
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;Engines.size(); i++) {</span>
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :     Engines[i]-&gt;SetFuelDensity(FuelDensity);</span>
+<span class="lineNum">     448 </span>            :   }
+<span class="lineNum">     449 </span>            : 
+<span class="lineNum">     450 </span>            : 
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :   PostLoad(el, FDMExec);</span>
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     454 </span>            : }
+<span class="lineNum">     455 </span>            : 
+<a name="456"><span class="lineNum">     456 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     457 </span>            : 
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 : SGPath FGPropulsion::FindFullPathName(const SGPath&amp; path) const</span>
+<span class="lineNum">     459 </span>            : {
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :   if (!ReadingEngine) return FGModel::FindFullPathName(path);</span>
+<span class="lineNum">     461 </span>            : 
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :   SGPath name = CheckPathName(FDMExec-&gt;GetFullAircraftPath()/string(&quot;Engines&quot;),</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :                               path);</span>
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :   if (!name.isNull()) return name;</span>
+<span class="lineNum">     465 </span>            : 
+<span class="lineNum">     466 </span><span class="lineNoCov">          0 :   return CheckPathName(FDMExec-&gt;GetEnginePath(), path);</span>
+<span class="lineNum">     467 </span>            : }
+<span class="lineNum">     468 </span>            : 
+<a name="469"><span class="lineNum">     469 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     470 </span>            : 
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 : string FGPropulsion::GetPropulsionStrings(const string&amp; delimiter) const</span>
+<span class="lineNum">     472 </span>            : {
+<span class="lineNum">     473 </span>            :   unsigned int i;
+<span class="lineNum">     474 </span>            : 
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :   string PropulsionStrings = &quot;&quot;;</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :   bool firstime = true;</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :   stringstream buf;</span>
+<span class="lineNum">     478 </span>            : 
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;Engines.size(); i++) {</span>
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :     if (firstime)  firstime = false;</span>
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :     else           PropulsionStrings += delimiter;</span>
+<span class="lineNum">     482 </span>            : 
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :     PropulsionStrings += Engines[i]-&gt;GetEngineLabels(delimiter);</span>
+<span class="lineNum">     484 </span>            :   }
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;Tanks.size(); i++) {</span>
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :     if (Tanks[i]-&gt;GetType() == FGTank::ttFUEL) buf &lt;&lt; delimiter &lt;&lt; &quot;Fuel Tank &quot; &lt;&lt; i;</span>
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :     else if (Tanks[i]-&gt;GetType() == FGTank::ttOXIDIZER) buf &lt;&lt; delimiter &lt;&lt; &quot;Oxidizer Tank &quot; &lt;&lt; i;</span>
+<span class="lineNum">     488 </span>            :   }
+<span class="lineNum">     489 </span>            : 
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :   PropulsionStrings += buf.str();</span>
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :   buf.str(&quot;&quot;);</span>
+<span class="lineNum">     492 </span>            : 
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :   return PropulsionStrings;</span>
+<span class="lineNum">     494 </span>            : }
+<span class="lineNum">     495 </span>            : 
+<a name="496"><span class="lineNum">     496 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     497 </span>            : 
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 : string FGPropulsion::GetPropulsionValues(const string&amp; delimiter) const</span>
+<span class="lineNum">     499 </span>            : {
+<span class="lineNum">     500 </span>            :   unsigned int i;
+<span class="lineNum">     501 </span>            : 
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :   string PropulsionValues = &quot;&quot;;</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :   bool firstime = true;</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :   stringstream buf;</span>
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;Engines.size(); i++) {</span>
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 :     if (firstime)  firstime = false;</span>
+<span class="lineNum">     508 </span><span class="lineNoCov">          0 :     else           PropulsionValues += delimiter;</span>
+<span class="lineNum">     509 </span>            : 
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :     PropulsionValues += Engines[i]-&gt;GetEngineValues(delimiter);</span>
+<span class="lineNum">     511 </span>            :   }
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;Tanks.size(); i++) {</span>
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :     buf &lt;&lt; delimiter;</span>
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :     buf &lt;&lt; Tanks[i]-&gt;GetContents();</span>
+<span class="lineNum">     515 </span>            :   }
+<span class="lineNum">     516 </span>            : 
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :   PropulsionValues += buf.str();</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :   buf.str(&quot;&quot;);</span>
+<span class="lineNum">     519 </span>            : 
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :   return PropulsionValues;</span>
+<span class="lineNum">     521 </span>            : }
+<span class="lineNum">     522 </span>            : 
+<a name="523"><span class="lineNum">     523 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     524 </span>            : 
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 : string FGPropulsion::GetPropulsionTankReport()</span>
+<span class="lineNum">     526 </span>            : {
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :   string out=&quot;&quot;;</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :   stringstream outstream;</span>
+<span class="lineNum">     529 </span>            : 
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :   /*const FGMatrix33&amp; mTkI =*/ CalculateTankInertias();</span>
+<span class="lineNum">     531 </span>            : 
+<span class="lineNum">     532 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;numTanks; i++)</span>
+<span class="lineNum">     533 </span>            :   {
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :     FGTank* tank = Tanks[i];</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :     string tankname=&quot;&quot;;</span>
+<span class="lineNum">     536 </span><span class="lineNoCov">          0 :     if (tank-&gt;GetType() == FGTank::ttFUEL &amp;&amp; tank-&gt;GetGrainType() != FGTank::gtUNKNOWN) {</span>
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :       tankname = &quot;Solid Fuel&quot;;</span>
+<span class="lineNum">     538 </span><span class="lineNoCov">          0 :     } else if (tank-&gt;GetType() == FGTank::ttFUEL) {</span>
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :       tankname = &quot;Fuel&quot;;</span>
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 :     } else if (tank-&gt;GetType() == FGTank::ttOXIDIZER) {</span>
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :       tankname = &quot;Oxidizer&quot;;</span>
+<span class="lineNum">     542 </span>            :     } else {
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :       tankname = &quot;(Unknown tank type)&quot;;</span>
+<span class="lineNum">     544 </span>            :     }
+<span class="lineNum">     545 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; highint &lt;&lt; left &lt;&lt; setw(4) &lt;&lt; i &lt;&lt; setw(30) &lt;&lt; tankname &lt;&lt; normint</span>
+<span class="lineNum">     546 </span><span class="lineNoCov">          0 :       &lt;&lt; right &lt;&lt; setw(10) &lt;&lt; tank-&gt;GetContents() &lt;&lt; setw(8) &lt;&lt; tank-&gt;GetXYZ(eX)</span>
+<span class="lineNum">     547 </span><span class="lineNoCov">          0 :          &lt;&lt; setw(8) &lt;&lt; tank-&gt;GetXYZ(eY) &lt;&lt; setw(8) &lt;&lt; tank-&gt;GetXYZ(eZ)</span>
+<span class="lineNum">     548 </span><span class="lineNoCov">          0 :          &lt;&lt; setw(12) &lt;&lt; tank-&gt;GetIxx() &lt;&lt; setw(12) &lt;&lt; tank-&gt;GetIyy()</span>
+<span class="lineNum">     549 </span><span class="lineNoCov">          0 :          &lt;&lt; setw(12) &lt;&lt; tank-&gt;GetIzz() &lt;&lt; endl;</span>
+<span class="lineNum">     550 </span>            :   }
+<span class="lineNum">     551 </span><span class="lineNoCov">          0 :   return outstream.str();</span>
+<span class="lineNum">     552 </span>            : }
+<span class="lineNum">     553 </span>            : 
+<a name="554"><span class="lineNum">     554 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     555 </span>            : 
+<span class="lineNum">     556 </span><span class="lineCov">          8 : const FGColumnVector3&amp; FGPropulsion::GetTanksMoment(void)</span>
+<span class="lineNum">     557 </span>            : {
+<span class="lineNum">     558 </span><span class="lineCov">          8 :   vXYZtank_arm.InitMatrix();</span>
+<span class="lineNum">     559 </span><span class="lineCov">          8 :   for (unsigned int i=0; i&lt;Tanks.size(); i++) {</span>
+<span class="lineNum">     560 </span><span class="lineNoCov">          0 :     vXYZtank_arm += Tanks[i]-&gt;GetXYZ() * Tanks[i]-&gt;GetContents();</span>
+<span class="lineNum">     561 </span>            :   }
+<span class="lineNum">     562 </span><span class="lineCov">          8 :   return vXYZtank_arm;</span>
+<span class="lineNum">     563 </span>            : }
+<span class="lineNum">     564 </span>            : 
+<a name="565"><span class="lineNum">     565 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     566 </span>            : 
+<span class="lineNum">     567 </span><span class="lineCov">          8 : double FGPropulsion::GetTanksWeight(void) const</span>
+<span class="lineNum">     568 </span>            : {
+<span class="lineNum">     569 </span><span class="lineCov">          8 :   double Tw = 0.0;</span>
+<span class="lineNum">     570 </span>            : 
+<span class="lineNum">     571 </span><span class="lineCov">          8 :   for (unsigned int i=0; i&lt;Tanks.size(); i++) Tw += Tanks[i]-&gt;GetContents();</span>
+<span class="lineNum">     572 </span>            : 
+<span class="lineNum">     573 </span><span class="lineCov">          8 :   return Tw;</span>
+<span class="lineNum">     574 </span>            : }
+<span class="lineNum">     575 </span>            : 
+<a name="576"><span class="lineNum">     576 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     577 </span>            : 
+<span class="lineNum">     578 </span><span class="lineCov">          8 : const FGMatrix33&amp; FGPropulsion::CalculateTankInertias(void)</span>
+<span class="lineNum">     579 </span>            : {
+<span class="lineNum">     580 </span><span class="lineCov">          8 :   size_t size = Tanks.size();</span>
+<span class="lineNum">     581 </span>            : 
+<span class="lineNum">     582 </span><span class="lineCov">          8 :   if (size == 0) return tankJ;</span>
+<span class="lineNum">     583 </span>            : 
+<span class="lineNum">     584 </span><span class="lineNoCov">          0 :   tankJ.InitMatrix();</span>
+<span class="lineNum">     585 </span>            : 
+<span class="lineNum">     586 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;size; i++) {</span>
+<span class="lineNum">     587 </span><span class="lineNoCov">          0 :     tankJ += FDMExec-&gt;GetMassBalance()-&gt;GetPointmassInertia( lbtoslug * Tanks[i]-&gt;GetContents(),</span>
+<span class="lineNum">     588 </span><span class="lineNoCov">          0 :                                                              Tanks[i]-&gt;GetXYZ());</span>
+<span class="lineNum">     589 </span><span class="lineNoCov">          0 :     tankJ(1,1) += Tanks[i]-&gt;GetIxx();</span>
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 :     tankJ(2,2) += Tanks[i]-&gt;GetIyy();</span>
+<span class="lineNum">     591 </span><span class="lineNoCov">          0 :     tankJ(3,3) += Tanks[i]-&gt;GetIzz();</span>
+<span class="lineNum">     592 </span>            :   }
+<span class="lineNum">     593 </span>            : 
+<span class="lineNum">     594 </span><span class="lineNoCov">          0 :   return tankJ;</span>
+<span class="lineNum">     595 </span>            : }
+<span class="lineNum">     596 </span>            : 
+<a name="597"><span class="lineNum">     597 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     598 </span>            : 
+<span class="lineNum">     599 </span><span class="lineNoCov">          0 : void FGPropulsion::SetMagnetos(int setting)</span>
+<span class="lineNum">     600 </span>            : {
+<span class="lineNum">     601 </span><span class="lineNoCov">          0 :   if (ActiveEngine &lt; 0) {</span>
+<span class="lineNum">     602 </span><span class="lineNoCov">          0 :     for (unsigned i=0; i&lt;Engines.size(); i++) {</span>
+<span class="lineNum">     603 </span>            :       // ToDo: first need to make sure the engine Type is really appropriate:
+<span class="lineNum">     604 </span>            :       //   do a check to see if it is of type Piston. This should be done for
+<span class="lineNum">     605 </span>            :       //   all of this kind of possibly across-the-board settings.
+<span class="lineNum">     606 </span><span class="lineNoCov">          0 :       if (Engines[i]-&gt;GetType() == FGEngine::etPiston)</span>
+<span class="lineNum">     607 </span><span class="lineNoCov">          0 :         ((FGPiston*)Engines[i])-&gt;SetMagnetos(setting);</span>
+<span class="lineNum">     608 </span>            :     }
+<span class="lineNum">     609 </span>            :   } else {
+<span class="lineNum">     610 </span><span class="lineNoCov">          0 :     ((FGPiston*)Engines[ActiveEngine])-&gt;SetMagnetos(setting);</span>
+<span class="lineNum">     611 </span>            :   }
+<span class="lineNum">     612 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     613 </span>            : 
+<a name="614"><span class="lineNum">     614 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     615 </span>            : 
+<span class="lineNum">     616 </span><span class="lineNoCov">          0 : void FGPropulsion::SetStarter(int setting)</span>
+<span class="lineNum">     617 </span>            : {
+<span class="lineNum">     618 </span><span class="lineNoCov">          0 :   if (ActiveEngine &lt; 0) {</span>
+<span class="lineNum">     619 </span><span class="lineNoCov">          0 :     for (unsigned i=0; i&lt;Engines.size(); i++) {</span>
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 :       if (setting == 0)</span>
+<span class="lineNum">     621 </span><span class="lineNoCov">          0 :         Engines[i]-&gt;SetStarter(false);</span>
+<span class="lineNum">     622 </span>            :       else
+<span class="lineNum">     623 </span><span class="lineNoCov">          0 :         Engines[i]-&gt;SetStarter(true);</span>
+<span class="lineNum">     624 </span>            :     }
+<span class="lineNum">     625 </span>            :   } else {
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :     if (setting == 0)</span>
+<span class="lineNum">     627 </span><span class="lineNoCov">          0 :       Engines[ActiveEngine]-&gt;SetStarter(false);</span>
+<span class="lineNum">     628 </span>            :     else
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :       Engines[ActiveEngine]-&gt;SetStarter(true);</span>
+<span class="lineNum">     630 </span>            :   }
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     632 </span>            : 
+<a name="633"><span class="lineNum">     633 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     634 </span>            : 
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 : int FGPropulsion::GetStarter(void) const</span>
+<span class="lineNum">     636 </span>            : {
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :   if (ActiveEngine &lt; 0) {</span>
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 :     bool starter = true;</span>
+<span class="lineNum">     639 </span>            : 
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :     for (unsigned i=0; i&lt;Engines.size(); i++)</span>
+<span class="lineNum">     641 </span><span class="lineNoCov">          0 :       starter &amp;= Engines[i]-&gt;GetStarter();</span>
+<span class="lineNum">     642 </span>            : 
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :     return starter ? 1 : 0;</span>
+<span class="lineNum">     644 </span>            :   } else
+<span class="lineNum">     645 </span><span class="lineNoCov">          0 :     return Engines[ActiveEngine]-&gt;GetStarter() ? 1: 0;</span>
+<span class="lineNum">     646 </span>            : }
+<span class="lineNum">     647 </span>            : 
+<a name="648"><span class="lineNum">     648 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     649 </span>            : 
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 : void FGPropulsion::SetCutoff(int setting)</span>
+<span class="lineNum">     651 </span>            : {
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 :   bool bsetting = setting == 0 ? false : true;</span>
+<span class="lineNum">     653 </span>            : 
+<span class="lineNum">     654 </span><span class="lineNoCov">          0 :   if (ActiveEngine &lt; 0) {</span>
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :     for (unsigned i=0; i&lt;Engines.size(); i++) {</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :       switch (Engines[i]-&gt;GetType()) { </span>
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :         case FGEngine::etTurbine:</span>
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :           ((FGTurbine*)Engines[i])-&gt;SetCutoff(bsetting);</span>
+<span class="lineNum">     659 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :         case FGEngine::etTurboprop:</span>
+<span class="lineNum">     661 </span><span class="lineNoCov">          0 :           ((FGTurboProp*)Engines[i])-&gt;SetCutoff(bsetting);</span>
+<span class="lineNum">     662 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     663 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     665 </span>            :       }
+<span class="lineNum">     666 </span>            :     }
+<span class="lineNum">     667 </span>            :   } else {
+<span class="lineNum">     668 </span><span class="lineNoCov">          0 :     switch (Engines[ActiveEngine]-&gt;GetType()) { </span>
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :       case FGEngine::etTurbine:</span>
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :         ((FGTurbine*)Engines[ActiveEngine])-&gt;SetCutoff(bsetting);</span>
+<span class="lineNum">     671 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     672 </span><span class="lineNoCov">          0 :       case FGEngine::etTurboprop:</span>
+<span class="lineNum">     673 </span><span class="lineNoCov">          0 :         ((FGTurboProp*)Engines[ActiveEngine])-&gt;SetCutoff(bsetting);</span>
+<span class="lineNum">     674 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     675 </span><span class="lineNoCov">          0 :       default:</span>
+<span class="lineNum">     676 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     677 </span>            :     }
+<span class="lineNum">     678 </span>            :   }
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     680 </span>            : 
+<a name="681"><span class="lineNum">     681 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     682 </span>            : 
+<span class="lineNum">     683 </span><span class="lineNoCov">          0 : int FGPropulsion::GetCutoff(void) const</span>
+<span class="lineNum">     684 </span>            : {
+<span class="lineNum">     685 </span><span class="lineNoCov">          0 :   if (ActiveEngine &lt; 0) {</span>
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :     bool cutoff = true;</span>
+<span class="lineNum">     687 </span>            : 
+<span class="lineNum">     688 </span><span class="lineNoCov">          0 :     for (unsigned i=0; i&lt;Engines.size(); i++) {</span>
+<span class="lineNum">     689 </span><span class="lineNoCov">          0 :       switch (Engines[i]-&gt;GetType()) { </span>
+<span class="lineNum">     690 </span><span class="lineNoCov">          0 :       case FGEngine::etTurbine:</span>
+<span class="lineNum">     691 </span><span class="lineNoCov">          0 :         cutoff &amp;= ((FGTurbine*)Engines[i])-&gt;GetCutoff();</span>
+<span class="lineNum">     692 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     693 </span><span class="lineNoCov">          0 :       case FGEngine::etTurboprop:</span>
+<span class="lineNum">     694 </span><span class="lineNoCov">          0 :         cutoff &amp;= ((FGTurboProp*)Engines[i])-&gt;GetCutoff();</span>
+<span class="lineNum">     695 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     696 </span><span class="lineNoCov">          0 :       default:</span>
+<span class="lineNum">     697 </span><span class="lineNoCov">          0 :         return -1;</span>
+<span class="lineNum">     698 </span>            :       }
+<span class="lineNum">     699 </span>            :     }
+<span class="lineNum">     700 </span>            : 
+<span class="lineNum">     701 </span><span class="lineNoCov">          0 :     return cutoff ? 1 : 0;</span>
+<span class="lineNum">     702 </span>            :   } else {
+<span class="lineNum">     703 </span><span class="lineNoCov">          0 :     switch (Engines[ActiveEngine]-&gt;GetType()) {</span>
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :     case FGEngine::etTurbine:</span>
+<span class="lineNum">     705 </span><span class="lineNoCov">          0 :       return ((FGTurbine*)Engines[ActiveEngine])-&gt;GetCutoff() ? 1 : 0;</span>
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :     case FGEngine::etTurboprop:</span>
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :       return ((FGTurboProp*)Engines[ActiveEngine])-&gt;GetCutoff() ? 1 : 0;</span>
+<span class="lineNum">     708 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     710 </span>            :     }
+<span class="lineNum">     711 </span>            :   }
+<span class="lineNum">     712 </span>            : 
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :   return -1;</span>
+<span class="lineNum">     714 </span>            : }
+<span class="lineNum">     715 </span>            : 
+<a name="716"><span class="lineNum">     716 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     717 </span>            : 
+<span class="lineNum">     718 </span><span class="lineNoCov">          0 : void FGPropulsion::SetActiveEngine(int engine)</span>
+<span class="lineNum">     719 </span>            : {
+<span class="lineNum">     720 </span><span class="lineNoCov">          0 :   if (engine &gt;= (int)Engines.size() || engine &lt; 0)</span>
+<span class="lineNum">     721 </span><span class="lineNoCov">          0 :     ActiveEngine = -1;</span>
+<span class="lineNum">     722 </span>            :   else
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :     ActiveEngine = engine;</span>
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     725 </span>            : 
+<a name="726"><span class="lineNum">     726 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     727 </span>            : 
+<span class="lineNum">     728 </span><span class="lineNoCov">          0 : double FGPropulsion::Transfer(int source, int target, double amount)</span>
+<span class="lineNum">     729 </span>            : {
+<span class="lineNum">     730 </span>            :  double shortage, overage;
+<span class="lineNum">     731 </span>            : 
+<span class="lineNum">     732 </span><span class="lineNoCov">          0 :   if (source == -1) {</span>
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :      shortage = 0.0;</span>
+<span class="lineNum">     734 </span>            :   } else {
+<span class="lineNum">     735 </span><span class="lineNoCov">          0 :      shortage = Tanks[source]-&gt;Drain(amount);</span>
+<span class="lineNum">     736 </span>            :   }
+<span class="lineNum">     737 </span><span class="lineNoCov">          0 :   if (target == -1) {</span>
+<span class="lineNum">     738 </span><span class="lineNoCov">          0 :      overage = 0.0;</span>
+<span class="lineNum">     739 </span>            :   } else {
+<span class="lineNum">     740 </span><span class="lineNoCov">          0 :      overage = Tanks[target]-&gt;Fill(amount - shortage);</span>
+<span class="lineNum">     741 </span>            :   }
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :   return overage;</span>
+<span class="lineNum">     743 </span>            : }
+<span class="lineNum">     744 </span>            : 
+<a name="745"><span class="lineNum">     745 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     746 </span>            : 
+<span class="lineNum">     747 </span><span class="lineNoCov">          0 : void FGPropulsion::DoRefuel(double time_slice)</span>
+<span class="lineNum">     748 </span>            : {
+<span class="lineNum">     749 </span>            :   unsigned int i;
+<span class="lineNum">     750 </span>            : 
+<span class="lineNum">     751 </span><span class="lineNoCov">          0 :   double fillrate = RefuelRate / 60.0 * time_slice;   </span>
+<span class="lineNum">     752 </span><span class="lineNoCov">          0 :   int TanksNotFull = 0;</span>
+<span class="lineNum">     753 </span>            : 
+<span class="lineNum">     754 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;numTanks; i++) {</span>
+<span class="lineNum">     755 </span><span class="lineNoCov">          0 :     if (Tanks[i]-&gt;GetPctFull() &lt; 99.99) ++TanksNotFull;</span>
+<span class="lineNum">     756 </span>            :   }
+<span class="lineNum">     757 </span>            : 
+<span class="lineNum">     758 </span>            :   // adds fuel equally to all tanks that are not full
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :   if (TanksNotFull) {</span>
+<span class="lineNum">     760 </span><span class="lineNoCov">          0 :     for (i=0; i&lt;numTanks; i++) {</span>
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 :       if (Tanks[i]-&gt;GetPctFull() &lt; 99.99)</span>
+<span class="lineNum">     762 </span><span class="lineNoCov">          0 :           Transfer(-1, i, fillrate/TanksNotFull);</span>
+<span class="lineNum">     763 </span>            :     }
+<span class="lineNum">     764 </span>            :   }
+<span class="lineNum">     765 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     766 </span>            : 
+<a name="767"><span class="lineNum">     767 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     768 </span>            : 
+<span class="lineNum">     769 </span><span class="lineNoCov">          0 : void FGPropulsion::DumpFuel(double time_slice)</span>
+<span class="lineNum">     770 </span>            : {
+<span class="lineNum">     771 </span>            :   unsigned int i;
+<span class="lineNum">     772 </span><span class="lineNoCov">          0 :   int TanksDumping = 0;</span>
+<span class="lineNum">     773 </span>            : 
+<span class="lineNum">     774 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;numTanks; i++) {</span>
+<span class="lineNum">     775 </span><span class="lineNoCov">          0 :     if (Tanks[i]-&gt;GetContents() &gt; Tanks[i]-&gt;GetStandpipe()) ++TanksDumping;</span>
+<span class="lineNum">     776 </span>            :   }
+<span class="lineNum">     777 </span>            : 
+<span class="lineNum">     778 </span><span class="lineNoCov">          0 :   if (TanksDumping == 0) return;</span>
+<span class="lineNum">     779 </span>            : 
+<span class="lineNum">     780 </span><span class="lineNoCov">          0 :   double dump_rate_per_tank = DumpRate / 60.0 * time_slice / TanksDumping;</span>
+<span class="lineNum">     781 </span>            : 
+<span class="lineNum">     782 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;numTanks; i++) {</span>
+<span class="lineNum">     783 </span><span class="lineNoCov">          0 :     if (Tanks[i]-&gt;GetContents() &gt; Tanks[i]-&gt;GetStandpipe()) {</span>
+<span class="lineNum">     784 </span><span class="lineNoCov">          0 :       Transfer(i, -1, dump_rate_per_tank);</span>
+<span class="lineNum">     785 </span>            :     }
+<span class="lineNum">     786 </span>            :   }
+<span class="lineNum">     787 </span>            : }
+<span class="lineNum">     788 </span>            : 
+<a name="789"><span class="lineNum">     789 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     790 </span>            : 
+<span class="lineNum">     791 </span><span class="lineNoCov">          0 : void FGPropulsion::SetFuelFreeze(bool f)</span>
+<span class="lineNum">     792 </span>            : {
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :   FuelFreeze = f;</span>
+<span class="lineNum">     794 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;numEngines; i++) {</span>
+<span class="lineNum">     795 </span><span class="lineNoCov">          0 :     Engines[i]-&gt;SetFuelFreeze(f);</span>
+<span class="lineNum">     796 </span>            :   }
+<span class="lineNum">     797 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     798 </span>            : 
+<a name="799"><span class="lineNum">     799 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     800 </span>            : 
+<span class="lineNum">     801 </span><span class="lineNoCov">          0 : void FGPropulsion::bind(void)</span>
+<span class="lineNum">     802 </span>            : {
+<span class="lineNum">     803 </span>            :   typedef double (FGPropulsion::*PMF)(int) const;
+<span class="lineNum">     804 </span>            :   typedef int (FGPropulsion::*iPMF)(void) const;
+<span class="lineNum">     805 </span>            : 
+<span class="lineNum">     806 </span><span class="lineNoCov">          0 :   IsBound = true;</span>
+<span class="lineNum">     807 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;propulsion/set-running&quot;, this, (iPMF)0, &amp;FGPropulsion::InitRunning, false);</span>
+<span class="lineNum">     808 </span><span class="lineNoCov">          0 :   if (HaveTurbineEngine || HaveTurboPropEngine) {</span>
+<span class="lineNum">     809 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie(&quot;propulsion/starter_cmd&quot;, this, &amp;FGPropulsion::GetStarter, &amp;FGPropulsion::SetStarter);</span>
+<span class="lineNum">     810 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie(&quot;propulsion/cutoff_cmd&quot;, this,  &amp;FGPropulsion::GetCutoff, &amp;FGPropulsion::SetCutoff);</span>
+<span class="lineNum">     811 </span>            :   }
+<span class="lineNum">     812 </span>            : 
+<span class="lineNum">     813 </span><span class="lineNoCov">          0 :   if (HavePistonEngine) {</span>
+<span class="lineNum">     814 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie(&quot;propulsion/starter_cmd&quot;, this, &amp;FGPropulsion::GetStarter, &amp;FGPropulsion::SetStarter);</span>
+<span class="lineNum">     815 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie(&quot;propulsion/magneto_cmd&quot;, this, (iPMF)0, &amp;FGPropulsion::SetMagnetos, false);</span>
+<span class="lineNum">     816 </span>            :   }
+<span class="lineNum">     817 </span>            : 
+<span class="lineNum">     818 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;propulsion/active_engine&quot;, this, (iPMF)&amp;FGPropulsion::GetActiveEngine,</span>
+<span class="lineNum">     819 </span>            :                         &amp;FGPropulsion::SetActiveEngine, true);
+<span class="lineNum">     820 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;forces/fbx-prop-lbs&quot;, this, eX, (PMF)&amp;FGPropulsion::GetForces);</span>
+<span class="lineNum">     821 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;forces/fby-prop-lbs&quot;, this, eY, (PMF)&amp;FGPropulsion::GetForces);</span>
+<span class="lineNum">     822 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;forces/fbz-prop-lbs&quot;, this, eZ, (PMF)&amp;FGPropulsion::GetForces);</span>
+<span class="lineNum">     823 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;moments/l-prop-lbsft&quot;, this, eX, (PMF)&amp;FGPropulsion::GetMoments);</span>
+<span class="lineNum">     824 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;moments/m-prop-lbsft&quot;, this, eY, (PMF)&amp;FGPropulsion::GetMoments);</span>
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;moments/n-prop-lbsft&quot;, this, eZ, (PMF)&amp;FGPropulsion::GetMoments);</span>
+<span class="lineNum">     826 </span><span class="lineNoCov">          0 :   TotalFuelQuantity = PropertyManager-&gt;CreatePropertyObject&lt;double&gt;(&quot;propulsion/total-fuel-lbs&quot;);</span>
+<span class="lineNum">     827 </span><span class="lineNoCov">          0 :   TotalOxidizerQuantity = PropertyManager-&gt;CreatePropertyObject&lt;double&gt;(&quot;propulsion/total-oxidizer-lbs&quot;);</span>
+<span class="lineNum">     828 </span><span class="lineNoCov">          0 :   refuel = PropertyManager-&gt;CreatePropertyObject&lt;bool&gt;(&quot;propulsion/refuel&quot;);</span>
+<span class="lineNum">     829 </span><span class="lineNoCov">          0 :   dump = PropertyManager-&gt;CreatePropertyObject&lt;bool&gt;(&quot;propulsion/fuel_dump&quot;);</span>
+<span class="lineNum">     830 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     831 </span>            : 
+<span class="lineNum">     832 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     833 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     834 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     835 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     836 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     837 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     838 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     839 </span>            : //       whatsoever.
+<span class="lineNum">     840 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     841 </span>            : //       startup messages
+<span class="lineNum">     842 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     843 </span>            : //       a class is instantiated
+<span class="lineNum">     844 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     845 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     846 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     847 </span>            : //       are printed out periodically
+<span class="lineNum">     848 </span>            : //    16: When set various parameters are sanity checked and
+<a name="849"><span class="lineNum">     849 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     850 </span>            : 
+<span class="lineNum">     851 </span><span class="lineCov">         16 : void FGPropulsion::Debug(int from)</span>
+<span class="lineNum">     852 </span>            : {
+<span class="lineNum">     853 </span><span class="lineCov">         16 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     854 </span>            : 
+<span class="lineNum">     855 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     856 </span><span class="lineCov">         16 :     if (from == 2) { // Loader</span>
+<span class="lineNum">     857 </span><span class="lineNoCov">          0 :       cout &lt;&lt; endl &lt;&lt; &quot;  Propulsion:&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     858 </span>            :     }
+<span class="lineNum">     859 </span>            :   }
+<span class="lineNum">     860 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     861 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGPropulsion&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     862 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGPropulsion&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     863 </span>            :   }
+<span class="lineNum">     864 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     865 </span>            :   }
+<span class="lineNum">     866 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     867 </span>            :   }
+<span class="lineNum">     868 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     869 </span>            :   }
+<span class="lineNum">     870 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     871 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     872 </span>            :     }
+<a name="873"><span class="lineNum">     873 </span>            :   }</a>
+<span class="lineNum">     874 </span>            : }
+<span class="lineNum">     875 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

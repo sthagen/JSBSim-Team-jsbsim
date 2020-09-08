@@ -1,0 +1,8 @@
+<map id="GetEulerDeg" name="GetEulerDeg">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a24bd1326d5380a1268a2bd54771633b2" title="Gets the initial pitch angle. " alt="" coords="151,5,333,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#a30c3ed98402719941d382a4511049416" title="Gets the initial roll angle. " alt="" coords="151,71,333,112"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInitialCondition.html#ae1bb0b96c67e458d329b1b71acda3a70" title="Gets the initial heading angle. " alt="" coords="151,136,333,177"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGPropagate.html#a269d067d10ad81cf2b04e951dc1af761" title="Retrieves the Euler angles (in degrees) that define the vehicle orientation. " alt="" coords="165,201,319,243"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="381,71,564,112"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGPropagate.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles that define the vehicle orientation. " alt="" coords="395,201,550,243"/>
+</map>

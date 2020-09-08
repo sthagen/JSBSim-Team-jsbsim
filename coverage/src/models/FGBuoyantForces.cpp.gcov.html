@@ -1,0 +1,380 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGBuoyantForces.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGBuoyantForces.cpp<span style="font-size: 80%;"> (source / <a href="FGBuoyantForces.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">88</td>
+            <td class="headerCovTableEntryLo">44.3 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryLo">66.7 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGBuoyantForces.cpp
+<span class="lineNum">       4 </span>            :  Authors:      Anders Gidenstam, Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 01/21/08
+<span class="lineNum">       6 </span>            :  Purpose:      Encapsulates the buoyant forces
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------------- Copyright (C) 2008 - 2011  Anders Gidenstam        -------------
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 2008  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      13 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      14 </span>            :  later version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      22 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      23 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      26 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : HISTORY
+<span class="lineNum">      32 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      33 </span>            : 01/21/08   JSB   Created
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      36 </span>            : INCLUDES
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      40 </span>            : #include &quot;FGBuoyantForces.h&quot;
+<span class="lineNum">      41 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : using namespace std;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : namespace JSBSim {
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      48 </span>            : CLASS IMPLEMENTATION
+<a name="49"><span class="lineNum">      49 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineCov">          8 : FGBuoyantForces::FGBuoyantForces(FGFDMExec* FDMExec) : FGModel(FDMExec)</span>
+<span class="lineNum">      52 </span>            : {
+<span class="lineNum">      53 </span><span class="lineCov">          8 :   Name = &quot;FGBuoyantForces&quot;;</span>
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span><span class="lineCov">          8 :   NoneDefined = true;</span>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span><span class="lineCov">          8 :   vTotalForces.InitMatrix();</span>
+<span class="lineNum">      58 </span><span class="lineCov">          8 :   vTotalMoments.InitMatrix();</span>
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span><span class="lineCov">          8 :   gasCellJ.InitMatrix();</span>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">      63 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">      64 </span>            : 
+<a name="65"><span class="lineNum">      65 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineCov">         24 : FGBuoyantForces::~FGBuoyantForces()</span>
+<span class="lineNum">      68 </span>            : {
+<span class="lineNum">      69 </span><span class="lineCov">          8 :   for (unsigned int i=0; i&lt;Cells.size(); i++) delete Cells[i];</span>
+<span class="lineNum">      70 </span><span class="lineCov">          8 :   Cells.clear();</span>
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">      73 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">      74 </span>            : 
+<a name="75"><span class="lineNum">      75 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineCov">          8 : bool FGBuoyantForces::InitModel(void)</span>
+<span class="lineNum">      78 </span>            : {
+<span class="lineNum">      79 </span><span class="lineCov">          8 :   if (!FGModel::InitModel()) return false;</span>
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span><span class="lineCov">          8 :   vTotalForces.InitMatrix();</span>
+<span class="lineNum">      82 </span><span class="lineCov">          8 :   vTotalMoments.InitMatrix();</span>
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span><span class="lineCov">          8 :   return true;</span>
+<span class="lineNum">      85 </span>            : }
+<span class="lineNum">      86 </span>            : 
+<a name="87"><span class="lineNum">      87 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 : bool FGBuoyantForces::Run(bool Holding)</span>
+<span class="lineNum">      90 </span>            : {
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :   if (FGModel::Run(Holding)) return true;</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :   if (Holding) return false; // if paused don't execute</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :   if (NoneDefined) return true;</span>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :   RunPreFunctions();</span>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :   vTotalForces.InitMatrix();</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   vTotalMoments.InitMatrix();</span>
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt;Cells.size(); i++) {</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :     Cells[i]-&gt;Calculate(FDMExec-&gt;GetDeltaT());</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :     vTotalForces  += Cells[i]-&gt;GetBodyForces();</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :     vTotalMoments += Cells[i]-&gt;GetMoments();</span>
+<span class="lineNum">     104 </span>            :   }
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   RunPostFunctions();</span>
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     109 </span>            : }
+<span class="lineNum">     110 </span>            : 
+<a name="111"><span class="lineNum">     111 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 : bool FGBuoyantForces::Load(Element *document)</span>
+<span class="lineNum">     114 </span>            : {
+<span class="lineNum">     115 </span>            :   Element *gas_cell_element;
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :   Debug(2);</span>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :   // Perform base class Pre-Load
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :   if (!FGModel::Upload(document, true))</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :   gas_cell_element = document-&gt;FindElement(&quot;gas_cell&quot;);</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :   while (gas_cell_element) {</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :     NoneDefined = false;</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :     Cells.push_back(new FGGasCell(FDMExec, gas_cell_element, Cells.size(), in));</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :     gas_cell_element = document-&gt;FindNextElement(&quot;gas_cell&quot;);</span>
+<span class="lineNum">     128 </span>            :   }
+<span class="lineNum">     129 </span>            :   
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :   PostLoad(document, FDMExec);</span>
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :   if (!NoneDefined) {</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :     bind();</span>
+<span class="lineNum">     134 </span>            :   }
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     137 </span>            : }
+<span class="lineNum">     138 </span>            : 
+<a name="139"><span class="lineNum">     139 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span><span class="lineCov">          8 : double FGBuoyantForces::GetGasMass(void) const</span>
+<span class="lineNum">     142 </span>            : {
+<span class="lineNum">     143 </span><span class="lineCov">          8 :   double Gw = 0.0;</span>
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span><span class="lineCov">          8 :   for (unsigned int i = 0; i &lt; Cells.size(); i++) {</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     Gw += Cells[i]-&gt;GetMass();</span>
+<span class="lineNum">     147 </span>            :   }
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span><span class="lineCov">          8 :   return Gw;</span>
+<span class="lineNum">     150 </span>            : }
+<span class="lineNum">     151 </span>            : 
+<a name="152"><span class="lineNum">     152 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span><span class="lineCov">          8 : const FGColumnVector3&amp; FGBuoyantForces::GetGasMassMoment(void)</span>
+<span class="lineNum">     155 </span>            : {
+<span class="lineNum">     156 </span><span class="lineCov">          8 :   vXYZgasCell_arm.InitMatrix();</span>
+<span class="lineNum">     157 </span><span class="lineCov">          8 :   for (unsigned int i = 0; i &lt; Cells.size(); i++) {</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     vXYZgasCell_arm += Cells[i]-&gt;GetMassMoment();</span>
+<span class="lineNum">     159 </span>            :   }
+<span class="lineNum">     160 </span><span class="lineCov">          8 :   return vXYZgasCell_arm;</span>
+<span class="lineNum">     161 </span>            : }
+<span class="lineNum">     162 </span>            : 
+<a name="163"><span class="lineNum">     163 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span><span class="lineCov">          8 : const FGMatrix33&amp; FGBuoyantForces::GetGasMassInertia(void)</span>
+<span class="lineNum">     166 </span>            : {
+<span class="lineNum">     167 </span><span class="lineCov">          8 :   size_t size = Cells.size();</span>
+<span class="lineNum">     168 </span>            :   
+<span class="lineNum">     169 </span><span class="lineCov">          8 :   if (size == 0) return gasCellJ;</span>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :   gasCellJ.InitMatrix();</span>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i &lt; size; i++) {</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :     gasCellJ += Cells[i]-&gt;GetInertia();</span>
+<span class="lineNum">     175 </span>            :   }
+<span class="lineNum">     176 </span>            :   
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :   return gasCellJ;</span>
+<span class="lineNum">     178 </span>            : }
+<span class="lineNum">     179 </span>            : 
+<a name="180"><span class="lineNum">     180 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 : string FGBuoyantForces::GetBuoyancyStrings(const string&amp; delimeter)</span>
+<span class="lineNum">     183 </span>            : {
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :   string CoeffStrings = &quot;&quot;;</span>
+<span class="lineNum">     185 </span>            : /*
+<span class="lineNum">     186 </span>            :   bool firstime = true;
+<span class="lineNum">     187 </span>            :   for (sd = 0; sd &lt; variables.size(); sd++) {
+<span class="lineNum">     188 </span>            :     if (firstime) {
+<span class="lineNum">     189 </span>            :       firstime = false;
+<span class="lineNum">     190 </span>            :     } else {
+<span class="lineNum">     191 </span>            :       CoeffStrings += delimeter;
+<span class="lineNum">     192 </span>            :     }
+<span class="lineNum">     193 </span>            :     CoeffStrings += variables[sd]-&gt;GetName();
+<span class="lineNum">     194 </span>            :   }
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            :   for (axis = 0; axis &lt; 6; axis++) {
+<span class="lineNum">     197 </span>            :     for (sd = 0; sd &lt; AeroFunctions[axis].size(); sd++) {
+<span class="lineNum">     198 </span>            :       if (firstime) {
+<span class="lineNum">     199 </span>            :         firstime = false;
+<span class="lineNum">     200 </span>            :       } else {
+<span class="lineNum">     201 </span>            :         CoeffStrings += delimeter;
+<span class="lineNum">     202 </span>            :       }
+<span class="lineNum">     203 </span>            :       CoeffStrings += AeroFunctions[axis][sd]-&gt;GetName();
+<span class="lineNum">     204 </span>            :     }
+<span class="lineNum">     205 </span>            :   }
+<span class="lineNum">     206 </span>            : */
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :   return CoeffStrings;</span>
+<span class="lineNum">     208 </span>            : }
+<span class="lineNum">     209 </span>            : 
+<a name="210"><span class="lineNum">     210 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 : string FGBuoyantForces::GetBuoyancyValues(const string&amp; delimeter)</span>
+<span class="lineNum">     213 </span>            : {
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :   string SDValues = &quot;&quot;;</span>
+<span class="lineNum">     215 </span>            : /*
+<span class="lineNum">     216 </span>            :   bool firstime = true;
+<span class="lineNum">     217 </span>            :   for (sd = 0; sd &lt; variables.size(); sd++) {
+<span class="lineNum">     218 </span>            :     if (firstime) {
+<span class="lineNum">     219 </span>            :       firstime = false;
+<span class="lineNum">     220 </span>            :     } else {
+<span class="lineNum">     221 </span>            :       SDValues += delimeter;
+<span class="lineNum">     222 </span>            :     }
+<span class="lineNum">     223 </span>            :     SDValues += variables[sd]-&gt;GetValueAsString();
+<span class="lineNum">     224 </span>            :   }
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :   for (unsigned int axis = 0; axis &lt; 6; axis++) {
+<span class="lineNum">     227 </span>            :     for (unsigned int sd = 0; sd &lt; AeroFunctions[axis].size(); sd++) {
+<span class="lineNum">     228 </span>            :       if (firstime) {
+<span class="lineNum">     229 </span>            :         firstime = false;
+<span class="lineNum">     230 </span>            :       } else {
+<span class="lineNum">     231 </span>            :         SDValues += delimeter;
+<span class="lineNum">     232 </span>            :       }
+<span class="lineNum">     233 </span>            :       SDValues += AeroFunctions[axis][sd]-&gt;GetValueAsString();
+<span class="lineNum">     234 </span>            :     }
+<span class="lineNum">     235 </span>            :   }
+<span class="lineNum">     236 </span>            : */
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :   return SDValues;</span>
+<span class="lineNum">     238 </span>            : }
+<span class="lineNum">     239 </span>            : 
+<a name="240"><span class="lineNum">     240 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 : void FGBuoyantForces::bind(void)</span>
+<span class="lineNum">     243 </span>            : {
+<span class="lineNum">     244 </span>            :   typedef double (FGBuoyantForces::*PGF)(int) const;
+<span class="lineNum">     245 </span>            :   typedef void   (FGBuoyantForces::*PSF)(int, double);
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;moments/l-buoyancy-lbsft&quot;, this, eL,</span>
+<span class="lineNum">     247 </span>            :                        (PGF)&amp;FGBuoyantForces::GetMoments, (PSF)0, false);
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;moments/m-buoyancy-lbsft&quot;, this, eM,</span>
+<span class="lineNum">     249 </span>            :                        (PGF)&amp;FGBuoyantForces::GetMoments, (PSF)0, false);
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;moments/n-buoyancy-lbsft&quot;, this, eN,</span>
+<span class="lineNum">     251 </span>            :                        (PGF)&amp;FGBuoyantForces::GetMoments, (PSF)0, false);
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;forces/fbx-buoyancy-lbs&quot;, this, eX,</span>
+<span class="lineNum">     253 </span>            :                        (PGF)&amp;FGBuoyantForces::GetForces, (PSF)0, false);
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;forces/fby-buoyancy-lbs&quot;, this, eY,</span>
+<span class="lineNum">     255 </span>            :                        (PGF)&amp;FGBuoyantForces::GetForces, (PSF)0, false);
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie(&quot;forces/fbz-buoyancy-lbs&quot;, this, eZ,</span>
+<span class="lineNum">     257 </span>            :                        (PGF)&amp;FGBuoyantForces::GetForces, (PSF)0, false);
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     261 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     262 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     263 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     264 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     265 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     266 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     267 </span>            : //       whatsoever.
+<span class="lineNum">     268 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     269 </span>            : //       startup messages
+<span class="lineNum">     270 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     271 </span>            : //       a class is instantiated
+<span class="lineNum">     272 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     273 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     274 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     275 </span>            : //       are printed out periodically
+<span class="lineNum">     276 </span>            : //    16: When set various parameters are sanity checked and
+<a name="277"><span class="lineNum">     277 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span><span class="lineCov">         16 : void FGBuoyantForces::Debug(int from)</span>
+<span class="lineNum">     280 </span>            : {
+<span class="lineNum">     281 </span><span class="lineCov">         16 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     284 </span><span class="lineCov">         16 :     if (from == 2) { // Loader</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :       cout &lt;&lt; endl &lt;&lt; &quot;  Buoyant Forces: &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     286 </span>            :     }
+<span class="lineNum">     287 </span>            :   }
+<span class="lineNum">     288 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGBuoyantForces&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGBuoyantForces&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     291 </span>            :   }
+<span class="lineNum">     292 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     293 </span>            :   }
+<span class="lineNum">     294 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     295 </span>            :   }
+<span class="lineNum">     296 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     297 </span>            :   }
+<span class="lineNum">     298 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     299 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     300 </span>            :     }
+<span class="lineNum">     301 </span>            :   }
+<a name="302"><span class="lineNum">     302 </span>            : }</a>
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span><span class="lineCov">         12 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

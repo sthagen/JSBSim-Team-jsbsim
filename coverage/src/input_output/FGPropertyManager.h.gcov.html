@@ -1,0 +1,769 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGPropertyManager.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGPropertyManager.h<span style="font-size: 80%;"> (source / <a href="FGPropertyManager.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntry">38</td>
+            <td class="headerCovTableEntryLo">73.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">43</td>
+            <td class="headerCovTableEntry">113</td>
+            <td class="headerCovTableEntryLo">38.1 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGPropertyManager.h
+<span class="lineNum">       4 </span>            :  Author:       Tony Peden
+<span class="lineNum">       5 </span>            :                Based on work originally by David Megginson
+<span class="lineNum">       6 </span>            :  Date:         2/2002
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------------- Copyright (C) 2002 -------------
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      12 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      13 </span>            :  version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      21 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      22 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      25 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      28 </span>            : SENTRY
+<span class="lineNum">      29 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : #ifndef FGPROPERTYMANAGER_H
+<span class="lineNum">      32 </span>            : #define FGPROPERTYMANAGER_H
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      35 </span>            : INCLUDES
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : // This is needed by MSVC9 when included in FlightGear because of
+<span class="lineNum">      39 </span>            : // the new Vec4d class in props.hxx
+<span class="lineNum">      40 </span>            : #if defined( HAVE_CONFIG_H )
+<span class="lineNum">      41 </span>            : # include &lt;config.h&gt;
+<span class="lineNum">      42 </span>            : #endif
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : #include &lt;string&gt;
+<span class="lineNum">      45 </span>            : #include &quot;simgear/props/propertyObject.hxx&quot;
+<span class="lineNum">      46 </span>            : #if !PROPS_STANDALONE
+<span class="lineNum">      47 </span>            : # include &quot;simgear/math/SGMath.hxx&quot;
+<span class="lineNum">      48 </span>            : #endif
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      53 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      54 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : namespace JSBSim {
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      59 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      60 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : /** Class wrapper for property handling.
+<span class="lineNum">      63 </span>            :     @author David Megginson, Tony Peden
+<span class="lineNum">      64 </span>            :   */
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      67 </span>            : CLASS DECLARATION
+<a name="68"><span class="lineNum">      68 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineCov">          8 : class FGPropertyNode : public SGPropertyNode</span>
+<span class="lineNum">      71 </span>            : {
+<a name="72"><span class="lineNum">      72 </span>            :   public:</a>
+<span class="lineNum">      73 </span>            :     /// Destructor
+<span class="lineNum">      74 </span><span class="lineCov">         16 :     virtual ~FGPropertyNode(void) {}</span>
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :     /**
+<span class="lineNum">      77 </span>            :      * Get a property node.
+<span class="lineNum">      78 </span>            :      *
+<span class="lineNum">      79 </span>            :      * @param path The path of the node, relative to root.
+<span class="lineNum">      80 </span>            :      * @param create true to create the node if it doesn't exist.
+<span class="lineNum">      81 </span>            :      * @return The node, or 0 if none exists and none was created.
+<span class="lineNum">      82 </span>            :      */
+<span class="lineNum">      83 </span>            :     FGPropertyNode*
+<span class="lineNum">      84 </span>            :     GetNode (const std::string &amp;path, bool create = false);
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            :     FGPropertyNode*
+<span class="lineNum">      87 </span>            :     GetNode (const std::string &amp;relpath, int index, bool create = false);
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            :     /**
+<span class="lineNum">      90 </span>            :      * Test whether a given node exists.
+<span class="lineNum">      91 </span>            :      *
+<span class="lineNum">      92 </span>            :      * @param path The path of the node, relative to root.
+<span class="lineNum">      93 </span>            :      * @return true if the node exists, false otherwise.
+<span class="lineNum">      94 </span>            :      */
+<span class="lineNum">      95 </span>            :     bool HasNode (const std::string &amp;path);
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            :     /**
+<span class="lineNum">      98 </span>            :      * Get the name of a node
+<span class="lineNum">      99 </span>            :      */
+<span class="lineNum">     100 </span>            :     std::string GetName( void ) const;
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :     /**
+<span class="lineNum">     103 </span>            :      * Get the name of a node without underscores, etc.
+<span class="lineNum">     104 </span>            :      */
+<span class="lineNum">     105 </span>            :     std::string GetPrintableName( void ) const;
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :     /**
+<span class="lineNum">     108 </span>            :      * Get the fully qualified name of a node
+<span class="lineNum">     109 </span>            :      * This function is very slow, so is probably useful for debugging only.
+<span class="lineNum">     110 </span>            :      */
+<span class="lineNum">     111 </span>            :     std::string GetFullyQualifiedName(void) const;
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            :     /**
+<span class="lineNum">     114 </span>            :      * Get the qualified name of a node relative to given base path,
+<span class="lineNum">     115 </span>            :      * otherwise the fully qualified name.
+<span class="lineNum">     116 </span>            :      * This function is very slow, so is probably useful for debugging only.
+<span class="lineNum">     117 </span>            :      *
+<span class="lineNum">     118 </span>            :      * @param path The path to strip off, if found.
+<span class="lineNum">     119 </span>            :      */
+<span class="lineNum">     120 </span>            :     std::string GetRelativeName( const std::string &amp;path = &quot;/fdm/jsbsim/&quot; ) const;
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span>            :     /**
+<span class="lineNum">     123 </span>            :      * Get a bool value for a property.
+<span class="lineNum">     124 </span>            :      *
+<span class="lineNum">     125 </span>            :      * This method is convenient but inefficient.  It should be used
+<span class="lineNum">     126 </span>            :      * infrequently (i.e. for initializing, loading, saving, etc.),
+<span class="lineNum">     127 </span>            :      * not in the main loop.  If you need to get a value frequently,
+<span class="lineNum">     128 </span>            :      * it is better to look up the node itself using GetNode and then
+<span class="lineNum">     129 </span>            :      * use the node's getBoolValue() method, to avoid the lookup overhead.
+<span class="lineNum">     130 </span>            :      *
+<span class="lineNum">     131 </span>            :      * @param name The property name.
+<span class="lineNum">     132 </span>            :      * @param defaultValue The default value to return if the property
+<span class="lineNum">     133 </span>            :      *        does not exist.
+<span class="lineNum">     134 </span>            :      * @return The property's value as a bool, or the default value provided.
+<span class="lineNum">     135 </span>            :      */
+<span class="lineNum">     136 </span>            :     bool GetBool (const std::string &amp;name, bool defaultValue = false) const;
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            :     /**
+<span class="lineNum">     140 </span>            :      * Get an int value for a property.
+<span class="lineNum">     141 </span>            :      *
+<span class="lineNum">     142 </span>            :      * This method is convenient but inefficient.  It should be used
+<span class="lineNum">     143 </span>            :      * infrequently (i.e. for initializing, loading, saving, etc.),
+<span class="lineNum">     144 </span>            :      * not in the main loop.  If you need to get a value frequently,
+<span class="lineNum">     145 </span>            :      * it is better to look up the node itself using GetNode and then
+<span class="lineNum">     146 </span>            :      * use the node's getIntValue() method, to avoid the lookup overhead.
+<span class="lineNum">     147 </span>            :      *
+<span class="lineNum">     148 </span>            :      * @param name The property name.
+<span class="lineNum">     149 </span>            :      * @param defaultValue The default value to return if the property
+<span class="lineNum">     150 </span>            :      *        does not exist.
+<span class="lineNum">     151 </span>            :      * @return The property's value as an int, or the default value provided.
+<span class="lineNum">     152 </span>            :      */
+<span class="lineNum">     153 </span>            :     int GetInt (const std::string &amp;name, int defaultValue = 0) const;
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            :     /**
+<span class="lineNum">     157 </span>            :      * Get a long value for a property.
+<span class="lineNum">     158 </span>            :      *
+<span class="lineNum">     159 </span>            :      * This method is convenient but inefficient.  It should be used
+<span class="lineNum">     160 </span>            :      * infrequently (i.e. for initializing, loading, saving, etc.),
+<span class="lineNum">     161 </span>            :      * not in the main loop.  If you need to get a value frequently,
+<span class="lineNum">     162 </span>            :      * it is better to look up the node itself using GetNode and then
+<span class="lineNum">     163 </span>            :      * use the node's getLongValue() method, to avoid the lookup overhead.
+<span class="lineNum">     164 </span>            :      *
+<span class="lineNum">     165 </span>            :      * @param name The property name.
+<span class="lineNum">     166 </span>            :      * @param defaultValue The default value to return if the property
+<span class="lineNum">     167 </span>            :      *        does not exist.
+<span class="lineNum">     168 </span>            :      * @return The property's value as a long, or the default value provided.
+<span class="lineNum">     169 </span>            :      */
+<span class="lineNum">     170 </span>            :     int GetLong (const std::string &amp;name, long defaultValue = 0L) const;
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :     /**
+<span class="lineNum">     174 </span>            :      * Get a float value for a property.
+<span class="lineNum">     175 </span>            :      *
+<span class="lineNum">     176 </span>            :      * This method is convenient but inefficient.  It should be used
+<span class="lineNum">     177 </span>            :      * infrequently (i.e. for initializing, loading, saving, etc.),
+<span class="lineNum">     178 </span>            :      * not in the main loop.  If you need to get a value frequently,
+<span class="lineNum">     179 </span>            :      * it is better to look up the node itself using GetNode and then
+<span class="lineNum">     180 </span>            :      * use the node's getFloatValue() method, to avoid the lookup overhead.
+<span class="lineNum">     181 </span>            :      *
+<span class="lineNum">     182 </span>            :      * @param name The property name.
+<span class="lineNum">     183 </span>            :      * @param defaultValue The default value to return if the property
+<span class="lineNum">     184 </span>            :      *        does not exist.
+<span class="lineNum">     185 </span>            :      * @return The property's value as a float, or the default value provided.
+<span class="lineNum">     186 </span>            :      */
+<span class="lineNum">     187 </span>            :     float GetFloat (const std::string &amp;name, float defaultValue = 0.0) const;
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span>            :     /**
+<span class="lineNum">     191 </span>            :      * Get a double value for a property.
+<span class="lineNum">     192 </span>            :      *
+<span class="lineNum">     193 </span>            :      * This method is convenient but inefficient.  It should be used
+<span class="lineNum">     194 </span>            :      * infrequently (i.e. for initializing, loading, saving, etc.),
+<span class="lineNum">     195 </span>            :      * not in the main loop.  If you need to get a value frequently,
+<span class="lineNum">     196 </span>            :      * it is better to look up the node itself using GetNode and then
+<span class="lineNum">     197 </span>            :      * use the node's getDoubleValue() method, to avoid the lookup overhead.
+<span class="lineNum">     198 </span>            :      *
+<span class="lineNum">     199 </span>            :      * @param name The property name.
+<span class="lineNum">     200 </span>            :      * @param defaultValue The default value to return if the property
+<span class="lineNum">     201 </span>            :      *        does not exist.
+<span class="lineNum">     202 </span>            :      * @return The property's value as a double, or the default value provided.
+<span class="lineNum">     203 </span>            :      */
+<span class="lineNum">     204 </span>            :     double GetDouble (const std::string &amp;name, double defaultValue = 0.0) const;
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            :     /**
+<span class="lineNum">     208 </span>            :      * Get a string value for a property.
+<span class="lineNum">     209 </span>            :      *
+<span class="lineNum">     210 </span>            :      * This method is convenient but inefficient.  It should be used
+<span class="lineNum">     211 </span>            :      * infrequently (i.e. for initializing, loading, saving, etc.),
+<span class="lineNum">     212 </span>            :      * not in the main loop.  If you need to get a value frequently,
+<span class="lineNum">     213 </span>            :      * it is better to look up the node itself using GetNode and then
+<span class="lineNum">     214 </span>            :      * use the node's getStringValue() method, to avoid the lookup overhead.
+<span class="lineNum">     215 </span>            :      *
+<span class="lineNum">     216 </span>            :      * @param name The property name.
+<span class="lineNum">     217 </span>            :      * @param defaultValue The default value to return if the property
+<span class="lineNum">     218 </span>            :      *        does not exist.
+<span class="lineNum">     219 </span>            :      * @return The property's value as a string, or the default value provided.
+<span class="lineNum">     220 </span>            :      */
+<span class="lineNum">     221 </span>            :     std::string GetString (const std::string &amp;name, std::string defaultValue = &quot;&quot;) const;
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span>            :     /**
+<span class="lineNum">     225 </span>            :      * Set a bool value for a property.
+<span class="lineNum">     226 </span>            :      *
+<span class="lineNum">     227 </span>            :      * Assign a bool value to a property.  If the property does not
+<span class="lineNum">     228 </span>            :      * yet exist, it will be created and its type will be set to
+<span class="lineNum">     229 </span>            :      * BOOL; if it has a type of UNKNOWN, the type will also be set to
+<span class="lineNum">     230 </span>            :      * BOOL; otherwise, the value type will be converted to the property's
+<span class="lineNum">     231 </span>            :      * type.
+<span class="lineNum">     232 </span>            :      *
+<span class="lineNum">     233 </span>            :      * @param name The property name.
+<span class="lineNum">     234 </span>            :      * @param val The new value for the property.
+<span class="lineNum">     235 </span>            :      * @return true if the assignment succeeded, false otherwise.
+<span class="lineNum">     236 </span>            :      */
+<span class="lineNum">     237 </span>            :     bool SetBool (const std::string &amp;name, bool val);
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            :     /**
+<span class="lineNum">     241 </span>            :      * Set an int value for a property.
+<span class="lineNum">     242 </span>            :      *
+<span class="lineNum">     243 </span>            :      * Assign an int value to a property.  If the property does not
+<span class="lineNum">     244 </span>            :      * yet exist, it will be created and its type will be set to
+<span class="lineNum">     245 </span>            :      * INT; if it has a type of UNKNOWN, the type will also be set to
+<span class="lineNum">     246 </span>            :      * INT; otherwise, the value type will be converted to the property's
+<span class="lineNum">     247 </span>            :      * type.
+<span class="lineNum">     248 </span>            :      *
+<span class="lineNum">     249 </span>            :      * @param name The property name.
+<span class="lineNum">     250 </span>            :      * @param val The new value for the property.
+<span class="lineNum">     251 </span>            :      * @return true if the assignment succeeded, false otherwise.
+<span class="lineNum">     252 </span>            :      */
+<span class="lineNum">     253 </span>            :     bool SetInt (const std::string &amp;name, int val);
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span>            :     /**
+<span class="lineNum">     257 </span>            :      * Set a long value for a property.
+<span class="lineNum">     258 </span>            :      *
+<span class="lineNum">     259 </span>            :      * Assign a long value to a property.  If the property does not
+<span class="lineNum">     260 </span>            :      * yet exist, it will be created and its type will be set to
+<span class="lineNum">     261 </span>            :      * LONG; if it has a type of UNKNOWN, the type will also be set to
+<span class="lineNum">     262 </span>            :      * LONG; otherwise, the value type will be converted to the property's
+<span class="lineNum">     263 </span>            :      * type.
+<span class="lineNum">     264 </span>            :      *
+<span class="lineNum">     265 </span>            :      * @param name The property name.
+<span class="lineNum">     266 </span>            :      * @param val The new value for the property.
+<span class="lineNum">     267 </span>            :      * @return true if the assignment succeeded, false otherwise.
+<span class="lineNum">     268 </span>            :      */
+<span class="lineNum">     269 </span>            :     bool SetLong (const std::string &amp;name, long val);
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            :     /**
+<span class="lineNum">     273 </span>            :      * Set a float value for a property.
+<span class="lineNum">     274 </span>            :      *
+<span class="lineNum">     275 </span>            :      * Assign a float value to a property.  If the property does not
+<span class="lineNum">     276 </span>            :      * yet exist, it will be created and its type will be set to
+<span class="lineNum">     277 </span>            :      * FLOAT; if it has a type of UNKNOWN, the type will also be set to
+<span class="lineNum">     278 </span>            :      * FLOAT; otherwise, the value type will be converted to the property's
+<span class="lineNum">     279 </span>            :      * type.
+<span class="lineNum">     280 </span>            :      *
+<span class="lineNum">     281 </span>            :      * @param name The property name.
+<span class="lineNum">     282 </span>            :      * @param val The new value for the property.
+<span class="lineNum">     283 </span>            :      * @return true if the assignment succeeded, false otherwise.
+<span class="lineNum">     284 </span>            :      */
+<span class="lineNum">     285 </span>            :     bool SetFloat (const std::string &amp;name, float val);
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span>            :     /**
+<span class="lineNum">     289 </span>            :      * Set a double value for a property.
+<span class="lineNum">     290 </span>            :      *
+<span class="lineNum">     291 </span>            :      * Assign a double value to a property.  If the property does not
+<span class="lineNum">     292 </span>            :      * yet exist, it will be created and its type will be set to
+<span class="lineNum">     293 </span>            :      * DOUBLE; if it has a type of UNKNOWN, the type will also be set to
+<span class="lineNum">     294 </span>            :      * DOUBLE; otherwise, the double value will be converted to the property's
+<span class="lineNum">     295 </span>            :      * type.
+<span class="lineNum">     296 </span>            :      *
+<span class="lineNum">     297 </span>            :      * @param name The property name.
+<span class="lineNum">     298 </span>            :      * @param val The new value for the property.
+<span class="lineNum">     299 </span>            :      * @return true if the assignment succeeded, false otherwise.
+<span class="lineNum">     300 </span>            :      */
+<span class="lineNum">     301 </span>            :     bool SetDouble (const std::string &amp;name, double val);
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            :     /**
+<span class="lineNum">     305 </span>            :      * Set a string value for a property.
+<span class="lineNum">     306 </span>            :      *
+<span class="lineNum">     307 </span>            :      * Assign a string value to a property.  If the property does not
+<span class="lineNum">     308 </span>            :      * yet exist, it will be created and its type will be set to
+<span class="lineNum">     309 </span>            :      * STRING; if it has a type of UNKNOWN, the type will also be set to
+<span class="lineNum">     310 </span>            :      * STRING; otherwise, the string value will be converted to the property's
+<span class="lineNum">     311 </span>            :      * type.
+<span class="lineNum">     312 </span>            :      *
+<span class="lineNum">     313 </span>            :      * @param name The property name.
+<span class="lineNum">     314 </span>            :      * @param val The new value for the property.
+<span class="lineNum">     315 </span>            :      * @return true if the assignment succeeded, false otherwise.
+<span class="lineNum">     316 </span>            :      */
+<span class="lineNum">     317 </span>            :     bool SetString (const std::string &amp;name, const std::string &amp;val);
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            :     ////////////////////////////////////////////////////////////////////////
+<span class="lineNum">     321 </span>            :     // Convenience functions for setting property attributes.
+<span class="lineNum">     322 </span>            :     ////////////////////////////////////////////////////////////////////////
+<span class="lineNum">     323 </span>            : 
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span>            :     /**
+<span class="lineNum">     326 </span>            :      * Set the state of the archive attribute for a property.
+<span class="lineNum">     327 </span>            :      *
+<span class="lineNum">     328 </span>            :      * If the archive attribute is true, the property will be written
+<span class="lineNum">     329 </span>            :      * when a flight is saved; if it is false, the property will be
+<span class="lineNum">     330 </span>            :      * skipped.
+<span class="lineNum">     331 </span>            :      *
+<span class="lineNum">     332 </span>            :      * A warning message will be printed if the property does not exist.
+<span class="lineNum">     333 </span>            :      *
+<span class="lineNum">     334 </span>            :      * @param name The property name.
+<span class="lineNum">     335 </span>            :      * @param state The state of the archive attribute (defaults to true).
+<span class="lineNum">     336 </span>            :      */
+<span class="lineNum">     337 </span>            :     void SetArchivable (const std::string &amp;name, bool state = true);
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span>            : 
+<span class="lineNum">     340 </span>            :     /**
+<span class="lineNum">     341 </span>            :      * Set the state of the read attribute for a property.
+<span class="lineNum">     342 </span>            :      *
+<span class="lineNum">     343 </span>            :      * If the read attribute is true, the property value will be readable;
+<span class="lineNum">     344 </span>            :      * if it is false, the property value will always be the default value
+<span class="lineNum">     345 </span>            :      * for its type.
+<span class="lineNum">     346 </span>            :      *
+<span class="lineNum">     347 </span>            :      * A warning message will be printed if the property does not exist.
+<span class="lineNum">     348 </span>            :      *
+<span class="lineNum">     349 </span>            :      * @param name The property name.
+<span class="lineNum">     350 </span>            :      * @param state The state of the read attribute (defaults to true).
+<span class="lineNum">     351 </span>            :      */
+<span class="lineNum">     352 </span>            :     void SetReadable (const std::string &amp;name, bool state = true);
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span>            : 
+<span class="lineNum">     355 </span>            :     /**
+<span class="lineNum">     356 </span>            :      * Set the state of the write attribute for a property.
+<span class="lineNum">     357 </span>            :      *
+<span class="lineNum">     358 </span>            :      * If the write attribute is true, the property value may be modified
+<span class="lineNum">     359 </span>            :      * (depending on how it is tied); if the write attribute is false, the
+<span class="lineNum">     360 </span>            :      * property value may not be modified.
+<span class="lineNum">     361 </span>            :      *
+<span class="lineNum">     362 </span>            :      * A warning message will be printed if the property does not exist.
+<span class="lineNum">     363 </span>            :      *
+<span class="lineNum">     364 </span>            :      * @param name The property name.
+<span class="lineNum">     365 </span>            :      * @param state The state of the write attribute (defaults to true).
+<span class="lineNum">     366 </span>            :      */
+<span class="lineNum">     367 </span>            :     void SetWritable (const std::string &amp;name, bool state = true);
+<span class="lineNum">     368 </span>            : };
+<span class="lineNum">     369 </span>            : 
+<span class="lineNum">     370 </span>            : typedef SGSharedPtr&lt;FGPropertyNode&gt; FGPropertyNode_ptr;
+<span class="lineNum">     371 </span>            : typedef SGSharedPtr&lt;const FGPropertyNode&gt; FGConstPropertyNode_ptr;
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span>            : class FGPropertyManager
+<span class="lineNum">     374 </span>            : {
+<a name="375"><span class="lineNum">     375 </span>            :   public:</a>
+<span class="lineNum">     376 </span>            :     /// Default constructor
+<span class="lineNum">     377 </span><span class="lineCov">          8 :     FGPropertyManager(void) { root = new FGPropertyNode; }</span>
+<a name="378"><span class="lineNum">     378 </span>            : </a>
+<span class="lineNum">     379 </span>            :     /// Constructor
+<span class="lineNum">     380 </span><span class="lineCov">          8 :     explicit FGPropertyManager(FGPropertyNode* _root) : root(_root) {};</span>
+<a name="381"><span class="lineNum">     381 </span>            : </a>
+<span class="lineNum">     382 </span>            :     /// Destructor
+<a name="383"><span class="lineNum">     383 </span><span class="lineCov">         32 :     virtual ~FGPropertyManager(void) { Unbind(); }</span></a>
+<a name="384"><span class="lineNum">     384 </span>            : </a>
+<span class="lineNum">     385 </span><span class="lineCov">         10 :     FGPropertyNode* GetNode(void) const { return root; }</span>
+<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :     FGPropertyNode* GetNode(const std::string &amp;path, bool create = false)</span></a>
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :     { return root-&gt;GetNode(path, create); }</span>
+<a name="388"><span class="lineNum">     388 </span><span class="lineCov">          8 :     FGPropertyNode* GetNode(const std::string &amp;relpath, int index, bool create = false)</span></a>
+<span class="lineNum">     389 </span><span class="lineCov">          8 :     { return root-&gt;GetNode(relpath, index, create); }</span>
+<span class="lineNum">     390 </span><span class="lineCov">         24 :     bool HasNode(const std::string&amp; path) const</span>
+<span class="lineNum">     391 </span>            :     {
+<span class="lineNum">     392 </span><span class="lineCov">         48 :       std::string newPath = path;</span>
+<span class="lineNum">     393 </span><span class="lineCov">         24 :       if (newPath[0] == '-') newPath.erase(0,1);</span>
+<span class="lineNum">     394 </span><span class="lineCov">         48 :       return root-&gt;HasNode(newPath);</span>
+<span class="lineNum">     395 </span>            :     }
+<span class="lineNum">     396 </span>            : 
+<span class="lineNum">     397 </span>            :     /** Property-ify a name
+<span class="lineNum">     398 </span>            :      *  replaces spaces with '-' and, optionally, makes name all lower case
+<span class="lineNum">     399 </span>            :      *  @param name string to change
+<span class="lineNum">     400 </span>            :      *  @param lowercase true to change all upper case chars to lower
+<span class="lineNum">     401 </span>            :      *  NOTE: this function changes its argument and thus relies
+<span class="lineNum">     402 </span>            :      *  on pass by value
+<span class="lineNum">     403 </span>            :      */
+<span class="lineNum">     404 </span>            :     std::string mkPropertyName(std::string name, bool lowercase);
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span>            :     ////////////////////////////////////////////////////////////////////////
+<span class="lineNum">     407 </span>            :     // Convenience functions for tying properties, with logging.
+<span class="lineNum">     408 </span>            :     ////////////////////////////////////////////////////////////////////////
+<span class="lineNum">     409 </span>            : 
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            :     /**
+<span class="lineNum">     412 </span>            :      * Untie a property from an external data source.
+<span class="lineNum">     413 </span>            :      *
+<span class="lineNum">     414 </span>            :      * Classes should use this function to release control of any
+<span class="lineNum">     415 </span>            :      * properties they are managing.
+<span class="lineNum">     416 </span>            :      */
+<span class="lineNum">     417 </span>            :     void Untie (const std::string &amp;name);
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span>            :     /**
+<span class="lineNum">     420 </span>            :      * Unbind all properties bound by this manager to an external data source.
+<span class="lineNum">     421 </span>            :      *
+<span class="lineNum">     422 </span>            :      * Classes should use this function to release control of any
+<span class="lineNum">     423 </span>            :      * properties they have bound using this property manager.
+<span class="lineNum">     424 </span>            :      */
+<span class="lineNum">     425 </span>            :     void Unbind (void);
+<span class="lineNum">     426 </span>            : 
+<span class="lineNum">     427 </span>            :         // Templates cause ambiguity here
+<span class="lineNum">     428 </span>            : 
+<span class="lineNum">     429 </span>            :     /**
+<span class="lineNum">     430 </span>            :      * Tie a property to an external bool variable.
+<span class="lineNum">     431 </span>            :      *
+<span class="lineNum">     432 </span>            :      * The property's value will automatically mirror the variable's
+<span class="lineNum">     433 </span>            :      * value, and vice-versa, until the property is untied.
+<span class="lineNum">     434 </span>            :      *
+<span class="lineNum">     435 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     436 </span>            :      * @param pointer A pointer to the variable.
+<span class="lineNum">     437 </span>            :      * @param useDefault true if any existing property value should be
+<span class="lineNum">     438 </span>            :      *        copied to the variable; false if the variable should not
+<span class="lineNum">     439 </span>            :      *        be modified; defaults to true.
+<span class="lineNum">     440 </span>            :      */
+<span class="lineNum">     441 </span>            :     void
+<span class="lineNum">     442 </span>            :     Tie (const std::string &amp;name, bool *pointer, bool useDefault = true);
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span>            : 
+<span class="lineNum">     445 </span>            :     /**
+<span class="lineNum">     446 </span>            :      * Tie a property to an external int variable.
+<span class="lineNum">     447 </span>            :      *
+<span class="lineNum">     448 </span>            :      * The property's value will automatically mirror the variable's
+<span class="lineNum">     449 </span>            :      * value, and vice-versa, until the property is untied.
+<span class="lineNum">     450 </span>            :      *
+<span class="lineNum">     451 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     452 </span>            :      * @param pointer A pointer to the variable.
+<span class="lineNum">     453 </span>            :      * @param useDefault true if any existing property value should be
+<span class="lineNum">     454 </span>            :      *        copied to the variable; false if the variable should not
+<span class="lineNum">     455 </span>            :      *        be modified; defaults to true.
+<span class="lineNum">     456 </span>            :      */
+<span class="lineNum">     457 </span>            :     void
+<span class="lineNum">     458 </span>            :     Tie (const std::string &amp;name, int *pointer, bool useDefault = true);
+<span class="lineNum">     459 </span>            : 
+<span class="lineNum">     460 </span>            : 
+<span class="lineNum">     461 </span>            :     /**
+<span class="lineNum">     462 </span>            :      * Tie a property to an external long variable.
+<span class="lineNum">     463 </span>            :      *
+<span class="lineNum">     464 </span>            :      * The property's value will automatically mirror the variable's
+<span class="lineNum">     465 </span>            :      * value, and vice-versa, until the property is untied.
+<span class="lineNum">     466 </span>            :      *
+<span class="lineNum">     467 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     468 </span>            :      * @param pointer A pointer to the variable.
+<span class="lineNum">     469 </span>            :      * @param useDefault true if any existing property value should be
+<span class="lineNum">     470 </span>            :      *        copied to the variable; false if the variable should not
+<span class="lineNum">     471 </span>            :      *        be modified; defaults to true.
+<span class="lineNum">     472 </span>            :      */
+<span class="lineNum">     473 </span>            :     void
+<span class="lineNum">     474 </span>            :     Tie (const std::string &amp;name, long *pointer, bool useDefault = true);
+<span class="lineNum">     475 </span>            : 
+<span class="lineNum">     476 </span>            : 
+<span class="lineNum">     477 </span>            :     /**
+<span class="lineNum">     478 </span>            :      * Tie a property to an external float variable.
+<span class="lineNum">     479 </span>            :      *
+<span class="lineNum">     480 </span>            :      * The property's value will automatically mirror the variable's
+<span class="lineNum">     481 </span>            :      * value, and vice-versa, until the property is untied.
+<span class="lineNum">     482 </span>            :      *
+<span class="lineNum">     483 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     484 </span>            :      * @param pointer A pointer to the variable.
+<span class="lineNum">     485 </span>            :      * @param useDefault true if any existing property value should be
+<span class="lineNum">     486 </span>            :      *        copied to the variable; false if the variable should not
+<span class="lineNum">     487 </span>            :      *        be modified; defaults to true.
+<span class="lineNum">     488 </span>            :      */
+<span class="lineNum">     489 </span>            :     void
+<span class="lineNum">     490 </span>            :     Tie (const std::string &amp;name, float *pointer, bool useDefault = true);
+<span class="lineNum">     491 </span>            : 
+<span class="lineNum">     492 </span>            :     /**
+<span class="lineNum">     493 </span>            :      * Tie a property to an external double variable.
+<span class="lineNum">     494 </span>            :      *
+<span class="lineNum">     495 </span>            :      * The property's value will automatically mirror the variable's
+<span class="lineNum">     496 </span>            :      * value, and vice-versa, until the property is untied.
+<span class="lineNum">     497 </span>            :      *
+<span class="lineNum">     498 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     499 </span>            :      * @param pointer A pointer to the variable.
+<span class="lineNum">     500 </span>            :      * @param useDefault true if any existing property value should be
+<span class="lineNum">     501 </span>            :      *        copied to the variable; false if the variable should not
+<span class="lineNum">     502 </span>            :      *        be modified; defaults to true.
+<span class="lineNum">     503 </span>            :      */
+<span class="lineNum">     504 </span>            :     void
+<span class="lineNum">     505 </span>            :     Tie (const std::string &amp;name, double *pointer, bool useDefault = true);
+<span class="lineNum">     506 </span>            : 
+<span class="lineNum">     507 </span>            : //============================================================================
+<span class="lineNum">     508 </span>            : //
+<span class="lineNum">     509 </span>            : //  All of the following functions *must* be inlined, otherwise linker
+<span class="lineNum">     510 </span>            : //  errors will result
+<span class="lineNum">     511 </span>            : //
+<span class="lineNum">     512 </span>            : //============================================================================
+<span class="lineNum">     513 </span>            : 
+<span class="lineNum">     514 </span>            :     /* template &lt;class V&gt; void
+<span class="lineNum">     515 </span>            :     Tie (const std::string &amp;name, V (*getter)(), void (*setter)(V) = 0,
+<span class="lineNum">     516 </span>            :            bool useDefault = true);
+<span class="lineNum">     517 </span>            : 
+<span class="lineNum">     518 </span>            :     template &lt;class V&gt; void
+<span class="lineNum">     519 </span>            :     Tie (const std::string &amp;name, int index, V (*getter)(int),
+<span class="lineNum">     520 </span>            :            void (*setter)(int, V) = 0, bool useDefault = true);
+<span class="lineNum">     521 </span>            : 
+<span class="lineNum">     522 </span>            :     template &lt;class T, class V&gt; void
+<span class="lineNum">     523 </span>            :     Tie (const std::string &amp;name, T * obj, V (T::*getter)() const,
+<span class="lineNum">     524 </span>            :            void (T::*setter)(V) = 0, bool useDefault = true);
+<span class="lineNum">     525 </span>            : 
+<span class="lineNum">     526 </span>            :     template &lt;class T, class V&gt; void
+<span class="lineNum">     527 </span>            :     Tie (const std::string &amp;name, T * obj, int index,
+<span class="lineNum">     528 </span>            :            V (T::*getter)(int) const, void (T::*setter)(int, V) = 0,
+<span class="lineNum">     529 </span>            :            bool useDefault = true); */
+<span class="lineNum">     530 </span>            : 
+<span class="lineNum">     531 </span>            :      /**
+<span class="lineNum">     532 </span>            :      * Tie a property to a pair of simple functions.
+<span class="lineNum">     533 </span>            :      *
+<span class="lineNum">     534 </span>            :      * Every time the property value is queried, the getter (if any) will
+<span class="lineNum">     535 </span>            :      * be invoked; every time the property value is modified, the setter
+<span class="lineNum">     536 </span>            :      * (if any) will be invoked.  The getter can be 0 to make the property
+<span class="lineNum">     537 </span>            :      * unreadable, and the setter can be 0 to make the property
+<span class="lineNum">     538 </span>            :      * unmodifiable.
+<span class="lineNum">     539 </span>            :      *
+<span class="lineNum">     540 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     541 </span>            :      * @param getter The getter function, or 0 if the value is unreadable.
+<span class="lineNum">     542 </span>            :      * @param setter The setter function, or 0 if the value is unmodifiable.
+<span class="lineNum">     543 </span>            :      * @param useDefault true if the setter should be invoked with any existing
+<span class="lineNum">     544 </span>            :      *        property value should be; false if the old value should be
+<span class="lineNum">     545 </span>            :      *        discarded; defaults to true.
+<span class="lineNum">     546 </span>            :      */
+<span class="lineNum">     547 </span>            : 
+<span class="lineNum">     548 </span>            :     template &lt;class V&gt; inline void
+<span class="lineNum">     549 </span>            :     Tie (const std::string &amp;name, V (*getter)(), void (*setter)(V) = 0, bool useDefault = true)
+<span class="lineNum">     550 </span>            :     {
+<span class="lineNum">     551 </span>            :       SGPropertyNode* property = root-&gt;getNode(name.c_str(), true);
+<span class="lineNum">     552 </span>            :       if (!property) {
+<span class="lineNum">     553 </span>            :         std::cerr &lt;&lt; &quot;Could not get or create property &quot; &lt;&lt; name &lt;&lt; std::endl;
+<span class="lineNum">     554 </span>            :         return;
+<span class="lineNum">     555 </span>            :       }
+<span class="lineNum">     556 </span>            : 
+<span class="lineNum">     557 </span>            :       if (!property-&gt;tie(SGRawValueFunctions&lt;V&gt;(getter, setter), useDefault))
+<span class="lineNum">     558 </span>            :         std::cerr &lt;&lt; &quot;Failed to tie property &quot; &lt;&lt; name &lt;&lt; &quot; to functions&quot; &lt;&lt; std::endl;
+<span class="lineNum">     559 </span>            :       else {
+<span class="lineNum">     560 </span>            :         if (setter == 0) property-&gt;setAttribute(SGPropertyNode::WRITE, false);
+<span class="lineNum">     561 </span>            :         if (getter == 0) property-&gt;setAttribute(SGPropertyNode::READ, false);
+<span class="lineNum">     562 </span>            :         tied_properties.push_back(property);
+<span class="lineNum">     563 </span>            :         if (FGJSBBase::debug_lvl &amp; 0x20) std::cout &lt;&lt; name &lt;&lt; std::endl;
+<span class="lineNum">     564 </span>            :       }
+<span class="lineNum">     565 </span>            :     }
+<span class="lineNum">     566 </span>            : 
+<span class="lineNum">     567 </span>            : 
+<span class="lineNum">     568 </span>            :     /**
+<span class="lineNum">     569 </span>            :      * Tie a property to a pair of indexed functions.
+<span class="lineNum">     570 </span>            :      *
+<span class="lineNum">     571 </span>            :      * Every time the property value is queried, the getter (if any) will
+<span class="lineNum">     572 </span>            :      * be invoked with the index provided; every time the property value
+<span class="lineNum">     573 </span>            :      * is modified, the setter (if any) will be invoked with the index
+<span class="lineNum">     574 </span>            :      * provided.  The getter can be 0 to make the property unreadable, and
+<span class="lineNum">     575 </span>            :      * the setter can be 0 to make the property unmodifiable.
+<span class="lineNum">     576 </span>            :      *
+<span class="lineNum">     577 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     578 </span>            :      * @param index The integer argument to pass to the getter and
+<span class="lineNum">     579 </span>            :      *        setter functions.
+<span class="lineNum">     580 </span>            :      * @param getter The getter function, or 0 if the value is unreadable.
+<span class="lineNum">     581 </span>            :      * @param setter The setter function, or 0 if the value is unmodifiable.
+<span class="lineNum">     582 </span>            :      * @param useDefault true if the setter should be invoked with any existing
+<span class="lineNum">     583 </span>            :      *        property value should there be one; false if the old value should be
+<span class="lineNum">     584 </span>            :      *        discarded; defaults to true.
+<span class="lineNum">     585 </span>            :      */
+<span class="lineNum">     586 </span>            :     template &lt;class V&gt; inline void Tie (const std::string &amp;name, int index, V (*getter)(int),
+<span class="lineNum">     587 </span>            :                                 void (*setter)(int, V) = 0, bool useDefault = true)
+<span class="lineNum">     588 </span>            :     {
+<span class="lineNum">     589 </span>            :       SGPropertyNode* property = root-&gt;getNode(name.c_str(), true);
+<span class="lineNum">     590 </span>            :       if (!property) {
+<span class="lineNum">     591 </span>            :         std::cerr &lt;&lt; &quot;Could not get or create property &quot; &lt;&lt; name &lt;&lt; std::endl;
+<span class="lineNum">     592 </span>            :         return;
+<span class="lineNum">     593 </span>            :       }
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span>            :       if (!property-&gt;tie(SGRawValueFunctionsIndexed&lt;V&gt;(index, getter, setter), useDefault))
+<span class="lineNum">     596 </span>            :         std::cerr &lt;&lt; &quot;Failed to tie property &quot; &lt;&lt; name &lt;&lt; &quot; to indexed functions&quot; &lt;&lt; std::endl;
+<span class="lineNum">     597 </span>            :       else {
+<span class="lineNum">     598 </span>            :         if (setter == 0) property-&gt;setAttribute(SGPropertyNode::WRITE, false);
+<span class="lineNum">     599 </span>            :         if (getter == 0) property-&gt;setAttribute(SGPropertyNode::READ, false);
+<span class="lineNum">     600 </span>            :         tied_properties.push_back(property);
+<span class="lineNum">     601 </span>            :         if (FGJSBBase::debug_lvl &amp; 0x20) std::cout &lt;&lt; name &lt;&lt; std::endl;
+<span class="lineNum">     602 </span>            :       }
+<span class="lineNum">     603 </span>            :     }
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span>            : 
+<span class="lineNum">     606 </span>            :     /**
+<span class="lineNum">     607 </span>            :      * Tie a property to a pair of object methods.
+<span class="lineNum">     608 </span>            :      *
+<span class="lineNum">     609 </span>            :      * Every time the property value is queried, the getter (if any) will
+<span class="lineNum">     610 </span>            :      * be invoked; every time the property value is modified, the setter
+<span class="lineNum">     611 </span>            :      * (if any) will be invoked.  The getter can be 0 to make the property
+<span class="lineNum">     612 </span>            :      * unreadable, and the setter can be 0 to make the property
+<span class="lineNum">     613 </span>            :      * unmodifiable.
+<span class="lineNum">     614 </span>            :      *
+<span class="lineNum">     615 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     616 </span>            :      * @param obj The object whose methods should be invoked.
+<span class="lineNum">     617 </span>            :      * @param getter The object's getter method, or 0 if the value is
+<span class="lineNum">     618 </span>            :      *        unreadable.
+<span class="lineNum">     619 </span>            :      * @param setter The object's setter method, or 0 if the value is
+<span class="lineNum">     620 </span>            :      *        unmodifiable.
+<span class="lineNum">     621 </span>            :      * @param useDefault true if the setter should be invoked with any existing
+<span class="lineNum">     622 </span>            :      *        property value should there be one; false if the old value should be
+<span class="lineNum">     623 </span>            :      *        discarded; defaults to true.
+<a name="624"><span class="lineNum">     624 </span>            :      */</a>
+<span class="lineNum">     625 </span>            :     template &lt;class T, class V&gt; inline void
+<span class="lineNum">     626 </span><span class="lineCov">       1616 :     Tie (const std::string &amp;name, T * obj, V (T::*getter)() const,</span>
+<span class="lineNum">     627 </span>            :            void (T::*setter)(V) = 0, bool useDefault = true)
+<span class="lineNum">     628 </span>            :     {
+<span class="lineNum">     629 </span><span class="lineCov">       1616 :       SGPropertyNode* property = root-&gt;getNode(name.c_str(), true);</span>
+<span class="lineNum">     630 </span><span class="lineCov">       1616 :       if (!property) {</span>
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 :         std::cerr &lt;&lt; &quot;Could not get or create property &quot; &lt;&lt; name &lt;&lt; std::endl;</span>
+<span class="lineNum">     632 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">     633 </span>            :       }
+<span class="lineNum">     634 </span>            : 
+<span class="lineNum">     635 </span><span class="lineCov">       1616 :       if (!property-&gt;tie(SGRawValueMethods&lt;T,V&gt;(*obj, getter, setter), useDefault))</span>
+<span class="lineNum">     636 </span><span class="lineNoCov">          0 :         std::cerr &lt;&lt; &quot;Failed to tie property &quot; &lt;&lt; name &lt;&lt; &quot; to object methods&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     637 </span>            :       else {
+<span class="lineNum">     638 </span><span class="lineCov">       1616 :         if (setter == 0) property-&gt;setAttribute(SGPropertyNode::WRITE, false);</span>
+<span class="lineNum">     639 </span><span class="lineCov">       1616 :         if (getter == 0) property-&gt;setAttribute(SGPropertyNode::READ, false);</span>
+<span class="lineNum">     640 </span><span class="lineCov">       1616 :         tied_properties.push_back(property);</span>
+<span class="lineNum">     641 </span><span class="lineCov">       1616 :         if (FGJSBBase::debug_lvl &amp; 0x20) std::cout &lt;&lt; name &lt;&lt; std::endl;</span>
+<span class="lineNum">     642 </span>            :       }
+<span class="lineNum">     643 </span>            :     }
+<span class="lineNum">     644 </span>            : 
+<span class="lineNum">     645 </span>            :     /**
+<span class="lineNum">     646 </span>            :      * Tie a property to a pair of indexed object methods.
+<span class="lineNum">     647 </span>            :      *
+<span class="lineNum">     648 </span>            :      * Every time the property value is queried, the getter (if any) will
+<span class="lineNum">     649 </span>            :      * be invoked with the index provided; every time the property value
+<span class="lineNum">     650 </span>            :      * is modified, the setter (if any) will be invoked with the index
+<span class="lineNum">     651 </span>            :      * provided.  The getter can be 0 to make the property unreadable, and
+<span class="lineNum">     652 </span>            :      * the setter can be 0 to make the property unmodifiable.
+<span class="lineNum">     653 </span>            :      *
+<span class="lineNum">     654 </span>            :      * @param name The property name to tie (full path).
+<span class="lineNum">     655 </span>            :      * @param obj The object whose methods should be invoked.
+<span class="lineNum">     656 </span>            :      * @param index The integer argument to pass to the getter and
+<span class="lineNum">     657 </span>            :      *        setter methods.
+<span class="lineNum">     658 </span>            :      * @param getter The getter method, or 0 if the value is unreadable.
+<span class="lineNum">     659 </span>            :      * @param setter The setter method, or 0 if the value is unmodifiable.
+<span class="lineNum">     660 </span>            :      * @param useDefault true if the setter should be invoked with any existing
+<span class="lineNum">     661 </span>            :      *        property value should be; false if the old value should be
+<span class="lineNum">     662 </span>            :      *        discarded; defaults to true.
+<a name="663"><span class="lineNum">     663 </span>            :      */</a>
+<span class="lineNum">     664 </span>            :     template &lt;class T, class V&gt; inline void
+<span class="lineNum">     665 </span><span class="lineCov">       1200 :     Tie (const std::string &amp;name, T * obj, int index, V (T::*getter)(int) const,</span>
+<span class="lineNum">     666 </span>            :                          void (T::*setter)(int, V) = 0, bool useDefault = true)
+<span class="lineNum">     667 </span>            :     {
+<span class="lineNum">     668 </span><span class="lineCov">       1200 :       SGPropertyNode* property = root-&gt;getNode(name.c_str(), true);</span>
+<span class="lineNum">     669 </span><span class="lineCov">       1200 :       if (!property) {</span>
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :         std::cerr &lt;&lt; &quot;Could not get or create property &quot; &lt;&lt; name &lt;&lt; std::endl;</span>
+<span class="lineNum">     671 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">     672 </span>            :       }
+<span class="lineNum">     673 </span>            : 
+<span class="lineNum">     674 </span><span class="lineCov">       1200 :       if (!property-&gt;tie(SGRawValueMethodsIndexed&lt;T,V&gt;(*obj, index, getter, setter), useDefault))</span>
+<span class="lineNum">     675 </span><span class="lineNoCov">          0 :         std::cerr &lt;&lt; &quot;Failed to tie property &quot; &lt;&lt; name &lt;&lt; &quot; to indexed object methods&quot; &lt;&lt; std::endl;</span>
+<span class="lineNum">     676 </span>            :       else {
+<span class="lineNum">     677 </span><span class="lineCov">       1200 :         if (setter == 0) property-&gt;setAttribute(SGPropertyNode::WRITE, false);</span>
+<span class="lineNum">     678 </span><span class="lineCov">       1200 :         if (getter == 0) property-&gt;setAttribute(SGPropertyNode::READ, false);</span>
+<span class="lineNum">     679 </span><span class="lineCov">       1200 :         tied_properties.push_back(property);</span>
+<span class="lineNum">     680 </span><span class="lineCov">       1200 :         if (FGJSBBase::debug_lvl &amp; 0x20) std::cout &lt;&lt; name &lt;&lt; std::endl;</span>
+<span class="lineNum">     681 </span>            :       }
+<span class="lineNum">     682 </span>            :    }
+<a name="683"><span class="lineNum">     683 </span>            : </a>
+<span class="lineNum">     684 </span>            :     template &lt;class T&gt; simgear::PropertyObject&lt;T&gt;
+<span class="lineNum">     685 </span><span class="lineNoCov">          0 :     CreatePropertyObject(const std::string &amp;path)</span>
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :     { return simgear::PropertyObject&lt;T&gt;(root-&gt;GetNode(path, true)); }</span>
+<span class="lineNum">     687 </span>            : 
+<span class="lineNum">     688 </span>            :   private:
+<span class="lineNum">     689 </span>            :     std::vector&lt;SGPropertyNode_ptr&gt; tied_properties;
+<span class="lineNum">     690 </span>            :     FGPropertyNode_ptr root;
+<span class="lineNum">     691 </span>            : };
+<span class="lineNum">     692 </span>            : }
+<span class="lineNum">     693 </span>            : #endif // FGPROPERTYMANAGER_H
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

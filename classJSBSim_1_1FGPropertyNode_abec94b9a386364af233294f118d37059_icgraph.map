@@ -1,0 +1,7 @@
+<map id="GetDouble" name="GetDouble">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAtmosphere.html#a4c497d810b0509f4743ec5acf449864c" title="Calculate the atmosphere for the given altitude. " alt="" coords="137,64,304,105"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGPropertyNode.html#a4ebd7e68db78d56d51e68d9b8e585f6c" title="Destructor. " alt="" coords="157,130,285,157"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGAtmosphere.html#a999447dcb0eaf212d39c92de739cf0ba" title="Destructor. " alt="" coords="378,5,545,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGAtmosphere.html#a764e8c6d39b827d2ad03f570a2fc37e6" title="Runs the atmosphere forces model; called by the Executive. " alt="" coords="362,71,561,98"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGStandardAtmosphere.html#a6b680ec4f2cb19d546928fca48e58176" title="Calculate the atmosphere for the given altitude. " alt="" coords="352,123,571,164"/>
+</map>

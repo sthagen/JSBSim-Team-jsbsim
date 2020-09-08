@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGAircraft.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGAircraft.h<span style="font-size: 80%;"> (source / <a href="FGAircraft.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">28</td>
+            <td class="headerCovTableEntryMed">78.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntryMed">79.3 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGAircraft.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 12/12/98
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 12/12/98   JSB   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGAIRCRAFT_H
+<span class="lineNum">      35 </span>            : #define FGAIRCRAFT_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &lt;string&gt;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : #include &quot;FGModel.h&quot;
+<span class="lineNum">      44 </span>            : #include &quot;math/FGMatrix33.h&quot;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      47 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      48 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : namespace JSBSim {
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      53 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      54 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : /** Encapsulates an Aircraft and its systems.
+<span class="lineNum">      57 </span>            : &lt;p&gt; Owns all the parts (other classes) which make up this aircraft. This includes
+<span class="lineNum">      58 </span>            :     the Engines, Tanks, Propellers, Nozzles, Aerodynamic and Mass properties,
+<span class="lineNum">      59 </span>            :     landing gear, etc. These constituent parts may actually run as separate
+<span class="lineNum">      60 </span>            :     JSBSim models themselves, but the responsibility for initializing them and
+<span class="lineNum">      61 </span>            :     for retrieving their force and moment contributions falls to FGAircraft.
+<span class="lineNum">      62 </span>            : &lt;p&gt; The \&lt;metrics&gt; section of the aircraft configuration file is read here, and
+<span class="lineNum">      63 </span>            :     the metrical information is held by this class.
+<span class="lineNum">      64 </span>            : &lt;h3&gt;Configuration File Format for \&lt;metrics&gt; Section:&lt;/h3&gt;
+<span class="lineNum">      65 </span>            : @code{.xml}
+<span class="lineNum">      66 </span>            :     &lt;metrics&gt;
+<span class="lineNum">      67 </span>            :         &lt;wingarea unit=&quot;{FT2 | M2}&quot;&gt; {number} &lt;/wingarea&gt;
+<span class="lineNum">      68 </span>            :         &lt;wingspan unit=&quot;{FT | M}&quot;&gt; {number} &lt;/wingspan&gt;
+<span class="lineNum">      69 </span>            :         &lt;chord unit=&quot;{FT | M}&quot;&gt; {number} &lt;/chord&gt;
+<span class="lineNum">      70 </span>            :         &lt;htailarea unit=&quot;{FT2 | M2}&quot;&gt; {number} &lt;/htailarea&gt;
+<span class="lineNum">      71 </span>            :         &lt;htailarm unit=&quot;{FT | M}&quot;&gt; {number} &lt;/htailarm&gt;
+<span class="lineNum">      72 </span>            :         &lt;vtailarea unit=&quot;{FT2 | M}&quot;&gt; {number} &lt;/vtailarea&gt;
+<span class="lineNum">      73 </span>            :         &lt;vtailarm unit=&quot;{FT | M}&quot;&gt; {number} &lt;/vtailarm&gt;
+<span class="lineNum">      74 </span>            :         &lt;wing_incidence unit=&quot;{RAD | DEG}&quot;&gt; {number} &lt;/wing_incidence&gt;
+<span class="lineNum">      75 </span>            :         &lt;location name=&quot;{AERORP | EYEPOINT | VRP}&quot; unit=&quot;{IN | M}&quot;&gt;
+<span class="lineNum">      76 </span>            :             &lt;x&gt; {number} &lt;/x&gt;
+<span class="lineNum">      77 </span>            :             &lt;y&gt; {number} &lt;/y&gt;
+<span class="lineNum">      78 </span>            :             &lt;z&gt; {number} &lt;/z&gt;
+<span class="lineNum">      79 </span>            :         &lt;/location&gt;
+<span class="lineNum">      80 </span>            :         {other location blocks}
+<span class="lineNum">      81 </span>            :     &lt;/metrics&gt;
+<span class="lineNum">      82 </span>            : @endcode
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :     @author Jon S. Berndt
+<span class="lineNum">      85 </span>            :     @see Cooke, Zyda, Pratt, and McGhee, &quot;NPSNET: Flight Simulation Dynamic Modeling
+<span class="lineNum">      86 </span>            :      Using Quaternions&quot;, Presence, Vol. 1, No. 4, pp. 404-420  Naval Postgraduate
+<span class="lineNum">      87 </span>            :      School, January 1994
+<span class="lineNum">      88 </span>            :     @see D. M. Henderson, &quot;Euler Angles, Quaternions, and Transformation Matrices&quot;,
+<span class="lineNum">      89 </span>            :      JSC 12960, July 1977
+<span class="lineNum">      90 </span>            :     @see Richard E. McFarland, &quot;A Standard Kinematic Model for Flight Simulation at
+<span class="lineNum">      91 </span>            :      NASA-Ames&quot;, NASA CR-2497, January 1975
+<span class="lineNum">      92 </span>            :     @see Barnes W. McCormick, &quot;Aerodynamics, Aeronautics, and Flight Mechanics&quot;,
+<span class="lineNum">      93 </span>            :      Wiley &amp; Sons, 1979 ISBN 0-471-03032-5
+<span class="lineNum">      94 </span>            :     @see Bernard Etkin, &quot;Dynamics of Flight, Stability and Control&quot;, Wiley &amp; Sons,
+<span class="lineNum">      95 </span>            :      1982 ISBN 0-471-08936-2
+<span class="lineNum">      96 </span>            : */
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      99 </span>            : CLASS DECLARATION
+<span class="lineNum">     100 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            : class FGAircraft : public FGModel {
+<span class="lineNum">     103 </span>            : public:
+<span class="lineNum">     104 </span>            :   /** Constructor
+<span class="lineNum">     105 </span>            :       @param Executive a pointer to the parent executive object */
+<span class="lineNum">     106 </span>            :   FGAircraft(FGFDMExec *Executive);
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            :   /// Destructor
+<span class="lineNum">     109 </span>            :   ~FGAircraft() override;
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            :   /** Runs the Aircraft model; called by the Executive
+<span class="lineNum">     112 </span>            :       Can pass in a value indicating if the executive is directing the simulation to Hold.
+<span class="lineNum">     113 </span>            :       @param Holding if true, the executive has been directed to hold the sim from 
+<span class="lineNum">     114 </span>            :                      advancing time. Some models may ignore this flag, such as the Input
+<span class="lineNum">     115 </span>            :                      model, which may need to be active to listen on a socket for the
+<span class="lineNum">     116 </span>            :                      &quot;Resume&quot; command to be given.
+<span class="lineNum">     117 </span>            :       @see JSBSim.cpp documentation
+<span class="lineNum">     118 </span>            :       @return false if no error */
+<span class="lineNum">     119 </span>            :   bool Run(bool Holding) override;
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            :   bool InitModel(void) override;
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :   /** Loads the aircraft.
+<span class="lineNum">     124 </span>            :       The executive calls this method to load the aircraft into JSBSim.
+<span class="lineNum">     125 </span>            :       @param el a pointer to the element tree
+<span class="lineNum">     126 </span>            :       @return true if successful */
+<span class="lineNum">     127 </span>            :   bool Load(Element* el) override;
+<span class="lineNum">     128 </span>            : 
+<a name="129"><span class="lineNum">     129 </span>            :   /** Gets the aircraft name</a>
+<span class="lineNum">     130 </span>            :       @return the name of the aircraft as a string type */
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :   const std::string&amp; GetAircraftName(void) const { return AircraftName; }</span>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<span class="lineNum">     133 </span>            :   /// Gets the wing area
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">          8 :   double GetWingArea(void) const { return WingArea; }</span></a>
+<span class="lineNum">     135 </span>            :   /// Gets the wing span
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">          8 :   double GetWingSpan(void) const { return WingSpan; }</span></a>
+<a name="137"><span class="lineNum">     137 </span>            :   /// Gets the average wing chord</a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">          8 :   double Getcbar(void) const { return cbar; }</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">          8 :   double GetWingIncidence(void) const { return WingIncidence; }</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">          8 :   double GetWingIncidenceDeg(void) const { return WingIncidence*radtodeg; }</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          8 :   double GetHTailArea(void) const { return HTailArea; }</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">          8 :   double GetHTailArm(void)  const { return HTailArm; }</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">          8 :   double GetVTailArea(void) const { return VTailArea; }</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">          8 :   double GetVTailArm(void)  const { return VTailArm; }</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">          8 :   double Getlbarh(void) const { return lbarh; } // HTailArm / cbar</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">          8 :   double Getlbarv(void) const { return lbarv; } // VTailArm / cbar</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">          8 :   double Getvbarh(void) const { return vbarh; } // H. Tail Volume</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">          8 :   double Getvbarv(void) const { return vbarv; } // V. Tail Volume</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetMoments(void) const { return vMoments; }</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :   double GetMoments(int idx) const { return vMoments(idx); }</span></a>
+<span class="lineNum">     151 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetForces(void) const { return vForces; }</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :   double GetForces(int idx) const { return vForces(idx); }</span>
+<a name="153"><span class="lineNum">     153 </span>            :   /** Gets the the aero reference point (RP) coordinates.</a>
+<a name="154"><span class="lineNum">     154 </span>            :       @return a vector containing the RP coordinates in the structural frame. */</a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         16 :   const FGColumnVector3&amp; GetXYZrp(void) const { return vXYZrp; }</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetXYZvrp(void) const { return vXYZvrp; }</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetXYZep(void) const { return vXYZep; }</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">         24 :   double GetXYZrp(int idx) const { return vXYZrp(idx); }</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">         24 :   double GetXYZvrp(int idx) const { return vXYZvrp(idx); }</span></a>
+<span class="lineNum">     160 </span><span class="lineCov">         24 :   double GetXYZep(int idx) const { return vXYZep(idx); }</span>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :   void SetAircraftName(const std::string&amp; name) {AircraftName = name;}</span></a>
+<span class="lineNum">     162 </span>            : 
+<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :   void SetXYZrp(int idx, double value) {vXYZrp(idx) = value;}</span></a>
+<span class="lineNum">     164 </span>            : 
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :   void SetWingArea(double S) {WingArea = S;}</span></a>
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span><span class="lineCov">         16 :   struct Inputs {</span>
+<span class="lineNum">     168 </span>            :     FGColumnVector3 AeroForce;
+<span class="lineNum">     169 </span>            :     FGColumnVector3 PropForce;
+<span class="lineNum">     170 </span>            :     FGColumnVector3 GroundForce;
+<span class="lineNum">     171 </span>            :     FGColumnVector3 ExternalForce;
+<span class="lineNum">     172 </span>            :     FGColumnVector3 BuoyantForce;
+<span class="lineNum">     173 </span>            :     FGColumnVector3 AeroMoment;
+<span class="lineNum">     174 </span>            :     FGColumnVector3 PropMoment;
+<span class="lineNum">     175 </span>            :     FGColumnVector3 GroundMoment;
+<span class="lineNum">     176 </span>            :     FGColumnVector3 ExternalMoment;
+<span class="lineNum">     177 </span>            :     FGColumnVector3 BuoyantMoment;
+<span class="lineNum">     178 </span>            :   } in;
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            : private:
+<span class="lineNum">     181 </span>            :   FGColumnVector3 vMoments;
+<span class="lineNum">     182 </span>            :   FGColumnVector3 vForces;
+<span class="lineNum">     183 </span>            :   FGColumnVector3 vXYZrp;
+<span class="lineNum">     184 </span>            :   FGColumnVector3 vXYZvrp;
+<span class="lineNum">     185 </span>            :   FGColumnVector3 vXYZep;
+<span class="lineNum">     186 </span>            :   FGColumnVector3 vDXYZcg;
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            :   double WingArea, WingSpan, cbar, WingIncidence;
+<span class="lineNum">     189 </span>            :   double HTailArea, VTailArea, HTailArm, VTailArm;
+<span class="lineNum">     190 </span>            :   double lbarh,lbarv,vbarh,vbarv;
+<span class="lineNum">     191 </span>            :   std::string AircraftName;
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span>            :   void bind(void);
+<span class="lineNum">     194 </span>            :   void unbind(void);
+<span class="lineNum">     195 </span>            :   void Debug(int from) override;
+<span class="lineNum">     196 </span>            : };
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            : } // namespace JSBSim
+<span class="lineNum">     199 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     200 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

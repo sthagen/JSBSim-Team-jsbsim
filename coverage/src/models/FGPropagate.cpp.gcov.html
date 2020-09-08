@@ -1,0 +1,1064 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGPropagate.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGPropagate.cpp<span style="font-size: 80%;"> (source / <a href="FGPropagate.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">115</td>
+            <td class="headerCovTableEntry">486</td>
+            <td class="headerCovTableEntryLo">23.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">38</td>
+            <td class="headerCovTableEntryLo">34.2 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGPropagate.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 01/05/99
+<span class="lineNum">       6 </span>            :  Purpose:      Integrate the EOM to determine instantaneous position
+<span class="lineNum">       7 </span>            :  Called by:    FGFDMExec
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      13 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      14 </span>            :  later version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      22 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      23 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      26 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : This class encapsulates the integration of rates and accelerations to get the
+<span class="lineNum">      31 </span>            : current position of the aircraft.
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : HISTORY
+<span class="lineNum">      34 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      35 </span>            : 01/05/99   JSB   Created
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : COMMENTS, REFERENCES,  and NOTES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      40 </span>            : [1] Cooke, Zyda, Pratt, and McGhee, &quot;NPSNET: Flight Simulation Dynamic Modeling
+<span class="lineNum">      41 </span>            :     Using Quaternions&quot;, Presence, Vol. 1, No. 4, pp. 404-420  Naval Postgraduate
+<span class="lineNum">      42 </span>            :     School, January 1994
+<span class="lineNum">      43 </span>            : [2] D. M. Henderson, &quot;Euler Angles, Quaternions, and Transformation Matrices&quot;,
+<span class="lineNum">      44 </span>            :     JSC 12960, July 1977
+<span class="lineNum">      45 </span>            : [3] Richard E. McFarland, &quot;A Standard Kinematic Model for Flight Simulation at
+<span class="lineNum">      46 </span>            :     NASA-Ames&quot;, NASA CR-2497, January 1975
+<span class="lineNum">      47 </span>            : [4] Barnes W. McCormick, &quot;Aerodynamics, Aeronautics, and Flight Mechanics&quot;,
+<span class="lineNum">      48 </span>            :     Wiley &amp; Sons, 1979 ISBN 0-471-03032-5
+<span class="lineNum">      49 </span>            : [5] Bernard Etkin, &quot;Dynamics of Flight, Stability and Control&quot;, Wiley &amp; Sons,
+<span class="lineNum">      50 </span>            :     1982 ISBN 0-471-08936-2
+<span class="lineNum">      51 </span>            : [6] S. Buss, &quot;Accurate and Efficient Simulation of Rigid Body Rotations&quot;,
+<span class="lineNum">      52 </span>            :     Technical Report, Department of Mathematics, University of California,
+<span class="lineNum">      53 </span>            :     San Diego, 1999
+<span class="lineNum">      54 </span>            : [7] Barker L.E., Bowles R.L. and Williams L.H., &quot;Development and Application of
+<span class="lineNum">      55 </span>            :     a Local Linearization Algorithm for the Integration of Quaternion Rate
+<span class="lineNum">      56 </span>            :     Equations in Real-Time Flight Simulation Problems&quot;, NASA TN D-7347,
+<span class="lineNum">      57 </span>            :     December 1973
+<span class="lineNum">      58 </span>            : [8] Phillips W.F, Hailey C.E and Gebert G.A, &quot;Review of Attitude Representations
+<span class="lineNum">      59 </span>            :     Used for Aircraft Kinematics&quot;, Journal Of Aircraft Vol. 38, No. 4,
+<span class="lineNum">      60 </span>            :     July-August 2001
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      63 </span>            : INCLUDES
+<span class="lineNum">      64 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            : #include &quot;FGPropagate.h&quot;
+<span class="lineNum">      69 </span>            : #include &quot;initialization/FGInitialCondition.h&quot;
+<span class="lineNum">      70 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      71 </span>            : #include &quot;simgear/io/iostreams/sgstream.hxx&quot;
+<span class="lineNum">      72 </span>            : #include &quot;FGInertial.h&quot;
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            : using namespace std;
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            : namespace JSBSim {
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      79 </span>            : CLASS IMPLEMENTATION
+<a name="80"><span class="lineNum">      80 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineCov">          8 : FGPropagate::FGPropagate(FGFDMExec* fdmex)</span>
+<span class="lineNum">      83 </span><span class="lineCov">          8 :   : FGModel(fdmex)</span>
+<span class="lineNum">      84 </span>            : {
+<span class="lineNum">      85 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">      86 </span><span class="lineCov">          8 :   Name = &quot;FGPropagate&quot;;</span>
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span><span class="lineCov">          8 :   Inertial = FDMExec-&gt;GetInertial();</span>
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            :   /// These define the indices use to select the various integrators.
+<span class="lineNum">      91 </span>            :   // eNone = 0, eRectEuler, eTrapezoidal, eAdamsBashforth2, eAdamsBashforth3, eAdamsBashforth4};
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span><span class="lineCov">          8 :   integrator_rotational_rate = eRectEuler;</span>
+<span class="lineNum">      94 </span><span class="lineCov">          8 :   integrator_translational_rate = eAdamsBashforth2;</span>
+<span class="lineNum">      95 </span><span class="lineCov">          8 :   integrator_rotational_position = eRectEuler;</span>
+<span class="lineNum">      96 </span><span class="lineCov">          8 :   integrator_translational_position = eAdamsBashforth3;</span>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span><span class="lineCov">          8 :   VState.dqPQRidot.resize(5, FGColumnVector3(0.0,0.0,0.0));</span>
+<span class="lineNum">      99 </span><span class="lineCov">          8 :   VState.dqUVWidot.resize(5, FGColumnVector3(0.0,0.0,0.0));</span>
+<span class="lineNum">     100 </span><span class="lineCov">          8 :   VState.dqInertialVelocity.resize(5, FGColumnVector3(0.0,0.0,0.0));</span>
+<span class="lineNum">     101 </span><span class="lineCov">          8 :   VState.dqQtrndot.resize(5, FGQuaternion(0.0,0.0,0.0));</span>
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span><span class="lineCov">          8 :   epa = 0.0;</span>
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span><span class="lineCov">          8 :   bind();</span>
+<span class="lineNum">     106 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">     107 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     108 </span>            : 
+<a name="109"><span class="lineNum">     109 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineCov">         24 : FGPropagate::~FGPropagate(void)</span>
+<span class="lineNum">     112 </span>            : {
+<span class="lineNum">     113 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">     114 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">     115 </span>            : 
+<a name="116"><span class="lineNum">     116 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineCov">          8 : bool FGPropagate::InitModel(void)</span>
+<span class="lineNum">     119 </span>            : {
+<span class="lineNum">     120 </span><span class="lineCov">          8 :   if (!FGModel::InitModel()) return false;</span>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span>            :   // For initialization ONLY:
+<span class="lineNum">     123 </span><span class="lineCov">          8 :   VState.vLocation.SetEllipse(in.SemiMajor, in.SemiMinor);</span>
+<span class="lineNum">     124 </span><span class="lineCov">          8 :   Inertial-&gt;SetAltitudeAGL(VState.vLocation, 4.0);</span>
+<span class="lineNum">     125 </span>            : 
+<span class="lineNum">     126 </span><span class="lineCov">          8 :   VState.dqPQRidot.resize(5, FGColumnVector3(0.0,0.0,0.0));</span>
+<span class="lineNum">     127 </span><span class="lineCov">          8 :   VState.dqUVWidot.resize(5, FGColumnVector3(0.0,0.0,0.0));</span>
+<span class="lineNum">     128 </span><span class="lineCov">          8 :   VState.dqInertialVelocity.resize(5, FGColumnVector3(0.0,0.0,0.0));</span>
+<span class="lineNum">     129 </span><span class="lineCov">          8 :   VState.dqQtrndot.resize(5, FGColumnVector3(0.0,0.0,0.0));</span>
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span><span class="lineCov">          8 :   integrator_rotational_rate = eRectEuler;</span>
+<span class="lineNum">     132 </span><span class="lineCov">          8 :   integrator_translational_rate = eAdamsBashforth2;</span>
+<span class="lineNum">     133 </span><span class="lineCov">          8 :   integrator_rotational_position = eRectEuler;</span>
+<span class="lineNum">     134 </span><span class="lineCov">          8 :   integrator_translational_position = eAdamsBashforth3;</span>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineCov">          8 :   epa = 0.0;</span>
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span><span class="lineCov">          8 :   return true;</span>
+<span class="lineNum">     139 </span>            : }
+<span class="lineNum">     140 </span>            : 
+<a name="141"><span class="lineNum">     141 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 : void FGPropagate::SetInitialState(const FGInitialCondition *FGIC)</span>
+<span class="lineNum">     144 </span>            : {
+<span class="lineNum">     145 </span>            :   // Initialize the State Vector elements and the transformation matrices
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            :   // Set the position lat/lon/radius
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :   VState.vLocation = FGIC-&gt;GetPosition();</span>
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :   epa = FGIC-&gt;GetEarthPositionAngleIC();</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :   Ti2ec = { cos(epa), sin(epa), 0.0,</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :             -sin(epa), cos(epa), 0.0,</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :             0.0, 0.0, 1.0 };</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :   Tec2i = Ti2ec.Transposed();          // ECEF to ECI frame transform</span>
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :   VState.vInertialPosition = Tec2i * VState.vLocation;</span>
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :   UpdateLocationMatrices();</span>
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :   // Set the orientation from the euler angles (is normalized within the
+<span class="lineNum">     161 </span>            :   // constructor). The Euler angles represent the orientation of the body
+<span class="lineNum">     162 </span>            :   // frame relative to the local frame.
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :   VState.qAttitudeLocal = FGIC-&gt;GetOrientation();</span>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :   VState.qAttitudeECI = Ti2l.GetQuaternion()*VState.qAttitudeLocal;</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :   UpdateBodyMatrices();</span>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            :   // Set the velocities in the instantaneus body frame
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :   VState.vUVW = FGIC-&gt;GetUVWFpsIC();</span>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span>            :   // Compute the local frame ECEF velocity
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :   vVel = Tb2l * VState.vUVW;</span>
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span>            :   // Compute local terrain velocity
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :   RecomputeLocalTerrainVelocity();</span>
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            :   // Set the angular velocities of the body frame relative to the ECEF frame,
+<span class="lineNum">     178 </span>            :   // expressed in the body frame.
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :   VState.vPQR = FGIC-&gt;GetPQRRadpsIC();</span>
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :   VState.vPQRi = VState.vPQR + Ti2b * in.vOmegaPlanet;</span>
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :   CalculateInertialVelocity(); // Translational position derivative</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :   CalculateQuatdot();  // Angular orientation derivative</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     186 </span>            : 
+<span class="lineNum">     187 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="188"><span class="lineNum">     188 </span>            : // Initialize the past value deques</a>
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 : void FGPropagate::InitializeDerivatives()</span>
+<span class="lineNum">     191 </span>            : {
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :   VState.dqPQRidot.assign(5, in.vPQRidot);</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :   VState.dqUVWidot.assign(5, in.vUVWidot);</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :   VState.dqInertialVelocity.assign(5, VState.vInertialVelocity);</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :   VState.dqQtrndot.assign(5, VState.vQtrndot);</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     199 </span>            : /*
+<span class="lineNum">     200 </span>            : Purpose: Called on a schedule to perform EOM integration
+<span class="lineNum">     201 </span>            : Notes:   [JB] Run in standalone mode, SeaLevelRadius will be reference radius.
+<span class="lineNum">     202 </span>            :          In FGFS, SeaLevelRadius is stuffed from FGJSBSim in JSBSim.cxx each pass.
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span>            : At the top of this Run() function, see several &quot;shortcuts&quot; (or, aliases) being
+<span class="lineNum">     205 </span>            : set up for use later, rather than using the longer class-&gt;function() notation.
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            : This propagation is done using the current state values
+<span class="lineNum">     208 </span>            : and current derivatives. Based on these values we compute an approximation to the
+<span class="lineNum">     209 </span>            : state values for (now + dt).
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span>            : In the code below, variables named beginning with a small &quot;v&quot; refer to a
+<span class="lineNum">     212 </span>            : a column vector, variables named beginning with a &quot;T&quot; refer to a transformation
+<span class="lineNum">     213 </span>            : matrix. ECEF refers to Earth Centered Earth Fixed. ECI refers to Earth Centered
+<span class="lineNum">     214 </span>            : Inertial.
+<span class="lineNum">     215 </span>            : 
+<a name="216"><span class="lineNum">     216 </span>            : */</a>
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 : bool FGPropagate::Run(bool Holding)</span>
+<span class="lineNum">     219 </span>            : {
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :   if (FGModel::Run(Holding)) return true;  // Fast return if we have nothing to do ...</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   if (Holding) return false;</span>
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :   double dt = in.DeltaT * rate;  // The 'stepsize'</span>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            :   // Propagate rotational / translational velocity, angular /translational position, respectively.
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :   if (!FDMExec-&gt;IntegrationSuspended()) {</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :     Integrate(VState.qAttitudeECI,      VState.vQtrndot,      VState.dqQtrndot,          dt, integrator_rotational_position);</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :     Integrate(VState.vPQRi,             in.vPQRidot,          VState.dqPQRidot,          dt, integrator_rotational_rate);</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :     Integrate(VState.vInertialPosition, VState.vInertialVelocity, VState.dqInertialVelocity, dt, integrator_translational_position);</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :     Integrate(VState.vInertialVelocity, in.vUVWidot,          VState.dqUVWidot,          dt, integrator_translational_rate);</span>
+<span class="lineNum">     232 </span>            :   }
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            :   // CAUTION : the order of the operations below is very important to get
+<span class="lineNum">     235 </span>            :   // transformation matrices that are consistent with the new state of the
+<span class="lineNum">     236 </span>            :   // vehicle
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            :   // 1. Update the Earth position angle (EPA)
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :   epa += in.vOmegaPlanet(eZ)*dt;</span>
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span>            :   // 2. Update the Ti2ec and Tec2i transforms from the updated EPA
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :   double cos_epa = cos(epa);</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :   double sin_epa = sin(epa);</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :   Ti2ec = { cos_epa, sin_epa, 0.0,</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :             -sin_epa, cos_epa, 0.0,</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :             0.0, 0.0, 1.0 };</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :   Tec2i = Ti2ec.Transposed();          // ECEF to ECI frame transform</span>
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span>            :   // 3. Update the location from the updated Ti2ec and inertial position
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :   VState.vLocation = Ti2ec*VState.vInertialPosition;</span>
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            :   // 4. Update the other &quot;Location-based&quot; transformation matrices from the
+<span class="lineNum">     253 </span>            :   //    updated vLocation vector.
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   UpdateLocationMatrices();</span>
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span>            :   // 5. Update the &quot;Orientation-based&quot; transformation matrices from the updated
+<span class="lineNum">     257 </span>            :   //    orientation quaternion and vLocation vector.
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   UpdateBodyMatrices();</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span>            :   // Translational position derivative (velocities are integrated in the
+<span class="lineNum">     261 </span>            :   // inertial frame)
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :   CalculateUVW();</span>
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span>            :   // Set auxilliary state variables
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :   RecomputeLocalTerrainVelocity();</span>
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :   VState.vPQR = VState.vPQRi - Ti2b * in.vOmegaPlanet;</span>
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span>            :   // Angular orientation derivative
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :   CalculateQuatdot();</span>
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :   VState.qAttitudeLocal = Tl2b.GetQuaternion();</span>
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :   // Compute vehicle velocity wrt ECEF frame, expressed in Local horizontal
+<span class="lineNum">     275 </span>            :   // frame.
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :   vVel = Tb2l * VState.vUVW;</span>
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :   Debug(2);</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     280 </span>            : }
+<span class="lineNum">     281 </span>            : 
+<a name="282"><span class="lineNum">     282 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 : void FGPropagate::SetHoldDown(bool hd)</span>
+<span class="lineNum">     285 </span>            : {
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :   if (hd) {</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :     VState.vUVW.InitMatrix();</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :     CalculateInertialVelocity();</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :     VState.vPQR.InitMatrix();</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :     VState.vPQRi = Ti2b * in.vOmegaPlanet;</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :     CalculateQuatdot();</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :     InitializeDerivatives();</span>
+<span class="lineNum">     293 </span>            :   }
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     297 </span>            : // Compute the quaternion orientation derivative
+<span class="lineNum">     298 </span>            : //
+<span class="lineNum">     299 </span>            : // vQtrndot is the quaternion derivative.
+<span class="lineNum">     300 </span>            : // Reference: See Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;,
+<a name="301"><span class="lineNum">     301 </span>            : //            Second edition (2004), eqn 1.5-16b (page 50)</a>
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 : void FGPropagate::CalculateQuatdot(void)</span>
+<span class="lineNum">     304 </span>            : {
+<span class="lineNum">     305 </span>            :   // Compute quaternion orientation derivative on current body rates
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :   VState.vQtrndot = VState.qAttitudeECI.GetQDot(VState.vPQRi);</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     308 </span>            : 
+<span class="lineNum">     309 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     310 </span>            :   // Transform the velocity vector of the body relative to the origin (Earth
+<span class="lineNum">     311 </span>            :   // center) to be expressed in the inertial frame, and add the vehicle velocity
+<span class="lineNum">     312 </span>            :   // contribution due to the rotation of the planet.
+<span class="lineNum">     313 </span>            :   // Reference: See Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;,
+<a name="314"><span class="lineNum">     314 </span>            :   //            Second edition (2004), eqn 1.5-16c (page 50)</a>
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 : void FGPropagate::CalculateInertialVelocity(void)</span>
+<span class="lineNum">     317 </span>            : {
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :   VState.vInertialVelocity = Tb2i * VState.vUVW + (in.vOmegaPlanet * VState.vInertialPosition);</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     322 </span>            :   // Transform the velocity vector of the inertial frame to be expressed in the
+<span class="lineNum">     323 </span>            :   // body frame relative to the origin (Earth center), and substract the vehicle
+<a name="324"><span class="lineNum">     324 </span>            :   // velocity contribution due to the rotation of the planet.</a>
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 : void FGPropagate::CalculateUVW(void)</span>
+<span class="lineNum">     327 </span>            : {
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :   VState.vUVW = Ti2b * (VState.vInertialVelocity - (in.vOmegaPlanet * VState.vInertialPosition));</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     330 </span>            : 
+<a name="331"><span class="lineNum">     331 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     332 </span>            : 
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 : void FGPropagate::Integrate( FGColumnVector3&amp; Integrand,</span>
+<span class="lineNum">     334 </span>            :                              FGColumnVector3&amp; Val,
+<span class="lineNum">     335 </span>            :                              deque &lt;FGColumnVector3&gt;&amp; ValDot,
+<span class="lineNum">     336 </span>            :                              double dt,
+<span class="lineNum">     337 </span>            :                              eIntegrateType integration_type)
+<span class="lineNum">     338 </span>            : {
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :   ValDot.push_front(Val);</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   ValDot.pop_back();</span>
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :   switch(integration_type) {</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :   case eRectEuler:       Integrand += dt*ValDot[0];</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :   case eTrapezoidal:     Integrand += 0.5*dt*(ValDot[0] + ValDot[1]);</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :   case eAdamsBashforth2: Integrand += dt*(1.5*ValDot[0] - 0.5*ValDot[1]);</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :   case eAdamsBashforth3: Integrand += (1/12.0)*dt*(23.0*ValDot[0] - 16.0*ValDot[1] + 5.0*ValDot[2]);</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :   case eAdamsBashforth4: Integrand += (1/24.0)*dt*(55.0*ValDot[0] - 59.0*ValDot[1] + 37.0*ValDot[2] - 9.0*ValDot[3]);</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :   case eAdamsBashforth5: Integrand += dt*((1901./720.)*ValDot[0] - (1387./360.)*ValDot[1] + (109./30.)*ValDot[2] - (637./360.)*ValDot[3] + (251./720.)*ValDot[4]);</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :   case eNone: // do nothing, freeze translational rate</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :   case eBuss1:</span>
+<span class="lineNum">     358 </span>            :   case eBuss2:
+<span class="lineNum">     359 </span>            :   case eLocalLinearization:
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :     throw(&quot;Can only use Buss (1 &amp; 2) or local linearization integration methods in for rotational position!&quot;);</span>
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :   default:</span>
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     363 </span>            :   }
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     365 </span>            : 
+<a name="366"><span class="lineNum">     366 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 : void FGPropagate::Integrate( FGQuaternion&amp; Integrand,</span>
+<span class="lineNum">     369 </span>            :                              FGQuaternion&amp; Val,
+<span class="lineNum">     370 </span>            :                              deque &lt;FGQuaternion&gt;&amp; ValDot,
+<span class="lineNum">     371 </span>            :                              double dt,
+<span class="lineNum">     372 </span>            :                              eIntegrateType integration_type)
+<span class="lineNum">     373 </span>            : {
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :   ValDot.push_front(Val);</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :   ValDot.pop_back();</span>
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :   switch(integration_type) {</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :   case eRectEuler:       Integrand += dt*ValDot[0];</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :   case eTrapezoidal:     Integrand += 0.5*dt*(ValDot[0] + ValDot[1]);</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :   case eAdamsBashforth2: Integrand += dt*(1.5*ValDot[0] - 0.5*ValDot[1]);</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :   case eAdamsBashforth3: Integrand += (1/12.0)*dt*(23.0*ValDot[0] - 16.0*ValDot[1] + 5.0*ValDot[2]);</span>
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :   case eAdamsBashforth4: Integrand += (1/24.0)*dt*(55.0*ValDot[0] - 59.0*ValDot[1] + 37.0*ValDot[2] - 9.0*ValDot[3]);</span>
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :   case eAdamsBashforth5: Integrand += dt*((1901./720.)*ValDot[0] - (1387./360.)*ValDot[1] + (109./30.)*ValDot[2] - (637./360.)*ValDot[3] + (251./720.)*ValDot[4]);</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :   case eBuss1:</span>
+<span class="lineNum">     391 </span>            :     {
+<span class="lineNum">     392 </span>            :       // This is the first order method as described in Samuel R. Buss paper[6].
+<span class="lineNum">     393 </span>            :       // The formula from Buss' paper is transposed below to quaternions and is
+<span class="lineNum">     394 </span>            :       // actually the exact solution of the quaternion differential equation
+<span class="lineNum">     395 </span>            :       // qdot = 1/2*w*q when w is constant.
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :       Integrand = Integrand * QExp(0.5 * dt * VState.vPQRi);</span>
+<span class="lineNum">     397 </span>            :     }
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :     return; // No need to normalize since the quaternion exponential is always normal</span>
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :   case eBuss2:</span>
+<span class="lineNum">     400 </span>            :     {
+<span class="lineNum">     401 </span>            :       // This is the 'augmented second-order method' from S.R. Buss paper [6].
+<span class="lineNum">     402 </span>            :       // Unlike Runge-Kutta or Adams-Bashforth, it is a one-pass second-order
+<span class="lineNum">     403 </span>            :       // method (see reference [6]).
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :       FGColumnVector3 wi = VState.vPQRi;</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :       FGColumnVector3 wdoti = in.vPQRidot;</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :       FGColumnVector3 omega = wi + 0.5*dt*wdoti + dt*dt/12.*wdoti*wi;</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :       Integrand = Integrand * QExp(0.5 * dt * omega);</span>
+<span class="lineNum">     408 </span>            :     }
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :     return; // No need to normalize since the quaternion exponential is always normal</span>
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :   case eLocalLinearization:</span>
+<span class="lineNum">     411 </span>            :     {
+<span class="lineNum">     412 </span>            :       // This is the local linearization algorithm of Barker et al. (see ref. [7])
+<span class="lineNum">     413 </span>            :       // It is also a one-pass second-order method. The code below is based on the
+<span class="lineNum">     414 </span>            :       // more compact formulation issued from equation (107) of ref. [8]. The
+<span class="lineNum">     415 </span>            :       // constants C1, C2, C3 and C4 have the same value than those in ref. [7] pp. 11
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :       FGColumnVector3 wi = 0.5 * VState.vPQRi;</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :       FGColumnVector3 wdoti = 0.5 * in.vPQRidot;</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :       double omegak2 = DotProduct(VState.vPQRi, VState.vPQRi);</span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :       double omegak = omegak2 &gt; 1E-6 ? sqrt(omegak2) : 1E-6;</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :       double rhok = 0.5 * dt * omegak;</span>
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :       double C1 = cos(rhok);</span>
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :       double C2 = 2.0 * sin(rhok) / omegak;</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :       double C3 = 4.0 * (1.0 - C1) / (omegak*omegak);</span>
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :       double C4 = 4.0 * (dt - C2) / (omegak*omegak);</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :       FGColumnVector3 Omega = C2*wi + C3*wdoti + C4*wi*wdoti;</span>
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :       FGQuaternion q;</span>
+<span class="lineNum">     427 </span>            : 
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :       q(1) = C1 - C4*DotProduct(wi, wdoti);</span>
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :       q(2) = Omega(eP);</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :       q(3) = Omega(eQ);</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :       q(4) = Omega(eR);</span>
+<span class="lineNum">     432 </span>            : 
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :       Integrand = Integrand * q;</span>
+<span class="lineNum">     434 </span>            : 
+<span class="lineNum">     435 </span>            :       /* Cross check with ref. [7] pp.11-12 formulas and code pp. 20
+<span class="lineNum">     436 </span>            :       double pk = VState.vPQRi(eP);
+<span class="lineNum">     437 </span>            :       double qk = VState.vPQRi(eQ);
+<span class="lineNum">     438 </span>            :       double rk = VState.vPQRi(eR);
+<span class="lineNum">     439 </span>            :       double pdotk = in.vPQRidot(eP);
+<span class="lineNum">     440 </span>            :       double qdotk = in.vPQRidot(eQ);
+<span class="lineNum">     441 </span>            :       double rdotk = in.vPQRidot(eR);
+<span class="lineNum">     442 </span>            :       double Ap = -0.25 * (pk*pdotk + qk*qdotk + rk*rdotk);
+<span class="lineNum">     443 </span>            :       double Bp = 0.25 * (pk*qdotk - qk*pdotk);
+<span class="lineNum">     444 </span>            :       double Cp = 0.25 * (pdotk*rk - pk*rdotk);
+<span class="lineNum">     445 </span>            :       double Dp = 0.25 * (qk*rdotk - qdotk*rk);
+<span class="lineNum">     446 </span>            :       double C2p = sin(rhok) / omegak;
+<span class="lineNum">     447 </span>            :       double C3p = 2.0 * (1.0 - cos(rhok)) / (omegak*omegak);
+<span class="lineNum">     448 </span>            :       double H = C1 + C4 * Ap;
+<span class="lineNum">     449 </span>            :       double G = -C2p*rk - C3p*rdotk + C4*Bp;
+<span class="lineNum">     450 </span>            :       double J = C2p*qk + C3p*qdotk - C4*Cp;
+<span class="lineNum">     451 </span>            :       double K = C2p*pk + C3p*pdotk - C4*Dp;
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span>            :       cout &lt;&lt; &quot;q:       &quot; &lt;&lt; q &lt;&lt; endl;
+<span class="lineNum">     454 </span>            : 
+<span class="lineNum">     455 </span>            :       // Warning! In the paper of Barker et al. the quaternion components are not
+<span class="lineNum">     456 </span>            :       // ordered the same way as in JSBSim (see equations (2) and (3) of ref. [7]
+<span class="lineNum">     457 </span>            :       // as well as the comment just below equation (3))
+<span class="lineNum">     458 </span>            :       cout &lt;&lt; &quot;FORTRAN: &quot; &lt;&lt; H &lt;&lt; &quot; , &quot; &lt;&lt; K &lt;&lt; &quot; , &quot; &lt;&lt; J &lt;&lt; &quot; , &quot; &lt;&lt; -G &lt;&lt; endl;*/
+<span class="lineNum">     459 </span>            :     }
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :     break; // The quaternion q is not normal so the normalization needs to be done.</span>
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :   case eNone: // do nothing, freeze rotational rate</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :   default:</span>
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     465 </span>            :   }
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :   Integrand.Normalize();</span>
+<span class="lineNum">     468 </span>            : }
+<span class="lineNum">     469 </span>            : 
+<a name="470"><span class="lineNum">     470 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     471 </span>            : 
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 : void FGPropagate::UpdateLocationMatrices(void)</span>
+<span class="lineNum">     473 </span>            : {
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :   Tl2ec = VState.vLocation.GetTl2ec(); // local to ECEF transform</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :   Tec2l = Tl2ec.Transposed();          // ECEF to local frame transform</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :   Ti2l  = Tec2l * Ti2ec;               // ECI to local frame transform</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :   Tl2i  = Ti2l.Transposed();           // local to ECI transform</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     479 </span>            : 
+<a name="480"><span class="lineNum">     480 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     481 </span>            : 
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 : void FGPropagate::UpdateBodyMatrices(void)</span>
+<span class="lineNum">     483 </span>            : {
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :   Ti2b  = VState.qAttitudeECI.GetT(); // ECI to body frame transform</span>
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :   Tb2i  = Ti2b.Transposed();          // body to ECI frame transform</span>
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :   Tl2b  = Ti2b * Tl2i;                // local to body frame transform</span>
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :   Tb2l  = Tl2b.Transposed();          // body to local frame transform</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 :   Tec2b = Ti2b * Tec2i;               // ECEF to body frame transform</span>
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :   Tb2ec = Tec2b.Transposed();         // body to ECEF frame tranform</span>
+<span class="lineNum">     490 </span>            : 
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :   Qec2b = Tec2b.GetQuaternion();</span>
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     493 </span>            : 
+<a name="494"><span class="lineNum">     494 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     495 </span>            : 
+<span class="lineNum">     496 </span><span class="lineNoCov">          0 : void FGPropagate::SetInertialOrientation(const FGQuaternion&amp; Qi)</span>
+<span class="lineNum">     497 </span>            : {
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 :   VState.qAttitudeECI = Qi;</span>
+<span class="lineNum">     499 </span><span class="lineNoCov">          0 :   VState.qAttitudeECI.Normalize();</span>
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :   UpdateBodyMatrices();</span>
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :   VState.qAttitudeLocal = Tl2b.GetQuaternion();</span>
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :   CalculateQuatdot();</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     504 </span>            : 
+<a name="505"><span class="lineNum">     505 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     506 </span>            : 
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 : void FGPropagate::SetInertialVelocity(const FGColumnVector3&amp; Vi) {</span>
+<span class="lineNum">     508 </span><span class="lineNoCov">          0 :   VState.vInertialVelocity = Vi;</span>
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :   CalculateUVW();</span>
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :   vVel = Tb2l * VState.vUVW;</span>
+<span class="lineNum">     511 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     512 </span>            : 
+<a name="513"><span class="lineNum">     513 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     514 </span>            : 
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 : void FGPropagate::SetInertialRates(const FGColumnVector3&amp; vRates) {</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :   VState.vPQRi = Ti2b * vRates;</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :   VState.vPQR = VState.vPQRi - Ti2b * in.vOmegaPlanet;</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :   CalculateQuatdot();</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     520 </span>            : 
+<a name="521"><span class="lineNum">     521 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     522 </span>            : 
+<span class="lineNum">     523 </span><span class="lineCov">         40 : double FGPropagate::GetAltitudeASL() const</span>
+<span class="lineNum">     524 </span>            : {
+<span class="lineNum">     525 </span><span class="lineCov">         40 :   return VState.vLocation.GetRadius() - VState.vLocation.GetSeaLevelRadius();</span>
+<span class="lineNum">     526 </span>            : }
+<span class="lineNum">     527 </span>            : 
+<a name="528"><span class="lineNum">     528 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     529 </span>            : 
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 : void FGPropagate::SetAltitudeASL(double altASL)</span>
+<span class="lineNum">     531 </span>            : {
+<span class="lineNum">     532 </span><span class="lineNoCov">          0 :   double slr = VState.vLocation.GetSeaLevelRadius();</span>
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :   VState.vLocation.SetRadius(slr + altASL);</span>
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :   UpdateVehicleState();</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     536 </span>            : 
+<a name="537"><span class="lineNum">     537 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     538 </span>            : 
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 : void FGPropagate::RecomputeLocalTerrainVelocity()</span>
+<span class="lineNum">     540 </span>            : {
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :   FGLocation contact;</span>
+<span class="lineNum">     542 </span><span class="lineNoCov">          0 :   FGColumnVector3 normal;</span>
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :   Inertial-&gt;GetContactPoint(VState.vLocation, contact, normal,</span>
+<span class="lineNum">     544 </span>            :                             LocalTerrainVelocity, LocalTerrainAngularVelocity);
+<span class="lineNum">     545 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     546 </span>            : 
+<a name="547"><span class="lineNum">     547 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     548 </span>            : 
+<span class="lineNum">     549 </span><span class="lineCov">          8 : double FGPropagate::GetTerrainElevation(void) const</span>
+<span class="lineNum">     550 </span>            : {
+<span class="lineNum">     551 </span><span class="lineCov">         16 :   FGLocation contact;</span>
+<span class="lineNum">     552 </span><span class="lineCov">         16 :   FGColumnVector3 vDummy;</span>
+<span class="lineNum">     553 </span><span class="lineCov">          8 :   Inertial-&gt;GetContactPoint(VState.vLocation, contact, vDummy, vDummy, vDummy);</span>
+<span class="lineNum">     554 </span><span class="lineCov">         16 :   return contact.GetGeodAltitude();</span>
+<span class="lineNum">     555 </span>            : }
+<span class="lineNum">     556 </span>            : 
+<a name="557"><span class="lineNum">     557 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     558 </span>            : 
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 : void FGPropagate::SetTerrainElevation(double terrainElev)</span>
+<span class="lineNum">     560 </span>            : {
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :   Inertial-&gt;SetTerrainElevation(terrainElev);</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     563 </span>            : 
+<a name="564"><span class="lineNum">     564 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     565 </span>            : 
+<span class="lineNum">     566 </span><span class="lineCov">          8 : double FGPropagate::GetLocalTerrainRadius(void) const</span>
+<span class="lineNum">     567 </span>            : {
+<span class="lineNum">     568 </span><span class="lineCov">         16 :   FGLocation contact;</span>
+<span class="lineNum">     569 </span><span class="lineCov">         16 :   FGColumnVector3 vDummy;</span>
+<span class="lineNum">     570 </span><span class="lineCov">          8 :   Inertial-&gt;GetContactPoint(VState.vLocation, contact, vDummy, vDummy, vDummy);</span>
+<span class="lineNum">     571 </span><span class="lineCov">         16 :   return contact.GetRadius();</span>
+<span class="lineNum">     572 </span>            : }
+<span class="lineNum">     573 </span>            : 
+<a name="574"><span class="lineNum">     574 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     575 </span>            : 
+<span class="lineNum">     576 </span><span class="lineCov">         48 : double FGPropagate::GetDistanceAGL(void) const</span>
+<span class="lineNum">     577 </span>            : {
+<span class="lineNum">     578 </span><span class="lineCov">         48 :   return Inertial-&gt;GetAltitudeAGL(VState.vLocation);</span>
+<span class="lineNum">     579 </span>            : }
+<span class="lineNum">     580 </span>            : 
+<a name="581"><span class="lineNum">     581 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     582 </span>            : 
+<span class="lineNum">     583 </span><span class="lineCov">          8 : double FGPropagate::GetDistanceAGLKm(void) const</span>
+<span class="lineNum">     584 </span>            : {
+<span class="lineNum">     585 </span><span class="lineCov">          8 :   return GetDistanceAGL()*0.0003048;</span>
+<span class="lineNum">     586 </span>            : }
+<span class="lineNum">     587 </span>            : 
+<a name="588"><span class="lineNum">     588 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     589 </span>            : 
+<span class="lineNum">     590 </span><span class="lineNoCov">          0 : void FGPropagate::SetDistanceAGL(double tt)</span>
+<span class="lineNum">     591 </span>            : {
+<span class="lineNum">     592 </span><span class="lineNoCov">          0 :   Inertial-&gt;SetAltitudeAGL(VState.vLocation, tt);</span>
+<span class="lineNum">     593 </span><span class="lineNoCov">          0 :   UpdateVehicleState();</span>
+<span class="lineNum">     594 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     595 </span>            : 
+<a name="596"><span class="lineNum">     596 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     597 </span>            : 
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 : void FGPropagate::SetDistanceAGLKm(double tt)</span>
+<span class="lineNum">     599 </span>            : {
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :   SetDistanceAGL(tt*3280.8399);</span>
+<span class="lineNum">     601 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     602 </span>            : 
+<a name="603"><span class="lineNum">     603 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span><span class="lineNoCov">          0 : void FGPropagate::SetVState(const VehicleState&amp; vstate)</span>
+<span class="lineNum">     606 </span>            : {
+<span class="lineNum">     607 </span>            :   //ToDo: Shouldn't all of these be set from the vstate vector passed in?
+<span class="lineNum">     608 </span><span class="lineNoCov">          0 :   VState.vLocation = vstate.vLocation;</span>
+<span class="lineNum">     609 </span><span class="lineNoCov">          0 :   UpdateLocationMatrices();</span>
+<span class="lineNum">     610 </span><span class="lineNoCov">          0 :   SetInertialOrientation(vstate.qAttitudeECI);</span>
+<span class="lineNum">     611 </span><span class="lineNoCov">          0 :   RecomputeLocalTerrainVelocity();</span>
+<span class="lineNum">     612 </span><span class="lineNoCov">          0 :   VState.vUVW = vstate.vUVW;</span>
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 :   vVel = Tb2l * VState.vUVW;</span>
+<span class="lineNum">     614 </span><span class="lineNoCov">          0 :   VState.vPQR = vstate.vPQR;</span>
+<span class="lineNum">     615 </span><span class="lineNoCov">          0 :   VState.vPQRi = VState.vPQR + Ti2b * in.vOmegaPlanet;</span>
+<span class="lineNum">     616 </span><span class="lineNoCov">          0 :   VState.vInertialPosition = vstate.vInertialPosition;</span>
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :   CalculateQuatdot();</span>
+<span class="lineNum">     618 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     619 </span>            : 
+<a name="620"><span class="lineNum">     620 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     621 </span>            : 
+<span class="lineNum">     622 </span><span class="lineNoCov">          0 : void FGPropagate::UpdateVehicleState(void)</span>
+<span class="lineNum">     623 </span>            : {
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :   RecomputeLocalTerrainVelocity();</span>
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :   VState.vInertialPosition = Tec2i * VState.vLocation;</span>
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :   UpdateLocationMatrices();</span>
+<span class="lineNum">     627 </span><span class="lineNoCov">          0 :   UpdateBodyMatrices();</span>
+<span class="lineNum">     628 </span><span class="lineNoCov">          0 :   vVel = Tb2l * VState.vUVW;</span>
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :   VState.qAttitudeLocal = Tl2b.GetQuaternion();</span>
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     631 </span>            : 
+<a name="632"><span class="lineNum">     632 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     633 </span>            : 
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 : void FGPropagate::SetLocation(const FGLocation&amp; l)</span>
+<span class="lineNum">     635 </span>            : {
+<span class="lineNum">     636 </span><span class="lineNoCov">          0 :   VState.vLocation = l;</span>
+<span class="lineNum">     637 </span><span class="lineNoCov">          0 :   UpdateVehicleState();</span>
+<span class="lineNum">     638 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     639 </span>            : 
+<a name="640"><span class="lineNum">     640 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     641 </span>            : 
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 : FGColumnVector3 FGPropagate::GetEulerDeg(void) const</span>
+<span class="lineNum">     643 </span>            : {
+<span class="lineNum">     644 </span><span class="lineNoCov">          0 :   return VState.qAttitudeLocal.GetEuler() * radtodeg;</span>
+<span class="lineNum">     645 </span>            : }
+<span class="lineNum">     646 </span>            : 
+<a name="647"><span class="lineNum">     647 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     648 </span>            : 
+<span class="lineNum">     649 </span><span class="lineNoCov">          0 : void FGPropagate::DumpState(void)</span>
+<span class="lineNum">     650 </span>            : {
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :   cout &lt;&lt; endl;</span>
+<span class="lineNum">     652 </span>            :   cout &lt;&lt; fgblue
+<span class="lineNum">     653 </span><span class="lineNoCov">          0 :        &lt;&lt; &quot;------------------------------------------------------------------&quot; &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     654 </span>            :   cout &lt;&lt; highint
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :        &lt;&lt; &quot;State Report at sim time: &quot; &lt;&lt; FDMExec-&gt;GetSimTime() &lt;&lt; &quot; seconds&quot; &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     656 </span>            :   cout &lt;&lt; &quot;  &quot; &lt;&lt; underon
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :        &lt;&lt;   &quot;Position&quot; &lt;&lt; underoff &lt;&lt; endl;</span>
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    ECI:   &quot; &lt;&lt; VState.vInertialPosition.Dump(&quot;, &quot;) &lt;&lt; &quot; (x,y,z, in ft)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     659 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    ECEF:  &quot; &lt;&lt; VState.vLocation &lt;&lt; &quot; (x,y,z, in ft)&quot;  &lt;&lt; endl;</span>
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    Local: &quot; &lt;&lt; VState.vLocation.GetGeodLatitudeDeg()</span>
+<span class="lineNum">     661 </span><span class="lineNoCov">          0 :                         &lt;&lt; &quot;, &quot; &lt;&lt; VState.vLocation.GetLongitudeDeg()</span>
+<span class="lineNum">     662 </span><span class="lineNoCov">          0 :                         &lt;&lt; &quot;, &quot; &lt;&lt; GetAltitudeASL() &lt;&lt; &quot; (geodetic lat, lon, alt ASL in deg and ft)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     663 </span>            : 
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 :   cout &lt;&lt; endl &lt;&lt; &quot;  &quot; &lt;&lt; underon</span>
+<span class="lineNum">     665 </span><span class="lineNoCov">          0 :        &lt;&lt;   &quot;Orientation&quot; &lt;&lt; underoff &lt;&lt; endl;</span>
+<span class="lineNum">     666 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    ECI:   &quot; &lt;&lt; VState.qAttitudeECI.GetEulerDeg().Dump(&quot;, &quot;) &lt;&lt; &quot; (phi, theta, psi in deg)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    Local: &quot; &lt;&lt; VState.qAttitudeLocal.GetEulerDeg().Dump(&quot;, &quot;) &lt;&lt; &quot; (phi, theta, psi in deg)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     668 </span>            : 
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :   cout &lt;&lt; endl &lt;&lt; &quot;  &quot; &lt;&lt; underon</span>
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 :        &lt;&lt;   &quot;Velocity&quot; &lt;&lt; underoff &lt;&lt; endl;</span>
+<span class="lineNum">     671 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    ECI:   &quot; &lt;&lt; VState.vInertialVelocity.Dump(&quot;, &quot;) &lt;&lt; &quot; (x,y,z in ft/s)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     672 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    ECEF:  &quot; &lt;&lt; (Tb2ec * VState.vUVW).Dump(&quot;, &quot;)  &lt;&lt; &quot; (x,y,z in ft/s)&quot;  &lt;&lt; endl;</span>
+<span class="lineNum">     673 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    Local: &quot; &lt;&lt; GetVel() &lt;&lt; &quot; (n,e,d in ft/sec)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     674 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    Body:  &quot; &lt;&lt; GetUVW() &lt;&lt; &quot; (u,v,w in ft/sec)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     675 </span>            : 
+<span class="lineNum">     676 </span><span class="lineNoCov">          0 :   cout &lt;&lt; endl &lt;&lt; &quot;  &quot; &lt;&lt; underon</span>
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 :        &lt;&lt;   &quot;Body Rates (relative to given frame, expressed in body frame)&quot; &lt;&lt; underoff &lt;&lt; endl;</span>
+<span class="lineNum">     678 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    ECI:   &quot; &lt;&lt; (VState.vPQRi*radtodeg).Dump(&quot;, &quot;) &lt;&lt; &quot; (p,q,r in deg/s)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    ECEF:  &quot; &lt;&lt; (VState.vPQR*radtodeg).Dump(&quot;, &quot;) &lt;&lt; &quot; (p,q,r in deg/s)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     680 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     681 </span>            : 
+<a name="682"><span class="lineNum">     682 </span>            : //******************************************************************************</a>
+<span class="lineNum">     683 </span>            : 
+<span class="lineNum">     684 </span><span class="lineNoCov">          0 : void FGPropagate::WriteStateFile(int num)</span>
+<span class="lineNum">     685 </span>            : {
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :   sg_ofstream outfile;</span>
+<span class="lineNum">     687 </span>            : 
+<span class="lineNum">     688 </span><span class="lineNoCov">          0 :   if (num == 0) return;</span>
+<span class="lineNum">     689 </span>            : 
+<span class="lineNum">     690 </span><span class="lineNoCov">          0 :   SGPath path = FDMExec-&gt;GetFullAircraftPath();</span>
+<span class="lineNum">     691 </span>            : 
+<span class="lineNum">     692 </span><span class="lineNoCov">          0 :   if (path.isNull()) path = SGPath(&quot;initfile.&quot;);</span>
+<span class="lineNum">     693 </span><span class="lineNoCov">          0 :   else               path.append(&quot;initfile.&quot;);</span>
+<span class="lineNum">     694 </span>            : 
+<span class="lineNum">     695 </span>            :   // Append sim time to the filename since there may be more than one created during a simulation run
+<span class="lineNum">     696 </span><span class="lineNoCov">          0 :   path.concat(to_string((double)FDMExec-&gt;GetSimTime())+&quot;.xml&quot;);</span>
+<span class="lineNum">     697 </span>            : 
+<span class="lineNum">     698 </span><span class="lineNoCov">          0 :   switch(num) {</span>
+<span class="lineNum">     699 </span><span class="lineNoCov">          0 :   case 1:</span>
+<span class="lineNum">     700 </span><span class="lineNoCov">          0 :     outfile.open(path);</span>
+<span class="lineNum">     701 </span><span class="lineNoCov">          0 :     if (outfile.is_open()) {</span>
+<span class="lineNum">     702 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     703 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&lt;initialize name=\&quot;reset00\&quot;&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;ubody unit=\&quot;FT/SEC\&quot;&gt; &quot; &lt;&lt; VState.vUVW(eU) &lt;&lt; &quot; &lt;/ubody&gt; &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     705 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;vbody unit=\&quot;FT/SEC\&quot;&gt; &quot; &lt;&lt; VState.vUVW(eV) &lt;&lt; &quot; &lt;/vbody&gt; &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;wbody unit=\&quot;FT/SEC\&quot;&gt; &quot; &lt;&lt; VState.vUVW(eW) &lt;&lt; &quot; &lt;/wbody&gt; &quot; &lt;&lt; endl;</span>
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;phi unit=\&quot;DEG\&quot;&gt; &quot; &lt;&lt; VState.qAttitudeLocal.GetEuler(ePhi)*radtodeg &lt;&lt; &quot; &lt;/phi&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     708 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;theta unit=\&quot;DEG\&quot;&gt; &quot; &lt;&lt; VState.qAttitudeLocal.GetEuler(eTht)*radtodeg &lt;&lt; &quot; &lt;/theta&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;psi unit=\&quot;DEG\&quot;&gt; &quot; &lt;&lt; VState.qAttitudeLocal.GetEuler(ePsi)*radtodeg &lt;&lt; &quot; &lt;/psi&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     710 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;longitude unit=\&quot;DEG\&quot;&gt; &quot; &lt;&lt; VState.vLocation.GetLongitudeDeg() &lt;&lt; &quot; &lt;/longitude&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     711 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;latitude unit=\&quot;DEG\&quot;&gt; &quot; &lt;&lt; VState.vLocation.GetLatitudeDeg() &lt;&lt; &quot; &lt;/latitude&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     712 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;altitude unit=\&quot;FT\&quot;&gt; &quot; &lt;&lt; GetDistanceAGL() &lt;&lt; &quot; &lt;/altitude&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&lt;/initialize&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     714 </span><span class="lineNoCov">          0 :       outfile.close();</span>
+<span class="lineNum">     715 </span>            :     } else {
+<span class="lineNum">     716 </span>            :       cerr &lt;&lt; &quot;Could not open and/or write the state to the initial conditions file: &quot;
+<span class="lineNum">     717 </span><span class="lineNoCov">          0 :            &lt;&lt; path &lt;&lt; endl;</span>
+<span class="lineNum">     718 </span>            :     }
+<span class="lineNum">     719 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     720 </span><span class="lineNoCov">          0 :   case 2:</span>
+<span class="lineNum">     721 </span><span class="lineNoCov">          0 :     outfile.open(path);</span>
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 :     if (outfile.is_open()) {</span>
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&lt;initialize name=\&quot;IC File\&quot; version=\&quot;2.0\&quot;&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     725 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     726 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;position frame=\&quot;ECEF\&quot;&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     727 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;latitude unit=\&quot;DEG\&quot; type=\&quot;geodetic\&quot;&gt; &quot; &lt;&lt; VState.vLocation.GetGeodLatitudeDeg() &lt;&lt; &quot; &lt;/latitude&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     728 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;longitude unit=\&quot;DEG\&quot;&gt; &quot; &lt;&lt; VState.vLocation.GetLongitudeDeg() &lt;&lt; &quot; &lt;/longitude&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;altitudeMSL unit=\&quot;FT\&quot;&gt; &quot; &lt;&lt; GetAltitudeASL() &lt;&lt; &quot; &lt;/altitudeMSL&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     730 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;/position&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     731 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     732 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;orientation unit=\&quot;DEG\&quot; frame=\&quot;LOCAL\&quot;&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;yaw&gt; &quot; &lt;&lt; VState.qAttitudeLocal.GetEulerDeg(eYaw) &lt;&lt; &quot; &lt;/yaw&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     734 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;pitch&gt; &quot; &lt;&lt; VState.qAttitudeLocal.GetEulerDeg(ePitch) &lt;&lt; &quot; &lt;/pitch&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     735 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;roll&gt; &quot; &lt;&lt; VState.qAttitudeLocal.GetEulerDeg(eRoll) &lt;&lt; &quot; &lt;/roll&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     736 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;/orientation&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     737 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     738 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;velocity unit=\&quot;FT/SEC\&quot; frame=\&quot;LOCAL\&quot;&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     739 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;x&gt; &quot; &lt;&lt; GetVel(eNorth) &lt;&lt; &quot; &lt;/x&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     740 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;y&gt; &quot; &lt;&lt; GetVel(eEast) &lt;&lt; &quot; &lt;/y&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     741 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;z&gt; &quot; &lt;&lt; GetVel(eDown) &lt;&lt; &quot; &lt;/z&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;/velocity&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     743 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     744 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;attitude_rate unit=\&quot;DEG/SEC\&quot; frame=\&quot;BODY\&quot;&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;roll&gt; &quot; &lt;&lt; (VState.vPQR*radtodeg)(eRoll) &lt;&lt; &quot; &lt;/roll&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     746 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;pitch&gt; &quot; &lt;&lt; (VState.vPQR*radtodeg)(ePitch) &lt;&lt; &quot; &lt;/pitch&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     747 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;    &lt;yaw&gt; &quot; &lt;&lt; (VState.vPQR*radtodeg)(eYaw) &lt;&lt; &quot; &lt;/yaw&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     748 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;  &lt;/attitude_rate&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     749 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     750 </span><span class="lineNoCov">          0 :       outfile &lt;&lt; &quot;&lt;/initialize&gt;&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     751 </span><span class="lineNoCov">          0 :       outfile.close();</span>
+<span class="lineNum">     752 </span>            :     } else {
+<span class="lineNum">     753 </span>            :       cerr &lt;&lt; &quot;Could not open and/or write the state to the initial conditions file: &quot;
+<span class="lineNum">     754 </span><span class="lineNoCov">          0 :            &lt;&lt; path &lt;&lt; endl;</span>
+<span class="lineNum">     755 </span>            :     }
+<span class="lineNum">     756 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     757 </span><span class="lineNoCov">          0 :   default:</span>
+<span class="lineNum">     758 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; &quot;When writing a state file, the supplied value must be 1 or 2 for the version number of the resulting IC file&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     759 </span>            :   }
+<span class="lineNum">     760 </span>            : }
+<span class="lineNum">     761 </span>            : 
+<a name="762"><span class="lineNum">     762 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     763 </span>            : 
+<span class="lineNum">     764 </span><span class="lineCov">          8 : void FGPropagate::bind(void)</span>
+<span class="lineNum">     765 </span>            : {
+<span class="lineNum">     766 </span>            :   typedef double (FGPropagate::*PMF)(int) const;
+<span class="lineNum">     767 </span>            :   typedef int (FGPropagate::*iPMF)(void) const;
+<span class="lineNum">     768 </span>            : 
+<span class="lineNum">     769 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/h-dot-fps&quot;, this, &amp;FGPropagate::Gethdot);</span>
+<span class="lineNum">     770 </span>            : 
+<span class="lineNum">     771 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/v-north-fps&quot;, this, eNorth, (PMF)&amp;FGPropagate::GetVel);</span>
+<span class="lineNum">     772 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/v-east-fps&quot;, this, eEast, (PMF)&amp;FGPropagate::GetVel);</span>
+<span class="lineNum">     773 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/v-down-fps&quot;, this, eDown, (PMF)&amp;FGPropagate::GetVel);</span>
+<span class="lineNum">     774 </span>            : 
+<span class="lineNum">     775 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/u-fps&quot;, this, eU, (PMF)&amp;FGPropagate::GetUVW);</span>
+<span class="lineNum">     776 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/v-fps&quot;, this, eV, (PMF)&amp;FGPropagate::GetUVW);</span>
+<span class="lineNum">     777 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/w-fps&quot;, this, eW, (PMF)&amp;FGPropagate::GetUVW);</span>
+<span class="lineNum">     778 </span>            : 
+<span class="lineNum">     779 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/p-rad_sec&quot;, this, eP, (PMF)&amp;FGPropagate::GetPQR);</span>
+<span class="lineNum">     780 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/q-rad_sec&quot;, this, eQ, (PMF)&amp;FGPropagate::GetPQR);</span>
+<span class="lineNum">     781 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/r-rad_sec&quot;, this, eR, (PMF)&amp;FGPropagate::GetPQR);</span>
+<span class="lineNum">     782 </span>            : 
+<span class="lineNum">     783 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/pi-rad_sec&quot;, this, eP, (PMF)&amp;FGPropagate::GetPQRi);</span>
+<span class="lineNum">     784 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/qi-rad_sec&quot;, this, eQ, (PMF)&amp;FGPropagate::GetPQRi);</span>
+<span class="lineNum">     785 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/ri-rad_sec&quot;, this, eR, (PMF)&amp;FGPropagate::GetPQRi);</span>
+<span class="lineNum">     786 </span>            : 
+<span class="lineNum">     787 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/eci-x-fps&quot;, this, eX, (PMF)&amp;FGPropagate::GetInertialVelocity);</span>
+<span class="lineNum">     788 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/eci-y-fps&quot;, this, eY, (PMF)&amp;FGPropagate::GetInertialVelocity);</span>
+<span class="lineNum">     789 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/eci-z-fps&quot;, this, eZ, (PMF)&amp;FGPropagate::GetInertialVelocity);</span>
+<span class="lineNum">     790 </span>            : 
+<span class="lineNum">     791 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/eci-velocity-mag-fps&quot;, this, &amp;FGPropagate::GetInertialVelocityMagnitude);</span>
+<span class="lineNum">     792 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;velocities/ned-velocity-mag-fps&quot;, this, &amp;FGPropagate::GetNEDVelocityMagnitude);</span>
+<span class="lineNum">     793 </span>            : 
+<span class="lineNum">     794 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/h-sl-ft&quot;, this, &amp;FGPropagate::GetAltitudeASL, &amp;FGPropagate::SetAltitudeASL, true);</span>
+<span class="lineNum">     795 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/h-sl-meters&quot;, this, &amp;FGPropagate::GetAltitudeASLmeters, &amp;FGPropagate::SetAltitudeASLmeters, true);</span>
+<span class="lineNum">     796 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/lat-gc-rad&quot;, this, &amp;FGPropagate::GetLatitude, &amp;FGPropagate::SetLatitude, false);</span>
+<span class="lineNum">     797 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/long-gc-rad&quot;, this, &amp;FGPropagate::GetLongitude, &amp;FGPropagate::SetLongitude, false);</span>
+<span class="lineNum">     798 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/lat-gc-deg&quot;, this, &amp;FGPropagate::GetLatitudeDeg, &amp;FGPropagate::SetLatitudeDeg, false);</span>
+<span class="lineNum">     799 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/long-gc-deg&quot;, this, &amp;FGPropagate::GetLongitudeDeg, &amp;FGPropagate::SetLongitudeDeg, false);</span>
+<span class="lineNum">     800 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/lat-geod-rad&quot;, this, &amp;FGPropagate::GetGeodLatitudeRad);</span>
+<span class="lineNum">     801 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/lat-geod-deg&quot;, this, &amp;FGPropagate::GetGeodLatitudeDeg);</span>
+<span class="lineNum">     802 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/geod-alt-ft&quot;, this, &amp;FGPropagate::GetGeodeticAltitude);</span>
+<span class="lineNum">     803 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/h-agl-ft&quot;, this,  &amp;FGPropagate::GetDistanceAGL, &amp;FGPropagate::SetDistanceAGL);</span>
+<span class="lineNum">     804 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/geod-alt-km&quot;, this, &amp;FGPropagate::GetGeodeticAltitudeKm);</span>
+<span class="lineNum">     805 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/h-agl-km&quot;, this,  &amp;FGPropagate::GetDistanceAGLKm, &amp;FGPropagate::SetDistanceAGLKm);</span>
+<span class="lineNum">     806 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/radius-to-vehicle-ft&quot;, this, &amp;FGPropagate::GetRadius);</span>
+<span class="lineNum">     807 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/terrain-elevation-asl-ft&quot;, this,</span>
+<span class="lineNum">     808 </span>            :                           &amp;FGPropagate::GetTerrainElevation,
+<span class="lineNum">     809 </span>            :                           &amp;FGPropagate::SetTerrainElevation, false);
+<span class="lineNum">     810 </span>            : 
+<span class="lineNum">     811 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/eci-x-ft&quot;, this, eX, (PMF)&amp;FGPropagate::GetInertialPosition);</span>
+<span class="lineNum">     812 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/eci-y-ft&quot;, this, eY, (PMF)&amp;FGPropagate::GetInertialPosition);</span>
+<span class="lineNum">     813 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/eci-z-ft&quot;, this, eZ, (PMF)&amp;FGPropagate::GetInertialPosition);</span>
+<span class="lineNum">     814 </span>            : 
+<span class="lineNum">     815 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/ecef-x-ft&quot;, this, eX, (PMF)&amp;FGPropagate::GetLocation);</span>
+<span class="lineNum">     816 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/ecef-y-ft&quot;, this, eY, (PMF)&amp;FGPropagate::GetLocation);</span>
+<span class="lineNum">     817 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/ecef-z-ft&quot;, this, eZ, (PMF)&amp;FGPropagate::GetLocation);</span>
+<span class="lineNum">     818 </span>            : 
+<span class="lineNum">     819 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;position/epa-rad&quot;, this, &amp;FGPropagate::GetEarthPositionAngle);</span>
+<span class="lineNum">     820 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/terrain-radius&quot;, this, &amp;FGPropagate::GetLocalTerrainRadius);</span>
+<span class="lineNum">     821 </span>            : 
+<span class="lineNum">     822 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/phi-rad&quot;, this, (int)ePhi, (PMF)&amp;FGPropagate::GetEuler);</span>
+<span class="lineNum">     823 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/theta-rad&quot;, this, (int)eTht, (PMF)&amp;FGPropagate::GetEuler);</span>
+<span class="lineNum">     824 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/psi-rad&quot;, this, (int)ePsi, (PMF)&amp;FGPropagate::GetEuler);</span>
+<span class="lineNum">     825 </span>            : 
+<span class="lineNum">     826 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/phi-deg&quot;, this, (int)ePhi, (PMF)&amp;FGPropagate::GetEulerDeg);</span>
+<span class="lineNum">     827 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/theta-deg&quot;, this, (int)eTht, (PMF)&amp;FGPropagate::GetEulerDeg);</span>
+<span class="lineNum">     828 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/psi-deg&quot;, this, (int)ePsi, (PMF)&amp;FGPropagate::GetEulerDeg);</span>
+<span class="lineNum">     829 </span>            : 
+<span class="lineNum">     830 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/roll-rad&quot;, this, (int)ePhi, (PMF)&amp;FGPropagate::GetEuler);</span>
+<span class="lineNum">     831 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/pitch-rad&quot;, this, (int)eTht, (PMF)&amp;FGPropagate::GetEuler);</span>
+<span class="lineNum">     832 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;attitude/heading-true-rad&quot;, this, (int)ePsi, (PMF)&amp;FGPropagate::GetEuler);</span>
+<span class="lineNum">     833 </span>            : 
+<span class="lineNum">     834 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;simulation/integrator/rate/rotational&quot;, (int*)&amp;integrator_rotational_rate);</span>
+<span class="lineNum">     835 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;simulation/integrator/rate/translational&quot;, (int*)&amp;integrator_translational_rate);</span>
+<span class="lineNum">     836 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;simulation/integrator/position/rotational&quot;, (int*)&amp;integrator_rotational_position);</span>
+<span class="lineNum">     837 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;simulation/integrator/position/translational&quot;, (int*)&amp;integrator_translational_position);</span>
+<span class="lineNum">     838 </span>            : 
+<span class="lineNum">     839 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;simulation/write-state-file&quot;, this, (iPMF)0, &amp;FGPropagate::WriteStateFile);</span>
+<span class="lineNum">     840 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     841 </span>            : 
+<span class="lineNum">     842 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     843 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     844 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     845 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     846 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     847 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     848 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     849 </span>            : //       whatsoever.
+<span class="lineNum">     850 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     851 </span>            : //       startup messages
+<span class="lineNum">     852 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     853 </span>            : //       a class is instantiated
+<span class="lineNum">     854 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     855 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     856 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     857 </span>            : //       are printed out periodically
+<span class="lineNum">     858 </span>            : //    16: When set various parameters are sanity checked and
+<a name="859"><span class="lineNum">     859 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     860 </span>            : 
+<span class="lineNum">     861 </span><span class="lineCov">         24 : void FGPropagate::Debug(int from)</span>
+<span class="lineNum">     862 </span>            : {
+<span class="lineNum">     863 </span><span class="lineCov">         24 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     864 </span>            : 
+<span class="lineNum">     865 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     866 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     867 </span>            : 
+<span class="lineNum">     868 </span>            :     }
+<span class="lineNum">     869 </span>            :   }
+<span class="lineNum">     870 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     871 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGPropagate&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     872 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGPropagate&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     873 </span>            :   }
+<span class="lineNum">     874 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     875 </span>            :   }
+<span class="lineNum">     876 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 8 &amp;&amp; from == 2) { // Runtime state variables</span>
+<span class="lineNum">     877 </span><span class="lineNoCov">          0 :     cout &lt;&lt; endl &lt;&lt; fgblue &lt;&lt; highint &lt;&lt; left</span>
+<span class="lineNum">     878 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot;  Propagation Report (English units: ft, degrees) at simulation time &quot; &lt;&lt; FDMExec-&gt;GetSimTime() &lt;&lt; &quot; seconds&quot;</span>
+<span class="lineNum">     879 </span><span class="lineNoCov">          0 :          &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     880 </span><span class="lineNoCov">          0 :     cout &lt;&lt; endl;</span>
+<span class="lineNum">     881 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Earth Position Angle (deg): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset</span>
+<span class="lineNum">     882 </span><span class="lineNoCov">          0 :          &lt;&lt; GetEarthPositionAngleDeg() &lt;&lt; endl;</span>
+<span class="lineNum">     883 </span><span class="lineNoCov">          0 :     cout &lt;&lt; endl;</span>
+<span class="lineNum">     884 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Body velocity (ft/sec): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; VState.vUVW &lt;&lt; endl;</span>
+<span class="lineNum">     885 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Local velocity (ft/sec): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; vVel &lt;&lt; endl;</span>
+<span class="lineNum">     886 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Inertial velocity (ft/sec): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; VState.vInertialVelocity &lt;&lt; endl;</span>
+<span class="lineNum">     887 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Inertial Position (ft): &quot; &lt;&lt; setw(10) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; VState.vInertialPosition &lt;&lt; endl;</span>
+<span class="lineNum">     888 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Latitude (deg): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; VState.vLocation.GetLatitudeDeg() &lt;&lt; endl;</span>
+<span class="lineNum">     889 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Longitude (deg): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; VState.vLocation.GetLongitudeDeg() &lt;&lt; endl;</span>
+<span class="lineNum">     890 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; &quot;  Altitude ASL (ft): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; GetAltitudeASL() &lt;&lt; endl;</span>
+<span class="lineNum">     891 </span>            : //    cout &lt;&lt; highint &lt;&lt; &quot;  Acceleration (NED, ft/sec^2): &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; Tb2l*GetUVWdot() &lt;&lt; endl;
+<span class="lineNum">     892 </span><span class="lineNoCov">          0 :     cout &lt;&lt; endl;</span>
+<span class="lineNum">     893 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix ECEF to Body (Orientation of Body with respect to ECEF): &quot;
+<span class="lineNum">     894 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tec2b.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     895 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     896 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tec2b.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     897 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     898 </span>            : 
+<span class="lineNum">     899 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Body to ECEF (Orientation of ECEF with respect to Body):&quot;
+<span class="lineNum">     900 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tb2ec.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     901 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     902 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tb2ec.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     903 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     904 </span>            : 
+<span class="lineNum">     905 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Local to Body (Orientation of Body with respect to Local):&quot;
+<span class="lineNum">     906 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tl2b.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     907 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     908 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tl2b.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     909 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     910 </span>            : 
+<span class="lineNum">     911 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Body to Local (Orientation of Local with respect to Body):&quot;
+<span class="lineNum">     912 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tb2l.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     913 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     914 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tb2l.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     915 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     916 </span>            : 
+<span class="lineNum">     917 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Local to ECEF (Orientation of ECEF with respect to Local):&quot;
+<span class="lineNum">     918 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tl2ec.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     919 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     920 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tl2ec.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     921 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     922 </span>            : 
+<span class="lineNum">     923 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix ECEF to Local (Orientation of Local with respect to ECEF):&quot;
+<span class="lineNum">     924 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tec2l.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     925 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     926 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tec2l.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     927 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     928 </span>            : 
+<span class="lineNum">     929 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix ECEF to Inertial (Orientation of Inertial with respect to ECEF):&quot;
+<span class="lineNum">     930 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tec2i.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     931 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     932 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tec2i.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     933 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     934 </span>            : 
+<span class="lineNum">     935 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Inertial to ECEF (Orientation of ECEF with respect to Inertial):&quot;
+<span class="lineNum">     936 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Ti2ec.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     937 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     938 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Ti2ec.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     939 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     940 </span>            : 
+<span class="lineNum">     941 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Inertial to Body (Orientation of Body with respect to Inertial):&quot;
+<span class="lineNum">     942 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Ti2b.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     943 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     944 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Ti2b.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     945 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     946 </span>            : 
+<span class="lineNum">     947 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Body to Inertial (Orientation of Inertial with respect to Body):&quot;
+<span class="lineNum">     948 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tb2i.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     949 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     950 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tb2i.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     951 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     952 </span>            : 
+<span class="lineNum">     953 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Inertial to Local (Orientation of Local with respect to Inertial):&quot;
+<span class="lineNum">     954 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Ti2l.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     955 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     956 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Ti2l.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     957 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     958 </span>            : 
+<span class="lineNum">     959 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;  Matrix Local to Inertial (Orientation of Inertial with respect to Local):&quot;
+<span class="lineNum">     960 </span><span class="lineNoCov">          0 :                     &lt;&lt; reset &lt;&lt; endl &lt;&lt; Tl2i.Dump(&quot;\t&quot;, &quot;    &quot;) &lt;&lt; endl;</span>
+<span class="lineNum">     961 </span>            :     cout &lt;&lt; highint &lt;&lt; &quot;    Associated Euler angles (deg): &quot; &lt;&lt; setw(8)
+<span class="lineNum">     962 </span><span class="lineNoCov">          0 :                     &lt;&lt; setprecision(3) &lt;&lt; reset &lt;&lt; (Tl2i.GetQuaternion().GetEuler()*radtodeg)</span>
+<span class="lineNum">     963 </span><span class="lineNoCov">          0 :                     &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">     964 </span>            : 
+<span class="lineNum">     965 </span><span class="lineNoCov">          0 :     cout &lt;&lt; setprecision(6); // reset the output stream</span>
+<span class="lineNum">     966 </span>            :   }
+<span class="lineNum">     967 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     968 </span><span class="lineNoCov">          0 :     if (from == 2) { // State sanity checking</span>
+<span class="lineNum">     969 </span><span class="lineNoCov">          0 :       if (fabs(VState.vPQR.Magnitude()) &gt; 1000.0) {</span>
+<span class="lineNum">     970 </span><span class="lineNoCov">          0 :         cerr &lt;&lt; endl &lt;&lt; &quot;Vehicle rotation rate is excessive (&gt;1000 rad/sec): &quot; &lt;&lt; VState.vPQR.Magnitude() &lt;&lt; endl;</span>
+<span class="lineNum">     971 </span><span class="lineNoCov">          0 :         exit(-1);</span>
+<span class="lineNum">     972 </span>            :       }
+<span class="lineNum">     973 </span><span class="lineNoCov">          0 :       if (fabs(VState.vUVW.Magnitude()) &gt; 1.0e10) {</span>
+<span class="lineNum">     974 </span><span class="lineNoCov">          0 :         cerr &lt;&lt; endl &lt;&lt; &quot;Vehicle velocity is excessive (&gt;1e10 ft/sec): &quot; &lt;&lt; VState.vUVW.Magnitude() &lt;&lt; endl;</span>
+<span class="lineNum">     975 </span><span class="lineNoCov">          0 :         exit(-1);</span>
+<span class="lineNum">     976 </span>            :       }
+<span class="lineNum">     977 </span><span class="lineNoCov">          0 :       if (fabs(GetDistanceAGL()) &gt; 1e10) {</span>
+<span class="lineNum">     978 </span><span class="lineNoCov">          0 :         cerr &lt;&lt; endl &lt;&lt; &quot;Vehicle altitude is excessive (&gt;1e10 ft): &quot; &lt;&lt; GetDistanceAGL() &lt;&lt; endl;</span>
+<span class="lineNum">     979 </span><span class="lineNoCov">          0 :         exit(-1);</span>
+<span class="lineNum">     980 </span>            :       }
+<span class="lineNum">     981 </span>            :     }
+<span class="lineNum">     982 </span>            :   }
+<span class="lineNum">     983 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     984 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     985 </span>            :     }
+<a name="986"><span class="lineNum">     986 </span>            :   }</a>
+<span class="lineNum">     987 </span>            : }
+<span class="lineNum">     988 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

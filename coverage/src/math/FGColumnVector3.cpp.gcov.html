@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/math/FGColumnVector3.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/math</a> - FGColumnVector3.cpp<span style="font-size: 80%;"> (source / <a href="FGColumnVector3.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">34</td>
+            <td class="headerCovTableEntry">34</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            : Module: FGColumnVector3.cpp
+<span class="lineNum">       4 </span>            : Author: Originally by Tony Peden [formatted here by JSB]
+<span class="lineNum">       5 </span>            : Date started: 1998
+<span class="lineNum">       6 </span>            : Purpose: FGColumnVector3 class
+<span class="lineNum">       7 </span>            : Called by: Various
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 1998 Tony Peden and Jon S. Berndt (jon@jsbsim.org) -
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      13 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      14 </span>            :  version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      22 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      23 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      26 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : HISTORY
+<span class="lineNum">      32 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      33 </span>            : ??/??/??   TP   Created
+<span class="lineNum">      34 </span>            : 03/16/2000 JSB  Added exception throwing
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : INCLUDES
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      41 </span>            : #include &quot;FGColumnVector3.h&quot;
+<span class="lineNum">      42 </span>            : #include &lt;iostream&gt;
+<span class="lineNum">      43 </span>            : #include &lt;sstream&gt;
+<span class="lineNum">      44 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      45 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : using namespace std;
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : namespace JSBSim {
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      52 </span>            : CLASS IMPLEMENTATION
+<a name="53"><span class="lineNum">      53 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span><span class="lineCov">     878488 : FGColumnVector3::FGColumnVector3(void)</span>
+<span class="lineNum">      56 </span>            : {
+<span class="lineNum">      57 </span><span class="lineCov">     878488 :   data[0] = data[1] = data[2] = 0.0;</span>
+<span class="lineNum">      58 </span>            :   // Debug(0);
+<span class="lineNum">      59 </span><span class="lineCov">     878488 : }</span>
+<span class="lineNum">      60 </span>            : 
+<a name="61"><span class="lineNum">      61 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span><span class="lineCov">          1 : string FGColumnVector3::Dump(const string&amp; delimiter) const</span>
+<span class="lineNum">      64 </span>            : {
+<span class="lineNum">      65 </span><span class="lineCov">          2 :   ostringstream buffer;</span>
+<span class="lineNum">      66 </span><span class="lineCov">          1 :   buffer &lt;&lt; std::setprecision(16) &lt;&lt; data[0] &lt;&lt; delimiter;</span>
+<span class="lineNum">      67 </span><span class="lineCov">          1 :   buffer &lt;&lt; std::setprecision(16) &lt;&lt; data[1] &lt;&lt; delimiter;</span>
+<span class="lineNum">      68 </span><span class="lineCov">          1 :   buffer &lt;&lt; std::setprecision(16) &lt;&lt; data[2];</span>
+<span class="lineNum">      69 </span><span class="lineCov">          2 :   return buffer.str();</span>
+<span class="lineNum">      70 </span>            : }
+<span class="lineNum">      71 </span>            : 
+<a name="72"><span class="lineNum">      72 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">          1 : ostream&amp; operator&lt;&lt;(ostream&amp; os, const FGColumnVector3&amp; col)</span>
+<span class="lineNum">      75 </span>            : {
+<span class="lineNum">      76 </span><span class="lineCov">          1 :   os &lt;&lt; col(1) &lt;&lt; &quot; , &quot; &lt;&lt; col(2) &lt;&lt; &quot; , &quot; &lt;&lt; col(3);</span>
+<span class="lineNum">      77 </span><span class="lineCov">          1 :   return os;</span>
+<span class="lineNum">      78 </span>            : }
+<span class="lineNum">      79 </span>            : 
+<a name="80"><span class="lineNum">      80 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineCov">        192 : FGColumnVector3 FGColumnVector3::operator/(const double scalar) const</span>
+<span class="lineNum">      83 </span>            : {
+<span class="lineNum">      84 </span><span class="lineCov">        192 :   if (scalar != 0.0)</span>
+<span class="lineNum">      85 </span><span class="lineCov">        191 :     return operator*( 1.0/scalar );</span>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span><span class="lineCov">          1 :   cerr &lt;&lt; &quot;Attempt to divide by zero in method \</span>
+<span class="lineNum">      88 </span>            :     FGColumnVector3::operator/(const double scalar), \
+<span class="lineNum">      89 </span><span class="lineCov">          1 :     object &quot; &lt;&lt; data[0] &lt;&lt; &quot; , &quot; &lt;&lt; data[1] &lt;&lt; &quot; , &quot; &lt;&lt; data[2] &lt;&lt; endl;</span>
+<span class="lineNum">      90 </span><span class="lineCov">          1 :   return FGColumnVector3();</span>
+<span class="lineNum">      91 </span>            : }
+<span class="lineNum">      92 </span>            : 
+<a name="93"><span class="lineNum">      93 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineCov">          2 : FGColumnVector3&amp; FGColumnVector3::operator/=(const double scalar)</span>
+<span class="lineNum">      96 </span>            : {
+<span class="lineNum">      97 </span><span class="lineCov">          2 :   if (scalar != 0.0)</span>
+<span class="lineNum">      98 </span><span class="lineCov">          1 :     operator*=( 1.0/scalar );</span>
+<span class="lineNum">      99 </span>            :   else
+<span class="lineNum">     100 </span><span class="lineCov">          1 :     cerr &lt;&lt; &quot;Attempt to divide by zero in method \</span>
+<span class="lineNum">     101 </span>            :       FGColumnVector3::operator/=(const double scalar), \
+<span class="lineNum">     102 </span><span class="lineCov">          1 :       object &quot; &lt;&lt; data[0] &lt;&lt; &quot; , &quot; &lt;&lt; data[1] &lt;&lt; &quot; , &quot; &lt;&lt; data[2] &lt;&lt; endl;</span>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span><span class="lineCov">          2 :   return *this;</span>
+<span class="lineNum">     105 </span>            : }
+<span class="lineNum">     106 </span>            : 
+<a name="107"><span class="lineNum">     107 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineCov">    1412108 : double FGColumnVector3::Magnitude(void) const</span>
+<span class="lineNum">     110 </span>            : {
+<span class="lineNum">     111 </span><span class="lineCov">    1412108 :   return sqrt( data[0]*data[0] +  data[1]*data[1] +  data[2]*data[2] );</span>
+<span class="lineNum">     112 </span>            : }
+<span class="lineNum">     113 </span>            : 
+<a name="114"><span class="lineNum">     114 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span><span class="lineCov">       1087 : FGColumnVector3&amp; FGColumnVector3::Normalize(void)</span>
+<span class="lineNum">     117 </span>            : {
+<span class="lineNum">     118 </span><span class="lineCov">       1087 :   double Mag = Magnitude();</span>
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span><span class="lineCov">       1087 :   if (Mag != 0.0)</span>
+<span class="lineNum">     121 </span><span class="lineCov">       1086 :     operator*=( 1.0/Mag );</span>
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span><span class="lineCov">       1087 :   return *this;</span>
+<span class="lineNum">     124 </span>            : }
+<span class="lineNum">     125 </span>            : 
+<a name="126"><span class="lineNum">     126 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span><span class="lineCov">    1359052 : double FGColumnVector3::Magnitude(const int idx1, const int idx2) const {</span>
+<span class="lineNum">     129 </span><span class="lineCov">    1359052 :   return sqrt( data[idx1-1]*data[idx1-1] +  data[idx2-1]*data[idx2-1] );</span>
+<span class="lineNum">     130 </span>            : }
+<a name="131"><span class="lineNum">     131 </span>            : </a>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span><span class="lineCov">         27 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

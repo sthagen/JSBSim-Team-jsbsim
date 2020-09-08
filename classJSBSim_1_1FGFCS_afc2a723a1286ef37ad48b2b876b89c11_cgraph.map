@@ -1,0 +1,13 @@
+<map id="SetGearCmd" name="SetGearCmd">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#ad56ea83efdf738fa217011fa34b855e5" title="Sets the propeller pitch command for the specified engine. " alt="" coords="152,5,300,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFCS.html#a5055c988eab2582445db14c4f24ca495" title="Sets the propeller feather command for the specified engine. " alt="" coords="169,56,283,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFCS.html#a0b4debe7173982d683aefafc29fa249b" title="Sets the left aileron position. " alt="" coords="181,107,271,133"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFCS.html#a6e535ee67a756375ff11c0b427e3978c" title="Sets the right aileron position. " alt="" coords="180,157,272,184"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGFCS.html#a70569b8490c8eb005a20276d7562c31c" title="Sets the elevator position. " alt="" coords="185,208,267,235"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGFCS.html#a5e45ae3b89bdd32f4ad78d9b13cf521c" title="Sets the rudder position. " alt="" coords="187,259,265,285"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGFCS.html#a90955c41cdba3f9123297e43b325ac95" title="Sets the flaps position. " alt="" coords="187,309,265,336"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGFCS.html#a185450d2a60ed59c2ad1645609765313" title="Sets the speedbrake position. " alt="" coords="181,360,271,387"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGFCS.html#a96ced18a90c1e1b0ae98602f0a042d68" title="Sets the spoiler position. " alt="" coords="181,411,271,437"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGFCS.html#a04b790be63fdea64363981ecc5d8b244" title="Sets the actual throttle setting for the specified engine. " alt="" coords="171,461,281,488"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGFCS.html#a65dc1ef47f8c4961d3bcee6291c35c53" title="Sets the actual mixture setting for the specified engine. " alt="" coords="172,512,280,539"/>
+</map>

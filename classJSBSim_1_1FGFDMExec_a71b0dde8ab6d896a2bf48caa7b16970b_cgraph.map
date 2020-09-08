@@ -1,0 +1,5 @@
+<map id="GetOutputFileName" name="GetOutputFileName">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFDMExec.html#a8ae88a0b73749057a42c729d2330f5ee" title="Executes trimming in the selected mode. " alt="" coords="192,31,257,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="305,5,479,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGTrim.html#a4d9a0c94e1c7e1767992625fb091b067" title="Print the results of the trim. " alt="" coords="307,56,477,83"/>
+</map>

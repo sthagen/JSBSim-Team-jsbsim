@@ -1,0 +1,4 @@
+<map id="GustFrame" name="GustFrame">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGWinds.html#a5ed79dd94ea2bc253ca214c99f4f77af" title="Sets the direction that the wind is coming from. " alt="" coords="140,5,231,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGWinds.html#ae8a5512750069682ea5d3b312e58bdb9" title="Retrieves the direction that the wind is coming from. " alt="" coords="279,5,371,32"/>
+</map>

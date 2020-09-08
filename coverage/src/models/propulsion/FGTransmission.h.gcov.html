@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/propulsion/FGTransmission.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/propulsion</a> - FGTransmission.h<span style="font-size: 80%;"> (source / <a href="FGTransmission.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  JSBSim
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 08/24/00
+<span class="lineNum">       6 </span>            :  ------------- Copyright (C) 2000  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  Header:       FGTransmission.h
+<span class="lineNum">       9 </span>            :  Author:       T.Kreitler
+<span class="lineNum">      10 </span>            :  Date started: 02/05/12
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            :  ------------- Copyright (C) 2012  T. Kreitler (t.kreitler@web.de) -------------
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      15 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      16 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      17 </span>            :  version.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      20 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      21 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      22 </span>            :  details.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      25 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      26 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      29 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : HISTORY
+<span class="lineNum">      32 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      33 </span>            : 02/05/12  T.Kreitler  Created
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      36 </span>            : SENTRY
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : #ifndef FGTRANSMISSION_H
+<span class="lineNum">      40 </span>            : #define FGTRANSMISSION_H
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      43 </span>            : INCLUDES
+<span class="lineNum">      44 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;input_output/FGPropertyManager.h&quot;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      51 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      52 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : namespace JSBSim {
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      57 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      58 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : /** Utility class that handles power transmission in conjunction with FGRotor.
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :   This class provides brake, clutch and free-wheel-unit (FWU) functionality
+<span class="lineNum">      63 </span>            :   for the rotor model. Also it is responsible for the RPM calculations.
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            :   When the engine is off the brake could be used to slow/hold down a spinning
+<span class="lineNum">      66 </span>            :   rotor. The maximum brake power is defined in the rotors' config file.
+<span class="lineNum">      67 </span>            :   (Right now there is no checking if the input is in the [0..1] range.)
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            :   The clutch operation is based on a heuristic approach. In the intermediate
+<span class="lineNum">      70 </span>            :   state the transfer is proportional to the clutch position. But equal RPM
+<span class="lineNum">      71 </span>            :   values are enforced on the thruster and rotor sides when approaching the
+<span class="lineNum">      72 </span>            :   closed state.
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :   The FWU inhibits that the rotor is driving the engine. To do so, the code
+<span class="lineNum">      75 </span>            :   just predicts the upcoming FWU state based on current torque conditions.
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :   Some engines won't work properly when the clutch is open. To keep them
+<span class="lineNum">      78 </span>            :   controllable some load must be provided on the engine side (EngineFriction,
+<span class="lineNum">      79 </span>            :   aka gear-loss). See the notes under 'Engine issues' in FGRotor.
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            : &lt;h3&gt;Property tree&lt;/h3&gt;
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            :   The following properties are created (with x = your thruster number):
+<span class="lineNum">      84 </span>            :   &lt;pre&gt;
+<span class="lineNum">      85 </span>            :     propulsion/engine[x]/brake-ctrl-norm
+<span class="lineNum">      86 </span>            :     propulsion/engine[x]/free-wheel-transmission
+<span class="lineNum">      87 </span>            :     propulsion/engine[x]/clutch-ctrl-norm
+<span class="lineNum">      88 </span>            :   &lt;/pre&gt;
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            : &lt;h3&gt;Notes&lt;/h3&gt;
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :   &lt;ul&gt;
+<span class="lineNum">      93 </span>            :     &lt;li&gt; EngineFriction is assumed constant, so better orientate at low RPM
+<span class="lineNum">      94 </span>            :          values, because piston and turboprop engines don't 'like' high
+<span class="lineNum">      95 </span>            :          load at startup.&lt;/li&gt;
+<span class="lineNum">      96 </span>            :     &lt;li&gt; The model doesn't support backward operation.&lt;/li&gt;
+<span class="lineNum">      97 </span>            :     &lt;li&gt; And even worse, the torque calculations silently assume a minimal
+<span class="lineNum">      98 </span>            :          RPM value of approx. 1.&lt;/li&gt;
+<span class="lineNum">      99 </span>            :   &lt;/ul&gt;
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            : */
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     105 </span>            : CLASS DECLARATION
+<span class="lineNum">     106 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            : class FGTransmission : public FGJSBBase {
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            : public:
+<span class="lineNum">     111 </span>            :   /** Constructor for FGTransmission.
+<span class="lineNum">     112 </span>            :       @param exec a pointer to the main executive object
+<span class="lineNum">     113 </span>            :       @param num the number of the thruster that uses this object
+<span class="lineNum">     114 </span>            :       @param dt simulation delta T */
+<span class="lineNum">     115 </span>            :   FGTransmission(FGFDMExec *exec, int num, double dt);
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span>            :   /// Destructor for FGTransmission
+<span class="lineNum">     118 </span>            :   ~FGTransmission();
+<span class="lineNum">     119 </span>            : 
+<a name="120"><span class="lineNum">     120 </span>            :   void Calculate(double EnginePower, double ThrusterTorque, double dt);</a>
+<span class="lineNum">     121 </span>            : 
+<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :   void   SetMaxBrakePower(double x) {MaxBrakePower=x;}</span></a>
+<span class="lineNum">     123 </span>            :   double GetMaxBrakePower() const {return MaxBrakePower;}
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :   void   SetEngineFriction(double x) {EngineFriction=x;}</span></a>
+<span class="lineNum">     125 </span>            :   double GetEngineFriction() const {return EngineFriction;}
+<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :   void   SetEngineMoment(double x) {EngineMoment=x;}</span></a>
+<span class="lineNum">     127 </span>            :   double GetEngineMoment() const {return EngineMoment;}
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :   void   SetThrusterMoment(double x) {ThrusterMoment=x;}</span>
+<a name="129"><span class="lineNum">     129 </span>            :   double GetThrusterMoment() const {return ThrusterMoment;}</a>
+<span class="lineNum">     130 </span>            : 
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :   double GetFreeWheelTransmission() const {return FreeWheelTransmission;}</span></a>
+<span class="lineNum">     132 </span>            :   void   SetEngineRPM(double x) {EngineRPM=x;}
+<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :   double GetEngineRPM() {return EngineRPM;}</span></a>
+<span class="lineNum">     134 </span>            :   void   SetThrusterRPM(double x) {ThrusterRPM=x;}
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :   double GetThrusterRPM() {return ThrusterRPM;}</span></a>
+<a name="136"><span class="lineNum">     136 </span>            : </a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :   double GetBrakeCtrlNorm() const {return BrakeCtrlNorm;}</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :   void   SetBrakeCtrlNorm(double x) {BrakeCtrlNorm=x;}</span></a>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :   double GetClutchCtrlNorm() const {return ClutchCtrlNorm;}</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   void   SetClutchCtrlNorm(double x) {ClutchCtrlNorm=x;}</span>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            : private:
+<span class="lineNum">     143 </span>            :   bool BindModel(int num);
+<a name="144"><span class="lineNum">     144 </span>            :   void Debug(int from);</a>
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :   inline double omega_to_rpm(double w) {</span>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     return w * 9.54929658551372014613302580235; // omega/(2.0*PI) * 60.0</span></a>
+<span class="lineNum">     148 </span>            :   }
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :   inline double rpm_to_omega(double r) {</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :     return r * 0.104719755119659774615421446109; // (rpm/60.0)*2.0*PI</span>
+<span class="lineNum">     151 </span>            :   }
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :   Filter FreeWheelLag;
+<span class="lineNum">     154 </span>            :   double FreeWheelTransmission; // state, 0: free, 1:locked
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            :   double ThrusterMoment;
+<span class="lineNum">     157 </span>            :   double EngineMoment;   // estimated MOI of gear and engine, influences acceleration
+<span class="lineNum">     158 </span>            :   double EngineFriction; // estimated friction in gear and possibly engine
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :   double ClutchCtrlNorm;
+<span class="lineNum">     161 </span>            :   double BrakeCtrlNorm;
+<span class="lineNum">     162 </span>            :   double MaxBrakePower;
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            :   double EngineRPM;
+<span class="lineNum">     165 </span>            :   double ThrusterRPM;
+<span class="lineNum">     166 </span>            :   FGPropertyManager* PropertyManager;
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            : };
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            : }
+<span class="lineNum">     171 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     172 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

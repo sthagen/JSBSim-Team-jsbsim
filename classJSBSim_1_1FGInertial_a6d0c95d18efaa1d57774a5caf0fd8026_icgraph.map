@@ -1,0 +1,5 @@
+<map id="GetTl2ec" name="GetTl2ec">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInertial.html#ad9453df496ad1736e08e3de3d0a23bc5" title="Get the gravity type. " alt="" coords="128,5,243,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInertial.html#a891d6a4818f727f19c512da34b692871" title="Transform matrix from the earth centered to local horizontal frame. " alt="" coords="148,56,223,83"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInertial.html#abd717975bda0df2c6335256016010b30" title="Set the gravity type. " alt="" coords="291,5,404,32"/>
+</map>

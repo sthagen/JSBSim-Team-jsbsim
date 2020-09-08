@@ -1,0 +1,6 @@
+<map id="GetTerrainElevationFtIC" name="GetTerrainElevationFtIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFDMExec.html#a93876fb8e8a2302e3880f9ebfb3ce6d5" title="Returns the FGInertial pointer. " alt="" coords="216,5,379,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInertial.html#a36b96e61eb18cfda477d67b0a01eac4e" title="Get terrain contact point information below the current location. " alt="" coords="230,71,365,112"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGLocation.html#ad6d787090b71419e91678ceb91c6ef1f" title="Gets the geodetic altitude in feet. " alt="" coords="225,136,370,177"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGLocation.html#ab0d754a471a7ec7280549a1ae1f93331" title="Get the sea level radius in feet below the current location. " alt="" coords="427,136,573,177"/>
+</map>

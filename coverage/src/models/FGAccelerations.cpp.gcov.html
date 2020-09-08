@@ -1,0 +1,496 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGAccelerations.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGAccelerations.cpp<span style="font-size: 80%;"> (source / <a href="FGAccelerations.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">56</td>
+            <td class="headerCovTableEntry">160</td>
+            <td class="headerCovTableEntryLo">35.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntryLo">57.1 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGAccelerations.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 07/12/11
+<span class="lineNum">       6 </span>            :  Purpose:      Calculates derivatives of rotational and translational rates, and
+<span class="lineNum">       7 </span>            :                of the attitude quaternion.
+<span class="lineNum">       8 </span>            :  Called by:    FGFDMExec
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  ------------- Copyright (C) 2011  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      13 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      14 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      15 </span>            :  later version.
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      18 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      19 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      20 </span>            :  details.
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      23 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      24 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      27 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      30 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      31 </span>            : This class encapsulates the calculation of the derivatives of the state vectors
+<span class="lineNum">      32 </span>            : UVW and PQR - the translational and rotational rates relative to the planet
+<span class="lineNum">      33 </span>            : fixed frame. The derivatives relative to the inertial frame are also calculated
+<span class="lineNum">      34 </span>            : as a side effect. Also, the derivative of the attitude quaterion is also
+<span class="lineNum">      35 </span>            : calculated.
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : HISTORY
+<span class="lineNum">      38 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      39 </span>            : 07/12/11   JSB   Created
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      42 </span>            : COMMENTS, REFERENCES,  and NOTES
+<span class="lineNum">      43 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      44 </span>            : [1] Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;, Second edition (2004)
+<span class="lineNum">      45 </span>            :     Wiley
+<span class="lineNum">      46 </span>            : [2] Richard E. McFarland, &quot;A Standard Kinematic Model for Flight Simulation at
+<span class="lineNum">      47 </span>            :     NASA-Ames&quot;, NASA CR-2497, January 1975
+<span class="lineNum">      48 </span>            : [3] Erin Catto, &quot;Iterative Dynamics with Temporal Coherence&quot;, February 22, 2005
+<span class="lineNum">      49 </span>            : [4] Mark Harris and Robert Lyle, &quot;Spacecraft Gravitational Torques&quot;,
+<span class="lineNum">      50 </span>            :     NASA SP-8024, May 1969
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      53 </span>            : INCLUDES
+<span class="lineNum">      54 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : #include &quot;FGAccelerations.h&quot;
+<span class="lineNum">      57 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : using namespace std;
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : namespace JSBSim {
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      64 </span>            : CLASS IMPLEMENTATION
+<a name="65"><span class="lineNum">      65 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineCov">          8 : FGAccelerations::FGAccelerations(FGFDMExec* fdmex)</span>
+<span class="lineNum">      68 </span><span class="lineCov">          8 :   : FGModel(fdmex)</span>
+<span class="lineNum">      69 </span>            : {
+<span class="lineNum">      70 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">      71 </span><span class="lineCov">          8 :   Name = &quot;FGAccelerations&quot;;</span>
+<span class="lineNum">      72 </span><span class="lineCov">          8 :   gravTorque = false;</span>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">          8 :   vPQRidot.InitMatrix();</span>
+<span class="lineNum">      75 </span><span class="lineCov">          8 :   vUVWidot.InitMatrix();</span>
+<span class="lineNum">      76 </span><span class="lineCov">          8 :   vUVWdot.InitMatrix();</span>
+<span class="lineNum">      77 </span><span class="lineCov">          8 :   vBodyAccel.InitMatrix();</span>
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineCov">          8 :   bind();</span>
+<span class="lineNum">      80 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">      81 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">      82 </span>            : 
+<a name="83"><span class="lineNum">      83 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineCov">         24 : FGAccelerations::~FGAccelerations(void)</span>
+<span class="lineNum">      86 </span>            : {
+<span class="lineNum">      87 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">      88 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">      89 </span>            : 
+<a name="90"><span class="lineNum">      90 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span><span class="lineCov">          8 : bool FGAccelerations::InitModel(void)</span>
+<span class="lineNum">      93 </span>            : {
+<span class="lineNum">      94 </span><span class="lineCov">          8 :   if (!FGModel::InitModel()) return false;</span>
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span><span class="lineCov">          8 :   vPQRidot.InitMatrix();</span>
+<span class="lineNum">      97 </span><span class="lineCov">          8 :   vUVWidot.InitMatrix();</span>
+<span class="lineNum">      98 </span><span class="lineCov">          8 :   vUVWdot.InitMatrix();</span>
+<span class="lineNum">      99 </span><span class="lineCov">          8 :   vBodyAccel.InitMatrix();</span>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineCov">          8 :   return true;</span>
+<span class="lineNum">     102 </span>            : }
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     105 </span>            : /*
+<span class="lineNum">     106 </span>            : Purpose: Called on a schedule to calculate derivatives.
+<a name="107"><span class="lineNum">     107 </span>            : */</a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 : bool FGAccelerations::Run(bool Holding)</span>
+<span class="lineNum">     110 </span>            : {
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :   if (FGModel::Run(Holding)) return true;  // Fast return if we have nothing to do ...</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :   if (Holding) return false;</span>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :   CalculatePQRdot();   // Angular rate derivative</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :   CalculateUVWdot();   // Translational rate derivative</span>
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :   if (!FDMExec-&gt;GetHoldDown())</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :     CalculateFrictionForces(in.DeltaT * rate);  // Update rate derivatives with friction forces</span>
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :   Debug(2);</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     122 </span>            : }
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     125 </span>            : // Compute body frame rotational accelerations based on the current body moments
+<span class="lineNum">     126 </span>            : //
+<span class="lineNum">     127 </span>            : // vPQRdot is the derivative of the absolute angular velocity of the vehicle
+<span class="lineNum">     128 </span>            : // (body rate with respect to the ECEF frame), expressed in the body frame,
+<span class="lineNum">     129 </span>            : // where the derivative is taken in the body frame.
+<span class="lineNum">     130 </span>            : // J is the inertia matrix
+<span class="lineNum">     131 </span>            : // Jinv is the inverse inertia matrix
+<span class="lineNum">     132 </span>            : // vMoments is the moment vector in the body frame
+<span class="lineNum">     133 </span>            : // in.vPQRi is the total inertial angular velocity of the vehicle
+<span class="lineNum">     134 </span>            : // expressed in the body frame.
+<span class="lineNum">     135 </span>            : // Reference: See Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;,
+<a name="136"><span class="lineNum">     136 </span>            : //            Second edition (2004), eqn 1.5-16e (page 50)</a>
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 : void FGAccelerations::CalculatePQRdot(void)</span>
+<span class="lineNum">     139 </span>            : {
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   if (gravTorque) {</span>
+<span class="lineNum">     141 </span>            :     // Compute the gravitational torque
+<span class="lineNum">     142 </span>            :     // Reference: See Harris and Lyle &quot;Spacecraft Gravitational Torques&quot;,
+<span class="lineNum">     143 </span>            :     //            NASA SP-8024 (1969) eqn (2) (page 7)
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     FGColumnVector3 R = in.Ti2b * in.vInertialPosition;</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :     double invRadius = 1.0 / R.Magnitude();</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     R *= invRadius;</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     in.Moment += (3.0 * in.vGravAccel.Magnitude() * invRadius) * (R * (in.J * R));</span>
+<span class="lineNum">     148 </span>            :   }
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :   // Compute body frame rotational accelerations based on the current body
+<span class="lineNum">     151 </span>            :   // moments and the total inertial angular velocity expressed in the body
+<span class="lineNum">     152 </span>            :   // frame.
+<span class="lineNum">     153 </span>            : //  if (HoldDown &amp;&amp; !FDMExec-&gt;GetTrimStatus()) {
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :   if (FDMExec-&gt;GetHoldDown()) {</span>
+<span class="lineNum">     155 </span>            :     // The rotational acceleration in ECI is calculated so that the rotational
+<span class="lineNum">     156 </span>            :     // acceleration is zero in the body frame.
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :     vPQRdot.InitMatrix();</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     vPQRidot = in.vPQRi * (in.Ti2b * in.vOmegaPlanet);</span>
+<span class="lineNum">     159 </span>            :   }
+<span class="lineNum">     160 </span>            :   else {
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :     vPQRidot = in.Jinv * (in.Moment - in.vPQRi * (in.J * in.vPQRi));</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :     vPQRdot = vPQRidot - in.vPQRi * (in.Ti2b * in.vOmegaPlanet);</span>
+<span class="lineNum">     163 </span>            :   }
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     167 </span>            : // This set of calculations results in the body and inertial frame accelerations
+<span class="lineNum">     168 </span>            : // being computed.
+<span class="lineNum">     169 </span>            : // Compute body and inertial frames accelerations based on the current body
+<span class="lineNum">     170 </span>            : // forces including centripetal and Coriolis accelerations for the former.
+<span class="lineNum">     171 </span>            : // in.vOmegaPlanet is the Earth angular rate - expressed in the inertial frame -
+<span class="lineNum">     172 </span>            : //   so it has to be transformed to the body frame. More completely,
+<span class="lineNum">     173 </span>            : //   in.vOmegaPlanet is the rate of the ECEF frame relative to the Inertial
+<span class="lineNum">     174 </span>            : //   frame (ECI), expressed in the Inertial frame.
+<span class="lineNum">     175 </span>            : // in.Force is the total force on the vehicle in the body frame.
+<span class="lineNum">     176 </span>            : // in.vPQR is the vehicle body rate relative to the ECEF frame, expressed
+<span class="lineNum">     177 </span>            : //   in the body frame.
+<span class="lineNum">     178 </span>            : // in.vUVW is the vehicle velocity relative to the ECEF frame, expressed
+<span class="lineNum">     179 </span>            : //   in the body frame.
+<span class="lineNum">     180 </span>            : // Reference: See Stevens and Lewis, &quot;Aircraft Control and Simulation&quot;,
+<a name="181"><span class="lineNum">     181 </span>            : //            Second edition (2004), eqns 1.5-13 (pg 48) and 1.5-16d (page 50)</a>
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 : void FGAccelerations::CalculateUVWdot(void)</span>
+<span class="lineNum">     184 </span>            : {
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :   if (FDMExec-&gt;GetHoldDown() &amp;&amp; !FDMExec-&gt;GetTrimStatus())</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :     vBodyAccel.InitMatrix();</span>
+<span class="lineNum">     187 </span>            :   else
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :     vBodyAccel = in.Force / in.Mass;</span>
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :   vUVWdot = vBodyAccel - (in.vPQR + 2.0 * (in.Ti2b * in.vOmegaPlanet)) * in.vUVW;</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            :   // Include Centripetal acceleration.
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :   vUVWdot -= in.Ti2b * (in.vOmegaPlanet * (in.vOmegaPlanet * in.vInertialPosition));</span>
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :   if (FDMExec-&gt;GetHoldDown()) {</span>
+<span class="lineNum">     196 </span>            :     // The acceleration in ECI is calculated so that the acceleration is zero
+<span class="lineNum">     197 </span>            :     // in the body frame.
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :     vUVWidot = in.vOmegaPlanet * (in.vOmegaPlanet * in.vInertialPosition);</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :     vUVWdot.InitMatrix();</span>
+<span class="lineNum">     200 </span>            :   }
+<span class="lineNum">     201 </span>            :   else {
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :     vUVWdot += in.Tec2b * in.vGravAccel;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :     vUVWidot = in.Tb2i * vBodyAccel + in.Tec2i * in.vGravAccel;</span>
+<span class="lineNum">     204 </span>            :   }
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     206 </span>            : 
+<a name="207"><span class="lineNum">     207 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     208 </span>            : 
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 : void FGAccelerations::SetHoldDown(bool hd)</span>
+<span class="lineNum">     210 </span>            : {
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :   if (hd) {</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :     vUVWidot = in.vOmegaPlanet * (in.vOmegaPlanet * in.vInertialPosition);</span>
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :     vUVWdot.InitMatrix();</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :     vPQRidot = in.vPQRi * (in.Ti2b * in.vOmegaPlanet);</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     vPQRdot.InitMatrix();</span>
+<span class="lineNum">     216 </span>            :   }
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     220 </span>            : // Computes the contact forces just before integrating the EOM.
+<span class="lineNum">     221 </span>            : // This routine is using Lagrange multipliers and the projected Gauss-Seidel
+<span class="lineNum">     222 </span>            : // (PGS) method.
+<span class="lineNum">     223 </span>            : // Reference: See Erin Catto, &quot;Iterative Dynamics with Temporal Coherence&quot;,
+<span class="lineNum">     224 </span>            : //            February 22, 2005
+<span class="lineNum">     225 </span>            : // In JSBSim there is only one rigid body (the aircraft) and there can be
+<span class="lineNum">     226 </span>            : // multiple points of contact between the aircraft and the ground. As a
+<span class="lineNum">     227 </span>            : // consequence our matrix Jac*M^-1*Jac^T is not sparse and the algorithm
+<span class="lineNum">     228 </span>            : // described in Catto's paper has been adapted accordingly.
+<span class="lineNum">     229 </span>            : // The friction forces are resolved in the body frame relative to the origin
+<a name="230"><span class="lineNum">     230 </span>            : // (Earth center).</a>
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 : void FGAccelerations::CalculateFrictionForces(double dt)</span>
+<span class="lineNum">     233 </span>            : {
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :   vector&lt;LagrangeMultiplier*&gt;&amp; multipliers = *in.MultipliersList;</span>
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :   size_t n = multipliers.size();</span>
+<span class="lineNum">     236 </span>            : 
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :   vFrictionForces.InitMatrix();</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :   vFrictionMoments.InitMatrix();</span>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            :   // If no gears are in contact with the ground then return
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :   if (!n) return;</span>
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :   vector&lt;double&gt; a(n*n); // Will contain Jac*M^-1*Jac^T</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :   vector&lt;double&gt; rhs(n);</span>
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span>            :   // Assemble the linear system of equations
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i &lt; n; i++) {</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :     FGColumnVector3 U = multipliers[i]-&gt;ForceJacobian;</span>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :     FGColumnVector3 r = multipliers[i]-&gt;LeverArm;</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :     FGColumnVector3 v1 = U / in.Mass;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :     FGColumnVector3 v2 = in.Jinv * (r*U); // Should be J^-T but J is symmetric and so is J^-1</span>
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :     for (unsigned int j=0; j &lt; i; j++)</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :       a[i*n+j] = a[j*n+i]; // Takes advantage of the symmetry of Jac^T*M^-1*Jac</span>
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :     for (unsigned int j=i; j &lt; n; j++) {</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :       U = multipliers[j]-&gt;ForceJacobian;</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :       r = multipliers[j]-&gt;LeverArm;</span>
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :       a[i*n+j] = DotProduct(U, v1 + v2*r);</span>
+<span class="lineNum">     260 </span>            :     }
+<span class="lineNum">     261 </span>            :   }
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span>            :   // Assemble the RHS member
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            :   // Translation
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :   FGColumnVector3 vdot = vUVWdot;</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :   if (dt &gt; 0.) // Zeroes out the relative movement between the aircraft and the ground</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :     vdot += (in.vUVW - in.Tec2b * in.TerrainVelocity) / dt;</span>
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            :   // Rotation
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :   FGColumnVector3 wdot = vPQRdot;</span>
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :   if (dt &gt; 0.) // Zeroes out the relative movement between the aircraft and the ground</span>
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :     wdot += (in.vPQR - in.Tec2b * in.TerrainAngularVel) / dt;</span>
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            :   // Prepare the linear system for the Gauss-Seidel algorithm :
+<span class="lineNum">     276 </span>            :   // 1. Compute the right hand side member 'rhs'
+<span class="lineNum">     277 </span>            :   // 2. Divide every line of 'a' and 'rhs' by a[i,i]. This is in order to save
+<span class="lineNum">     278 </span>            :   //    a division computation at each iteration of Gauss-Seidel.
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i &lt; n; i++) {</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :     double d = a[i*n+i];</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :     FGColumnVector3 U = multipliers[i]-&gt;ForceJacobian;</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :     FGColumnVector3 r = multipliers[i]-&gt;LeverArm;</span>
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :     rhs[i] = -DotProduct(U, vdot + wdot*r)/d;</span>
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :     for (unsigned int j=0; j &lt; n; j++)</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :       a[i*n+j] /= d;</span>
+<span class="lineNum">     288 </span>            :   }
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span>            :   // Resolve the Lagrange multipliers with the projected Gauss-Seidel method
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :   for (int iter=0; iter &lt; 50; iter++) {</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :     double norm = 0.;</span>
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :     for (unsigned int i=0; i &lt; n; i++) {</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :       double lambda0 = multipliers[i]-&gt;value;</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :       double dlambda = rhs[i];</span>
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :       for (unsigned int j=0; j &lt; n; j++)</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :         dlambda -= a[i*n+j]*multipliers[j]-&gt;value;</span>
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :       multipliers[i]-&gt;value = Constrain(multipliers[i]-&gt;Min, lambda0+dlambda, multipliers[i]-&gt;Max);</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :       dlambda = multipliers[i]-&gt;value - lambda0;</span>
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :       norm += fabs(dlambda);</span>
+<span class="lineNum">     305 </span>            :     }
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :     if (norm &lt; 1E-5) break;</span>
+<span class="lineNum">     308 </span>            :   }
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            :   // Calculate the total friction forces and moments
+<span class="lineNum">     311 </span>            : 
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :   for (unsigned int i=0; i&lt; n; i++) {</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :     double lambda = multipliers[i]-&gt;value;</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :     FGColumnVector3 U = multipliers[i]-&gt;ForceJacobian;</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :     FGColumnVector3 r = multipliers[i]-&gt;LeverArm;</span>
+<span class="lineNum">     316 </span>            : 
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :     FGColumnVector3 F = lambda * U;</span>
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :     vFrictionForces += F;</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :     vFrictionMoments += r * F;</span>
+<span class="lineNum">     320 </span>            :   }
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :   FGColumnVector3 accel = vFrictionForces / in.Mass;</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :   FGColumnVector3 omegadot = in.Jinv * vFrictionMoments;</span>
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :   vBodyAccel += accel;</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :   vUVWdot += accel;</span>
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :   vUVWidot += in.Tb2i * accel;</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :   vPQRdot += omegadot;</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :   vPQRidot += omegadot;</span>
+<span class="lineNum">     330 </span>            : }
+<span class="lineNum">     331 </span>            : 
+<a name="332"><span class="lineNum">     332 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 : void FGAccelerations::InitializeDerivatives(void)</span>
+<span class="lineNum">     335 </span>            : {
+<span class="lineNum">     336 </span>            :   // Make an initial run and set past values
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :   CalculatePQRdot();           // Angular rate derivative</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :   CalculateUVWdot();           // Translational rate derivative</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :   CalculateFrictionForces(0.);   // Update rate derivatives with friction forces</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     341 </span>            : 
+<a name="342"><span class="lineNum">     342 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span><span class="lineCov">          8 : void FGAccelerations::bind(void)</span>
+<span class="lineNum">     345 </span>            : {
+<span class="lineNum">     346 </span>            :   typedef double (FGAccelerations::*PMF)(int) const;
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;accelerations/pdot-rad_sec2&quot;, this, eP, (PMF)&amp;FGAccelerations::GetPQRdot);</span>
+<span class="lineNum">     349 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;accelerations/qdot-rad_sec2&quot;, this, eQ, (PMF)&amp;FGAccelerations::GetPQRdot);</span>
+<span class="lineNum">     350 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;accelerations/rdot-rad_sec2&quot;, this, eR, (PMF)&amp;FGAccelerations::GetPQRdot);</span>
+<span class="lineNum">     351 </span>            : 
+<span class="lineNum">     352 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;accelerations/udot-ft_sec2&quot;, this, eU, (PMF)&amp;FGAccelerations::GetUVWdot);</span>
+<span class="lineNum">     353 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;accelerations/vdot-ft_sec2&quot;, this, eV, (PMF)&amp;FGAccelerations::GetUVWdot);</span>
+<span class="lineNum">     354 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;accelerations/wdot-ft_sec2&quot;, this, eW, (PMF)&amp;FGAccelerations::GetUVWdot);</span>
+<span class="lineNum">     355 </span>            : 
+<span class="lineNum">     356 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;accelerations/gravity-ft_sec2&quot;, this, &amp;FGAccelerations::GetGravAccelMagnitude);</span>
+<span class="lineNum">     357 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;simulation/gravitational-torque&quot;, &amp;gravTorque);</span>
+<span class="lineNum">     358 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fbx-weight-lbs&quot;, this, eX, (PMF)&amp;FGAccelerations::GetWeight);</span>
+<span class="lineNum">     359 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fby-weight-lbs&quot;, this, eY, (PMF)&amp;FGAccelerations::GetWeight);</span>
+<span class="lineNum">     360 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fbz-weight-lbs&quot;, this, eZ, (PMF)&amp;FGAccelerations::GetWeight);</span>
+<span class="lineNum">     361 </span>            : 
+<span class="lineNum">     362 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fbx-total-lbs&quot;, this, eX, (PMF)&amp;FGAccelerations::GetForces);</span>
+<span class="lineNum">     363 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fby-total-lbs&quot;, this, eY, (PMF)&amp;FGAccelerations::GetForces);</span>
+<span class="lineNum">     364 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fbz-total-lbs&quot;, this, eZ, (PMF)&amp;FGAccelerations::GetForces);</span>
+<span class="lineNum">     365 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;moments/l-total-lbsft&quot;, this, eL, (PMF)&amp;FGAccelerations::GetMoments);</span>
+<span class="lineNum">     366 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;moments/m-total-lbsft&quot;, this, eM, (PMF)&amp;FGAccelerations::GetMoments);</span>
+<span class="lineNum">     367 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;moments/n-total-lbsft&quot;, this, eN, (PMF)&amp;FGAccelerations::GetMoments);</span>
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;moments/l-gear-lbsft&quot;, this, eL, (PMF)&amp;FGAccelerations::GetGroundMoments);</span>
+<span class="lineNum">     370 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;moments/m-gear-lbsft&quot;, this, eM, (PMF)&amp;FGAccelerations::GetGroundMoments);</span>
+<span class="lineNum">     371 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;moments/n-gear-lbsft&quot;, this, eN, (PMF)&amp;FGAccelerations::GetGroundMoments);</span>
+<span class="lineNum">     372 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fbx-gear-lbs&quot;, this, eX, (PMF)&amp;FGAccelerations::GetGroundForces);</span>
+<span class="lineNum">     373 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fby-gear-lbs&quot;, this, eY, (PMF)&amp;FGAccelerations::GetGroundForces);</span>
+<span class="lineNum">     374 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;forces/fbz-gear-lbs&quot;, this, eZ, (PMF)&amp;FGAccelerations::GetGroundForces);</span>
+<span class="lineNum">     375 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     378 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     379 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     380 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     381 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     382 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     383 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     384 </span>            : //       whatsoever.
+<span class="lineNum">     385 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     386 </span>            : //       startup messages
+<span class="lineNum">     387 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     388 </span>            : //       a class is instantiated
+<span class="lineNum">     389 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     390 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     391 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     392 </span>            : //       are printed out periodically
+<span class="lineNum">     393 </span>            : //    16: When set various parameters are sanity checked and
+<a name="394"><span class="lineNum">     394 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     395 </span>            : 
+<span class="lineNum">     396 </span><span class="lineCov">         24 : void FGAccelerations::Debug(int from)</span>
+<span class="lineNum">     397 </span>            : {
+<span class="lineNum">     398 </span><span class="lineCov">         24 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     401 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span>            :     }
+<span class="lineNum">     404 </span>            :   }
+<span class="lineNum">     405 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGAccelerations&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGAccelerations&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     408 </span>            :   }
+<span class="lineNum">     409 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     410 </span>            :   }
+<span class="lineNum">     411 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 8 &amp;&amp; from == 2) { // Runtime state variables</span>
+<span class="lineNum">     412 </span>            :   }
+<span class="lineNum">     413 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     414 </span>            :   }
+<span class="lineNum">     415 </span><span class="lineCov">         24 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     416 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     417 </span>            :     }
+<a name="418"><span class="lineNum">     418 </span>            :   }</a>
+<span class="lineNum">     419 </span>            : }
+<span class="lineNum">     420 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

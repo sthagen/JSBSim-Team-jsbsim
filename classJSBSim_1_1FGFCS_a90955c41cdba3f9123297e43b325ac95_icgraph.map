@@ -1,0 +1,6 @@
+<map id="SetDfPos" name="SetDfPos">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#aae4680454468e1f7bf3ee7a18b2c5a0c" title="Retrieves all component outputs for inclusion in output stream. " alt="" coords="279,59,429,85"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFCS.html#afc2a723a1286ef37ad48b2b876b89c11" title="Set the gear extend/retract command, defaults to down. " alt="" coords="132,84,231,111"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFCS.html#ac192d89471561942c0cfc3b1585c7f48" title="Gets the prop feather position. " alt="" coords="508,29,623,56"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGOutputSocket.html#a0d7143a7146c3401f1c71e68d68097d6" title="Generates the output. " alt="" coords="477,81,653,122"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="GetForcesInStabilityAxes" name="GetForcesInStabilityAxes">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAerodynamics.html#a7e567f91ddddd571cef3912fd907487b" title="Gets the aero function values. " alt="" coords="224,5,384,32"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGAerodynamics.html#ab30385439501e33149d96b350b34bc13" title="Retrieves the aerodynamic forces in the wind axes, given an axis. " alt="" coords="270,56,338,83"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGAerodynamics.html#ad7885d4d4cf81b16a56e7f249d8692aa" title="Retrieves the square of the lift coefficient. " alt="" coords="468,5,572,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGOutputSocket.html#a0d7143a7146c3401f1c71e68d68097d6" title="Generates the output. " alt="" coords="432,57,608,98"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="FGOutputFG" name="FGOutputFG">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutputSocket.html" title="Implements the output to a socket. " alt="" coords="129,95,249,121"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGOutputType.html" title="Abstract class to provide functions generic to all the output directives. " alt="" coords="5,5,113,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGfdmSocket.html" title="Encapsulates an object that enables JSBSim to communicate via socket (input and/or output)..." alt="" coords="137,5,240,32"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="264,5,319,32"/>
+</map>

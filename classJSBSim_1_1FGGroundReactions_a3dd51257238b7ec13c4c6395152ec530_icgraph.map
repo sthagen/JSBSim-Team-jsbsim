@@ -1,0 +1,5 @@
+<map id="GetGearUnit" name="GetGearUnit">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutputFG.html#ac139d3edf9cdfcdd83a3eba596995817" title="Evaluate the output directives from an XML file. " alt="" coords="158,5,311,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="148,71,321,98"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFDMExec.html#a8ae88a0b73749057a42c729d2330f5ee" title="Executes trimming in the selected mode. " alt="" coords="369,64,532,105"/>
+</map>

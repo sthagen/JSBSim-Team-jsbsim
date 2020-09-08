@@ -1,0 +1,4 @@
+<map id="SomeMessages" name="SomeMessages">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGJSBBase.html#a1ab99f2669e14d57679ab0d03c91b475" title="Reads the message on the queue and removes it from the queue. " alt="" coords="183,5,306,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGJSBBase.html#a651c43fc75c2334b266d6ff914679f1c" title="Reads the next message on the queue and removes it from the queue. " alt="" coords="169,56,320,83"/>
+</map>

@@ -1,0 +1,407 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGAuxiliary.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGAuxiliary.h<span style="font-size: 80%;"> (source / <a href="FGAuxiliary.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntry">52</td>
+            <td class="headerCovTableEntryMed">88.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGAuxiliary.h
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       5 </span>            :  Date started: 01/26/99
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 11/22/98   JSB   Created
+<span class="lineNum">      29 </span>            :   1/1/00   TP    Added calcs and getters for VTAS, VCAS, VEAS, Vground, in knots
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      32 </span>            : SENTRY
+<span class="lineNum">      33 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : #ifndef FGAUXILIARY_H
+<span class="lineNum">      36 </span>            : #define FGAUXILIARY_H
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      39 </span>            : INCLUDES
+<span class="lineNum">      40 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : #include &quot;FGModel.h&quot;
+<span class="lineNum">      43 </span>            : #include &quot;math/FGLocation.h&quot;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      46 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      47 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : namespace JSBSim {
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      52 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      53 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : /** Encapsulates various uncategorized scheduled functions.
+<span class="lineNum">      56 </span>            :     Pilot sensed accelerations are calculated here. This is used
+<span class="lineNum">      57 </span>            :     for the coordinated turn ball instrument. Motion base platforms sometimes
+<span class="lineNum">      58 </span>            :     use the derivative of pilot sensed accelerations as the driving parameter,
+<span class="lineNum">      59 </span>            :     rather than straight accelerations.
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            :     The theory behind pilot-sensed calculations is presented:
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            :     For purposes of discussion and calculation, assume for a minute that the
+<span class="lineNum">      64 </span>            :     pilot is in space and motionless in inertial space. She will feel
+<span class="lineNum">      65 </span>            :     no accelerations. If the aircraft begins to accelerate along any axis or
+<span class="lineNum">      66 </span>            :     axes (without rotating), the pilot will sense those accelerations. If
+<span class="lineNum">      67 </span>            :     any rotational moment is applied, the pilot will sense an acceleration
+<span class="lineNum">      68 </span>            :     due to that motion in the amount:
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            :     [wdot X R]  +  [w X (w X R)]
+<span class="lineNum">      71 </span>            :     Term I          Term II
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            :     where:
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            :     wdot = omegadot, the rotational acceleration rate vector
+<span class="lineNum">      76 </span>            :     w    = omega, the rotational rate vector
+<span class="lineNum">      77 </span>            :     R    = the vector from the aircraft CG to the pilot eyepoint
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            :     The sum total of these two terms plus the acceleration of the aircraft
+<span class="lineNum">      80 </span>            :     body axis gives the acceleration the pilot senses in inertial space.
+<span class="lineNum">      81 </span>            :     In the presence of a large body such as a planet, a gravity field also
+<span class="lineNum">      82 </span>            :     provides an accelerating attraction. This acceleration can be transformed
+<span class="lineNum">      83 </span>            :     from the reference frame of the planet so as to be expressed in the frame
+<span class="lineNum">      84 </span>            :     of reference of the aircraft. This gravity field accelerating attraction
+<span class="lineNum">      85 </span>            :     is felt by the pilot as a force on her tushie as she sits in her aircraft
+<span class="lineNum">      86 </span>            :     on the runway awaiting takeoff clearance.
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            :     In JSBSim the acceleration of the body frame in inertial space is given
+<span class="lineNum">      89 </span>            :     by the F = ma relation. If the vForces vector is divided by the aircraft
+<span class="lineNum">      90 </span>            :     mass, the acceleration vector is calculated. The term wdot is equivalent
+<span class="lineNum">      91 </span>            :     to the JSBSim vPQRdot vector, and the w parameter is equivalent to vPQR.
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            :     @author Tony Peden, Jon Berndt
+<span class="lineNum">      94 </span>            : */
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      97 </span>            : CLASS DECLARATION
+<span class="lineNum">      98 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            : class FGAuxiliary : public FGModel {
+<span class="lineNum">     101 </span>            : public:
+<span class="lineNum">     102 </span>            :   /** Constructor
+<span class="lineNum">     103 </span>            :       @param Executive a pointer to the parent executive object */
+<span class="lineNum">     104 </span>            :   explicit FGAuxiliary(FGFDMExec* Executive);
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :   /// Destructor
+<span class="lineNum">     107 </span>            :   ~FGAuxiliary();
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            :   bool InitModel(void) override;
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            :   /** Runs the Auxiliary routines; called by the Executive
+<span class="lineNum">     112 </span>            :       Can pass in a value indicating if the executive is directing the
+<span class="lineNum">     113 </span>            :       simulation to Hold.
+<span class="lineNum">     114 </span>            :       @param Holding if true, the executive has been directed to hold the sim
+<span class="lineNum">     115 </span>            :                      from advancing time. Some models may ignore this flag, such
+<span class="lineNum">     116 </span>            :                      as the Input model, which may need to be active to listen
+<span class="lineNum">     117 </span>            :                      on a socket for the &quot;Resume&quot; command to be given.  @return
+<span class="lineNum">     118 </span>            :                      false if no error */
+<span class="lineNum">     119 </span>            :   bool Run(bool Holding) override;
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : // GET functions
+<span class="lineNum">     122 </span>            : 
+<a name="123"><span class="lineNum">     123 </span>            :   // Atmospheric parameters GET functions</a>
+<span class="lineNum">     124 </span>            :   /** Returns Calibrated airspeed in feet/second.*/
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">          8 :   double GetVcalibratedFPS(void) const { return vcas; }</span></a>
+<span class="lineNum">     126 </span>            :   /** Returns Calibrated airspeed in knots.*/
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">         24 :   double GetVcalibratedKTS(void) const { return vcas*fpstokts; }</span></a>
+<span class="lineNum">     128 </span>            :   /** Returns equivalent airspeed in feet/second. */
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          8 :   double GetVequivalentFPS(void) const { return veas; }</span></a>
+<span class="lineNum">     130 </span>            :   /** Returns equivalent airspeed in knots. */
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">          8 :   double GetVequivalentKTS(void) const { return veas*fpstokts; }</span></a>
+<span class="lineNum">     132 </span>            :   /** Returns the true airspeed in feet per second. */
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">          8 :   double GetVtrueFPS() const { return Vt; }</span></a>
+<span class="lineNum">     134 </span>            :   /** Returns the true airspeed in knots. */
+<span class="lineNum">     135 </span><span class="lineCov">          8 :   double GetVtrueKTS() const { return Vt * fpstokts; }</span>
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :   /** Returns the total pressure.
+<span class="lineNum">     138 </span>            :       Total pressure is freestream total pressure for
+<a name="139"><span class="lineNum">     139 </span>            :       subsonic only. For supersonic it is the 1D total pressure</a>
+<span class="lineNum">     140 </span>            :       behind a normal shock. */
+<span class="lineNum">     141 </span><span class="lineCov">         16 :   double GetTotalPressure(void) const { return pt; }</span>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            :   /** Returns the total temperature.
+<span class="lineNum">     144 </span>            :     The total temperature (&quot;tat&quot;, isentropic flow) is calculated:
+<span class="lineNum">     145 </span>            :     @code
+<span class="lineNum">     146 </span>            :     tat = in.Temperature*(1 + 0.2*Mach*Mach)
+<span class="lineNum">     147 </span>            :     @endcode
+<span class="lineNum">     148 </span>            :     (where &quot;in.Temperature&quot; is standard temperature calculated by the atmosphere
+<a name="149"><span class="lineNum">     149 </span>            :     model) */</a>
+<a name="150"><span class="lineNum">     150 </span>            : </a>
+<span class="lineNum">     151 </span><span class="lineCov">          8 :   double GetTotalTemperature(void) const { return tat; }</span>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">         16 :   double GetTAT_C(void) const { return tatc; }</span></a>
+<a name="153"><span class="lineNum">     153 </span>            : </a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">         24 :   double GetPilotAccel(int idx)  const { return vPilotAccel(idx);  }</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         24 :   double GetNpilot(int idx)      const { return vPilotAccelN(idx); }</span></a>
+<span class="lineNum">     156 </span><span class="lineCov">         24 :   double GetAeroPQR(int axis)    const { return vAeroPQR(axis);    }</span>
+<span class="lineNum">     157 </span><span class="lineCov">         24 :   double GetEulerRates(int axis) const { return vEulerRates(axis); }</span>
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            :   const FGColumnVector3&amp; GetPilotAccel (void) const { return vPilotAccel;  }
+<span class="lineNum">     160 </span>            :   const FGColumnVector3&amp; GetNpilot     (void) const { return vPilotAccelN; }
+<span class="lineNum">     161 </span>            :   const FGColumnVector3&amp; GetNcg        (void) const { return vNcg;         }
+<a name="162"><span class="lineNum">     162 </span>            :   double GetNcg                     (int idx) const { return vNcg(idx);    }</a>
+<span class="lineNum">     163 </span>            :   double GetNlf                        (void) const;
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetAeroPQR    (void) const { return vAeroPQR;     }</span></a>
+<span class="lineNum">     165 </span>            :   const FGColumnVector3&amp; GetEulerRates (void) const { return vEulerRates;  }
+<span class="lineNum">     166 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetAeroUVW    (void) const { return vAeroUVW;     }</span>
+<a name="167"><span class="lineNum">     167 </span>            :   const FGLocation&amp;      GetLocationVRP(void) const { return vLocationVRP; }</a>
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">         24 :   double GetAeroUVW (int idx) const { return vAeroUVW(idx); }</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">         24 :   double Getalpha   (void) const { return alpha;      }</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">         24 :   double Getbeta    (void) const { return beta;       }</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">          8 :   double Getadot    (void) const { return adot;       }</span></a>
+<span class="lineNum">     173 </span><span class="lineCov">          8 :   double Getbdot    (void) const { return bdot;       }</span>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          8 :   double GetMagBeta (void) const { return fabs(beta); }</span></a>
+<span class="lineNum">     175 </span>            : 
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          8 :   double Getalpha   (int unit) const { if (unit == inDegrees) return alpha*radtodeg;</span></a>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :                                        else return BadUnits(); }</span>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">          8 :   double Getbeta    (int unit) const { if (unit == inDegrees) return beta*radtodeg;</span></a>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :                                        else return BadUnits(); }</span>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">          8 :   double Getadot    (int unit) const { if (unit == inDegrees) return adot*radtodeg;</span></a>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :                                        else return BadUnits(); }</span>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">          8 :   double Getbdot    (int unit) const { if (unit == inDegrees) return bdot*radtodeg;</span></a>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :                                        else return BadUnits(); }</span>
+<span class="lineNum">     184 </span><span class="lineCov">          8 :   double GetMagBeta (int unit) const { if (unit == inDegrees) return fabs(beta)*radtodeg;</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :                                        else return BadUnits(); }</span>
+<span class="lineNum">     186 </span>            : 
+<span class="lineNum">     187 </span>            :   /** Calculates and returns the wind-to-body axis transformation matrix.
+<a name="188"><span class="lineNum">     188 </span>            :       @return a reference to the wind-to-body transformation matrix.</a>
+<span class="lineNum">     189 </span>            :       */
+<span class="lineNum">     190 </span><span class="lineCov">         16 :   const FGMatrix33&amp; GetTw2b(void) const { return mTw2b; }</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            :   /** Calculates and returns the body-to-wind axis transformation matrix.
+<a name="193"><span class="lineNum">     193 </span>            :       @return a reference to the wind-to-body transformation matrix.</a>
+<span class="lineNum">     194 </span>            :       */
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">          8 :   const FGMatrix33&amp; GetTb2w(void) const { return mTb2w; }</span></a>
+<a name="196"><span class="lineNum">     196 </span>            : </a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">         24 :   double Getqbar          (void) const { return qbar;       }</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">          8 :   double GetqbarUW        (void) const { return qbarUW;     }</span></a>
+<span class="lineNum">     199 </span><span class="lineCov">          8 :   double GetqbarUV        (void) const { return qbarUV;     }</span>
+<span class="lineNum">     200 </span><span class="lineCov">          8 :   double GetReynoldsNumber(void) const { return Re;         }</span>
+<span class="lineNum">     201 </span>            : 
+<a name="202"><span class="lineNum">     202 </span>            :   /** Gets the magnitude of total vehicle velocity including wind effects in</a>
+<span class="lineNum">     203 </span>            :       feet per second. */
+<span class="lineNum">     204 </span><span class="lineCov">         32 :   double GetVt            (void) const { return Vt;         }</span>
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            :   /** Gets the ground speed in feet per second.
+<span class="lineNum">     207 </span>            :       The magnitude is the square root of the sum of the squares (RSS) of the 
+<a name="208"><span class="lineNum">     208 </span>            :       vehicle north and east velocity components.</a>
+<span class="lineNum">     209 </span>            :       @return The magnitude of the vehicle velocity in the horizontal plane. */
+<span class="lineNum">     210 </span><span class="lineCov">         16 :   double GetVground       (void) const { return Vground;    }</span>
+<a name="211"><span class="lineNum">     211 </span>            : </a>
+<span class="lineNum">     212 </span>            :   /** Gets the Mach number. */
+<span class="lineNum">     213 </span><span class="lineCov">          8 :   double GetMach          (void) const { return Mach;       }</span>
+<a name="214"><span class="lineNum">     214 </span>            : </a>
+<span class="lineNum">     215 </span>            :   /** The mach number calculated using the vehicle X axis velocity. */
+<span class="lineNum">     216 </span><span class="lineCov">          8 :   double GetMachU         (void) const { return MachU;      }</span>
+<a name="217"><span class="lineNum">     217 </span>            : </a>
+<span class="lineNum">     218 </span>            :   /** The longitudinal acceleration in g's of the aircraft center of gravity. */
+<span class="lineNum">     219 </span><span class="lineCov">          8 :   double GetNx            (void) const { return Nx;         }</span>
+<a name="220"><span class="lineNum">     220 </span>            : </a>
+<span class="lineNum">     221 </span>            :   /** The lateral acceleration in g's of the aircraft center of gravity. */
+<span class="lineNum">     222 </span><span class="lineCov">          8 :   double GetNy            (void) const { return Ny;         }</span>
+<a name="223"><span class="lineNum">     223 </span>            : </a>
+<span class="lineNum">     224 </span>            :   /** The vertical acceleration in g's of the aircraft center of gravity. */
+<span class="lineNum">     225 </span><span class="lineCov">          8 :   double GetNz            (void) const { return Nz;         }</span>
+<span class="lineNum">     226 </span>            : 
+<a name="227"><span class="lineNum">     227 </span>            :   const FGColumnVector3&amp; GetNwcg(void) const { return vNwcg; }</a>
+<a name="228"><span class="lineNum">     228 </span>            : </a>
+<span class="lineNum">     229 </span><span class="lineCov">          8 :   double GetHOverBCG(void) const { return hoverbcg; }</span>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">          8 :   double GetHOverBMAC(void) const { return hoverbmac; }</span></a>
+<a name="231"><span class="lineNum">     231 </span>            : </a>
+<span class="lineNum">     232 </span><span class="lineCov">          8 :   double GetGamma(void)              const { return gamma;         }</span>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">          8 :   double GetGroundTrack(void)        const { return psigt;         }</span></a>
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span><span class="lineCov">          8 :   double GetGamma(int unit) const {</span>
+<span class="lineNum">     236 </span><span class="lineCov">          8 :     if (unit == inDegrees) return gamma*radtodeg;</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     else return BadUnits();</span>
+<span class="lineNum">     238 </span>            :   }
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            : // Time routines, SET and GET functions, used by FGMSIS atmosphere
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span>            :   void SetDayOfYear    (int doy)    { day_of_year = doy;    }
+<span class="lineNum">     243 </span>            :   void SetSecondsInDay (double sid) { seconds_in_day = sid; }
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            :   int    GetDayOfYear    (void) const { return day_of_year;    }
+<span class="lineNum">     246 </span>            :   double GetSecondsInDay (void) const { return seconds_in_day; }
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :   double GetLongitudeRelativePosition (void) const;
+<span class="lineNum">     249 </span>            :   double GetLatitudeRelativePosition  (void) const;
+<span class="lineNum">     250 </span>            :   double GetDistanceRelativePosition  (void) const;
+<span class="lineNum">     251 </span>            : 
+<a name="252"><span class="lineNum">     252 </span>            :   void SetAeroPQR(const FGColumnVector3&amp; tt) { vAeroPQR = tt; }</a>
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span><span class="lineCov">         16 :   struct Inputs {</span>
+<span class="lineNum">     255 </span>            :     double Pressure;
+<span class="lineNum">     256 </span>            :     double Density;
+<span class="lineNum">     257 </span>            :     double DensitySL;
+<span class="lineNum">     258 </span>            :     double PressureSL;
+<span class="lineNum">     259 </span>            :     double Temperature;
+<span class="lineNum">     260 </span>            :     double SoundSpeed;
+<span class="lineNum">     261 </span>            :     double KinematicViscosity;
+<span class="lineNum">     262 </span>            :     double DistanceAGL;
+<span class="lineNum">     263 </span>            :     double Wingspan;
+<span class="lineNum">     264 </span>            :     double Wingchord;
+<span class="lineNum">     265 </span>            :     double StandardGravity;
+<span class="lineNum">     266 </span>            :     double Mass;
+<span class="lineNum">     267 </span>            :     FGMatrix33 Tl2b;
+<span class="lineNum">     268 </span>            :     FGMatrix33 Tb2l;
+<span class="lineNum">     269 </span>            :     FGColumnVector3 vPQR;
+<span class="lineNum">     270 </span>            :     FGColumnVector3 vPQRi;
+<span class="lineNum">     271 </span>            :     FGColumnVector3 vPQRidot;
+<span class="lineNum">     272 </span>            :     FGColumnVector3 vUVW;
+<span class="lineNum">     273 </span>            :     FGColumnVector3 vUVWdot;
+<span class="lineNum">     274 </span>            :     FGColumnVector3 vVel;
+<span class="lineNum">     275 </span>            :     FGColumnVector3 vBodyAccel;
+<span class="lineNum">     276 </span>            :     FGColumnVector3 ToEyePt;
+<span class="lineNum">     277 </span>            :     FGColumnVector3 RPBody;
+<span class="lineNum">     278 </span>            :     FGColumnVector3 VRPBody;
+<span class="lineNum">     279 </span>            :     FGColumnVector3 vFw;
+<span class="lineNum">     280 </span>            :     FGLocation vLocation;
+<span class="lineNum">     281 </span>            :     double CosTht;
+<span class="lineNum">     282 </span>            :     double SinTht;
+<span class="lineNum">     283 </span>            :     double CosPhi;
+<span class="lineNum">     284 </span>            :     double SinPhi;
+<span class="lineNum">     285 </span>            :     FGColumnVector3 TotalWindNED;
+<span class="lineNum">     286 </span>            :     FGColumnVector3 TurbPQR;
+<span class="lineNum">     287 </span>            :   } in;
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span>            : private:
+<span class="lineNum">     290 </span>            :   double vcas, veas;
+<span class="lineNum">     291 </span>            :   double pt, tat, tatc; // Don't add a getter for pt!
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            :   FGMatrix33 mTw2b;
+<span class="lineNum">     294 </span>            :   FGMatrix33 mTb2w;
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span>            :   FGColumnVector3 vPilotAccel;
+<span class="lineNum">     297 </span>            :   FGColumnVector3 vPilotAccelN;
+<span class="lineNum">     298 </span>            :   FGColumnVector3 vNcg;
+<span class="lineNum">     299 </span>            :   FGColumnVector3 vNwcg;
+<span class="lineNum">     300 </span>            :   FGColumnVector3 vAeroPQR;
+<span class="lineNum">     301 </span>            :   FGColumnVector3 vAeroUVW;
+<span class="lineNum">     302 </span>            :   FGColumnVector3 vEulerRates;
+<span class="lineNum">     303 </span>            :   FGColumnVector3 vMachUVW;
+<span class="lineNum">     304 </span>            :   FGLocation vLocationVRP;
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span>            :   double Vt, Vground;
+<span class="lineNum">     307 </span>            :   double Mach, MachU;
+<span class="lineNum">     308 </span>            :   double qbar, qbarUW, qbarUV;
+<span class="lineNum">     309 </span>            :   double Re; // Reynolds Number = V*c/mu
+<span class="lineNum">     310 </span>            :   double alpha, beta;
+<span class="lineNum">     311 </span>            :   double adot,bdot;
+<span class="lineNum">     312 </span>            :   double psigt, gamma;
+<span class="lineNum">     313 </span>            :   double Nx, Ny, Nz;
+<span class="lineNum">     314 </span>            :   double seconds_in_day;  // seconds since current GMT day began
+<span class="lineNum">     315 </span>            :   int    day_of_year;     // GMT day, 1 .. 366
+<span class="lineNum">     316 </span>            : 
+<span class="lineNum">     317 </span>            :   double hoverbcg, hoverbmac;
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span>            :   void UpdateWindMatrices(void);
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span>            :   void CalculateRelativePosition(void);
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span>            :   void bind(void);
+<span class="lineNum">     324 </span>            :   double BadUnits(void) const;
+<span class="lineNum">     325 </span>            :   void Debug(int from) override;
+<span class="lineNum">     326 </span>            : };
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span>            : } // namespace JSBSim
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     331 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

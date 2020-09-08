@@ -1,0 +1,10 @@
+<map id="SetAltitudeAGL" name="SetAltitudeAGL">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInertial.html#a73c8611f4ce740c255fe6ccc2d7891c9" title="Get the altitude above ground level. " alt="" coords="200,105,313,132"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#a78752db06521e6974fad0089a5e31695" title="Sets the initial Altitude above ground level. " alt="" coords="627,18,809,59"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInitialCondition.html#a777b283e5014563b30f96b47a9e6220a" title="Sets the initial geodetic latitude. " alt="" coords="627,127,809,168"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGPropagate.html#a3554b724a9f259cb57840ae37cbec446" title="Returns the &quot;constant&quot; LocalTerrainRadius. " alt="" coords="406,32,569,74"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a1fabb78d427d8f826631eb863fccce28" title="Resets the IC data structure to new values. " alt="" coords="165,215,348,256"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGPropagate.html#a9729191af164b5db0c9f72cd182939d2" title="Initializes the FGPropagate class after instantiation and prior to first execution. " alt="" coords="179,280,334,322"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a84eb5205c00cea25382e8961e77a4784" title="Gets the initial altitude above ground level. " alt="" coords="396,98,579,139"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#a122dacd64147e2d1b1db97e719de2989" title="Sets pitch angle initial condition in degrees. " alt="" coords="396,215,579,256"/>
+</map>

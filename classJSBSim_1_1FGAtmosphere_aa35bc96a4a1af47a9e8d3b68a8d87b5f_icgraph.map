@@ -1,0 +1,7 @@
+<map id="GetTemperatureSL" name="GetTemperatureSL">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAtmosphere.html#a5fbcf054eb0b500a6568532e93ed44fa" title="Converts from PSF (pounds per square foot) to one of several unit systems. " alt="" coords="185,85,309,112"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGAtmosphere.html#ac14a06c4960831033bc795b913312aff" title="Returns the ratio of the temperature as modeled at the supplied altitude over the sea level value..." alt="" coords="393,5,540,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGAtmosphere.html#a3ef269c7002ec866114404079457ca8a" title="Calculates the pressure altitude given any temperature or pressure bias. " alt="" coords="380,56,553,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGStandardAtmosphere.html#a9e2a198c702aa06782d41debb1417527" title="Returns the partial pressure of water vapor. " alt="" coords="357,107,576,149"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGStandardAtmosphere.html#ac08b709127d4023c2411db4c8fc228b7" title="Returns the saturated pressure of water vapor. " alt="" coords="357,173,576,214"/>
+</map>

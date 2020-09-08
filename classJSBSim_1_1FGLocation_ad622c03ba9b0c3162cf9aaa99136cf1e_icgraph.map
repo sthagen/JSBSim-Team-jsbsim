@@ -1,0 +1,9 @@
+<map id="GetLongitudeDeg" name="GetLongitudeDeg">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAuxiliary.html#a764e8c6d39b827d2ad03f570a2fc37e6" title="Runs the Auxiliary routines; called by the Executive Can pass in a value indicating if the executive ..." alt="" coords="178,5,357,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#afc878176c820859eb67f63414bbc0b45" title="Gets the initial longitude. " alt="" coords="176,57,359,98"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1MSIS.html#a35ac9aa2a24b4c76037dcc874cdfdcdd" title="Runs the MSIS&#45;00 atmosphere model; called by the Executive Can pass in a value indicating if the exec..." alt="" coords="196,123,339,149"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGOutputSocket.html#a0d7143a7146c3401f1c71e68d68097d6" title="Generates the output. " alt="" coords="637,195,813,237"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGPropagate.html#a269d067d10ad81cf2b04e951dc1af761" title="Retrieves the Euler angles (in degrees) that define the vehicle orientation. " alt="" coords="190,225,345,266"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="407,57,589,98"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGPropagate.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles that define the vehicle orientation. " alt="" coords="421,225,575,266"/>
+</map>

@@ -1,0 +1,470 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGOutputTextFile.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGOutputTextFile.cpp<span style="font-size: 80%;"> (source / <a href="FGOutputTextFile.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">264</td>
+            <td class="headerCovTableEntryLo">0.4 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">40.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGOutputTextFile.cpp
+<span class="lineNum">       4 </span>            :  Author:       Bertrand Coconnier
+<span class="lineNum">       5 </span>            :  Date started: 09/17/11
+<span class="lineNum">       6 </span>            :  Purpose:      Manage output of sim parameters to a text file
+<span class="lineNum">       7 </span>            :  Called by:    FGOutput
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 2011 Bertrand Coconnier -------------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      13 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      14 </span>            :  later version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      22 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      23 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      26 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : This is the place where you create output routines to dump data for perusal
+<span class="lineNum">      31 </span>            : later.
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : HISTORY
+<span class="lineNum">      34 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      35 </span>            : 09/17/11   BC    Created
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : #include &quot;FGOutputTextFile.h&quot;
+<span class="lineNum">      44 </span>            : #include &quot;models/FGAerodynamics.h&quot;
+<span class="lineNum">      45 </span>            : #include &quot;models/FGAccelerations.h&quot;
+<span class="lineNum">      46 </span>            : #include &quot;models/FGAtmosphere.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;models/FGAuxiliary.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;models/FGPropulsion.h&quot;
+<span class="lineNum">      49 </span>            : #include &quot;models/FGMassBalance.h&quot;
+<span class="lineNum">      50 </span>            : #include &quot;models/FGExternalReactions.h&quot;
+<span class="lineNum">      51 </span>            : #include &quot;models/FGBuoyantForces.h&quot;
+<span class="lineNum">      52 </span>            : #include &quot;models/FGFCS.h&quot;
+<span class="lineNum">      53 </span>            : #include &quot;models/atmosphere/FGWinds.h&quot;
+<span class="lineNum">      54 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : using namespace std;
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : namespace JSBSim {
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      61 </span>            : CLASS IMPLEMENTATION
+<a name="62"><span class="lineNum">      62 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 : bool FGOutputTextFile::Load(Element* el)</span>
+<span class="lineNum">      65 </span>            : {
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :   if(!FGOutputFile::Load(el))</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   string type = el-&gt;GetAttributeValue(&quot;type&quot;);</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :   string delim;</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :   if (type == &quot;TABULAR&quot;) {</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :     delim = &quot;\t&quot;;</span>
+<span class="lineNum">      73 </span>            :   } else {
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :     delim = &quot;,&quot;;</span>
+<span class="lineNum">      75 </span>            :   }
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   SetDelimiter(delim);</span>
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">      80 </span>            : }
+<span class="lineNum">      81 </span>            : 
+<a name="82"><span class="lineNum">      82 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 : bool FGOutputTextFile::OpenFile(void)</span>
+<span class="lineNum">      85 </span>            : {
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   datafile.clear();</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :   datafile.open(Filename);</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :   if (!datafile) {</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; endl &lt;&lt; fgred &lt;&lt; highint &lt;&lt; &quot;ERROR: unable to open the file &quot;</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :          &lt;&lt; reset &lt;&lt; Filename.c_str() &lt;&lt; endl</span>
+<span class="lineNum">      91 </span>            :          &lt;&lt; fgred &lt;&lt; highint &lt;&lt; &quot;       =&gt; Output to this file is disabled.&quot;
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :          &lt;&lt; reset &lt;&lt; endl &lt;&lt; endl;</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :     Disable();</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">      95 </span>            :   }
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :   string scratch = &quot;&quot;;</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   streambuf* buffer = datafile.rdbuf();</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :   ostream outstream(buffer);</span>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :   outstream.precision(10);</span>
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :   outstream &lt;&lt; &quot;Time&quot;;</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssSimulation) {</span>
+<span class="lineNum">     105 </span>            :     // Nothing here, yet
+<span class="lineNum">     106 </span>            :   }
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssAerosurfaces) {</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Aileron Command (norm)&quot; + delimeter;</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Elevator Command (norm)&quot; + delimeter;</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Rudder Command (norm)&quot; + delimeter;</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Flap Command (norm)&quot; + delimeter;</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Left Aileron Position (deg)&quot; + delimeter;</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Right Aileron Position (deg)&quot; + delimeter;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Elevator Position (deg)&quot; + delimeter;</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Rudder Position (deg)&quot; + delimeter;</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Flap Position (deg)&quot;;</span>
+<span class="lineNum">     118 </span>            :   }
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssRates) {</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;P (deg/s)&quot; + delimeter + &quot;Q (deg/s)&quot; + delimeter + &quot;R (deg/s)&quot; + delimeter;</span>
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;P dot (deg/s^2)&quot; + delimeter + &quot;Q dot (deg/s^2)&quot; + delimeter + &quot;R dot (deg/s^2)&quot; + delimeter;</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;P_{inertial} (deg/s)&quot; + delimeter + &quot;Q_{inertial} (deg/s)&quot; + delimeter + &quot;R_{inertial} (deg/s)&quot;;</span>
+<span class="lineNum">     124 </span>            :   }
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssVelocities) {</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;q bar (psf)&quot; + delimeter;</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Reynolds Number&quot; + delimeter;</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;V_{Total} (ft/s)&quot; + delimeter;</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;V_{Inertial} (ft/s)&quot; + delimeter;</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;UBody&quot; + delimeter + &quot;VBody&quot; + delimeter + &quot;WBody&quot; + delimeter;</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;UdotBody&quot; + delimeter + &quot;VdotBody&quot; + delimeter + &quot;WdotBody&quot; + delimeter;</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;UdotBody_i&quot; + delimeter + &quot;VdotBody_i&quot; + delimeter + &quot;WdotBody_i&quot; + delimeter;</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;BodyAccel_X&quot; + delimeter + &quot;BodyAccel_Y&quot; + delimeter + &quot;BodyAccel_Z&quot; + delimeter;</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Aero V_{X Body} (ft/s)&quot; + delimeter + &quot;Aero V_{Y Body} (ft/s)&quot; + delimeter + &quot;Aero V_{Z Body} (ft/s)&quot; + delimeter;</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;V_{X_{inertial}} (ft/s)&quot; + delimeter + &quot;V_{Y_{inertial}} (ft/s)&quot; + delimeter + &quot;V_{Z_{inertial}} (ft/s)&quot; + delimeter;</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;V_{X_{ecef}} (ft/s)&quot; + delimeter + &quot;V_{Y_{ecef}} (ft/s)&quot; + delimeter + &quot;V_{Z_{ecef}} (ft/s)&quot; + delimeter;</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;V_{North} (ft/s)&quot; + delimeter + &quot;V_{East} (ft/s)&quot; + delimeter + &quot;V_{Down} (ft/s)&quot;;</span>
+<span class="lineNum">     139 </span>            :   }
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssForces) {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Drag} (lbs)&quot; + delimeter + &quot;F_{Side} (lbs)&quot; + delimeter + &quot;F_{Lift} (lbs)&quot; + delimeter;</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L/D&quot; + delimeter;</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Aero x} (lbs)&quot; + delimeter + &quot;F_{Aero y} (lbs)&quot; + delimeter + &quot;F_{Aero z} (lbs)&quot; + delimeter;</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Prop x} (lbs)&quot; + delimeter + &quot;F_{Prop y} (lbs)&quot; + delimeter + &quot;F_{Prop z} (lbs)&quot; + delimeter;</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Gear x} (lbs)&quot; + delimeter + &quot;F_{Gear y} (lbs)&quot; + delimeter + &quot;F_{Gear z} (lbs)&quot; + delimeter;</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Ext x} (lbs)&quot; + delimeter + &quot;F_{Ext y} (lbs)&quot; + delimeter + &quot;F_{Ext z} (lbs)&quot; + delimeter;</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Buoyant x} (lbs)&quot; + delimeter + &quot;F_{Buoyant y} (lbs)&quot; + delimeter + &quot;F_{Buoyant z} (lbs)&quot; + delimeter;</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Weight x} (lbs)&quot; + delimeter + &quot;F_{Weight y} (lbs)&quot; + delimeter + &quot;F_{Weight z} (lbs)&quot; + delimeter;</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;F_{Total x} (lbs)&quot; + delimeter + &quot;F_{Total y} (lbs)&quot; + delimeter + &quot;F_{Total z} (lbs)&quot;;</span>
+<span class="lineNum">     151 </span>            :   }
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssMoments) {</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L_{Aero} (ft-lbs)&quot; + delimeter + &quot;M_{Aero} (ft-lbs)&quot; + delimeter + &quot;N_{Aero} (ft-lbs)&quot; + delimeter;</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L_{Aero MRC} (ft-lbs)&quot; + delimeter + &quot;M_{Aero MRC} (ft-lbs)&quot; + delimeter + &quot;N_{Aero MRC} (ft-lbs)&quot; + delimeter;</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L_{Prop} (ft-lbs)&quot; + delimeter + &quot;M_{Prop} (ft-lbs)&quot; + delimeter + &quot;N_{Prop} (ft-lbs)&quot; + delimeter;</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L_{Gear} (ft-lbs)&quot; + delimeter + &quot;M_{Gear} (ft-lbs)&quot; + delimeter + &quot;N_{Gear} (ft-lbs)&quot; + delimeter;</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L_{ext} (ft-lbs)&quot; + delimeter + &quot;M_{ext} (ft-lbs)&quot; + delimeter + &quot;N_{ext} (ft-lbs)&quot; + delimeter;</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L_{Buoyant} (ft-lbs)&quot; + delimeter + &quot;M_{Buoyant} (ft-lbs)&quot; + delimeter + &quot;N_{Buoyant} (ft-lbs)&quot; + delimeter;</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;L_{Total} (ft-lbs)&quot; + delimeter + &quot;M_{Total} (ft-lbs)&quot; + delimeter + &quot;N_{Total} (ft-lbs)&quot;;</span>
+<span class="lineNum">     161 </span>            :   }
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssAtmosphere) {</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Rho (slugs/ft^3)&quot; + delimeter;</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Absolute Viscosity&quot; + delimeter;</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Kinematic Viscosity&quot; + delimeter;</span>
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Temperature (R)&quot; + delimeter;</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;P_{SL} (psf)&quot; + delimeter;</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;P_{Ambient} (psf)&quot; + delimeter;</span>
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Turbulence Magnitude (ft/sec)&quot; + delimeter;</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Turbulence X Direction (deg)&quot; + delimeter;</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Wind V_{North} (ft/s)&quot; + delimeter + &quot;Wind V_{East} (ft/s)&quot; + delimeter + &quot;Wind V_{Down} (ft/s)&quot; + delimeter;</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Roll Turbulence (deg/sec)&quot; + delimeter + &quot;Pitch Turbulence (deg/sec)&quot; + delimeter + &quot;Yaw Turbulence (deg/sec)&quot;;</span>
+<span class="lineNum">     174 </span>            :   }
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssMassProps) {</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{xx}&quot; + delimeter;</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{xy}&quot; + delimeter;</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{xz}&quot; + delimeter;</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{yx}&quot; + delimeter;</span>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{yy}&quot; + delimeter;</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{yz}&quot; + delimeter;</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{zx}&quot; + delimeter;</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{zy}&quot; + delimeter;</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;I_{zz}&quot; + delimeter;</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Mass&quot; + delimeter;</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Weight&quot; + delimeter;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;X_{cg}&quot; + delimeter + &quot;Y_{cg}&quot; + delimeter + &quot;Z_{cg}&quot;;</span>
+<span class="lineNum">     189 </span>            :   }
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssPropagate) {</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Altitude ASL (ft)&quot; + delimeter;</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Altitude AGL (ft)&quot; + delimeter;</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Phi (deg)&quot; + delimeter + &quot;Theta (deg)&quot; + delimeter + &quot;Psi (deg)&quot; + delimeter;</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Q(1)_{LOCAL}&quot; + delimeter + &quot;Q(2)_{LOCAL}&quot; + delimeter + &quot;Q(3)_{LOCAL}&quot; + delimeter + &quot;Q(4)_{LOCAL}&quot; +  delimeter;</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Q(1)_{ECEF}&quot; + delimeter + &quot;Q(2)_{ECEF}&quot; + delimeter + &quot;Q(3)_{ECEF}&quot; + delimeter + &quot;Q(4)_{ECEF}&quot; +  delimeter;</span>
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Q(1)_{ECI}&quot; + delimeter + &quot;Q(2)_{ECI}&quot; + delimeter + &quot;Q(3)_{ECI}&quot; + delimeter + &quot;Q(4)_{ECI}&quot; +  delimeter;</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Alpha (deg)&quot; + delimeter;</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Beta (deg)&quot; + delimeter;</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Latitude (deg)&quot; + delimeter;</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Latitude Geodetic (deg)&quot; + delimeter;</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Longitude (deg)&quot; + delimeter;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;X_{ECI} (ft)&quot; + delimeter + &quot;Y_{ECI} (ft)&quot; + delimeter + &quot;Z_{ECI} (ft)&quot; + delimeter;</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;X_{ECEF} (ft)&quot; + delimeter + &quot;Y_{ECEF} (ft)&quot; + delimeter + &quot;Z_{ECEF} (ft)&quot; + delimeter;</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Earth Position Angle (deg)&quot; + delimeter;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Distance AGL (ft)&quot; + delimeter;</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; &quot;Terrain Elevation (ft)&quot;;</span>
+<span class="lineNum">     208 </span>            :   }
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssAeroFunctions) {</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :     scratch = Aerodynamics-&gt;GetAeroFunctionStrings(delimeter);</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :     if (scratch.length() != 0) outstream &lt;&lt; delimeter &lt;&lt; scratch;</span>
+<span class="lineNum">     212 </span>            :   }
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssFCS) {</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :     scratch = FCS-&gt;GetComponentStrings(delimeter);</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     if (scratch.length() != 0) outstream &lt;&lt; delimeter &lt;&lt; scratch;</span>
+<span class="lineNum">     216 </span>            :   }
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssGroundReactions) {</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; GroundReactions-&gt;GetGroundReactionStrings(delimeter);</span>
+<span class="lineNum">     220 </span>            :   }
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssPropulsion &amp;&amp; Propulsion-&gt;GetNumEngines() &gt; 0) {</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propulsion-&gt;GetPropulsionStrings(delimeter);</span>
+<span class="lineNum">     224 </span>            :   }
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :   for (unsigned int i=0;i&lt;OutputParameters.size();++i) {</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :     if (!OutputCaptions[i].empty())</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :       outstream &lt;&lt; delimeter &lt;&lt; OutputCaptions[i];</span>
+<span class="lineNum">     229 </span>            :     else
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :       outstream &lt;&lt; delimeter &lt;&lt; OutputParameters[i]-&gt;GetFullyQualifiedName();</span>
+<span class="lineNum">     231 </span>            :   }
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :   if (PreFunctions.size() &gt; 0) {</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :     for (unsigned int i=0;i&lt;PreFunctions.size();i++) {</span>
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :       outstream &lt;&lt; delimeter &lt;&lt; PreFunctions[i]-&gt;GetName();</span>
+<span class="lineNum">     236 </span>            :     }
+<span class="lineNum">     237 </span>            :   }
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :   outstream &lt;&lt; endl;</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :   outstream.flush();</span>
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     243 </span>            : }
+<span class="lineNum">     244 </span>            : 
+<a name="245"><span class="lineNum">     245 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     246 </span>            : 
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 : void FGOutputTextFile::Print(void)</span>
+<span class="lineNum">     248 </span>            : {
+<span class="lineNum">     249 </span>            :   streambuf* buffer;
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :   string scratch = Filename.utf8Str();</span>
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   if (to_upper(scratch) == &quot;COUT&quot;) {</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :     buffer = cout.rdbuf();</span>
+<span class="lineNum">     254 </span>            :   } else {
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :     buffer = datafile.rdbuf();</span>
+<span class="lineNum">     256 </span>            :   }
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   ostream outstream(buffer);</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :   outstream.precision(10);</span>
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :   outstream &lt;&lt; FDMExec-&gt;GetSimTime();</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssSimulation) {</span>
+<span class="lineNum">     264 </span>            :   }
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssAerosurfaces) {</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDaCmd() &lt;&lt; delimeter;</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDeCmd() &lt;&lt; delimeter;</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDrCmd() &lt;&lt; delimeter;</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDfCmd() &lt;&lt; delimeter;</span>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDaLPos(ofDeg) &lt;&lt; delimeter;</span>
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDaRPos(ofDeg) &lt;&lt; delimeter;</span>
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDePos(ofDeg) &lt;&lt; delimeter;</span>
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDrPos(ofDeg) &lt;&lt; delimeter;</span>
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; FCS-&gt;GetDfPos(ofDeg);</span>
+<span class="lineNum">     276 </span>            :   }
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssRates) {</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; (radtodeg*Propagate-&gt;GetPQR()).Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; (radtodeg*Accelerations-&gt;GetPQRdot()).Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; (radtodeg*Propagate-&gt;GetPQRi()).Dump(delimeter);</span>
+<span class="lineNum">     282 </span>            :   }
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssVelocities) {</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Auxiliary-&gt;Getqbar() &lt;&lt; delimeter;</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Auxiliary-&gt;GetReynoldsNumber() &lt;&lt; delimeter;</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; setprecision(12) &lt;&lt; Auxiliary-&gt;GetVt() &lt;&lt; delimeter;</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetInertialVelocityMagnitude() &lt;&lt; delimeter;</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; setprecision(12) &lt;&lt; Propagate-&gt;GetUVW().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; setprecision(12) &lt;&lt; Accelerations-&gt;GetUVWdot().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; setprecision(12) &lt;&lt; Accelerations-&gt;GetUVWidot().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; setprecision(12) &lt;&lt; Accelerations-&gt;GetBodyAccel().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Auxiliary-&gt;GetAeroUVW().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetInertialVelocity().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetECEFVelocity().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetVel().Dump(delimeter);</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :     outstream.precision(10);</span>
+<span class="lineNum">     298 </span>            :   }
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssForces) {</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Aerodynamics-&gt;GetvFw().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Aerodynamics-&gt;GetLoD() &lt;&lt; delimeter;</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Aerodynamics-&gt;GetForces().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propulsion-&gt;GetForces().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Accelerations-&gt;GetGroundForces().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; ExternalReactions-&gt;GetForces().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; BuoyantForces-&gt;GetForces().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Accelerations-&gt;GetWeight().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Accelerations-&gt;GetForces().Dump(delimeter);</span>
+<span class="lineNum">     310 </span>            :   }
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssMoments) {</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Aerodynamics-&gt;GetMoments().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Aerodynamics-&gt;GetMomentsMRC().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propulsion-&gt;GetMoments().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Accelerations-&gt;GetGroundMoments().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; ExternalReactions-&gt;GetMoments().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; BuoyantForces-&gt;GetMoments().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Accelerations-&gt;GetMoments().Dump(delimeter);</span>
+<span class="lineNum">     320 </span>            :   }
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssAtmosphere) {</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Atmosphere-&gt;GetDensity() &lt;&lt; delimeter;</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Atmosphere-&gt;GetAbsoluteViscosity() &lt;&lt; delimeter;</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Atmosphere-&gt;GetKinematicViscosity() &lt;&lt; delimeter;</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Atmosphere-&gt;GetTemperature() &lt;&lt; delimeter;</span>
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Atmosphere-&gt;GetPressureSL() &lt;&lt; delimeter;</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Atmosphere-&gt;GetPressure() &lt;&lt; delimeter;</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Winds-&gt;GetTurbMagnitude() &lt;&lt; delimeter;</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Winds-&gt;GetTurbDirection() &lt;&lt; delimeter;</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Winds-&gt;GetTotalWindNED().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; (Winds-&gt;GetTurbPQR()*radtodeg).Dump(delimeter);</span>
+<span class="lineNum">     333 </span>            :   }
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssMassProps) {</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; MassBalance-&gt;GetJ().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; MassBalance-&gt;GetMass() &lt;&lt; delimeter;</span>
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; MassBalance-&gt;GetWeight() &lt;&lt; delimeter;</span>
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; MassBalance-&gt;GetXYZcg().Dump(delimeter);</span>
+<span class="lineNum">     340 </span>            :   }
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssPropagate) {</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :     outstream.precision(14);</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetAltitudeASL() &lt;&lt; delimeter;</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetDistanceAGL() &lt;&lt; delimeter;</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; (radtodeg*Propagate-&gt;GetEuler()).Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetQuaternion().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :     FGQuaternion Qec = Propagate-&gt;GetQuaternionECEF();</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Qec.Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetQuaternionECI().Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Auxiliary-&gt;Getalpha(inDegrees) &lt;&lt; delimeter;</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Auxiliary-&gt;Getbeta(inDegrees) &lt;&lt; delimeter;</span>
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetLatitudeDeg() &lt;&lt; delimeter;</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetGeodLatitudeDeg() &lt;&lt; delimeter;</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetLongitudeDeg() &lt;&lt; delimeter;</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :     outstream.precision(18);</span>
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; ((FGColumnVector3)Propagate-&gt;GetInertialPosition()).Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; ((FGColumnVector3)Propagate-&gt;GetLocation()).Dump(delimeter) &lt;&lt; delimeter;</span>
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :     outstream.precision(14);</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetEarthPositionAngleDeg() &lt;&lt; delimeter;</span>
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetDistanceAGL() &lt;&lt; delimeter;</span>
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propagate-&gt;GetTerrainElevation();</span>
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :     outstream.precision(10);</span>
+<span class="lineNum">     364 </span>            :   }
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssAeroFunctions) {</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :     scratch = Aerodynamics-&gt;GetAeroFunctionValues(delimeter);</span>
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :     if (scratch.length() != 0) outstream &lt;&lt; delimeter &lt;&lt; scratch;</span>
+<span class="lineNum">     368 </span>            :   }
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssFCS) {</span>
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :     scratch = FCS-&gt;GetComponentValues(delimeter);</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :     if (scratch.length() != 0) outstream &lt;&lt; delimeter &lt;&lt; scratch;</span>
+<span class="lineNum">     372 </span>            :   }
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssGroundReactions) {</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; GroundReactions-&gt;GetGroundReactionValues(delimeter);</span>
+<span class="lineNum">     376 </span>            :   }
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :   if (SubSystems &amp; ssPropulsion &amp;&amp; Propulsion-&gt;GetNumEngines() &gt; 0) {</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter;</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; Propulsion-&gt;GetPropulsionValues(delimeter);</span>
+<span class="lineNum">     380 </span>            :   }
+<span class="lineNum">     381 </span>            : 
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :   outstream.precision(18);</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :   for (unsigned int i=0;i&lt;OutputParameters.size();++i) {</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter &lt;&lt; OutputParameters[i]-&gt;GetValue();</span>
+<span class="lineNum">     385 </span>            :   }
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :   for (unsigned int i=0;i&lt;PreFunctions.size();i++) {</span>
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :     outstream &lt;&lt; delimeter &lt;&lt; PreFunctions[i]-&gt;getDoubleValue();</span>
+<span class="lineNum">     388 </span>            :   }
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :   outstream.precision(10);</span>
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :   outstream &lt;&lt; endl;</span>
+<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :   outstream.flush();</span></a>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     394 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

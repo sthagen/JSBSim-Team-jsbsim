@@ -1,0 +1,4 @@
+<map id="SetOutputProperties" name="SetOutputProperties">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutput.html#a73535c48fc7e09497439e8fb05bea07f" title="Load the output directives and adds a new output instance to the Output Manager list. " alt="" coords="359,5,529,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGOutputType.html#adf530cd3a94a418574de8d346527803b" title="Set the activated subsystems for this output instance. " alt="" coords="193,31,311,57"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="GetUnusableVolume" name="GetUnusableVolume">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGTank.html#a3280dd80a29a4ab3343f05a5d2a7afe3" title="Returns the density of a named fuel type. " alt="" coords="196,31,327,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGTank.html#a3f836b4283222c9b9a1e556ab2205f5a" title="Constructor. " alt="" coords="398,5,467,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGTank.html#a214dcdce5277cf592fa2d1deca9c4fdf" title="Gets the temperature of the fuel. " alt="" coords="375,56,491,83"/>
+</map>

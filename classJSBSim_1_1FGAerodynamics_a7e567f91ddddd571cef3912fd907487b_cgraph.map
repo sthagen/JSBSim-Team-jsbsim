@@ -1,0 +1,14 @@
+<map id="GetAeroFunctionValues" name="GetAeroFunctionValues">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGModelFunctions.html#a7137c8955bc052d365da3ce2955fb7c8" title="Gets the function values. " alt="" coords="230,5,418,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="213,71,435,98"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGAerodynamics.html#aa6b3caafb0b7ac3778d88c68ca11cd3a" title="Gets the total aerodynamic force vector. " alt="" coords="283,122,365,149"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGAerodynamics.html#a678e24d562b7c55f5ac2d55461af3c54" title="Gets the total aerodynamic moment vector about the CG. " alt="" coords="275,173,373,199"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGAerodynamics.html#a41f940ff8070c8b8b8e7b0e32bb58625" title="Retrieves the aerodynamic forces in the wind axes. " alt="" coords="290,223,358,250"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGAerodynamics.html#a115cf33a1fa8266e70ec8b370c50f3c5" title="Retrieves the aerodynamic forces in the stability axes. " alt="" coords="239,274,409,301"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGAerodynamics.html#a3e48b0331cf373d848b322e4994c5836" title="Gets the total aerodynamic moment vector about the CG in the stability axes. " alt="" coords="231,325,417,351"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGAerodynamics.html#a398603f5b9e3e9f2c4f60c8f1462845d" title="Gets the total aerodynamic moment vector about the CG in the wind axes. " alt="" coords="240,375,408,402"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGAerodynamics.html#a47350c55d9a4409ee789b7bf1d1a5bac" title="Retrieves the lift over drag ratio. " alt="" coords="291,426,357,453"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGAerodynamics.html#ad7885d4d4cf81b16a56e7f249d8692aa" title="Retrieves the square of the lift coefficient. " alt="" coords="272,477,376,503"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGMatrix33.html#a039718b92a595f3eafaafb2091cfa52a" title="Transposed matrix. " alt="" coords="251,528,397,569"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGAerodynamics.html#a0354e29bf7dea97bcb25f875e235a85d" title="Gets the strings for the current set of aero functions. " alt="" coords="483,477,644,503"/>
+</map>

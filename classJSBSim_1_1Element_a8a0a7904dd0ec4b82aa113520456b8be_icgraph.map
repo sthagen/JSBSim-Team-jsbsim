@@ -1,0 +1,6 @@
+<map id="AddAttribute" name="AddAttribute">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#a0b8d108c40ce8b06c3c849824ab18397" title="Loads the Flight Control System. " alt="" coords="547,5,705,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1Element.html#acd9d28a3d57f39a1274f5ca67c49ed08" title="Adds a child element to the list of children stored for this element. " alt="" coords="148,31,271,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFCS.html#a15cf9085b00149fd82aea3bcb4bc7589" title="Gets the center brake. " alt="" coords="753,5,949,32"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGModel.html#a42ce334dbfdce7ccb2a75f9d32d02065" title="Uploads this model in memory. " alt="" coords="319,31,499,57"/>
+</map>

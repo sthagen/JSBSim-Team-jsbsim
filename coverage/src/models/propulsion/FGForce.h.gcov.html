@@ -1,0 +1,400 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/propulsion/FGForce.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/propulsion</a> - FGForce.h<span style="font-size: 80%;"> (source / <a href="FGForce.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGForce.h
+<span class="lineNum">       4 </span>            :  Author:       Tony Peden
+<span class="lineNum">       5 </span>            :  Date started: 5/20/00
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Anthony K. Peden (apeden@earthlink.net) -----
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            :  HISTORY
+<span class="lineNum">      28 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : 5/20/00  TP   Created
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      33 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : The purpose of this class is to provide storage for computed forces and
+<span class="lineNum">      36 </span>            : encapsulate all the functionality associated with transforming those
+<span class="lineNum">      37 </span>            : forces from their native coord system to the body system.  This includes
+<span class="lineNum">      38 </span>            : computing the moments due to the difference between the point of application
+<span class="lineNum">      39 </span>            : and the cg.
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : CAVEAT:  if the custom transform is used for wind-to-body transforms then the
+<span class="lineNum">      42 </span>            :          user *must* always pass this class the negative of beta. This is true
+<span class="lineNum">      43 </span>            :          because sideslip angle does not follow the right hand rule i.e. it is
+<span class="lineNum">      44 </span>            :          positive for aircraft nose left sideslip.  Note that use of the custom
+<span class="lineNum">      45 </span>            :          transform for this purpose shouldn't be necessary as it is already
+<span class="lineNum">      46 </span>            :          provided by SetTransform(tWindBody) and is not subject to the same
+<span class="lineNum">      47 </span>            :          restriction.
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      50 </span>            : SENTRY
+<span class="lineNum">      51 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : #ifndef FGFORCE_H
+<span class="lineNum">      54 </span>            : #define FGFORCE_H
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      57 </span>            : INCLUDES
+<span class="lineNum">      58 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      61 </span>            : #include &quot;math/FGMatrix33.h&quot;
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      64 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      65 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            : namespace JSBSim {
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            : class FGFDMExec;
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      72 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      73 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            : /** Utility class that aids in the conversion of forces between coordinate
+<span class="lineNum">      76 </span>            :     systems and calculation of moments.
+<span class="lineNum">      77 </span>            : &lt;br&gt;&lt;h3&gt;Resolution of Applied Forces into Moments and Body Axes Components&lt;/h3&gt;
+<span class="lineNum">      78 </span>            : &lt;br&gt;&lt;p&gt;
+<span class="lineNum">      79 </span>            : All forces acting on the aircraft that cannot be considered a change in weight
+<span class="lineNum">      80 </span>            : need to be resolved into body axis components so that the aircraft acceleration
+<span class="lineNum">      81 </span>            : vectors, both translational and rotational, can be computed. Furthermore, the
+<span class="lineNum">      82 </span>            : moments produced by each force that does not act at a location corresponding to
+<span class="lineNum">      83 </span>            : the center of gravity also need to be computed. Unfortunately, the math required
+<span class="lineNum">      84 </span>            : to do this can be a bit messy and errors are easily introduced so the class
+<span class="lineNum">      85 </span>            : FGForce was created to provide these services in a consistent and reusable
+<span class="lineNum">      86 </span>            : manner.&lt;br&gt;&lt;br&gt;&lt;/p&gt;
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            : &lt;h4&gt;Basic usage&lt;/h4&gt;
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            : &lt;p&gt;FGForce requires that its users supply it with the location of the applied
+<span class="lineNum">      91 </span>            : force vector in JSBSim structural coordinates, the sense of each axis in that
+<span class="lineNum">      92 </span>            : coordinate system relative to the body system, the orientation of the vector
+<span class="lineNum">      93 </span>            : also relative to body coordinates and, of course, the force vector itself. With
+<span class="lineNum">      94 </span>            : this information it will compute both the body axis force components and the
+<span class="lineNum">      95 </span>            : resulting moments. Any moments inherently produced by the native system can be
+<span class="lineNum">      96 </span>            : supplied as well and they will be summed with those computed.&lt;/p&gt;
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            : &lt;p&gt;A good example for demonstrating the use of this class are the aerodynamic
+<span class="lineNum">      99 </span>            : forces: lift, drag, and side force and the aerodynamic moments about the pitch,
+<span class="lineNum">     100 </span>            : roll and yaw axes. These &quot;native&quot; forces and moments are computed and stored
+<span class="lineNum">     101 </span>            : in the FGColumnVector objects vFs and vMoments. Their native coordinate system
+<span class="lineNum">     102 </span>            : is often referred to as the wind system and is defined as a right-handed system
+<span class="lineNum">     103 </span>            : having its x-axis aligned with the relative velocity vector and pointing towards
+<span class="lineNum">     104 </span>            : the rear of the aircraft , the y-axis extending out the right wing, and the
+<span class="lineNum">     105 </span>            : z-axis directed upwards. This is different than body axes; they are defined such
+<span class="lineNum">     106 </span>            : that the x-axis is lies on the aircraft's roll axis and positive forward, the
+<span class="lineNum">     107 </span>            : y-axis is positive out the right wing, and the z-axis is positive downwards. In
+<span class="lineNum">     108 </span>            : this instance, JSBSim already provides the needed transform and FGForce can make
+<span class="lineNum">     109 </span>            : use of it by calling SetTransformType() once an object is created:&lt;/p&gt;
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            : &lt;p&gt;&lt;tt&gt;FGForce fgf(FDMExec);&lt;/tt&gt;&lt;br&gt;
+<span class="lineNum">     112 </span>            : &lt;tt&gt;fgf.SetTransformType(tWindBody);&lt;/tt&gt;&lt;br&gt;&lt;br&gt;
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            : This call need only be made once for each object. The available transforms are
+<span class="lineNum">     115 </span>            : defined in the enumerated type TransformType and are tWindBody, tLocalBody,
+<span class="lineNum">     116 </span>            : tCustom, and tNone. The local-to-body transform, like the wind-to-body, also
+<span class="lineNum">     117 </span>            : makes use of that already available in JSBSim. tNone sets FGForce to do no
+<span class="lineNum">     118 </span>            : angular transform at all, and tCustom allows for modeling force vectors at
+<span class="lineNum">     119 </span>            : arbitrary angles relative to the body system such as that produced by propulsion
+<span class="lineNum">     120 </span>            : systems. Setting up and using a custom transform is covered in more detail
+<span class="lineNum">     121 </span>            : below.
+<span class="lineNum">     122 </span>            : Continuing with the example, the point of application of the aerodynamic forces,
+<span class="lineNum">     123 </span>            : the aerodynamic reference point in JSBSim, also needs to be set:&lt;/p&gt;
+<span class="lineNum">     124 </span>            : &lt;p&gt;&lt;tt&gt;
+<span class="lineNum">     125 </span>            : fgf.SetLocation(x, y, z)&lt;/tt&gt;&lt;/p&gt;
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            : &lt;p&gt;where x, y, and z are in JSBSim structural coordinates.&lt;/p&gt;
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span>            : &lt;p&gt;Initialization is complete and the FGForce object is ready to do its job. As
+<span class="lineNum">     130 </span>            : stated above, the lift, drag, and side force are computed and stored in the
+<span class="lineNum">     131 </span>            : vector vFs and need to be passed to FGForce:&lt;/p&gt;
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            : &lt;p&gt;&lt;tt&gt;fgf.SetNativeForces(vFs);&lt;/tt&gt; &lt;/p&gt;
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            : &lt;p&gt;The same applies to the aerodynamic pitching, rolling and yawing moments:&lt;/p&gt;
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            : &lt;p&gt;&lt;tt&gt;fgf.SetNativeMoments(vMoments);&lt;/tt&gt;&lt;/p&gt;
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            : &lt;p&gt;Note that storing the native forces and moments outside of this class is not
+<span class="lineNum">     140 </span>            : strictly necessary, overloaded SetNativeForces() and SetNativeMoments() methods
+<span class="lineNum">     141 </span>            : which each accept three doubles (rather than a vector) are provided and can be
+<span class="lineNum">     142 </span>            : repeatedly called without incurring undue overhead. The body axes force vector
+<span class="lineNum">     143 </span>            : can now be retrieved by calling:&lt;/p&gt;
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            : &lt;p&gt;&lt;tt&gt;vFb=fgf.GetBodyForces();&lt;/tt&gt;&lt;/p&gt;
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            : &lt;p&gt;This method is where the bulk of the work gets done so calling it more than
+<span class="lineNum">     148 </span>            : once for the same set of native forces and moments should probably be avoided.
+<span class="lineNum">     149 </span>            : Note that the moment calculations are done here as well so they should be
+<span class="lineNum">     150 </span>            : retrieved after calling the GetBodyForces() method:&lt;/p&gt;
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            : &lt;p&gt;&lt;tt&gt;vM=fgf.GetMoments();&lt;/tt&gt; &lt;/p&gt;
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            : &lt;p&gt;As an aside, the native moments are not needed to perform the computations
+<span class="lineNum">     155 </span>            : correctly so, if the FGForce object is not being used to store them then an
+<span class="lineNum">     156 </span>            : alternate approach is to avoid the SetNativeMoments call and perform the sum&lt;/p&gt;
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span>            : &lt;p&gt;&lt;tt&gt;vMoments+=fgf.GetMoments();&lt;/tt&gt; &lt;br&gt;&lt;br&gt;
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            : after the forces have been retrieved. &lt;/p&gt;
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span>            : &lt;h4&gt;Use of the Custom Transform Type&lt;/h4&gt;
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            : &lt;p&gt;In cases where the native force vector is not aligned with the body, wind, or
+<span class="lineNum">     165 </span>            : local coordinate systems a custom transform type is provided. A vectorable
+<span class="lineNum">     166 </span>            : engine nozzle will be used to demonstrate its usage. Initialization is much the
+<span class="lineNum">     167 </span>            : same:&lt;/p&gt;
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            : &lt;p&gt;&lt;tt&gt;FGForce fgf(FDMExec);&lt;/tt&gt; &lt;br&gt;
+<span class="lineNum">     170 </span>            : &lt;tt&gt;fgf.SetTransformType(tCustom);&lt;/tt&gt; &lt;br&gt;
+<span class="lineNum">     171 </span>            : &lt;tt&gt;fgf.SetLocation(x,y,z);&lt;/tt&gt; &lt;/p&gt;
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            : &lt;p&gt;Except that here the tCustom transform type is specified and the location of
+<span class="lineNum">     174 </span>            : the thrust vector is used rather than the aerodynamic reference point. Thrust is
+<span class="lineNum">     175 </span>            : typically considered to be positive when directed aft while the body x-axis is
+<span class="lineNum">     176 </span>            : positive forward and, if the native system is right handed, the z-axis will be
+<span class="lineNum">     177 </span>            : reversed as well. These differences in sense need to be specified using by the
+<span class="lineNum">     178 </span>            : call: &lt;/p&gt;
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            : &lt;p&gt;&lt;tt&gt;fgf.SetSense(-1,1,-1);&lt;/tt&gt;&lt;/p&gt;
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            : &lt;p&gt;The angles are specified by calling the method: &lt;/p&gt;
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            : &lt;p&gt;&lt;tt&gt;fgf.SetAnglesToBody(pitch, roll, yaw);&lt;/tt&gt; &lt;/p&gt;
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span>            : &lt;p&gt;in which the transform matrix is computed. Note that these angles should be
+<span class="lineNum">     187 </span>            : taken relative to the body system and not the local as the names might suggest.
+<span class="lineNum">     188 </span>            : For an aircraft with vectorable thrust, this method will need to be called
+<span class="lineNum">     189 </span>            : every time the nozzle angle changes, a fixed engine/nozzle installation, on the
+<span class="lineNum">     190 </span>            : other hand, will require it to be be called only once.&lt;/p&gt;
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            : &lt;p&gt;Retrieval of the computed forces and moments is done as detailed above.&lt;/p&gt;
+<span class="lineNum">     193 </span>            : &lt;br&gt;
+<span class="lineNum">     194 </span>            : &lt;pre&gt;
+<span class="lineNum">     195 </span>            :     &lt;p&gt;&lt;i&gt;CAVEAT: If the custom system is used to compute
+<span class="lineNum">     196 </span>            :     the wind-to-body transform, then the sign of the sideslip
+<span class="lineNum">     197 </span>            :     angle must be reversed when calling SetAnglesToBody().
+<span class="lineNum">     198 </span>            :     This is true because sideslip angle does not follow the right
+<span class="lineNum">     199 </span>            :     hand rule. Using the custom transform type this way
+<span class="lineNum">     200 </span>            :     should not be necessary, as it is already provided as a built
+<span class="lineNum">     201 </span>            :     in type (and the sign differences are correctly accounted for).&lt;/i&gt;
+<span class="lineNum">     202 </span>            :     &lt;/p&gt;
+<span class="lineNum">     203 </span>            : &lt;/pre&gt;
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span>            : &lt;h4&gt;Use as a Base Type&lt;/h4&gt;
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            : &lt;p&gt;For use as a base type, the native force and moment vector data members are
+<span class="lineNum">     208 </span>            : defined as protected. In this case the SetNativeForces() and SetNativeMoments()
+<span class="lineNum">     209 </span>            : methods need not be used and, instead, the assignments to vFn, the force vector,
+<span class="lineNum">     210 </span>            : and vMn, the moments, can be made directly. Otherwise, the usage is similar.&lt;br&gt;
+<span class="lineNum">     211 </span>            : &lt;br&gt;&lt;br&gt;&lt;/p&gt;
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span>            :     @author Tony Peden
+<span class="lineNum">     214 </span>            : */
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     217 </span>            : CLASS DECLARATION
+<span class="lineNum">     218 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     219 </span>            : 
+<span class="lineNum">     220 </span>            : class FGForce : public FGJSBBase
+<span class="lineNum">     221 </span>            : {
+<span class="lineNum">     222 </span>            : public:
+<span class="lineNum">     223 </span>            :   /// Constructor
+<span class="lineNum">     224 </span>            :   explicit FGForce(FGFDMExec *FDMExec);
+<span class="lineNum">     225 </span>            :   FGForce(const FGForce&amp; force);
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :   /// Destructor
+<span class="lineNum">     228 </span>            :   virtual ~FGForce();
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            :   enum TransformType { tNone, tWindBody, tLocalBody, tCustom };
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :   virtual const FGColumnVector3&amp; GetBodyForces(void);
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            :   inline double GetBodyXForce(void) const { return vFb(eX); }
+<a name="235"><span class="lineNum">     235 </span>            :   inline double GetBodyYForce(void) const { return vFb(eY); }</a>
+<span class="lineNum">     236 </span>            :   inline double GetBodyZForce(void) const { return vFb(eZ); }
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :   inline const FGColumnVector3&amp; GetMoments(void) const { return vM; }</span>
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            :   // Normal point of application, JSBsim structural coords
+<span class="lineNum">     240 </span>            :   // (inches, x +back, y +right, z +up)
+<span class="lineNum">     241 </span>            :   inline void SetLocation(double x, double y, double z) {
+<span class="lineNum">     242 </span>            :     vXYZn(eX) = x;
+<span class="lineNum">     243 </span>            :     vXYZn(eY) = y;
+<span class="lineNum">     244 </span>            :     vXYZn(eZ) = z;
+<span class="lineNum">     245 </span>            :     SetActingLocation(x, y, z);
+<span class="lineNum">     246 </span>            :   }
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :   /** Acting point of application.
+<span class="lineNum">     249 </span>            :       JSBsim structural coords used (inches, x +back, y +right, z +up).
+<span class="lineNum">     250 </span>            :       This function sets the point at which the force acts - this may
+<span class="lineNum">     251 </span>            :       not be the same as where the object resides. One area where this
+<span class="lineNum">     252 </span>            :       is true is P-Factor modeling.
+<span class="lineNum">     253 </span>            :       @param x acting location of force
+<span class="lineNum">     254 </span>            :       @param y acting location of force
+<span class="lineNum">     255 </span>            :       @param z acting location of force    */
+<span class="lineNum">     256 </span>            :   inline void SetActingLocation(double x, double y, double z) {
+<span class="lineNum">     257 </span>            :     vActingXYZn(eX) = x;
+<span class="lineNum">     258 </span>            :     vActingXYZn(eY) = y;
+<a name="259"><span class="lineNum">     259 </span>            :     vActingXYZn(eZ) = z;</a>
+<a name="260"><span class="lineNum">     260 </span>            :   }</a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :   inline void SetLocationX(double x) {vXYZn(eX) = x; vActingXYZn(eX) = x;}</span></a>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :   inline void SetLocationY(double y) {vXYZn(eY) = y; vActingXYZn(eY) = y;}</span>
+<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :   inline void SetLocationZ(double z) {vXYZn(eZ) = z; vActingXYZn(eZ) = z;}</span></a>
+<a name="264"><span class="lineNum">     264 </span>            :   inline double SetActingLocationX(double x) {vActingXYZn(eX) = x; return x;}</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :   inline double SetActingLocationY(double y) {vActingXYZn(eY) = y; return y;}</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :   inline double SetActingLocationZ(double z) {vActingXYZn(eZ) = z; return z;}</span></a>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :   inline void SetLocation(const FGColumnVector3&amp; vv) { vXYZn = vv; SetActingLocation(vv);}</span>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :   inline void SetActingLocation(const FGColumnVector3&amp; vv) { vActingXYZn = vv; }</span></a>
+<a name="269"><span class="lineNum">     269 </span>            : </a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :   inline double GetLocationX( void ) const { return vXYZn(eX);}</span></a>
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :   inline double GetLocationY( void ) const { return vXYZn(eY);}</span>
+<a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :   inline double GetLocationZ( void ) const { return vXYZn(eZ);}</span></a>
+<a name="273"><span class="lineNum">     273 </span>            :   inline double GetActingLocationX( void ) const { return vActingXYZn(eX);}</a>
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :   inline double GetActingLocationY( void ) const { return vActingXYZn(eY);}</span>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :   inline double GetActingLocationZ( void ) const { return vActingXYZn(eZ);}</span></a>
+<span class="lineNum">     276 </span>            :   const FGColumnVector3&amp; GetLocation(void) const { return vXYZn; }
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :   const FGColumnVector3&amp; GetActingLocation(void) const { return vActingXYZn; }</span>
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            :   //these angles are relative to body axes, not earth!!!!!
+<span class="lineNum">     280 </span>            :   //I'm using these because pitch, roll, and yaw are easy to visualize,
+<span class="lineNum">     281 </span>            :   //there's no equivalent to roll in wind axes i.e. alpha, ? , beta
+<span class="lineNum">     282 </span>            :   //making up new names or using these is a toss-up: either way people
+<span class="lineNum">     283 </span>            :   //are going to get confused.
+<span class="lineNum">     284 </span>            :   //They are in radians.
+<a name="285"><span class="lineNum">     285 </span>            : </a>
+<span class="lineNum">     286 </span>            :   void SetAnglesToBody(double broll, double bpitch, double byaw);
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :   inline void  SetAnglesToBody(const FGColumnVector3&amp; vv) {</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :     SetAnglesToBody(vv(eRoll), vv(ePitch), vv(eYaw));</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :   }</span>
+<a name="290"><span class="lineNum">     290 </span>            : </a>
+<a name="291"><span class="lineNum">     291 </span>            :   void UpdateCustomTransformMatrix(void);</a>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :   void SetPitch(double pitch) {vOrient(ePitch) = pitch; UpdateCustomTransformMatrix();}</span>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :   void SetYaw(double yaw) {vOrient(eYaw) = yaw; UpdateCustomTransformMatrix();}</span></a>
+<a name="294"><span class="lineNum">     294 </span>            : </a>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :   double GetPitch(void) const {return vOrient(ePitch);}</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :   double GetYaw(void) const {return vOrient(eYaw);}</span>
+<a name="297"><span class="lineNum">     297 </span>            : </a>
+<span class="lineNum">     298 </span>            :   inline const FGColumnVector3&amp; GetAnglesToBody(void) const {return vOrient;}
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :   inline double GetAnglesToBody(int axis) const {return vOrient(axis);}</span></a>
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :   inline void SetTransformType(TransformType ii) { ttype=ii; }</span>
+<span class="lineNum">     302 </span>            :   inline TransformType GetTransformType(void) const { return ttype; }
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            :   const FGMatrix33&amp; Transform(void) const;
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span>            : protected:
+<span class="lineNum">     307 </span>            :   FGFDMExec *fdmex;
+<span class="lineNum">     308 </span>            :   FGColumnVector3 vFn;
+<span class="lineNum">     309 </span>            :   FGColumnVector3 vMn;
+<span class="lineNum">     310 </span>            :   FGColumnVector3 vOrient;
+<span class="lineNum">     311 </span>            :   TransformType ttype;
+<span class="lineNum">     312 </span>            :   FGColumnVector3 vXYZn;
+<span class="lineNum">     313 </span>            :   FGColumnVector3 vActingXYZn;
+<span class="lineNum">     314 </span>            :   FGMatrix33 mT;
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span>            : private:
+<span class="lineNum">     317 </span>            :   FGColumnVector3 vFb;
+<span class="lineNum">     318 </span>            :   FGColumnVector3 vM;
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            :   void Debug(int from);
+<span class="lineNum">     321 </span>            : };
+<span class="lineNum">     322 </span>            : }
+<span class="lineNum">     323 </span>            : #endif
+<span class="lineNum">     324 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+<map id="ResetSLTemperature" name="ResetSLTemperature">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGStandardAtmosphere.html#a35789c83cd390c95759e43ac7814e228" title="Returns the temperature gradient to be applied on top of the standard temperature gradient..." alt="" coords="200,5,396,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGStandardAtmosphere.html#ae2ea4c880e365482c78e2b0579fd2922" title="Sets the vapor mass per million of dry air mass units. " alt="" coords="444,5,628,32"/>
+</map>

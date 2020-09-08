@@ -1,0 +1,6 @@
+<map id="GetVgroundKtsIC" name="GetVgroundKtsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="179,31,229,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a4824f36ca8f38ef52be1bcaa785c404f" title="Gets the target normal load factor set from IC. " alt="" coords="339,5,449,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInput.html#a8204557b6f2865b7e6e29b3a3a9d524d" title="Adds a new input instance to the Input Manager. " alt="" coords="277,56,511,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="294,107,494,133"/>
+</map>

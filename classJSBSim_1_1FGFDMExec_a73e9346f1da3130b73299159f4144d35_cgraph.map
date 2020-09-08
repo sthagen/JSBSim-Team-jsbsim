@@ -1,0 +1,18 @@
+<map id="QueryPropertyCatalog" name="QueryPropertyCatalog">
+<area shape="rect" id="node2" href="$classJSBSim_1_1Element.html#a0290668d182e1035b626b551f2b552e7" title="Searches for a specified element. " alt="" coords="204,164,411,191"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1Element.html#a66c9f019215d9c6b3f85cdab75d6d429" title="Gets a line of data belonging to an element. " alt="" coords="204,215,411,242"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1Element.html#a4fd4cb4d88046523b2cf729bf847e0e2" title="Retrieves an attribute. " alt="" coords="728,562,932,604"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html#af3ced4128ce6d9badd7b8a13865c2ad9" title="Default constructor. " alt="" coords="258,266,357,292"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1Element.html#a326333a8188c02e36352de3f609c3a03" title="Composes a 3&#45;element column vector for the supplied location or orientation. " alt="" coords="204,486,411,528"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="459,215,680,242"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGFDMExec.html#a8ae88a0b73749057a42c729d2330f5ee" title="Executes trimming in the selected mode. " alt="" coords="537,266,602,292"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGFDMExec.html#acdaa615364934636260de75dd19c6ca5" title="Resets the initial conditions object and prepares the simulation to run again. " alt="" coords="487,316,652,343"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGFDMExec.html#ad6801fd794ccf6b675ad3d31d6b652a9" title="Returns the cumulative simulation time in seconds. " alt="" coords="522,367,617,394"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGFDMExec.html#a738179a34b72fa5a9a72ddafc2e4adae" title="Returns the simulation delta T. " alt="" coords="528,418,611,444"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGFDMExec.html#a4c2b8b3245d1cd596ffb4f9a972f4243" title="Retrieves the current debug level setting. " alt="" coords="513,63,625,90"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGFDMExec.html#ae7bc2590ddc9fba3244495b8967fb30c" title="Sets the property forces/hold&#45;down. " alt="" coords="779,38,881,64"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGFDMExec.html#a34843268c054cbafe3593f44d0a5addb" title="Sets the debug level. " alt="" coords="514,114,625,140"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGFDMExec.html#a0facbb1395cdc5668dd1420da35e71e2" title="Gets the value of the property forces/hold&#45;down. " alt="" coords="517,164,621,191"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1Element.html#ac5c2e3334b384afca061f0bf965dc864" title="Determines if an element has the supplied attribute. " alt="" coords="466,519,673,546"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1Element.html#a30a269bd930d31646341ba15787281e3" title="Retrieves an attribute value as a double precision real number. " alt="" coords="728,478,932,520"/>
+</map>

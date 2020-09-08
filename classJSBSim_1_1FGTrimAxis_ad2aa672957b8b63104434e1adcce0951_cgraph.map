@@ -1,0 +1,9 @@
+<map id="FGTrimAxis" name="FGTrimAxis">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a84eb5205c00cea25382e8961e77a4784" title="Gets the initial altitude above ground level. " alt="" coords="145,37,328,79"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInitialCondition.html#acd24191b1a1075553a497c6b57014883" title="Gets the initial pitch angle. " alt="" coords="145,103,328,144"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a166ec4260ec1051bf83b148a667af572" title="Gets the initial roll angle. " alt="" coords="145,168,328,209"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#ac5907b6c99a44689f3220cee1cdf8e33" title="Gets the initial heading angle. " alt="" coords="145,233,328,275"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#a93876fb8e8a2302e3880f9ebfb3ce6d5" title="Returns the FGInertial pointer. " alt="" coords="376,5,539,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInertial.html#a73c8611f4ce740c255fe6ccc2d7891c9" title="Get the altitude above ground level. " alt="" coords="390,71,525,112"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGQuaternion.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles. " alt="" coords="378,168,537,209"/>
+</map>

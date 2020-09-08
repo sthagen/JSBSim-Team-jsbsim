@@ -1,0 +1,4 @@
+<map id="GetMass" name="GetMass">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGGasCell.html#ab4f2abee6ace8ea44fa06a50f78b7540" title="Runs the gas cell model; called by BuoyantForces. " alt="" coords="161,5,238,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGBallonet.html#ab4f2abee6ace8ea44fa06a50f78b7540" title="Runs the ballonet model; called by FGGasCell. " alt="" coords="128,57,271,98"/>
+</map>

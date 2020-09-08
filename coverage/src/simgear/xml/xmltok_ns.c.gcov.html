@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/simgear/xml/xmltok_ns.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/simgear/xml</a> - xmltok_ns.c<span style="font-size: 80%;"> (source / <a href="xmltok_ns.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">35</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : const ENCODING *</a>
+<span class="lineNum">       2 </span><span class="lineNoCov">          0 : NS(XmlGetUtf8InternalEncoding)(void)</span>
+<span class="lineNum">       3 </span>            : {
+<span class="lineNum">       4 </span><span class="lineNoCov">          0 :   return &amp;ns(internal_utf8_encoding).enc;</span>
+<span class="lineNum">       5 </span>            : }
+<a name="6"><span class="lineNum">       6 </span>            : </a>
+<span class="lineNum">       7 </span>            : const ENCODING *
+<span class="lineNum">       8 </span><span class="lineNoCov">          0 : NS(XmlGetUtf16InternalEncoding)(void)</span>
+<span class="lineNum">       9 </span>            : {
+<span class="lineNum">      10 </span>            : #if BYTEORDER == 1234
+<span class="lineNum">      11 </span>            :   return &amp;ns(internal_little2_encoding).enc;
+<span class="lineNum">      12 </span>            : #elif BYTEORDER == 4321
+<span class="lineNum">      13 </span>            :   return &amp;ns(internal_big2_encoding).enc;
+<span class="lineNum">      14 </span>            : #else
+<span class="lineNum">      15 </span><span class="lineNoCov">          0 :   const short n = 1;</span>
+<span class="lineNum">      16 </span><span class="lineNoCov">          0 :   return (*(const char *)&amp;n</span>
+<span class="lineNum">      17 </span>            :           ? &amp;ns(internal_little2_encoding).enc
+<span class="lineNum">      18 </span><span class="lineNoCov">          0 :           : &amp;ns(internal_big2_encoding).enc);</span>
+<span class="lineNum">      19 </span>            : #endif
+<span class="lineNum">      20 </span>            : }
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            : static const ENCODING *NS(encodings)[] = {
+<span class="lineNum">      23 </span>            :   &amp;ns(latin1_encoding).enc,
+<span class="lineNum">      24 </span>            :   &amp;ns(ascii_encoding).enc,
+<span class="lineNum">      25 </span>            :   &amp;ns(utf8_encoding).enc,
+<span class="lineNum">      26 </span>            :   &amp;ns(big2_encoding).enc,
+<span class="lineNum">      27 </span>            :   &amp;ns(big2_encoding).enc,
+<span class="lineNum">      28 </span>            :   &amp;ns(little2_encoding).enc,
+<span class="lineNum">      29 </span>            :   &amp;ns(utf8_encoding).enc /* NO_ENC */
+<span class="lineNum">      30 </span>            : };
+<a name="31"><span class="lineNum">      31 </span>            : </a>
+<span class="lineNum">      32 </span>            : static int PTRCALL
+<span class="lineNum">      33 </span><span class="lineNoCov">          0 : NS(initScanProlog)(const ENCODING *enc, const char *ptr, const char *end,</span>
+<span class="lineNum">      34 </span>            :                    const char **nextTokPtr)
+<span class="lineNum">      35 </span>            : {
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 :   return initScan(NS(encodings), (const INIT_ENCODING *)enc,</span>
+<span class="lineNum">      37 </span>            :                   XML_PROLOG_STATE, ptr, end, nextTokPtr);
+<span class="lineNum">      38 </span>            : }
+<a name="39"><span class="lineNum">      39 </span>            : </a>
+<span class="lineNum">      40 </span>            : static int PTRCALL
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 : NS(initScanContent)(const ENCODING *enc, const char *ptr, const char *end,</span>
+<span class="lineNum">      42 </span>            :                     const char **nextTokPtr)
+<span class="lineNum">      43 </span>            : {
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :   return initScan(NS(encodings), (const INIT_ENCODING *)enc,</span>
+<span class="lineNum">      45 </span>            :                   XML_CONTENT_STATE, ptr, end, nextTokPtr);
+<span class="lineNum">      46 </span>            : }
+<a name="47"><span class="lineNum">      47 </span>            : </a>
+<span class="lineNum">      48 </span>            : int
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 : NS(XmlInitEncoding)(INIT_ENCODING *p, const ENCODING **encPtr,</span>
+<span class="lineNum">      50 </span>            :                     const char *name)
+<span class="lineNum">      51 </span>            : {
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :   int i = getEncodingIndex(name);</span>
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :   if (i == UNKNOWN_ENC)</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :   SET_INIT_ENC_INDEX(p, i);</span>
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 :   p-&gt;initEnc.scanners[XML_PROLOG_STATE] = NS(initScanProlog);</span>
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :   p-&gt;initEnc.scanners[XML_CONTENT_STATE] = NS(initScanContent);</span>
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :   p-&gt;initEnc.updatePosition = initUpdatePosition;</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :   p-&gt;encPtr = encPtr;</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :   *encPtr = &amp;(p-&gt;initEnc);</span>
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :   return 1;</span>
+<span class="lineNum">      62 </span>            : }
+<a name="63"><span class="lineNum">      63 </span>            : </a>
+<span class="lineNum">      64 </span>            : static const ENCODING *
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 : NS(findEncoding)(const ENCODING *enc, const char *ptr, const char *end)</span>
+<span class="lineNum">      66 </span>            : {
+<span class="lineNum">      67 </span>            : #define ENCODING_MAX 128
+<span class="lineNum">      68 </span>            :   char buf[ENCODING_MAX];
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   char *p = buf;</span>
+<span class="lineNum">      70 </span>            :   int i;
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :   XmlUtf8Convert(enc, &amp;ptr, end, &amp;p, p + ENCODING_MAX - 1);</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :   if (ptr != end)</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :   *p = 0;</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :   if (streqci(buf, KW_UTF_16) &amp;&amp; enc-&gt;minBytesPerChar == 2)</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :     return enc;</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   i = getEncodingIndex(buf);</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :   if (i == UNKNOWN_ENC)</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :   return NS(encodings)[i];</span>
+<span class="lineNum">      81 </span>            : }
+<a name="82"><span class="lineNum">      82 </span>            : </a>
+<span class="lineNum">      83 </span>            : int
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 : NS(XmlParseXmlDecl)(int isGeneralTextEntity,</span>
+<span class="lineNum">      85 </span>            :                     const ENCODING *enc,
+<span class="lineNum">      86 </span>            :                     const char *ptr,
+<span class="lineNum">      87 </span>            :                     const char *end,
+<span class="lineNum">      88 </span>            :                     const char **badPtr,
+<span class="lineNum">      89 </span>            :                     const char **versionPtr,
+<span class="lineNum">      90 </span>            :                     const char **versionEndPtr,
+<span class="lineNum">      91 </span>            :                     const char **encodingName,
+<span class="lineNum">      92 </span>            :                     const ENCODING **encoding,
+<span class="lineNum">      93 </span>            :                     int *standalone)
+<span class="lineNum">      94 </span>            : {
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :   return doParseXmlDecl(NS(findEncoding),</span>
+<span class="lineNum">      96 </span>            :                         isGeneralTextEntity,
+<span class="lineNum">      97 </span>            :                         enc,
+<span class="lineNum">      98 </span>            :                         ptr,
+<span class="lineNum">      99 </span>            :                         end,
+<span class="lineNum">     100 </span>            :                         badPtr,
+<span class="lineNum">     101 </span>            :                         versionPtr,
+<span class="lineNum">     102 </span>            :                         versionEndPtr,
+<span class="lineNum">     103 </span>            :                         encodingName,
+<span class="lineNum">     104 </span>            :                         encoding,
+<span class="lineNum">     105 </span>            :                         standalone);
+<span class="lineNum">     106 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

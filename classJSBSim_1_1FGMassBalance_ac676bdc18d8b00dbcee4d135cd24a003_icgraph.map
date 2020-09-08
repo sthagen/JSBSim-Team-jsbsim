@@ -1,0 +1,13 @@
+<map id="StructuralToBody" name="StructuralToBody">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFDMExec.html#aa83769769c700eba0b0b82a5c62dbc71" title="This function executes each scheduled model in succession. " alt="" coords="181,89,367,115"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGForce.html#a06ef165f39feac98d53ce45276118618" title="Destructor. " alt="" coords="176,189,372,215"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGMassBalance.html#ae268173584e6f3caca80f1c3e601d98f" title="Computes the inertia contribution of a pointmass. " alt="" coords="203,239,345,266"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGRotor.html#a630c02bbc20b13cbbd9f10ebe27871be" title="Destructor for FGRotor. " alt="" coords="177,290,371,317"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#afaf93cada78d011829d409d0b250120b" title="Initializes the sim from the initial condition object and executes each scheduled model without integ..." alt="" coords="636,81,799,123"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFDMExec.html#ad178a57b91f9d74dd7888748477f2dce" title="Unbind all tied JSBSim properties. " alt="" coords="852,27,1015,68"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html#a1580c9edd024a31c38a13d9b40fa8914" title="Initializes the simulation with initial conditions. " alt="" coords="420,81,583,123"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="631,30,804,57"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGGasCell.html#ab4f2abee6ace8ea44fa06a50f78b7540" title="Runs the gas cell model; called by BuoyantForces. " alt="" coords="426,264,577,305"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGBallonet.html#ab4f2abee6ace8ea44fa06a50f78b7540" title="Runs the ballonet model; called by FGGasCell. " alt="" coords="430,329,573,371"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGPropulsion.html#a0b8d108c40ce8b06c3c849824ab18397" title="Loads the propulsion system (engine[s] and tank[s]). " alt="" coords="423,199,580,240"/>
+</map>

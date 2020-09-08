@@ -1,0 +1,5 @@
+<map id="GetDsCmd" name="GetDsCmd">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#a3c5c69498f8bd70099e846d19d5b4819" title="Gets the steering command. " alt="" coords="141,5,339,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGGroundReactions.html#a9df30f127d68cac80b72996975b60653" title="Sets the steering command. " alt="" coords="197,56,283,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFCS.html#a9df30f127d68cac80b72996975b60653" title="Sets the steering command. " alt="" coords="387,56,583,83"/>
+</map>

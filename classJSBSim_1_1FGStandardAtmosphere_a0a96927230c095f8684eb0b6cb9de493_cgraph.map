@@ -1,0 +1,6 @@
+<map id="SetVaporPressure" name="SetVaporPressure">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGStandardAtmosphere.html#af10797f6dc49e9e5977e364d3a2153f0" title="Calculates the pressure altitude given any temperature or pressure bias. " alt="" coords="181,5,355,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGStandardAtmosphere.html#aec7ab226284ca4b879edfd5b93f0e864" title="Validate the value of the vapor mass fraction. " alt="" coords="577,31,760,57"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGAtmosphere.html#a88eae7e36fb9b0dc5facf0f5b4320373" title="Converts to PSF (pounds per square foot) from one of several unit systems. " alt="" coords="185,107,351,149"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGStandardAtmosphere.html#a05ce8403c7535cca4ac4ad9203ba9254" title="Convert a geopotential altitude to a geometric altitude. " alt="" coords="403,5,529,32"/>
+</map>

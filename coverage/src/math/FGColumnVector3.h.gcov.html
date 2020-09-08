@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/math/FGColumnVector3.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/math</a> - FGColumnVector3.h<span style="font-size: 80%;"> (source / <a href="FGColumnVector3.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">64</td>
+            <td class="headerCovTableEntry">64</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            : Header: FGColumnVector3.h
+<span class="lineNum">       4 </span>            : Author: Originally by Tony Peden [formatted and adapted here by Jon Berndt]
+<span class="lineNum">       5 </span>            : Date started: Unknown
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------ Copyright (C) 2001 by Tony Peden and Jon S. Berndt (jon@jsbsim.org)
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : ??/??/???? ??   Initial version and more.
+<span class="lineNum">      29 </span>            : 03/06/2004 MF   Rework, document and do much inlineing.
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      32 </span>            : SENTRY
+<span class="lineNum">      33 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : #ifndef FGCOLUMNVECTOR3_H
+<span class="lineNum">      36 </span>            : #define FGCOLUMNVECTOR3_H
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      39 </span>            : INCLUDES
+<span class="lineNum">      40 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : #include &lt;iosfwd&gt;
+<span class="lineNum">      43 </span>            : #include &lt;string&gt;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      46 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      47 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : namespace JSBSim {
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      52 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      53 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : /** This class implements a 3 element column vector.
+<span class="lineNum">      56 </span>            :     @author Jon S. Berndt, Tony Peden, et. al.
+<span class="lineNum">      57 </span>            : */
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      60 </span>            : CLASS DECLARATION
+<span class="lineNum">      61 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : class FGColumnVector3
+<span class="lineNum">      64 </span>            : {
+<span class="lineNum">      65 </span>            : public:
+<span class="lineNum">      66 </span>            :   /** Default initializer.
+<span class="lineNum">      67 </span>            :       Create a zero vector.   */
+<span class="lineNum">      68 </span>            :   FGColumnVector3(void);
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            :   /** Initialization by given values.
+<span class="lineNum">      71 </span>            :       @param X value of the x-conponent.
+<span class="lineNum">      72 </span>            :       @param Y value of the y-conponent.
+<a name="73"><span class="lineNum">      73 </span>            :       @param Z value of the z-conponent.</a>
+<span class="lineNum">      74 </span>            :       Create a vector from the doubles given in the arguments.   */
+<span class="lineNum">      75 </span><span class="lineCov">    1745791 :   FGColumnVector3(const double X, const double Y, const double Z) {</span>
+<span class="lineNum">      76 </span><span class="lineCov">    1745791 :     data[0] = X;</span>
+<span class="lineNum">      77 </span><span class="lineCov">    1745791 :     data[1] = Y;</span>
+<span class="lineNum">      78 </span><span class="lineCov">    1745791 :     data[2] = Z;</span>
+<span class="lineNum">      79 </span><span class="lineCov">    1745791 :   }</span>
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :   /** Copy constructor.
+<a name="82"><span class="lineNum">      82 </span>            :       @param v Vector which is used for initialization.</a>
+<span class="lineNum">      83 </span>            :       Create copy of the vector given in the argument.   */
+<span class="lineNum">      84 </span><span class="lineCov">     873037 :   FGColumnVector3(const FGColumnVector3&amp; v) {</span>
+<span class="lineNum">      85 </span><span class="lineCov">     873037 :     data[0] = v.data[0];</span>
+<span class="lineNum">      86 </span><span class="lineCov">     873037 :     data[1] = v.data[1];</span>
+<span class="lineNum">      87 </span><span class="lineCov">     873037 :     data[2] = v.data[2];</span>
+<span class="lineNum">      88 </span><span class="lineCov">     873037 :   }</span>
+<a name="89"><span class="lineNum">      89 </span>            : </a>
+<span class="lineNum">      90 </span>            :   /// Destructor.
+<span class="lineNum">      91 </span><span class="lineCov">    3497316 :   ~FGColumnVector3(void) { }</span>
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            :   /** Read access the entries of the vector.
+<span class="lineNum">      94 </span>            :       @param idx the component index.
+<span class="lineNum">      95 </span>            :       Return the value of the matrix entry at the given index.
+<a name="96"><span class="lineNum">      96 </span>            :       Indices are counted starting with 1.</a>
+<span class="lineNum">      97 </span>            :       Note that the index given in the argument is unchecked.   */
+<span class="lineNum">      98 </span><span class="lineCov">   10278566 :   double operator()(const unsigned int idx) const { return data[idx-1]; }</span>
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :   /** Write access the entries of the vector.
+<span class="lineNum">     101 </span>            :       @param idx the component index.
+<span class="lineNum">     102 </span>            :       Return a reference to the vector entry at the given index.
+<a name="103"><span class="lineNum">     103 </span>            :       Indices are counted starting with 1.</a>
+<span class="lineNum">     104 </span>            :       Note that the index given in the argument is unchecked.   */
+<span class="lineNum">     105 </span><span class="lineCov">    5190953 :   double&amp; operator()(const unsigned int idx) { return data[idx-1]; }</span>
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :   /** Read access the entries of the vector.
+<span class="lineNum">     108 </span>            :       @param idx the component index.
+<span class="lineNum">     109 </span>            :       Return the value of the matrix entry at the given index.
+<span class="lineNum">     110 </span>            :       Indices are counted starting with 1.
+<span class="lineNum">     111 </span>            :       This function is just a shortcut for the &lt;tt&gt;double
+<span class="lineNum">     112 </span>            :       operator()(unsigned int idx) const&lt;/tt&gt; function. It is
+<a name="113"><span class="lineNum">     113 </span>            :       used internally to access the elements in a more convenient way.</a>
+<span class="lineNum">     114 </span>            :       Note that the index given in the argument is unchecked.   */
+<span class="lineNum">     115 </span><span class="lineCov">       1805 :   double Entry(const unsigned int idx) const { return data[idx-1]; }</span>
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span>            :   /** Write access the entries of the vector.
+<span class="lineNum">     118 </span>            :       @param idx the component index.
+<span class="lineNum">     119 </span>            :       Return a reference to the vector entry at the given index.
+<span class="lineNum">     120 </span>            :       Indices are counted starting with 1.
+<span class="lineNum">     121 </span>            :       This function is just a shortcut for the &lt;tt&gt;double&amp;
+<span class="lineNum">     122 </span>            :       operator()(unsigned int idx)&lt;/tt&gt; function. It is
+<a name="123"><span class="lineNum">     123 </span>            :       used internally to access the elements in a more convenient way.</a>
+<span class="lineNum">     124 </span>            :       Note that the index given in the argument is unchecked.   */
+<span class="lineNum">     125 </span><span class="lineCov">       6988 :   double&amp; Entry(const unsigned int idx) { return data[idx-1]; }</span>
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :   /** Prints the contents of the vector
+<span class="lineNum">     128 </span>            :       @param delimeter the item separator (tab or comma)
+<span class="lineNum">     129 </span>            :       @return a string with the delimeter-separated contents of the vector  */
+<span class="lineNum">     130 </span>            :   std::string Dump(const std::string&amp; delimeter) const;
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span>            :   /** Assignment operator.
+<a name="133"><span class="lineNum">     133 </span>            :       @param b source vector.</a>
+<span class="lineNum">     134 </span>            :       Copy the content of the vector given in the argument into *this.   */
+<span class="lineNum">     135 </span><span class="lineCov">     874033 :   FGColumnVector3&amp; operator=(const FGColumnVector3&amp; b) {</span>
+<span class="lineNum">     136 </span><span class="lineCov">     874033 :     data[0] = b.data[0];</span>
+<span class="lineNum">     137 </span><span class="lineCov">     874033 :     data[1] = b.data[1];</span>
+<span class="lineNum">     138 </span><span class="lineCov">     874033 :     data[2] = b.data[2];</span>
+<span class="lineNum">     139 </span><span class="lineCov">     874033 :     return *this;</span>
+<span class="lineNum">     140 </span>            :   }
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            :   /** Assignment operator.
+<a name="143"><span class="lineNum">     143 </span>            :       @param lv initializer list of at most 3 values (i.e. {x, y, Z})</a>
+<span class="lineNum">     144 </span>            :       Copy the content of the list into *this. */
+<span class="lineNum">     145 </span><span class="lineCov">        422 :   FGColumnVector3&amp; operator=(std::initializer_list&lt;double&gt; lv) {</span>
+<span class="lineNum">     146 </span><span class="lineCov">        422 :     double *v = data;</span>
+<span class="lineNum">     147 </span><span class="lineCov">       1688 :     for(auto &amp;x : lv)</span>
+<span class="lineNum">     148 </span><span class="lineCov">       1266 :       *(v++) = x;</span>
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span><span class="lineCov">        422 :     return *this;</span>
+<span class="lineNum">     151 </span>            :   }
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :   /**  Comparison operator.
+<a name="154"><span class="lineNum">     154 </span>            :       @param b other vector.</a>
+<span class="lineNum">     155 </span>            :       Returns true if both vectors are exactly the same.   */
+<span class="lineNum">     156 </span><span class="lineCov">         28 :   bool operator==(const FGColumnVector3&amp; b) const {</span>
+<span class="lineNum">     157 </span><span class="lineCov">         28 :     return data[0] == b.data[0] &amp;&amp; data[1] == b.data[1] &amp;&amp; data[2] == b.data[2];</span>
+<span class="lineNum">     158 </span>            :   }
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :   /** Comparison operator.
+<a name="161"><span class="lineNum">     161 </span>            :       @param b other vector.</a>
+<span class="lineNum">     162 </span>            :       Returns false if both vectors are exactly the same.   */
+<span class="lineNum">     163 </span><span class="lineCov">          7 :   bool operator!=(const FGColumnVector3&amp; b) const { return ! operator==(b); }</span>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span>            :   /** Multiplication by a scalar.
+<span class="lineNum">     166 </span>            :       @param scalar scalar value to multiply the vector with.
+<a name="167"><span class="lineNum">     167 </span>            :       @return The resulting vector from the multiplication with that scalar.</a>
+<span class="lineNum">     168 </span>            :       Multiply the vector with the scalar given in the argument.   */
+<span class="lineNum">     169 </span><span class="lineCov">        346 :   FGColumnVector3 operator*(const double scalar) const {</span>
+<span class="lineNum">     170 </span><span class="lineCov">        346 :     return FGColumnVector3(scalar*data[0], scalar*data[1], scalar*data[2]);</span>
+<span class="lineNum">     171 </span>            :   }
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :   /** Multiply by 1/scalar.
+<span class="lineNum">     174 </span>            :       @param scalar scalar value to devide the vector through.
+<span class="lineNum">     175 </span>            :       @return The resulting vector from the division through that scalar.
+<span class="lineNum">     176 </span>            :       Multiply the vector with the 1/scalar given in the argument.   */
+<span class="lineNum">     177 </span>            :   FGColumnVector3 operator/(const double scalar) const;
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span>            :   /** Cross product multiplication.
+<span class="lineNum">     180 </span>            :       @param V vector to multiply with.
+<span class="lineNum">     181 </span>            :       @return The resulting vector from the cross product multiplication.
+<a name="182"><span class="lineNum">     182 </span>            :       Compute and return the cross product of the current vector with</a>
+<span class="lineNum">     183 </span>            :       the given argument.   */
+<span class="lineNum">     184 </span><span class="lineCov">        740 :   FGColumnVector3 operator*(const FGColumnVector3&amp; V) const {</span>
+<span class="lineNum">     185 </span><span class="lineCov">        740 :     return FGColumnVector3( data[1] * V.data[2] - data[2] * V.data[1],</span>
+<span class="lineNum">     186 </span><span class="lineCov">        740 :                             data[2] * V.data[0] - data[0] * V.data[2],</span>
+<span class="lineNum">     187 </span><span class="lineCov">       2220 :                             data[0] * V.data[1] - data[1] * V.data[0] );</span>
+<span class="lineNum">     188 </span>            :   }
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<span class="lineNum">     190 </span>            :   /// Addition operator.
+<span class="lineNum">     191 </span><span class="lineCov">        110 :   FGColumnVector3 operator+(const FGColumnVector3&amp; B) const {</span>
+<span class="lineNum">     192 </span><span class="lineCov">        220 :     return FGColumnVector3( data[0] + B.data[0], data[1] + B.data[1],</span>
+<span class="lineNum">     193 </span><span class="lineCov">        330 :                             data[2] + B.data[2] );</span>
+<span class="lineNum">     194 </span>            :   }
+<a name="195"><span class="lineNum">     195 </span>            : </a>
+<span class="lineNum">     196 </span>            :   /// Subtraction operator.
+<span class="lineNum">     197 </span><span class="lineCov">        304 :   FGColumnVector3 operator-(const FGColumnVector3&amp; B) const {</span>
+<span class="lineNum">     198 </span><span class="lineCov">        608 :     return FGColumnVector3( data[0] - B.data[0], data[1] - B.data[1],</span>
+<span class="lineNum">     199 </span><span class="lineCov">        912 :                             data[2] - B.data[2] );</span>
+<span class="lineNum">     200 </span>            :   }
+<a name="201"><span class="lineNum">     201 </span>            : </a>
+<span class="lineNum">     202 </span>            :   /// Subtract an other vector.
+<span class="lineNum">     203 </span><span class="lineCov">        185 :   FGColumnVector3&amp; operator-=(const FGColumnVector3 &amp;B) {</span>
+<span class="lineNum">     204 </span><span class="lineCov">        185 :     data[0] -= B.data[0];</span>
+<span class="lineNum">     205 </span><span class="lineCov">        185 :     data[1] -= B.data[1];</span>
+<span class="lineNum">     206 </span><span class="lineCov">        185 :     data[2] -= B.data[2];</span>
+<span class="lineNum">     207 </span><span class="lineCov">        185 :     return *this;</span>
+<span class="lineNum">     208 </span>            :   }
+<a name="209"><span class="lineNum">     209 </span>            : </a>
+<span class="lineNum">     210 </span>            :   /// Add an other vector.
+<span class="lineNum">     211 </span><span class="lineCov">          3 :   FGColumnVector3&amp; operator+=(const FGColumnVector3 &amp;B) {</span>
+<span class="lineNum">     212 </span><span class="lineCov">          3 :     data[0] += B.data[0];</span>
+<span class="lineNum">     213 </span><span class="lineCov">          3 :     data[1] += B.data[1];</span>
+<span class="lineNum">     214 </span><span class="lineCov">          3 :     data[2] += B.data[2];</span>
+<span class="lineNum">     215 </span><span class="lineCov">          3 :     return *this;</span>
+<span class="lineNum">     216 </span>            :   }
+<a name="217"><span class="lineNum">     217 </span>            : </a>
+<span class="lineNum">     218 </span>            :   /// Scale by a scalar.
+<span class="lineNum">     219 </span><span class="lineCov">      52871 :   FGColumnVector3&amp; operator*=(const double scalar) {</span>
+<span class="lineNum">     220 </span><span class="lineCov">      52871 :     data[0] *= scalar;</span>
+<span class="lineNum">     221 </span><span class="lineCov">      52871 :     data[1] *= scalar;</span>
+<span class="lineNum">     222 </span><span class="lineCov">      52871 :     data[2] *= scalar;</span>
+<span class="lineNum">     223 </span><span class="lineCov">      52871 :     return *this;</span>
+<span class="lineNum">     224 </span>            :   }
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :   /// Scale by a 1/scalar.
+<a name="227"><span class="lineNum">     227 </span>            :   FGColumnVector3&amp; operator/=(const double scalar);</a>
+<a name="228"><span class="lineNum">     228 </span>            : </a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    1742729 :   void InitMatrix(void) { data[0] = data[1] = data[2] = 0.0; }</span></a>
+<span class="lineNum">     230 </span><span class="lineCov">          9 :   void InitMatrix(const double a) { data[0] = data[1] = data[2] = a; }</span>
+<span class="lineNum">     231 </span><span class="lineCov">          3 :   void InitMatrix(const double a, const double b, const double c) {</span>
+<span class="lineNum">     232 </span><span class="lineCov">          3 :     data[0]=a; data[1]=b; data[2]=c;</span>
+<span class="lineNum">     233 </span><span class="lineCov">          3 :   }</span>
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            :   /** Length of the vector.
+<span class="lineNum">     236 </span>            :       Compute and return the euclidean norm of this vector.   */
+<span class="lineNum">     237 </span>            :   double Magnitude(void) const;
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            :   /** Length of the vector in a coordinate axis plane.
+<span class="lineNum">     240 </span>            :       Compute and return the euclidean norm of this vector projected into
+<span class="lineNum">     241 </span>            :       the coordinate axis plane idx1-idx2.   */
+<span class="lineNum">     242 </span>            :   double Magnitude(const int idx1, const int idx2) const;
+<span class="lineNum">     243 </span>            : 
+<span class="lineNum">     244 </span>            :   /** Normalize.
+<span class="lineNum">     245 </span>            :       Normalize the vector to have the Magnitude() == 1.0. If the vector
+<span class="lineNum">     246 </span>            :       is equal to zero it is left untouched.   */
+<span class="lineNum">     247 </span>            :   FGColumnVector3&amp; Normalize(void);
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span>            : private:
+<span class="lineNum">     250 </span>            :   double data[3];
+<span class="lineNum">     251 </span>            : };
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            : /** Dot product of two vectors
+<a name="254"><span class="lineNum">     254 </span>            :     Compute and return the euclidean dot (or scalar) product of two vectors</a>
+<span class="lineNum">     255 </span>            :     v1 and v2 */
+<span class="lineNum">     256 </span><span class="lineCov">          5 : inline double DotProduct(const FGColumnVector3&amp; v1, const FGColumnVector3&amp; v2) {</span>
+<span class="lineNum">     257 </span><span class="lineCov">          5 :   return v1(1)*v2(1) + v1(2)*v2(2) + v1(3)*v2(3);</span>
+<span class="lineNum">     258 </span>            : }
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span>            : /** Scalar multiplication.
+<span class="lineNum">     261 </span>            :     @param scalar scalar value to multiply with.
+<span class="lineNum">     262 </span>            :     @param A Vector to multiply.
+<a name="263"><span class="lineNum">     263 </span>            :     Multiply the Vector with a scalar value. Note: At this time, this</a>
+<span class="lineNum">     264 </span>            :     operator MUST be inlined, or a multiple definition link error will occur.*/
+<span class="lineNum">     265 </span><span class="lineCov">        153 : inline FGColumnVector3 operator*(double scalar, const FGColumnVector3&amp; A) {</span>
+<span class="lineNum">     266 </span>            :   // use already defined operation.
+<span class="lineNum">     267 </span><span class="lineCov">        153 :   return A*scalar;</span>
+<span class="lineNum">     268 </span>            : }
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            : /** Write vector to a stream.
+<span class="lineNum">     271 </span>            :     @param os Stream to write to.
+<span class="lineNum">     272 </span>            :     @param col vector to write.
+<span class="lineNum">     273 </span>            :     Write the vector to a stream.*/
+<span class="lineNum">     274 </span>            : std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const FGColumnVector3&amp; col);
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span>            : } // namespace JSBSim
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     279 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

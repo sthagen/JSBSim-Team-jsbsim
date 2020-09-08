@@ -1,0 +1,40 @@
+<map id="Load" name="Load">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutputSocket.html#a0b8d108c40ce8b06c3c849824ab18397" title="Init the output directives from an XML file. " alt="" coords="134,257,310,299"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1Element.html#a0290668d182e1035b626b551f2b552e7" title="Searches for a specified element. " alt="" coords="655,123,861,150"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1Element.html#ac5c2e3334b384afca061f0bf965dc864" title="Determines if an element has the supplied attribute. " alt="" coords="655,326,861,353"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1Element.html#a4fd4cb4d88046523b2cf729bf847e0e2" title="Retrieves an attribute. " alt="" coords="909,189,1113,231"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1Element.html#a30a269bd930d31646341ba15787281e3" title="Retrieves an attribute value as a double precision real number. " alt="" coords="909,276,1113,317"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGPropagate.html#a645621ae6613dac57bf228543069e829" title="Returns the current altitude above sea level. " alt="" coords="681,459,835,500"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1FGPropagate.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles that define the vehicle orientation. " alt="" coords="145,611,299,652"/>
+<area shape="rect" id="node18" href="$classJSBSim_1_1FGFDMExec.html#ad6801fd794ccf6b675ad3d31d6b652a9" title="Returns the cumulative simulation time in seconds. " alt="" coords="677,524,839,565"/>
+<area shape="rect" id="node19" href="$classJSBSim_1_1FGPropagate.html#a12fc6df620df19e61ad6429765e699e5" title="Retrieves the velocity vector. " alt="" coords="681,589,835,631"/>
+<area shape="rect" id="node20" href="$classJSBSim_1_1FGPropagate.html#a0df1d58a7f747a452fabe7f8dd739efb" title="Retrieves the body frame vehicle velocity vector. " alt="" coords="681,655,835,696"/>
+<area shape="rect" id="node21" href="$classJSBSim_1_1FGPropagate.html#a21e73db757464873633de46e50b9ac1b" title="Returns the current altitude rate. " alt="" coords="681,720,835,761"/>
+<area shape="rect" id="node22" href="$classJSBSim_1_1FGAuxiliary.html#a3eb9fed6ce542cff292c15ba06f872d0" title="Returns Calibrated airspeed in knots. " alt="" coords="149,779,295,820"/>
+<area shape="rect" id="node23" href="$classJSBSim_1_1FGPropulsion.html#af9836eb91cc0c0c2bcb426f49415d7bc" title="Retrieves the number of engines defined for the aircraft. " alt="" coords="143,844,301,885"/>
+<area shape="rect" id="node24" href="$classJSBSim_1_1FGPropulsion.html#a0d36d1e7250a50068e923dfd5c227187" title="Retrieves an engine object pointer from the list of engines. " alt="" coords="143,909,301,951"/>
+<area shape="rect" id="node25" href="$classJSBSim_1_1FGPropulsion.html#ae9a7748e710e60d21c35bd48f90c7a3e" title="Retrieves the number of tanks defined for the aircraft. " alt="" coords="143,975,301,1016"/>
+<area shape="rect" id="node26" href="$classJSBSim_1_1FGPropulsion.html#a9186616473ab20ce36f380f2bb508b4f" title="Retrieves a tank object pointer from the list of tanks. " alt="" coords="143,1040,301,1081"/>
+<area shape="rect" id="node27" href="$classJSBSim_1_1FGGroundReactions.html#a3c2c81e3be81d86f1756896dc2e477e9" title="Gets the number of gears. " alt="" coords="123,1105,321,1147"/>
+<area shape="rect" id="node28" href="$classJSBSim_1_1FGGroundReactions.html#a3dd51257238b7ec13c4c6395152ec530" title="Gets a gear instance. " alt="" coords="123,1171,321,1212"/>
+<area shape="rect" id="node29" href="$classJSBSim_1_1FGLGear.html#a8bc9d2981379e37c791f8f5efaaa3115" title="Gets the Weight On Wheels flag value. " alt="" coords="124,1237,320,1263"/>
+<area shape="rect" id="node30" href="$classJSBSim_1_1FGLGear.html#aa4bf61964ce6530c67c60da7e3277c8b" title="Gets the current compressed length of the gear in feet. " alt="" coords="114,1287,330,1314"/>
+<area shape="rect" id="node31" href="$classJSBSim_1_1FGFCS.html#a5bd88ff542ccd25f24cf968c223b4909" title="Gets the elevator position. " alt="" coords="126,1338,318,1365"/>
+<area shape="rect" id="node32" href="$classJSBSim_1_1FGFCS.html#ab2926b6cf52b7d3d9cdf25f98bc69572" title="Gets the pitch trim command. " alt="" coords="104,1389,340,1415"/>
+<area shape="rect" id="node33" href="$classJSBSim_1_1FGFCS.html#a19d60d676eda1a38972e7cf3f7c707c7" title="Gets the flaps position. " alt="" coords="127,1439,317,1466"/>
+<area shape="rect" id="node35" href="$classJSBSim_1_1FGFCS.html#a8365d40d300f36b7209992cc75890a11" title="Gets the left aileron position. " alt="" coords="123,1490,321,1517"/>
+<area shape="rect" id="node36" href="$classJSBSim_1_1FGFCS.html#a923b5759e5a9381945402b9bfd4abcd3" title="Gets the right aileron position. " alt="" coords="121,1541,323,1567"/>
+<area shape="rect" id="node37" href="$classJSBSim_1_1FGFCS.html#aef832f0d068c275f8d07eee7557d66b5" title="Gets the rudder position. " alt="" coords="127,1591,317,1618"/>
+<area shape="rect" id="node38" href="$classJSBSim_1_1FGFCS.html#a6c45165d6f660755cda1903b2215d0c1" title="Gets the speedbrake position. " alt="" coords="123,1642,321,1669"/>
+<area shape="rect" id="node39" href="$classJSBSim_1_1FGFCS.html#acf8e5f075699432e26034c1bd4866f4c" title="Gets the spoiler position. " alt="" coords="123,1693,321,1719"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGOutputType.html#a0b8d108c40ce8b06c3c849824ab18397" title="Init the output directives from an XML file (implement the FGModel interface). " alt="" coords="415,225,579,267"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGOutputSocket.html#a0e328034b29ce0a47dec6d8e6a794687" title="Overwrites the name identifier under which the output will be logged. " alt="" coords="409,291,585,332"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGLocation.html#aa71688869eede539bff376f43a78ea14" title="Get the distance from the center of the earth in feet. " alt="" coords="939,341,1084,383"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGLocation.html#ab0d754a471a7ec7280549a1ae1f93331" title="Get the sea level radius in feet below the current location. " alt="" coords="1161,429,1308,471"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGLocation.html#ad1b855893aaa82233cdd6e509c1ee23a" title="Set the distance from the center of the earth. " alt="" coords="939,524,1084,565"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGInertial.html#a36b96e61eb18cfda477d67b0a01eac4e" title="Get terrain contact point information below the current location. " alt="" coords="944,589,1079,631"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGLocation.html#ad6d787090b71419e91678ceb91c6ef1f" title="Gets the geodetic altitude in feet. " alt="" coords="939,459,1084,500"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGInertial.html#a951b99be7d4a44868bf71be60537ac23" title="Set the terrain elevation above sea level. " alt="" coords="939,655,1083,696"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1FGPropagate.html#a269d067d10ad81cf2b04e951dc1af761" title="Retrieves the Euler angles (in degrees) that define the vehicle orientation. " alt="" coords="420,611,575,652"/>
+<area shape="rect" id="node34" href="$classJSBSim_1_1FGFCS.html#afc1b521ddea7d038b730d3694343706a" title="Gets the throttle position. " alt="" coords="388,1439,607,1466"/>
+</map>

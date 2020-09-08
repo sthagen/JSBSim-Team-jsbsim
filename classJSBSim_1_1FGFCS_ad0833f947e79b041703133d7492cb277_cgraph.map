@@ -1,0 +1,5 @@
+<map id="SetCBrake" name="SetCBrake">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#a9da2d62b1af1fdbcb52720c4a1d41522" title="Gets the brake for a specified group. " alt="" coords="140,46,217,73"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#a333018474e2b8b621a2ec90afeaf74fc" title="Retrieves the full aircraft path name. " alt="" coords="265,5,428,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFDMExec.html#a486a40a5545e9ea0e161f5b42aa7d315" title="Retrieves the systems path. " alt="" coords="265,71,428,112"/>
+</map>

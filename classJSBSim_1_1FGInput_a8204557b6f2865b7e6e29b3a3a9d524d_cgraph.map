@@ -1,0 +1,51 @@
+<map id="SetDirectivesFile" name="SetDirectivesFile">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="176,1355,359,1396"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFDMExec.html#a333018474e2b8b621a2ec90afeaf74fc" title="Retrieves the full aircraft path name. " alt="" coords="429,5,591,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1Element.html#aeed93f7828bb444f583f7940e4f0f8ad" title="Retrieves the element name. " alt="" coords="669,326,860,353"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1Element.html#ac5c2e3334b384afca061f0bf965dc864" title="Determines if an element has the supplied attribute. " alt="" coords="661,173,868,199"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1Element.html#a4fd4cb4d88046523b2cf729bf847e0e2" title="Retrieves an attribute. " alt="" coords="916,133,1120,175"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1Element.html#a30a269bd930d31646341ba15787281e3" title="Retrieves an attribute value as a double precision real number. " alt="" coords="916,216,1120,257"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1Element.html#a0290668d182e1035b626b551f2b552e7" title="Searches for a specified element. " alt="" coords="407,610,613,637"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1Element.html#ac4d4a2672f9ed7d1da87e393c185d1f2" title="Converts the element data to a number. " alt="" coords="673,485,856,527"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1Element.html#ac49b58ae4fd6170ac11c2ed21d882666" title="Searches for the next element as specified. " alt="" coords="417,661,603,703"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1Element.html#abf31eea79e3de7547610926decbb7b3d" title="Searches for the named element and converts and returns the data belonging to it. ..." alt="" coords="407,376,613,417"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1Element.html#a947c5ac935ae1435154c6198c46fbb55" title="Return a string that contains a description of the location where the current XML element was read fr..." alt="" coords="667,433,862,459"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGInitialCondition.html#a777b283e5014563b30f96b47a9e6220a" title="Sets the initial geodetic latitude. " alt="" coords="419,779,601,820"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGFDMExec.html#a93876fb8e8a2302e3880f9ebfb3ce6d5" title="Returns the FGInertial pointer. " alt="" coords="1168,884,1331,925"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGInitialCondition.html#adb6fe57c0d1ce470a4d12b8e3054f75b" title="Sets the altitude above sea level initial condition in feet. " alt="" coords="673,876,856,917"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1FGLocation.html#ad1b855893aaa82233cdd6e509c1ee23a" title="Set the distance from the center of the earth. " alt="" coords="945,825,1091,867"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1FGInitialCondition.html#ab6f6dae970e40878a34789be7dfcb9a7" title="Sets the initial latitude. " alt="" coords="419,947,601,988"/>
+<area shape="rect" id="node18" href="$classJSBSim_1_1FGInitialCondition.html#a78752db06521e6974fad0089a5e31695" title="Sets the initial Altitude above ground level. " alt="" coords="927,1052,1109,1093"/>
+<area shape="rect" id="node19" href="$classJSBSim_1_1FGLocation.html#a46524a57969eed72f4a7f477a22b1df9" title="Get the GEOCENTRIC latitude in radians. " alt="" coords="1177,1193,1322,1235"/>
+<area shape="rect" id="node20" href="$classJSBSim_1_1FGInitialCondition.html#a5c7c88a597829607471730f280b3266b" title="Sets the initial longitude. " alt="" coords="673,993,856,1035"/>
+<area shape="rect" id="node21" href="$classJSBSim_1_1FGInitialCondition.html#a93ec4bc417c0505b4548f6a63af82bdf" title="Sets the initial terrain elevation. " alt="" coords="673,1111,856,1152"/>
+<area shape="rect" id="node22" href="$classJSBSim_1_1FGInertial.html#a951b99be7d4a44868bf71be60537ac23" title="Set the terrain elevation above sea level. " alt="" coords="946,1223,1090,1264"/>
+<area shape="rect" id="node23" href="$classJSBSim_1_1FGQuaternion.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles. " alt="" coords="431,1384,589,1425"/>
+<area shape="rect" id="node24" href="$classJSBSim_1_1FGInitialCondition.html#a2fe355afd5f9b583b518a83cc554fe2c" title="Sets the initial body axis X velocity. " alt="" coords="419,1449,601,1491"/>
+<area shape="rect" id="node25" href="$classJSBSim_1_1FGInitialCondition.html#a59c3939235fd2ff048baefb80ea553ba" title="Sets the initial body axis Y velocity. " alt="" coords="419,1515,601,1556"/>
+<area shape="rect" id="node26" href="$classJSBSim_1_1FGInitialCondition.html#a47fbab53d69f8beccfeb9697e0a38815" title="Sets the initial body axis Z velocity. " alt="" coords="419,1580,601,1621"/>
+<area shape="rect" id="node27" href="$classJSBSim_1_1FGInitialCondition.html#acd99d36d72f2c25c01651a10fa13b8cb" title="Sets the initial local axis north velocity. " alt="" coords="419,1645,601,1687"/>
+<area shape="rect" id="node28" href="$classJSBSim_1_1FGInitialCondition.html#aee0b89ee39361ed68b8c9f5ad1e8be1f" title="Sets the initial local axis east velocity. " alt="" coords="419,1711,601,1752"/>
+<area shape="rect" id="node29" href="$classJSBSim_1_1FGInitialCondition.html#ab552a591140eb9f5b67276e1711f5323" title="Sets the initial local axis down velocity. " alt="" coords="419,1776,601,1817"/>
+<area shape="rect" id="node30" href="$classJSBSim_1_1FGInitialCondition.html#abaa026e39ca6d9c383ccffa8f9bbd936" title="Set calibrated airspeed initial condition in knots. " alt="" coords="419,1893,601,1935"/>
+<area shape="rect" id="node31" href="$classJSBSim_1_1FGQuaternion.html#a4c650fa69b797cb5d122b7b19c70d380" title="Transformation matrix. " alt="" coords="685,1848,844,1889"/>
+<area shape="rect" id="node32" href="$classJSBSim_1_1FGMatrix33.html#a039718b92a595f3eafaafb2091cfa52a" title="Transposed matrix. " alt="" coords="691,1939,838,1980"/>
+<area shape="rect" id="node33" href="$classJSBSim_1_1FGInitialCondition.html#a4ccfd2afe9f63466cf32f2ffe96fbfc0" title="Set true airspeed initial condition in knots. " alt="" coords="419,2011,601,2052"/>
+<area shape="rect" id="node34" href="$classJSBSim_1_1FGInitialCondition.html#a4b214047e1c25d93b9d706621f32f6ce" title="Set mach initial condition. " alt="" coords="673,2099,856,2140"/>
+<area shape="rect" id="node35" href="$classJSBSim_1_1Element.html#aee69786373509020c79e3deeb7bfe592" title="Searches for the named element and returns the data belonging to it as a number. " alt="" coords="407,544,613,585"/>
+<area shape="rect" id="node36" href="$classJSBSim_1_1FGInitialCondition.html#a68c83023466c7734fea2917175d9325d" title="Sets the flight path angle initial condition in degrees. " alt="" coords="419,1064,601,1105"/>
+<area shape="rect" id="node37" href="$classJSBSim_1_1FGInitialCondition.html#aa0085586d19a7796ec2ac667f8d89b14" title="Sets the initial climb rate. " alt="" coords="673,1176,856,1217"/>
+<area shape="rect" id="node38" href="$classJSBSim_1_1FGInitialCondition.html#a6f3cf9777dfc1bbd1bf43925c8e617d7" title="Set ground speed initial condition in knots. " alt="" coords="419,2128,601,2169"/>
+<area shape="rect" id="node39" href="$classJSBSim_1_1FGInitialCondition.html#a5c958bfa2833878f77a13e857e446534" title="Sets angle of attack initial condition in degrees. " alt="" coords="419,2193,601,2235"/>
+<area shape="rect" id="node40" href="$classJSBSim_1_1FGInitialCondition.html#abffe2ecc4a7f992d6e4a8569e374eb5e" title="Sets angle of sideslip initial condition in degrees. " alt="" coords="419,2259,601,2300"/>
+<area shape="rect" id="node41" href="$classJSBSim_1_1FGInitialCondition.html#a3064f4b800bd75993cc04e6f85b0846c" title="Sets the initial total wind speed. " alt="" coords="419,2324,601,2365"/>
+<area shape="rect" id="node42" href="$classJSBSim_1_1FGInitialCondition.html#acb10a2eea909a886349f49830377b028" title="Sets the initial wind direction. " alt="" coords="419,2389,601,2431"/>
+<area shape="rect" id="node43" href="$classJSBSim_1_1FGInitialCondition.html#aade0339651dc5bf735d0fb105dc16cdf" title="Sets the initial headwind velocity. " alt="" coords="419,2455,601,2496"/>
+<area shape="rect" id="node44" href="$classJSBSim_1_1FGInitialCondition.html#a57d4e26c7e34322f7e032b418cf8772f" title="Sets the initial crosswind speed. " alt="" coords="419,2520,601,2561"/>
+<area shape="rect" id="node45" href="$classJSBSim_1_1FGInitialCondition.html#aa0d2c2abe6862889abdfa1d109f21e07" title="Sets the target normal load factor. " alt="" coords="419,2585,601,2627"/>
+<area shape="rect" id="node46" href="$classJSBSim_1_1Element.html#aa9c4e9e17572561475562e52683bd726" title="Searches for the named element and returns the string data belonging to it. " alt="" coords="407,2651,613,2692"/>
+<area shape="rect" id="node47" href="$classJSBSim_1_1FGLocation.html#aa71688869eede539bff376f43a78ea14" title="Get the distance from the center of the earth in feet. " alt="" coords="437,2716,583,2757"/>
+<area shape="rect" id="node48" href="$classJSBSim_1_1FGFDMExec.html#a98bd4c89aad9b3ea9a019fd3247f97d9" title="Returns the FGPropagate pointer. " alt="" coords="429,2781,591,2823"/>
+<area shape="rect" id="node49" href="$classJSBSim_1_1FGFDMExec.html#af2d06a737321b234a81a09e9177243c7" title="Returns the FGAccelerations pointer. " alt="" coords="429,2847,591,2888"/>
+<area shape="rect" id="node50" href="$classJSBSim_1_1Element.html#a326333a8188c02e36352de3f609c3a03" title="Composes a 3&#45;element column vector for the supplied location or orientation. " alt="" coords="407,208,613,249"/>
+</map>

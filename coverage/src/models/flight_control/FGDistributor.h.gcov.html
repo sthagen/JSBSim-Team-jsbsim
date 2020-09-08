@@ -1,0 +1,278 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/flight_control/FGDistributor.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/flight_control</a> - FGDistributor.h<span style="font-size: 80%;"> (source / <a href="FGDistributor.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGDistributor.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 09/27/2013
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2013 jon@jsbsim.org  -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      30 </span>            : SENTRY
+<span class="lineNum">      31 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : #ifndef FGDISTRIBUTOR_H
+<span class="lineNum">      34 </span>            : #define FGDISTRIBUTOR_H
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : INCLUDES
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #include &quot;FGFCSComponent.h&quot;
+<span class="lineNum">      41 </span>            : #include &quot;math/FGCondition.h&quot;
+<span class="lineNum">      42 </span>            : #include &quot;math/FGParameterValue.h&quot;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      45 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      46 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : namespace JSBSim {
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      51 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      52 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /** Encapsulates a distributor for the flight control system.
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : The distributor component models a distributor - 
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : Within a test, additional tests can be specified, which allows for
+<span class="lineNum">      59 </span>            : complex groupings of logical comparisons. Each test contains
+<span class="lineNum">      60 </span>            : additional conditions, as well as possibly additional tests.
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : @code{.xml}
+<span class="lineNum">      63 </span>            : &lt;distributor name=&quot;name/is/irrelevant&quot; type=&quot;exclusive|inclusive&quot;&gt;
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            :   &lt;case&gt;
+<span class="lineNum">      66 </span>            :     [&lt;test logic=&quot;{AND|OR}&quot; value=&quot;{property|value}&quot;&gt;
+<span class="lineNum">      67 </span>            :       {property} {conditional} {property|value}
+<span class="lineNum">      68 </span>            :       &lt;test logic=&quot;{AND|OR}&quot;&gt;
+<span class="lineNum">      69 </span>            :         {property} {conditional} {property|value}
+<span class="lineNum">      70 </span>            :         ...
+<span class="lineNum">      71 </span>            :       &lt;/test&gt;
+<span class="lineNum">      72 </span>            :       ...
+<span class="lineNum">      73 </span>            :     &lt;/test&gt;] &lt;!-- Optional &lt;test&gt; one time. A &lt;case&gt; without a &lt;test&gt; is always executed --&gt;
+<span class="lineNum">      74 </span>            :     &lt;property value=&quot;number|property&quot;&gt; property_name &lt;/property&gt;
+<span class="lineNum">      75 </span>            :     ...
+<span class="lineNum">      76 </span>            :   &lt;/case&gt;
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            :   ... &lt;!-- Additional cases --&gt;
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            : &lt;/distributor&gt;
+<span class="lineNum">      81 </span>            : @endcode
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            : If the distributor type is exclusive no further &lt;case&gt; components are evaluated
+<span class="lineNum">      84 </span>            : once a case &lt;test&gt; condition has been found to be true.
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            : If the distributor type is inclusive all the &lt;case&gt; components are evaluated
+<span class="lineNum">      87 </span>            : no matter how many &lt;case&gt; conditions are true.
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            : Whether the distributor type is inclusive or exclusive the &lt;case&gt; component
+<span class="lineNum">      90 </span>            : without &lt;test&gt; is always executed.
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            : Here's an example that evaluate the sign of the property test/number and sets
+<span class="lineNum">      93 </span>            : test/default to the value of test/reference.
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            : @code{.xml}
+<span class="lineNum">      96 </span>            : &lt;distributor&gt;
+<span class="lineNum">      97 </span>            :   &lt;case&gt;
+<span class="lineNum">      98 </span>            :     &lt;test&gt;
+<span class="lineNum">      99 </span>            :       test/number lt 0.0
+<span class="lineNum">     100 </span>            :     &lt;/test&gt;
+<span class="lineNum">     101 </span>            :     &lt;property value=&quot;-1.0&quot;&gt; test/sign &lt;/property&gt;
+<span class="lineNum">     102 </span>            :   &lt;/case&gt;
+<span class="lineNum">     103 </span>            :   &lt;case&gt;
+<span class="lineNum">     104 </span>            :     &lt;test&gt;
+<span class="lineNum">     105 </span>            :       test/number ge 0.0
+<span class="lineNum">     106 </span>            :     &lt;/test&gt;
+<span class="lineNum">     107 </span>            :     &lt;property value=&quot;1.0&quot;&gt; test/sign &lt;/property&gt;
+<span class="lineNum">     108 </span>            :   &lt;/case&gt;
+<span class="lineNum">     109 </span>            :   &lt;!-- default case --&gt;
+<span class="lineNum">     110 </span>            :   &lt;case&gt;
+<span class="lineNum">     111 </span>            :     &lt;property value=&quot;test/reference&quot;&gt; test/default &lt;/property&gt;
+<span class="lineNum">     112 </span>            :   &lt;/case&gt;
+<span class="lineNum">     113 </span>            : &lt;/distributor&gt;
+<span class="lineNum">     114 </span>            : @endcode
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            : Note: In the &quot;logic&quot; attribute, &quot;AND&quot; is the default logic, if none is supplied.
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span>            : @author Jon S. Berndt
+<span class="lineNum">     119 </span>            : */
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     122 </span>            : CLASS DECLARATION
+<span class="lineNum">     123 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            : class FGDistributor  : public FGFCSComponent
+<span class="lineNum">     126 </span>            : {
+<span class="lineNum">     127 </span>            : public:
+<span class="lineNum">     128 </span>            :   /** Constructor
+<span class="lineNum">     129 </span>            :       @param fcs a pointer to the parent FGFCS class
+<span class="lineNum">     130 </span>            :       @param element a pointer to the Element (from the config file XML tree)
+<span class="lineNum">     131 </span>            :              that represents this distributor component */
+<span class="lineNum">     132 </span>            :   FGDistributor(FGFCS* fcs, Element* element);
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :   /// Destructor
+<span class="lineNum">     135 </span>            :   ~FGDistributor();
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :   /** Executes the distributor logic.
+<span class="lineNum">     138 </span>            :       @return true - always*/
+<span class="lineNum">     139 </span>            :   bool Run(void) override;
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span>            : private:
+<span class="lineNum">     142 </span>            : 
+<a name="143"><span class="lineNum">     143 </span>            :   enum eType {eInclusive=0, eExclusive} Type;</a>
+<span class="lineNum">     144 </span>            : 
+<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :   class PropValPair {</span></a>
+<span class="lineNum">     146 </span>            :   public:
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     PropValPair(const std::string&amp; prop, const std::string&amp; val,</span>
+<span class="lineNum">     148 </span>            :                 FGPropertyManager* propMan)
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :       : Prop(new FGPropertyValue(prop, propMan)),</span>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :         Val(new FGParameterValue(val, propMan)) {}</span></a>
+<span class="lineNum">     151 </span>            :     
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :     void SetPropToValue() {</span>
+<span class="lineNum">     153 </span>            :       try {
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         Prop-&gt;SetValue(Val-&gt;GetValue());</span>
+<span class="lineNum">     155 </span>            :       }
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :       catch(...) {</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :         throw(Prop-&gt;GetName()+&quot; in distributor component is not known&quot;);</span>
+<span class="lineNum">     158 </span>            :       }
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="160"><span class="lineNum">     160 </span>            : </a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     std::string GetPropName() { return Prop-&gt;GetName(); }</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     std::string GetValString() { return Val-&gt;GetName(); }</span></a>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :     bool GetLateBoundProp() { return Prop-&gt;IsLateBound(); }</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     bool GetLateBoundValue() {return Val-&gt;IsLateBound();</span>
+<span class="lineNum">     165 </span>            :     }
+<span class="lineNum">     166 </span>            :   private:
+<span class="lineNum">     167 </span>            :     FGPropertyValue_ptr Prop;
+<span class="lineNum">     168 </span>            :     FGParameterValue_ptr Val;
+<span class="lineNum">     169 </span>            :   };
+<span class="lineNum">     170 </span>            : 
+<a name="171"><span class="lineNum">     171 </span>            :   class Case {</a>
+<span class="lineNum">     172 </span>            :   public:
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     Case() : Test(nullptr) {}</span></a>
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :     ~Case() {</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :       for (auto pair: PropValPairs) delete pair;</span>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="178"><span class="lineNum">     178 </span>            : </a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :     void SetTest(FGCondition* test) {Test = test;}</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     FGCondition* GetTest(void) {return Test;}</span></a>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :     void AddPropValPair(PropValPair* pvPair) {PropValPairs.push_back(pvPair);}</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :     void SetPropValPairs() {</span>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :       for (auto pair: PropValPairs) pair-&gt;SetPropToValue();</span></a>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :     }</span>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     std::vector&lt;PropValPair*&gt;::const_iterator IterPropValPairs(void) const</span></a>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :     { return PropValPairs.cbegin(); }</span>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     std::vector&lt;PropValPair*&gt;::const_iterator EndPropValPairs(void) const</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :     { return PropValPairs.cend(); }</span></a>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :     bool HasTest() {return Test != nullptr;}</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     bool GetTestResult() { return Test-&gt;Evaluate(); }</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            :   private:
+<span class="lineNum">     193 </span>            :     FGCondition* Test;
+<span class="lineNum">     194 </span>            :     std::vector &lt;PropValPair*&gt; PropValPairs;
+<span class="lineNum">     195 </span>            :   };
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            :   std::vector &lt;Case*&gt; Cases;
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            :   void Debug(int from) override;
+<span class="lineNum">     200 </span>            : };
+<span class="lineNum">     201 </span>            : }
+<span class="lineNum">     202 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

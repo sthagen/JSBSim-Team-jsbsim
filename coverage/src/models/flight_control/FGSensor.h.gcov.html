@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/flight_control/FGSensor.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/flight_control</a> - FGSensor.h<span style="font-size: 80%;"> (source / <a href="FGSensor.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGSensor.h
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       5 </span>            :  Date started: 9 July 2005
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2005 -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      30 </span>            : SENTRY
+<span class="lineNum">      31 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : #ifndef FGSENSOR_H
+<span class="lineNum">      34 </span>            : #define FGSENSOR_H
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : INCLUDES
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #include &quot;FGFCSComponent.h&quot;
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      43 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      44 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : namespace JSBSim {
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : class FGFCS;
+<span class="lineNum">      49 </span>            : class Element;
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      52 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      53 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : /** Encapsulates a Sensor component for the flight control system.
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : Syntax:
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : @code
+<span class="lineNum">      60 </span>            : &lt;sensor name=&quot;name&quot;&gt;
+<span class="lineNum">      61 </span>            :   &lt;input&gt; property &lt;/input&gt;
+<span class="lineNum">      62 </span>            :   &lt;lag&gt; number &lt;/lag&gt;
+<span class="lineNum">      63 </span>            :   &lt;noise [variation=&quot;PERCENT|ABSOLUTE&quot;] [distribution=&quot;UNIFORM|GAUSSIAN&quot;]&gt; number &lt;/noise&gt;
+<span class="lineNum">      64 </span>            :   &lt;quantization name=&quot;name&quot;&gt;
+<span class="lineNum">      65 </span>            :     &lt;bits&gt; number &lt;/bits&gt;
+<span class="lineNum">      66 </span>            :     &lt;min&gt; number &lt;/min&gt;
+<span class="lineNum">      67 </span>            :     &lt;max&gt; number &lt;/max&gt;
+<span class="lineNum">      68 </span>            :   &lt;/quantization&gt;
+<span class="lineNum">      69 </span>            :   &lt;drift_rate&gt; number &lt;/drift_rate&gt;
+<span class="lineNum">      70 </span>            :   &lt;gain&gt; number &lt;/gain&gt;
+<span class="lineNum">      71 </span>            :   &lt;bias&gt; number &lt;/bias&gt;
+<span class="lineNum">      72 </span>            :   &lt;delay [type=&quot;time|frames&quot;]&gt; number &lt; /delay&gt;
+<span class="lineNum">      73 </span>            : &lt;/sensor&gt;
+<span class="lineNum">      74 </span>            : @endcode
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            : Example:
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            : @code
+<span class="lineNum">      79 </span>            : &lt;sensor name=&quot;aero/sensor/qbar&quot;&gt;
+<span class="lineNum">      80 </span>            :   &lt;input&gt; aero/qbar &lt;/input&gt;
+<span class="lineNum">      81 </span>            :   &lt;lag&gt; 0.5 &lt;/lag&gt;
+<span class="lineNum">      82 </span>            :   &lt;noise variation=&quot;PERCENT&quot;&gt; 2 &lt;/noise&gt;
+<span class="lineNum">      83 </span>            :   &lt;quantization name=&quot;aero/sensor/quantized/qbar&quot;&gt;
+<span class="lineNum">      84 </span>            :     &lt;bits&gt; 12 &lt;/bits&gt;
+<span class="lineNum">      85 </span>            :     &lt;min&gt; 0 &lt;/min&gt;
+<span class="lineNum">      86 </span>            :     &lt;max&gt; 400 &lt;/max&gt;
+<span class="lineNum">      87 </span>            :   &lt;/quantization&gt;
+<span class="lineNum">      88 </span>            :   &lt;bias&gt; 0.5 &lt;/bias&gt;
+<span class="lineNum">      89 </span>            : &lt;/sensor&gt;
+<span class="lineNum">      90 </span>            : @endcode
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            : The only required element in the sensor definition is the input element. In that
+<span class="lineNum">      93 </span>            : case, no degradation would be modeled, and the output would simply be the input.
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            : Noise can be Gaussian or uniform, and the noise can be applied as a factor
+<span class="lineNum">      96 </span>            : (PERCENT) or additively (ABSOLUTE). The noise that can be applied at each frame
+<span class="lineNum">      97 </span>            : of the simulation execution is calculated as a random factor times a noise value
+<span class="lineNum">      98 </span>            : that is specified in the config file. When the noise distribution type is
+<span class="lineNum">      99 </span>            : Gaussian, the random number can be between roughly -3 and +3 for a span of six
+<span class="lineNum">     100 </span>            : sigma. When the distribution type is UNIFORM, the random value can be between
+<span class="lineNum">     101 </span>            : -1.0 and +1.0. This random value is multiplied against the specified noise to
+<span class="lineNum">     102 </span>            : arrive at a random noise value for the frame. If the noise type is PERCENT, then
+<span class="lineNum">     103 </span>            : random noise value is added to one, and that sum is then multiplied against the
+<span class="lineNum">     104 </span>            : input signal for the sensor. In this case, the specified noise value in the
+<span class="lineNum">     105 </span>            : config file would be expected to actually be a percent value, such as 0.05 (for
+<span class="lineNum">     106 </span>            : a 5% variance). If the noise type is ABSOLUTE, then the random noise value
+<span class="lineNum">     107 </span>            : specified in the config file is understood to be an absolute value of noise to
+<span class="lineNum">     108 </span>            : be added to the input signal instead of being added to 1.0 and having that sum
+<span class="lineNum">     109 </span>            : be multiplied against the input signal as in the PERCENT type. For the ABSOLUTE
+<span class="lineNum">     110 </span>            : noise case, the noise number specified in the config file could be any number.
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span>            : If the type is ABSOLUTE, then the noise number times the random number is added
+<span class="lineNum">     113 </span>            : to the input signal instead of being multiplied against it as with the PERCENT
+<span class="lineNum">     114 </span>            : type of noise.
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            : The delay element can specify a frame delay. The integer number provided is the
+<span class="lineNum">     117 </span>            : number of frames to delay the output signal.
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            : @author Jon S. Berndt
+<span class="lineNum">     120 </span>            : @version $Revision: 1.24 $
+<span class="lineNum">     121 </span>            : */
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     124 </span>            : CLASS DECLARATION
+<span class="lineNum">     125 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            : class FGSensor  : public FGFCSComponent
+<span class="lineNum">     128 </span>            : {
+<span class="lineNum">     129 </span>            : public:
+<span class="lineNum">     130 </span>            :   FGSensor(FGFCS* fcs, Element* element);
+<a name="131"><span class="lineNum">     131 </span>            :   virtual ~FGSensor();</a>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :   void SetFailLow(double val) {if (val &gt; 0.0) fail_low = true; else fail_low = false;}</span></a>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :   void SetFailHigh(double val) {if (val &gt; 0.0) fail_high = true; else fail_high = false;}</span>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :   void SetFailStuck(double val) {if (val &gt; 0.0) fail_stuck = true; else fail_stuck = false;}</span></a>
+<a name="136"><span class="lineNum">     136 </span>            : </a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :   double GetFailLow(void) const {if (fail_low) return 1.0; else return 0.0;}</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :   double GetFailHigh(void) const {if (fail_high) return 1.0; else return 0.0;}</span></a>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :   double GetFailStuck(void) const {if (fail_stuck) return 1.0; else return 0.0;}</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   int    GetQuantized(void) const {return quantized;}</span>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            :   bool Run (void) override;
+<span class="lineNum">     143 </span>            :   void ResetPastStates(void) override;
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            : protected:
+<span class="lineNum">     146 </span>            :   enum eNoiseType {ePercent=0, eAbsolute} NoiseType;
+<span class="lineNum">     147 </span>            :   enum eDistributionType {eUniform=0, eGaussian} DistributionType;
+<span class="lineNum">     148 </span>            :   double min, max;
+<span class="lineNum">     149 </span>            :   double span;
+<span class="lineNum">     150 </span>            :   double bias;
+<span class="lineNum">     151 </span>            :   double gain;
+<span class="lineNum">     152 </span>            :   double drift_rate;
+<span class="lineNum">     153 </span>            :   double drift;
+<span class="lineNum">     154 </span>            :   double noise_variance;
+<span class="lineNum">     155 </span>            :   double lag;
+<span class="lineNum">     156 </span>            :   double granularity;
+<span class="lineNum">     157 </span>            :   double ca; /// lag filter coefficient &quot;a&quot;
+<span class="lineNum">     158 </span>            :   double cb; /// lag filter coefficient &quot;b&quot;
+<span class="lineNum">     159 </span>            :   double PreviousOutput;
+<span class="lineNum">     160 </span>            :   double PreviousInput;
+<span class="lineNum">     161 </span>            :   int noise_type;
+<span class="lineNum">     162 </span>            :   int bits;
+<span class="lineNum">     163 </span>            :   int quantized;
+<span class="lineNum">     164 </span>            :   int divisions;
+<span class="lineNum">     165 </span>            :   bool fail_low;
+<span class="lineNum">     166 </span>            :   bool fail_high;
+<span class="lineNum">     167 </span>            :   bool fail_stuck;
+<span class="lineNum">     168 </span>            :   std::string quant_property;
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            :   void ProcessSensorSignal(void);
+<span class="lineNum">     171 </span>            :   void Noise(void);
+<span class="lineNum">     172 </span>            :   void Bias(void);
+<span class="lineNum">     173 </span>            :   void Drift(void);
+<span class="lineNum">     174 </span>            :   void Quantize(void);
+<span class="lineNum">     175 </span>            :   void Lag(void);
+<span class="lineNum">     176 </span>            :   void Gain(void);
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span>            :   void bind(Element* el) override;
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            : private:
+<span class="lineNum">     181 </span>            :   void Debug(int from) override;
+<span class="lineNum">     182 </span>            : };
+<span class="lineNum">     183 </span>            : }
+<span class="lineNum">     184 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

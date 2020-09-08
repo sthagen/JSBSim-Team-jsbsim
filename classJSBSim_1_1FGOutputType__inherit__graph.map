@@ -1,0 +1,8 @@
+<map id="FGOutputType" name="FGOutputType">
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGOutputFile.html" title="Abstract class that provide functions that are generic to all the outputs that are directed to a file..." alt="" coords="19,229,119,256"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGOutputSocket.html" title="Implements the output to a socket. " alt="" coords="143,229,263,256"/>
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGModel.html" title="Base class for all scheduled JSBSim models. " alt="" coords="98,80,173,107"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGModelFunctions.html" title="The model functions class provides the capability for loading, storing, and executing arbitrary funct..." alt="" coords="69,5,201,32"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGOutputTextFile.html" title="Implements the output to a human readable text file. " alt="" coords="5,304,132,331"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGOutputFG.html" title="Implements the output to a FlightGear socket. " alt="" coords="156,304,253,331"/>
+</map>

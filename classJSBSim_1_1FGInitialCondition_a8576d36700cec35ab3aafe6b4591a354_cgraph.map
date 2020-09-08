@@ -1,0 +1,7 @@
+<map id="GetMachIC" name="GetMachIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a346a168487e721ed793f896774dbc12c" title="Gets the initial altitude above sea level. " alt="" coords="157,45,295,71"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGAtmosphere.html#a9279f5c904e49a436c68665f57ab6be9" title="Returns the speed of sound in ft/sec. " alt="" coords="143,96,309,137"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGQuaternion.html#a4c650fa69b797cb5d122b7b19c70d380" title="Transformation matrix. " alt="" coords="147,161,305,203"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGLocation.html#aa71688869eede539bff376f43a78ea14" title="Get the distance from the center of the earth in feet. " alt="" coords="358,5,503,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGLocation.html#ab0d754a471a7ec7280549a1ae1f93331" title="Get the sea level radius in feet below the current location. " alt="" coords="357,71,504,112"/>
+</map>

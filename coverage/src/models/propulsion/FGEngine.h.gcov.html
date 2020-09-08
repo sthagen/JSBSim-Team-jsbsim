@@ -1,0 +1,326 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/propulsion/FGEngine.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/propulsion</a> - FGEngine.h<span style="font-size: 80%;"> (source / <a href="FGEngine.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntryLo">3.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntryLo">7.4 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGEngine.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 01/21/99
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      11 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      12 </span>            :  version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      19 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      20 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      23 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      26 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : Based on Flightgear code, which is based on LaRCSim. This class simulates
+<span class="lineNum">      29 </span>            : a generic engine.
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : HISTORY
+<span class="lineNum">      32 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      33 </span>            : 01/21/99   JSB   Created
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      36 </span>            : SENTRY
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : #ifndef FGENGINE_H
+<span class="lineNum">      40 </span>            : #define FGENGINE_H
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      43 </span>            : INCLUDES
+<span class="lineNum">      44 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      47 </span>            : #include &lt;string&gt;
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : #include &quot;math/FGModelFunctions.h&quot;
+<span class="lineNum">      50 </span>            : #include &quot;math/FGColumnVector3.h&quot;
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      53 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      54 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : namespace JSBSim {
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : class FGFDMExec;
+<span class="lineNum">      59 </span>            : class FGThruster;
+<span class="lineNum">      60 </span>            : class Element;
+<span class="lineNum">      61 </span>            : class FGPropertyManager;
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      64 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      65 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            : /** Base class for all engines.
+<span class="lineNum">      68 </span>            :     This base class contains methods and members common to all engines, such as
+<span class="lineNum">      69 </span>            :     logic to drain fuel from the appropriate tank, etc. 
+<span class="lineNum">      70 </span>            :     &lt;br&gt;
+<span class="lineNum">      71 </span>            :     &lt;h3&gt;Configuration File Format:&lt;/h3&gt;
+<span class="lineNum">      72 </span>            : @code
+<span class="lineNum">      73 </span>            :         &lt;engine file=&quot;{string}&quot;&gt;
+<span class="lineNum">      74 </span>            :             &lt;location unit=&quot;{IN | M}&quot;&gt;
+<span class="lineNum">      75 </span>            :                 &lt;x&gt; {number} &lt;/x&gt;
+<span class="lineNum">      76 </span>            :                 &lt;y&gt; {number} &lt;/y&gt;
+<span class="lineNum">      77 </span>            :                 &lt;z&gt; {number} &lt;/z&gt;
+<span class="lineNum">      78 </span>            :             &lt;/location&gt;
+<span class="lineNum">      79 </span>            :             &lt;!-- optional orientation definition --&gt;
+<span class="lineNum">      80 </span>            :             &lt;orient unit=&quot;{RAD | DEG}&quot;&gt;
+<span class="lineNum">      81 </span>            :                 &lt;roll&gt;  {number} &lt;/roll&gt;
+<span class="lineNum">      82 </span>            :                 &lt;pitch&gt; {number} &lt;/pitch&gt;
+<span class="lineNum">      83 </span>            :                 &lt;yaw&gt; {number} &lt;/yaw&gt;
+<span class="lineNum">      84 </span>            :             &lt;/orient&gt;
+<span class="lineNum">      85 </span>            :             &lt;feed&gt; {integer} &lt;/feed&gt;
+<span class="lineNum">      86 </span>            :             ... optional more feed tank index numbers ... 
+<span class="lineNum">      87 </span>            :             &lt;thruster file=&quot;{string}&quot;&gt;
+<span class="lineNum">      88 </span>            :                 &lt;location unit=&quot;{IN | M}&quot;&gt;
+<span class="lineNum">      89 </span>            :                     &lt;x&gt; {number} &lt;/x&gt;
+<span class="lineNum">      90 </span>            :                     &lt;y&gt; {number} &lt;/y&gt;
+<span class="lineNum">      91 </span>            :                     &lt;z&gt; {number} &lt;/z&gt;
+<span class="lineNum">      92 </span>            :                 &lt;/location&gt;
+<span class="lineNum">      93 </span>            :                 &lt;orient unit=&quot;{RAD | DEG}&quot;&gt;
+<span class="lineNum">      94 </span>            :                     &lt;roll&gt; {number} &lt;/roll&gt;
+<span class="lineNum">      95 </span>            :                     &lt;pitch&gt; {number} &lt;/pitch&gt;
+<span class="lineNum">      96 </span>            :                     &lt;yaw&gt; {number} &lt;/yaw&gt;
+<span class="lineNum">      97 </span>            :                 &lt;/orient&gt;
+<span class="lineNum">      98 </span>            :             &lt;/thruster&gt;
+<span class="lineNum">      99 </span>            :         &lt;/engine&gt;
+<span class="lineNum">     100 </span>            : @endcode
+<span class="lineNum">     101 </span>            : &lt;pre&gt;
+<span class="lineNum">     102 </span>            :     NOTES:
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            :   Not all thruster types can be matched with a given engine type.  See the class
+<span class="lineNum">     105 </span>            :   documentation for engine and thruster classes.
+<span class="lineNum">     106 </span>            : &lt;/pre&gt;     
+<span class="lineNum">     107 </span>            :     @author Jon S. Berndt
+<span class="lineNum">     108 </span>            : */
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     111 </span>            : CLASS DECLARATION
+<span class="lineNum">     112 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            : class FGEngine : public FGModelFunctions
+<a name="115"><span class="lineNum">     115 </span>            : {</a>
+<span class="lineNum">     116 </span>            : public:
+<span class="lineNum">     117 </span><span class="lineCov">         16 :   struct Inputs {</span>
+<span class="lineNum">     118 </span>            :     double Pressure;
+<span class="lineNum">     119 </span>            :     double PressureRatio;
+<span class="lineNum">     120 </span>            :     double Temperature;
+<span class="lineNum">     121 </span>            :     double Density;
+<span class="lineNum">     122 </span>            :     double DensityRatio;
+<span class="lineNum">     123 </span>            :     double Soundspeed;
+<span class="lineNum">     124 </span>            :     double TotalPressure;
+<span class="lineNum">     125 </span>            :     double TAT_c;
+<span class="lineNum">     126 </span>            :     double Vt;
+<span class="lineNum">     127 </span>            :     double Vc;
+<span class="lineNum">     128 </span>            :     double qbar;
+<span class="lineNum">     129 </span>            :     double alpha;
+<span class="lineNum">     130 </span>            :     double beta;
+<span class="lineNum">     131 </span>            :     double H_agl;
+<span class="lineNum">     132 </span>            :     FGColumnVector3 AeroUVW;
+<span class="lineNum">     133 </span>            :     FGColumnVector3 AeroPQR;
+<span class="lineNum">     134 </span>            :     FGColumnVector3 PQRi;
+<span class="lineNum">     135 </span>            :     std::vector &lt;double&gt; ThrottleCmd;
+<span class="lineNum">     136 </span>            :     std::vector &lt;double&gt; MixtureCmd;
+<span class="lineNum">     137 </span>            :     std::vector &lt;double&gt; ThrottlePos;
+<span class="lineNum">     138 </span>            :     std::vector &lt;double&gt; MixturePos;
+<span class="lineNum">     139 </span>            :     std::vector &lt;double&gt; PropAdvance;
+<span class="lineNum">     140 </span>            :     std::vector &lt;bool&gt; PropFeather;
+<span class="lineNum">     141 </span>            :     double TotalDeltaT;
+<span class="lineNum">     142 </span>            :   };
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            :   FGEngine(int engine_number, struct Inputs&amp; input);
+<span class="lineNum">     145 </span>            :   ~FGEngine() override;
+<span class="lineNum">     146 </span>            : 
+<a name="147"><span class="lineNum">     147 </span>            :   enum EngineType {etUnknown, etRocket, etPiston, etTurbine, etTurboprop, etElectric};</a>
+<a name="148"><span class="lineNum">     148 </span>            : </a>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :   EngineType GetType(void) const { return Type; }</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :   virtual const std::string&amp;  GetName(void) const { return Name; }</span>
+<a name="151"><span class="lineNum">     151 </span>            : </a>
+<a name="152"><span class="lineNum">     152 </span>            :   // Engine controls</a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :   virtual double  GetThrottleMin(void) const { return MinThrottle; }</span></a>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :   virtual double  GetThrottleMax(void) const { return MaxThrottle; }</span>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :   virtual bool    GetStarter(void) const     { return Starter; }</span></a>
+<a name="156"><span class="lineNum">     156 </span>            : </a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :   virtual double getFuelFlow_gph () const {return FuelFlow_gph;}</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :   virtual double getFuelFlow_pph () const {return FuelFlow_pph;}</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :   virtual double GetFuelFlowRate(void) const {return FuelFlowRate;}</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :   virtual double GetFuelFlowRateGPH(void) const {return FuelFlowRate*3600/FuelDensity;}</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :   virtual double GetFuelUsedLbs(void) const {return FuelUsedLbs;}</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :   virtual bool   GetStarved(void) const { return Starved; }</span></a>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :   virtual bool   GetRunning(void) const { return Running; }</span>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :   virtual bool   GetCranking(void) const { return Cranking; }</span></a>
+<a name="165"><span class="lineNum">     165 </span>            : </a>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :   virtual void SetStarved(bool tt) { Starved = tt; }</span>
+<a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :   virtual void SetStarved(void)    { Starved = true; }</span></a>
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :   virtual void SetRunning(bool bb) { Running=bb; }</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :   virtual void SetName(const std::string&amp; name) { Name = name; }</span></a>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :   virtual void SetFuelFreeze(bool f) { FuelFreeze = f; }</span>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :   virtual void SetFuelDensity(double d) { FuelDensity = d; }</span></a>
+<span class="lineNum">     173 </span>            : 
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :   virtual void SetStarter(bool s) { Starter = s; }</span></a>
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :   virtual int InitRunning(void){ return 1; }</span>
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span>            :   /** Resets the Engine parameters to the initial conditions */
+<span class="lineNum">     179 </span>            :   virtual void ResetToIC(void);
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :   /** Calculates the thrust of the engine, and other engine functions. */
+<span class="lineNum">     182 </span>            :   virtual void Calculate(void) = 0;
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            :   virtual double GetThrust(void) const;
+<span class="lineNum">     185 </span>            :     
+<span class="lineNum">     186 </span>            :   /// Sets engine placement information
+<span class="lineNum">     187 </span>            :   virtual void SetPlacement(const FGColumnVector3&amp; location, const FGColumnVector3&amp; orientation);
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span>            :   /** The fuel need is calculated based on power levels and flow rate for that
+<span class="lineNum">     190 </span>            :       power level. It is also turned from a rate into an actual amount (pounds)
+<span class="lineNum">     191 </span>            :       by multiplying it by the delta T and the rate.
+<span class="lineNum">     192 </span>            :       @return Total fuel requirement for this engine in pounds. */
+<a name="193"><span class="lineNum">     193 </span>            :   virtual double CalcFuelNeed(void);</a>
+<span class="lineNum">     194 </span>            : 
+<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :   virtual double CalcOxidizerNeed(void) {return 0.0;}</span></a>
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :   virtual double GetPowerAvailable(void) {return 0.0;};</span>
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            :   virtual const FGColumnVector3&amp; GetBodyForces(void);
+<span class="lineNum">     200 </span>            :   virtual const FGColumnVector3&amp; GetMoments(void);
+<a name="201"><span class="lineNum">     201 </span>            : </a>
+<span class="lineNum">     202 </span>            :   void LoadThruster(FGFDMExec* exec, Element *el);
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :   FGThruster* GetThruster(void) const {return Thruster;}</span>
+<a name="204"><span class="lineNum">     204 </span>            : </a>
+<span class="lineNum">     205 </span>            :   unsigned int GetSourceTank(unsigned int i) const;
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :   size_t GetNumSourceTanks() const {return SourceTanks.size();}</span>
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            :   virtual std::string GetEngineLabels(const std::string&amp; delimiter) = 0;
+<span class="lineNum">     209 </span>            :   virtual std::string GetEngineValues(const std::string&amp; delimiter) = 0;
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span>            :   struct Inputs&amp; in;
+<span class="lineNum">     212 </span>            :   void LoadThrusterInputs();
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span>            : protected:
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span>            :   std::string Name;
+<span class="lineNum">     217 </span>            :   const int   EngineNumber;
+<span class="lineNum">     218 </span>            :   EngineType Type;
+<span class="lineNum">     219 </span>            :   double X, Y, Z;
+<span class="lineNum">     220 </span>            :   double EnginePitch;
+<span class="lineNum">     221 </span>            :   double EngineYaw;
+<span class="lineNum">     222 </span>            :   double SLFuelFlowMax;
+<span class="lineNum">     223 </span>            :   double MaxThrottle;
+<span class="lineNum">     224 </span>            :   double MinThrottle;
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :   double FuelExpended;
+<span class="lineNum">     227 </span>            :   double FuelFlowRate;
+<span class="lineNum">     228 </span>            :   double PctPower;
+<span class="lineNum">     229 </span>            :   bool  Starter;
+<span class="lineNum">     230 </span>            :   bool  Starved;
+<span class="lineNum">     231 </span>            :   bool  Running;
+<span class="lineNum">     232 </span>            :   bool  Cranking;
+<span class="lineNum">     233 </span>            :   bool  FuelFreeze;
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            :   double FuelFlow_gph;
+<span class="lineNum">     236 </span>            :   double FuelFlow_pph;
+<span class="lineNum">     237 </span>            :   double FuelUsedLbs;
+<span class="lineNum">     238 </span>            :   double FuelDensity;
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            :   FGThruster* Thruster;
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span>            :   std::vector &lt;int&gt; SourceTanks;
+<span class="lineNum">     243 </span>            : 
+<span class="lineNum">     244 </span>            :   bool Load(FGFDMExec *exec, Element *el);
+<span class="lineNum">     245 </span>            :   void Debug(int from);
+<span class="lineNum">     246 </span>            : };
+<span class="lineNum">     247 </span>            : }
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     250 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

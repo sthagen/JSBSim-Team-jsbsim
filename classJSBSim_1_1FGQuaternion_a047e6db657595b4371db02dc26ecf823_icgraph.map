@@ -1,0 +1,15 @@
+<map id="GetEuler" name="GetEuler">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#aab430a890b7eb995d69c0c042fca969a" title="Sets the initial angle of attack. " alt="" coords="127,99,309,140"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="588,189,771,231"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a4e35ac529197f0bbcd476f52eae08a40" title="Sets the initial sideslip angle. " alt="" coords="127,219,309,260"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#a166ec4260ec1051bf83b148a667af572" title="Gets the initial roll angle. " alt="" coords="127,340,309,381"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGInitialCondition.html#acd24191b1a1075553a497c6b57014883" title="Gets the initial pitch angle. " alt="" coords="127,405,309,447"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGInitialCondition.html#ac5907b6c99a44689f3220cee1cdf8e33" title="Gets the initial heading angle. " alt="" coords="127,471,309,512"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGPropagate.html#a269d067d10ad81cf2b04e951dc1af761" title="Retrieves the Euler angles (in degrees) that define the vehicle orientation. " alt="" coords="141,584,295,625"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#a5c958bfa2833878f77a13e857e446534" title="Sets angle of attack initial condition in degrees. " alt="" coords="357,65,540,107"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInitialCondition.html#a4432f5e65443121378434889b2580f07" title="Sets the initial flight path angle. " alt="" coords="357,131,540,172"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#abffe2ecc4a7f992d6e4a8569e374eb5e" title="Sets angle of sideslip initial condition in degrees. " alt="" coords="357,248,540,289"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="362,365,535,391"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGTrimAxis.html#ad2aa672957b8b63104434e1adcce0951" title="Constructor for Trim Axis class. " alt="" coords="375,467,523,508"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGPropagate.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles that define the vehicle orientation. " alt="" coords="371,584,526,625"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="FGAtmosphere" name="FGAtmosphere">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGModel.html" title="Base class for all scheduled JSBSim models. " alt="" coords="265,95,339,121"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGModelFunctions.html" title="The model functions class provides the capability for loading, storing, and executing arbitrary funct..." alt="" coords="5,5,137,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGPropertyManager.html" title="FGPropertyManager" alt="" coords="162,5,301,32"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html" title="Encapsulates the JSBSim simulation executive. " alt="" coords="325,5,423,32"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="448,5,503,32"/>
+<area shape="rect" id="node7" href="$structJSBSim_1_1FGAtmosphere_1_1Inputs.html" title="Inputs" alt="" coords="363,95,422,121"/>
+</map>

@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGModelLoader.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGModelLoader.cpp<span style="font-size: 80%;"> (source / <a href="FGModelLoader.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntryLo">3.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGModelLoader.cpp
+<span class="lineNum">       4 </span>            :  Author:       Bertrand Coconnier
+<span class="lineNum">       5 </span>            :  Date started: 12/14/13
+<span class="lineNum">       6 </span>            :  Purpose:      Read and manage XML data for models definition
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :   ------------- Copyright (C) 2013 Bertrand Coconnier -------------
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      12 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      13 </span>            :  version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      21 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      22 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      25 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      28 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : This is the place where the XML data is loaded in memory for an access during
+<span class="lineNum">      30 </span>            : the models initialization.
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : HISTORY
+<span class="lineNum">      33 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      34 </span>            : 12/14/13   BC    Created
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : INCLUDES
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      41 </span>            : #include &quot;FGModelLoader.h&quot;
+<span class="lineNum">      42 </span>            : #include &quot;FGXMLFileRead.h&quot;
+<span class="lineNum">      43 </span>            : #include &quot;models/FGModel.h&quot;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : using namespace std;
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : namespace JSBSim {
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      50 </span>            : CLASS IMPLEMENTATION
+<a name="51"><span class="lineNum">      51 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 : Element_ptr FGModelLoader::Open(Element *el)</span>
+<span class="lineNum">      54 </span>            : {
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :   Element_ptr document = el;</span>
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 :   string fname = el-&gt;GetAttributeValue(&quot;file&quot;);</span>
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :   if (!fname.empty()) {</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :     FGXMLFileRead XMLFileRead;</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :     SGPath path(SGPath::fromUtf8(fname.c_str()));</span>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :     if (path.isRelative())</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :       path = model-&gt;FindFullPathName(path);</span>
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :     if (CachedFiles.find(path.utf8Str()) != CachedFiles.end())</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :       document = CachedFiles[path.utf8Str()];</span>
+<span class="lineNum">      67 </span>            :     else {
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :       document = XMLFileRead.LoadXMLDocument(path);</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :       if (document == 0L) {</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :         cerr &lt;&lt; endl &lt;&lt; el-&gt;ReadFrom()</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :              &lt;&lt; &quot;Could not open file: &quot; &lt;&lt; fname &lt;&lt; endl;</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :         return NULL;</span>
+<span class="lineNum">      73 </span>            :       }
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :       CachedFiles[path.utf8Str()] = document;</span>
+<span class="lineNum">      75 </span>            :     }
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :     if (document-&gt;GetName() != el-&gt;GetName()) {</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :       document-&gt;SetParent(el);</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :       el-&gt;AddChildElement(document);</span>
+<span class="lineNum">      80 </span>            :     }
+<span class="lineNum">      81 </span>            :   }
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   return document;</span>
+<a name="84"><span class="lineNum">      84 </span>            : }</a>
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 : SGPath CheckPathName(const SGPath&amp; path, const SGPath&amp; filename) {</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :   SGPath fullName = path/filename.utf8Str();</span>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :   if (fullName.extension() != &quot;xml&quot;)</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :     fullName.concat(&quot;.xml&quot;);</span>
+<span class="lineNum">      91 </span>            : 
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :   return fullName.exists() ? fullName : SGPath();</span></a>
+<span class="lineNum">      93 </span>            : }
+<span class="lineNum">      94 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

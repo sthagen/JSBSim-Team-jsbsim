@@ -1,0 +1,5 @@
+<map id="GetTec2l" name="GetTec2l">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGLocation.html#afa50b3c5c4e01a2b203a9c30dcf67414" title="Get the geodetic distance between the current location and a given location. " alt="" coords="128,5,239,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGLocation.html#a9f3cdc923cb7613620d1fb498a7e5e13" title="Get the heading that should be followed from the current location to a given location along the short..." alt="" coords="130,56,237,83"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGLocation.html#aa71688869eede539bff376f43a78ea14" title="Get the distance from the center of the earth in feet. " alt="" coords="287,5,371,32"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="SetRollTrimCmd" name="SetRollTrimCmd">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#abcb88ae97820a75597ea0c8393c1cf55" title="Sets the throttle command for the specified engine. " alt="" coords="172,5,287,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFCS.html#a362068d78d6109b4fad3d2267335ab29" title="Sets the mixture command for the specified engine. " alt="" coords="173,56,286,83"/>
+</map>

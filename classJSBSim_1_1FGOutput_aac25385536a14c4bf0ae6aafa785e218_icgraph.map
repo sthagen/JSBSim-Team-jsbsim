@@ -1,0 +1,5 @@
+<map id="Load" name="Load">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGOutput.html#aba9ec81f447e9a505fe732037c0f79e7" title="Disables the output generation for all output instances. " alt="" coords="171,5,237,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="104,56,304,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFDMExec.html#a3a5c816fd2db9ddca6c3f209f2b456d0" title="Loads a script. " alt="" coords="352,49,515,90"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="GetAltitudeASLmeters" name="GetAltitudeASLmeters">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropagate.html#a645621ae6613dac57bf228543069e829" title="Returns the current altitude above sea level. " alt="" coords="205,163,317,190"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGLocation.html#aa71688869eede539bff376f43a78ea14" title="Get the distance from the center of the earth in feet. " alt="" coords="365,5,511,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGLocation.html#ab0d754a471a7ec7280549a1ae1f93331" title="Get the sea level radius in feet below the current location. " alt="" coords="559,159,705,200"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGLocation.html#ad1b855893aaa82233cdd6e509c1ee23a" title="Set the distance from the center of the earth. " alt="" coords="365,123,511,164"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInertial.html#a36b96e61eb18cfda477d67b0a01eac4e" title="Get terrain contact point information below the current location. " alt="" coords="371,188,505,229"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGLocation.html#ad6d787090b71419e91678ceb91c6ef1f" title="Gets the geodetic altitude in feet. " alt="" coords="365,253,511,295"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInertial.html#a951b99be7d4a44868bf71be60537ac23" title="Set the terrain elevation above sea level. " alt="" coords="366,319,510,360"/>
+</map>

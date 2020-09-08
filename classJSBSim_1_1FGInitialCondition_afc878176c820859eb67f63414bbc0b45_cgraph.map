@@ -1,0 +1,12 @@
+<map id="GetLongitudeDegIC" name="GetLongitudeDegIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGLocation.html#ad622c03ba9b0c3162cf9aaa99136cf1e" title="Get the longitude. " alt="" coords="199,9,345,51"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a346a168487e721ed793f896774dbc12c" title="Gets the initial altitude above sea level. " alt="" coords="203,75,341,102"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a84eb5205c00cea25382e8961e77a4784" title="Gets the initial altitude above ground level. " alt="" coords="203,130,341,157"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGInitialCondition.html#a5454247df3a6df9d8b0816529d6e6529" title="Gets the initial terrain elevation. " alt="" coords="191,227,353,254"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGLocation.html#aa71688869eede539bff376f43a78ea14" title="Get the distance from the center of the earth in feet. " alt="" coords="410,5,555,47"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGLocation.html#ab0d754a471a7ec7280549a1ae1f93331" title="Get the sea level radius in feet below the current location. " alt="" coords="612,192,759,233"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGFDMExec.html#a93876fb8e8a2302e3880f9ebfb3ce6d5" title="Returns the FGInertial pointer. " alt="" coords="401,188,564,229"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInertial.html#a73c8611f4ce740c255fe6ccc2d7891c9" title="Get the altitude above ground level. " alt="" coords="415,123,550,164"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGInertial.html#a36b96e61eb18cfda477d67b0a01eac4e" title="Get terrain contact point information below the current location. " alt="" coords="415,253,550,295"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGLocation.html#ad6d787090b71419e91678ceb91c6ef1f" title="Gets the geodetic altitude in feet. " alt="" coords="410,319,555,360"/>
+</map>

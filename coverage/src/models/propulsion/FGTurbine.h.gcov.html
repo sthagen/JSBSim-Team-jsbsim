@@ -1,0 +1,420 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/propulsion/FGTurbine.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/propulsion</a> - FGTurbine.h<span style="font-size: 80%;"> (source / <a href="FGTurbine.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">25</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGTurbine.h
+<span class="lineNum">       4 </span>            :  Author:       David Culp
+<span class="lineNum">       5 </span>            :  Date started: 03/11/2003
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2003  David Culp (daveculp@cox.net)----------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      11 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      12 </span>            :  version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      20 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      21 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      24 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 03/11/2003  DPC  Created, based on FGTurbine
+<span class="lineNum">      29 </span>            : 09/22/2003  DPC  Added starting, stopping, new framework
+<span class="lineNum">      30 </span>            : 04/29/2004  DPC  Renamed from FGSimTurbine to FGTurbine
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      33 </span>            : SENTRY
+<span class="lineNum">      34 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : #ifndef FGTURBINE_H
+<span class="lineNum">      37 </span>            : #define FGTURBINE_H
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      40 </span>            : INCLUDES
+<span class="lineNum">      41 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : #include &quot;FGEngine.h&quot;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      46 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      47 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : namespace JSBSim {
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : class Element;
+<span class="lineNum">      52 </span>            : class FGFunction;
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      55 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      56 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : /** This class models a turbine engine.  Based on Jon Berndt's FGTurbine module.
+<span class="lineNum">      59 </span>            :     Here the term &quot;phase&quot; signifies the engine's mode of operation.  At any given
+<span class="lineNum">      60 </span>            :     time the engine is in only one phase.  At simulator startup the engine will be
+<span class="lineNum">      61 </span>            :     placed in the Trim phase in order to provide a simplified thrust value without
+<span class="lineNum">      62 </span>            :     throttle lag.  When trimming is complete the engine will go to the Off phase,
+<span class="lineNum">      63 </span>            :     unless the value FGEngine::Running has been previously set to true, in which
+<span class="lineNum">      64 </span>            :     case the engine will go to the Run phase.  Once an engine is in the Off phase
+<span class="lineNum">      65 </span>            :     the full starting procedure (or airstart) must be used to get it running.
+<span class="lineNum">      66 </span>            : &lt;P&gt;
+<span class="lineNum">      67 </span>            :     - STARTING (on ground):
+<span class="lineNum">      68 </span>            :       -# Set the control FGEngine::Starter to true.  The engine will spin up to
+<span class="lineNum">      69 </span>            :          a maximum of about %25 N2 (%5.2 N1). This value may be changed using the &lt;startnX&gt; parameter.
+<span class="lineNum">      70 </span>            :                  This simulates the action of a pneumatic starter.
+<span class="lineNum">      71 </span>            :       -# After reaching %15 N2 set the control FGEngine::Cutoff to false. If fuel
+<span class="lineNum">      72 </span>            :          is available the engine will now accelerate to idle.  The starter will
+<span class="lineNum">      73 </span>            :          automatically be set to false after the start cycle.
+<span class="lineNum">      74 </span>            : &lt;P&gt;
+<span class="lineNum">      75 </span>            :     - STARTING (in air):
+<span class="lineNum">      76 </span>            :       -# Increase speed to obtain a minimum of %15 N2.  If this is not possible,
+<span class="lineNum">      77 </span>            :          the starter may be used to assist.
+<span class="lineNum">      78 </span>            :       -# Place the control FGEngine::Cutoff to false.
+<span class="lineNum">      79 </span>            : &lt;P&gt;
+<span class="lineNum">      80 </span>            :     Ignition is assumed to be on anytime the Cutoff control is set to false,
+<span class="lineNum">      81 </span>            :     therefore a separate ignition system is not modeled.
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            : &lt;h3&gt;Configuration File Format:&lt;/h3&gt;
+<span class="lineNum">      84 </span>            : @code
+<span class="lineNum">      85 </span>            :  &lt;turbine_engine name=&quot;{string}&quot;&gt;
+<span class="lineNum">      86 </span>            :   &lt;milthrust unit=&quot;{LBS | N}&quot;&gt; {number} &lt;/milthrust&gt;
+<span class="lineNum">      87 </span>            :   &lt;maxthrust unit=&quot;{LBS | N}&quot;&gt; {number} &lt;/maxthrust&gt;
+<span class="lineNum">      88 </span>            :   &lt;bypassratio&gt; {number} &lt;/bypassratio&gt;
+<span class="lineNum">      89 </span>            :   &lt;bleed&gt; {number} &lt;/bleed&gt;
+<span class="lineNum">      90 </span>            :   &lt;tsfc&gt; {number} &lt;/tsfc&gt;
+<span class="lineNum">      91 </span>            :   &lt;atsfc&gt; {number} &lt;/atsfc&gt;
+<span class="lineNum">      92 </span>            :   &lt;ignitionn1&gt; {number} &lt;/ignitionn1&gt;
+<span class="lineNum">      93 </span>            :   &lt;ignitionn2&gt; {number} &lt;/ignitionn2&gt;
+<span class="lineNum">      94 </span>            :   &lt;idlen1&gt; {number} &lt;/idlen1&gt;
+<span class="lineNum">      95 </span>            :   &lt;idlen2&gt; {number} &lt;/idlen2&gt;
+<span class="lineNum">      96 </span>            :   &lt;n1spinup&gt; {number} &lt;/n1spinup&gt;
+<span class="lineNum">      97 </span>            :   &lt;n2spinup&gt; {number} &lt;/n2spinup&gt;
+<span class="lineNum">      98 </span>            :   &lt;n1startrate&gt; {number} &lt;/n1startrate&gt;
+<span class="lineNum">      99 </span>            :   &lt;n2startrate&gt; {number} &lt;/n2startrate&gt;
+<span class="lineNum">     100 </span>            :   &lt;n1spindown&gt; {number} &lt;/n1spindown&gt;
+<span class="lineNum">     101 </span>            :   &lt;n2spindown&gt; {number} &lt;/n2spindown&gt;
+<span class="lineNum">     102 </span>            :   &lt;maxn1&gt; {number} &lt;/maxn1&gt;
+<span class="lineNum">     103 </span>            :   &lt;maxn2&gt; {number} &lt;/maxn2&gt;
+<span class="lineNum">     104 </span>            :   &lt;augmented&gt; {0 | 1} &lt;/augmented&gt;
+<span class="lineNum">     105 </span>            :   &lt;augmethod&gt; {0 | 1 | 2} &lt;/augmethod&gt;
+<span class="lineNum">     106 </span>            :   &lt;injected&gt; {0 | 1} &lt;/injected&gt;
+<span class="lineNum">     107 </span>            :   &lt;injection-time&gt; {number} &lt;/injection-time&gt;
+<span class="lineNum">     108 </span>            :   &lt;disable-windmill&gt; {0 | 1}&lt;/disable-windmill&gt;
+<span class="lineNum">     109 </span>            :  &lt;/turbine_engine&gt;
+<span class="lineNum">     110 </span>            : @endcode
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span>            : &lt;h3&gt;Definition of the turbine engine configuration file parameters:&lt;/h3&gt;
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            : &lt;pre&gt;
+<span class="lineNum">     115 </span>            :   milthrust   - Maximum thrust, static, at sea level.
+<span class="lineNum">     116 </span>            :   maxthrust   - Afterburning thrust, static, at sea level.
+<span class="lineNum">     117 </span>            :   bypassratio - Ratio of bypass air flow to core air flow.
+<span class="lineNum">     118 </span>            :   bleed       - Thrust reduction factor due to losses (0.0 to 1.0).
+<span class="lineNum">     119 </span>            :   tsfc        - Thrust-specific fuel consumption at cruise, lbm/hr/lbf
+<span class="lineNum">     120 </span>            :   atsfc       - Afterburning TSFC, lbm/hr/lbf
+<span class="lineNum">     121 </span>            :   ignitionn1  - Fan rotor rpm (% of max) while starting
+<span class="lineNum">     122 </span>            :   ignitionn2  - Core rotor rpm (% of max) while starting
+<span class="lineNum">     123 </span>            :   idlen1      - Fan rotor rpm (% of max) at idle
+<span class="lineNum">     124 </span>            :   idlen2      - Core rotor rpm (% of max) at idle
+<span class="lineNum">     125 </span>            :   n1spinup    - Fan rotor rpm starter acceleration to ignitionn1 value (default 1.0)
+<span class="lineNum">     126 </span>            :   n2spinup    - Core rotor rpm starter acceleration to ignitionn2 value (default 3.0)
+<span class="lineNum">     127 </span>            :   n1startrate - Fan rotor rpm time taken to accelerate from ignitionn1 to idlen1 value (default 1.4)
+<span class="lineNum">     128 </span>            :   n2startrate - Core rotor rpm time taken to accelerate to ignitionn2 idlen2 value (default 2.0)
+<span class="lineNum">     129 </span>            :   n1spindown  - Factor used in calculation for fan rotor time to spool down to zero (default 2.0)
+<span class="lineNum">     130 </span>            :   n2spindown  - Factor used in calculation for core rotor time to spool down to zero (default 2.0)
+<span class="lineNum">     131 </span>            :   maxn1       - Fan rotor rpm (% of max) at full throttle 
+<span class="lineNum">     132 </span>            :   maxn2       - Core rotor rpm (% of max) at full throttle
+<span class="lineNum">     133 </span>            :   augmented
+<span class="lineNum">     134 </span>            :               0 = afterburner not installed
+<span class="lineNum">     135 </span>            :               1 = afterburner installed
+<span class="lineNum">     136 </span>            :   augmethod
+<span class="lineNum">     137 </span>            :               0 = afterburner activated by property /engines/engine[n]/augmentation
+<span class="lineNum">     138 </span>            :               1 = afterburner activated by pushing throttle above 99% position
+<span class="lineNum">     139 </span>            :               2 = throttle range is expanded in the FCS, and values above 1.0 are afterburner range
+<span class="lineNum">     140 </span>            :   injected
+<span class="lineNum">     141 </span>            :               0 = Water injection not installed
+<span class="lineNum">     142 </span>            :               1 = Water injection installed
+<span class="lineNum">     143 </span>            :   injection-time - Time, in seconds, of water injection duration 
+<span class="lineNum">     144 </span>            :   InjN1increment - % increase in N1 when injection is taking place
+<span class="lineNum">     145 </span>            :   InjN2increment - % increase in N2 when injection is taking place
+<span class="lineNum">     146 </span>            :   disable-windmill - flag that disables engine windmilling when off if true
+<span class="lineNum">     147 </span>            : &lt;/pre&gt;
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span>            : &lt;h3&gt;NOTES:&lt;/h3&gt;  
+<span class="lineNum">     150 </span>            : &lt;pre&gt;
+<span class="lineNum">     151 </span>            :     Bypass ratio is used only to estimate engine acceleration time.  The
+<span class="lineNum">     152 </span>            :     effect of bypass ratio on engine efficiency is already included in
+<span class="lineNum">     153 </span>            :     the TSFC value.  Feel free to set this parameter (even for turbojets) to
+<span class="lineNum">     154 </span>            :     whatever value gives a desired spool-up rate. Default value is 0.
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            :     The bleed factor is multiplied by thrust to give a resulting thrust
+<span class="lineNum">     157 </span>            :     after losses.  This can represent losses due to bleed, or any other cause.
+<span class="lineNum">     158 </span>            :     Default value is 0.  A common value would be 0.04.
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :     Nozzle position, for variable area exhaust nozzles, is provided for users
+<span class="lineNum">     161 </span>            :     needing to drive a nozzle gauge or animate a virtual nozzle.
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :     This model can only be used with the &quot;direct&quot; thruster.  See the file:
+<span class="lineNum">     164 </span>            :     /engine/direct.xml
+<span class="lineNum">     165 </span>            : &lt;/pre&gt;
+<span class="lineNum">     166 </span>            :     @author David P. Culp
+<span class="lineNum">     167 </span>            : */
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     170 </span>            : CLASS DECLARATION
+<span class="lineNum">     171 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            : class FGTurbine : public FGEngine
+<span class="lineNum">     174 </span>            : {
+<span class="lineNum">     175 </span>            : public:
+<span class="lineNum">     176 </span>            :   /** Constructor
+<span class="lineNum">     177 </span>            :       @param Executive pointer to executive structure
+<span class="lineNum">     178 </span>            :       @param el pointer to the XML element representing the turbine engine
+<span class="lineNum">     179 </span>            :       @param engine_number engine number  */
+<span class="lineNum">     180 </span>            :   FGTurbine(FGFDMExec* Executive, Element *el, int engine_number, struct Inputs&amp; input);
+<span class="lineNum">     181 </span>            :   /// Destructor
+<span class="lineNum">     182 </span>            :   ~FGTurbine();
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            :   enum phaseType { tpOff, tpRun, tpSpinUp, tpStart, tpStall, tpSeize, tpTrim };
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span>            :   void Calculate(void);
+<span class="lineNum">     187 </span>            :   double CalcFuelNeed(void);
+<span class="lineNum">     188 </span>            :   double GetPowerAvailable(void);
+<span class="lineNum">     189 </span>            :   /** A lag filter.
+<span class="lineNum">     190 </span>            :       Used to control the rate at which values are allowed to change.
+<span class="lineNum">     191 </span>            :       @param var a pointer to a variable of type double
+<span class="lineNum">     192 </span>            :       @param target the desired (target) value
+<span class="lineNum">     193 </span>            :       @param accel the rate, per second, the value may increase
+<span class="lineNum">     194 </span>            :       @param decel the rate, per second, the value may decrease    */
+<span class="lineNum">     195 </span>            :   double Seek(double* var, double target, double accel, double decel);
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            :   phaseType GetPhase(void) { return phase; }
+<a name="198"><span class="lineNum">     198 </span>            : </a>
+<span class="lineNum">     199 </span>            :   bool GetOvertemp(void)  const {return Overtemp; }
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :   bool GetInjection(void) const {return Injection;}</span>
+<span class="lineNum">     201 </span>            :   bool GetFire(void) const { return Fire; }
+<a name="202"><span class="lineNum">     202 </span>            :   bool GetAugmentation(void) const {return Augmentation;}</a>
+<span class="lineNum">     203 </span>            :   bool GetReversed(void) const { return Reversed; }
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :   bool GetCutoff(void) const { return Cutoff; }</span>
+<span class="lineNum">     205 </span>            :   int GetIgnition(void) const {return Ignition;}
+<span class="lineNum">     206 </span>            : 
+<a name="207"><span class="lineNum">     207 </span>            :   double GetInlet(void) const { return InletPosition; }</a>
+<span class="lineNum">     208 </span>            :   double GetNozzle(void) const { return NozzlePosition; }
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :   double GetBleedDemand(void) const {return BleedDemand;}</span>
+<span class="lineNum">     210 </span>            :   double GetN1(void) const {return N1;}
+<span class="lineNum">     211 </span>            :   double GetN2(void) const {return N2;}
+<span class="lineNum">     212 </span>            :   double GetEPR(void) const {return EPR;}
+<a name="213"><span class="lineNum">     213 </span>            :   double GetEGT(void) const {return EGT_degC;}</a>
+<a name="214"><span class="lineNum">     214 </span>            : </a>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :   double GetMaxN1(void) const {return MaxN1;}</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :   double GetMaxN2(void) const {return MaxN2;}</span>
+<a name="217"><span class="lineNum">     217 </span>            :   double getOilPressure_psi () const {return OilPressure_psi;}</a>
+<a name="218"><span class="lineNum">     218 </span>            :   double getOilTemp_degF (void) {return KelvinToFahrenheit(OilTemp_degK);}</a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :   double GetInjectionTimer(void) const {return InjectionTimer;}</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :   double GetInjWaterNorm(void) const {return InjWaterNorm;}</span></a>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   double GetInjN1increment(void) const {return InjN1increment;}</span>
+<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :   double GetInjN2increment(void) const {return InjN2increment;}</span></a>
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :   void SetInjection(bool injection) {Injection = injection;}</span>
+<span class="lineNum">     225 </span>            :   void SetIgnition(int ignition) {Ignition = ignition;}
+<span class="lineNum">     226 </span>            :   void SetAugmentation(bool augmentation) {Augmentation = augmentation;}
+<a name="227"><span class="lineNum">     227 </span>            :   void SetPhase( phaseType p ) { phase = p; }</a>
+<span class="lineNum">     228 </span>            :   void SetEPR(double epr) {EPR = epr;}
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :   void SetBleedDemand(double bleedDemand) {BleedDemand = bleedDemand;}</span></a>
+<a name="230"><span class="lineNum">     230 </span>            :   void SetReverse(bool reversed) { Reversed = reversed; }</a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :   void SetCutoff(bool cutoff) { Cutoff = cutoff; }</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :   void SetMaxN1(double maxn1) {MaxN1 = maxn1;}</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :   void SetMaxN2(double maxn2) {MaxN2 = maxn2;}</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :   void SetInjectionTimer(double injtimer) {InjectionTimer = injtimer;}</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :   void SetInjWaterNorm(double injwater) {InjWaterNorm = injwater;}</span></a>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :   void SetInjN1increment(double injN1inc) {InjN1increment = injN1inc;}</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :   void SetInjN2increment(double injN2inc) {InjN2increment = injN2inc;}</span>
+<span class="lineNum">     238 </span>            :   
+<span class="lineNum">     239 </span>            :   int InitRunning(void);
+<span class="lineNum">     240 </span>            :   void ResetToIC(void);
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span>            :   std::string GetEngineLabels(const std::string&amp; delimiter);
+<span class="lineNum">     243 </span>            :   std::string GetEngineValues(const std::string&amp; delimiter);
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            : private:
+<span class="lineNum">     246 </span>            : 
+<span class="lineNum">     247 </span>            :   phaseType phase;         ///&lt; Operating mode, or &quot;phase&quot;
+<span class="lineNum">     248 </span>            :   double MilThrust;        ///&lt; Maximum Unaugmented Thrust, static @ S.L. (lbf)
+<span class="lineNum">     249 </span>            :   double MaxThrust;        ///&lt; Maximum Augmented Thrust, static @ S.L. (lbf)
+<span class="lineNum">     250 </span>            :   double BypassRatio;      ///&lt; Bypass Ratio
+<span class="lineNum">     251 </span>            :   double TSFC;             ///&lt; Thrust Specific Fuel Consumption (lbm/hr/lbf)
+<span class="lineNum">     252 </span>            :   double ATSFC;            ///&lt; Augmented TSFC (lbm/hr/lbf)
+<span class="lineNum">     253 </span>            :   double IdleN1;           ///&lt; Idle N1
+<span class="lineNum">     254 </span>            :   double IdleN2;           ///&lt; Idle N2
+<span class="lineNum">     255 </span>            :   double IgnitionN1;       ///&lt; Ignition N1
+<span class="lineNum">     256 </span>            :   double IgnitionN2;       ///&lt; Ignition N2
+<span class="lineNum">     257 </span>            :   double N1;               ///&lt; N1
+<span class="lineNum">     258 </span>            :   double N2;               ///&lt; N2
+<span class="lineNum">     259 </span>            :   double N2norm;           ///&lt; N2 normalized (0=idle, 1=max)
+<span class="lineNum">     260 </span>            :   double MaxN1;            ///&lt; N1 at 100% throttle
+<span class="lineNum">     261 </span>            :   double MaxN2;            ///&lt; N2 at 100% throttle
+<span class="lineNum">     262 </span>            :   double IdleFF;           ///&lt; Idle Fuel Flow (lbm/hr)
+<span class="lineNum">     263 </span>            :   double N1_factor;        ///&lt; factor to tie N1 and throttle
+<span class="lineNum">     264 </span>            :   double N2_factor;        ///&lt; factor to tie N2 and throttle
+<span class="lineNum">     265 </span>            :   double ThrottlePos;      ///&lt; FCS-supplied throttle position - modified for local use!
+<span class="lineNum">     266 </span>            :   double AugmentCmd;       ///&lt; modulated afterburner command (0.0 to 1.0)
+<span class="lineNum">     267 </span>            :   double N1_spinup;        ///&lt; N1 spin up rate from pneumatic starter (per second)
+<span class="lineNum">     268 </span>            :   double N2_spinup;        ///&lt; N2 spin up rate from pneumatic starter (per second)
+<span class="lineNum">     269 </span>            :   double N1_start_rate;    ///&lt; N1 spin up rate from ignition (per second)
+<span class="lineNum">     270 </span>            :   double N2_start_rate;    ///&lt; N2 spin up rate from ignition (per second)
+<span class="lineNum">     271 </span>            :   double N1_spindown;      ///&lt; N1 spin down factor
+<span class="lineNum">     272 </span>            :   double N2_spindown;      ///&lt; N2 spin down factor
+<span class="lineNum">     273 </span>            :   bool Stalled;            ///&lt; true if engine is compressor-stalled
+<span class="lineNum">     274 </span>            :   bool Seized;             ///&lt; true if inner spool is seized
+<span class="lineNum">     275 </span>            :   bool Overtemp;           ///&lt; true if EGT exceeds limits
+<span class="lineNum">     276 </span>            :   bool Fire;               ///&lt; true if engine fire detected
+<span class="lineNum">     277 </span>            :   bool Injection;
+<span class="lineNum">     278 </span>            :   bool Augmentation;
+<span class="lineNum">     279 </span>            :   bool Reversed;
+<span class="lineNum">     280 </span>            :   bool Cutoff;
+<span class="lineNum">     281 </span>            :   bool disableWindmill;    ///&lt; flag to disable windmilling of engine in Off phase
+<span class="lineNum">     282 </span>            :   int Injected;            ///&lt; = 1 if water injection installed
+<span class="lineNum">     283 </span>            :   int Ignition;
+<span class="lineNum">     284 </span>            :   int Augmented;           ///&lt; = 1 if augmentation installed
+<span class="lineNum">     285 </span>            :   int AugMethod;           ///&lt; = 0 if using property /engine[n]/augmentation
+<span class="lineNum">     286 </span>            :                            ///&lt; = 1 if using last 1% of throttle movement
+<span class="lineNum">     287 </span>            :                            ///&lt; = 2 if using FCS-defined throttle
+<span class="lineNum">     288 </span>            :   double EGT_degC;
+<span class="lineNum">     289 </span>            :   double EPR;
+<span class="lineNum">     290 </span>            :   double OilPressure_psi;
+<span class="lineNum">     291 </span>            :   double OilTemp_degK;
+<span class="lineNum">     292 </span>            :   double BleedDemand;
+<span class="lineNum">     293 </span>            :   double InletPosition;
+<span class="lineNum">     294 </span>            :   double NozzlePosition;
+<span class="lineNum">     295 </span>            :   double correctedTSFC;
+<span class="lineNum">     296 </span>            :   double InjectionTimer;
+<span class="lineNum">     297 </span>            :   double InjectionTime;
+<span class="lineNum">     298 </span>            :   double InjWaterNorm;
+<span class="lineNum">     299 </span>            :   double InjN1increment;
+<span class="lineNum">     300 </span>            :   double InjN2increment;
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span>            :   double Off(void);
+<span class="lineNum">     303 </span>            :   double Run();
+<span class="lineNum">     304 </span>            :   double SpinUp(void);
+<span class="lineNum">     305 </span>            :   double Start(void);
+<span class="lineNum">     306 </span>            :   double Stall(void);
+<span class="lineNum">     307 </span>            :   double Seize(void);
+<span class="lineNum">     308 </span>            :   double Trim();
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            :   FGFunction *IdleThrustLookup;
+<span class="lineNum">     311 </span>            :   FGFunction *MilThrustLookup;
+<span class="lineNum">     312 </span>            :   FGFunction *MaxThrustLookup;
+<span class="lineNum">     313 </span>            :   FGFunction *InjectionLookup;
+<span class="lineNum">     314 </span>            :   FGFDMExec* FDMExec;
+<span class="lineNum">     315 </span>            :   FGParameter *N1SpoolUp;
+<span class="lineNum">     316 </span>            :   FGParameter *N1SpoolDown;
+<span class="lineNum">     317 </span>            :   FGParameter *N2SpoolUp;
+<span class="lineNum">     318 </span>            :   FGParameter *N2SpoolDown;
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            :   bool Load(FGFDMExec *exec, Element *el);
+<span class="lineNum">     321 </span>            :   void bindmodel(FGPropertyManager* pm);
+<span class="lineNum">     322 </span>            :   void Debug(int from);
+<span class="lineNum">     323 </span>            : 
+<span class="lineNum">     324 </span>            :   friend class FGSpoolUp;
+<a name="325"><span class="lineNum">     325 </span>            : };</a>
+<span class="lineNum">     326 </span>            : 
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 : class FGSpoolUp : public FGParameter</span>
+<a name="328"><span class="lineNum">     328 </span>            : {</a>
+<span class="lineNum">     329 </span>            : public:
+<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :   FGSpoolUp(FGTurbine* _turb, double BPR, double factor)</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :     : turb(_turb), delay(factor * 90.0 / (BPR + 3.0)) {}</span></a>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :   string GetName(void) const { return string(); };</span>
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :   double GetValue(void) const {</span>
+<span class="lineNum">     334 </span>            :     // adjust acceleration for N2 and atmospheric density
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :     double n = std::min(1.0, turb-&gt;N2norm + 0.1);</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :     return delay / (1 + 3 * (1-n)*(1-n)*(1-n) + (1 - turb-&gt;in.DensityRatio));</span>
+<span class="lineNum">     337 </span>            :   }
+<span class="lineNum">     338 </span>            : private:
+<span class="lineNum">     339 </span>            :   FGTurbine* turb;
+<span class="lineNum">     340 </span>            :   double delay; ///&lt; Inverse spool-up time from idle to 100% (seconds)
+<span class="lineNum">     341 </span>            : };
+<span class="lineNum">     342 </span>            : }
+<span class="lineNum">     343 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     344 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

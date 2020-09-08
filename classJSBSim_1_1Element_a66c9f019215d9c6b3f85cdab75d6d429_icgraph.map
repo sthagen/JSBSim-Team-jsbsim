@@ -1,0 +1,29 @@
+<map id="GetDataLine" name="GetDataLine">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGActuator.html#a0962ac7e146feeb5eaad86e2c48a509f" title="Constructor. " alt="" coords="173,123,318,164"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGDistributor.html#a74684516aa9fa3392cd32b268003fd6d" title="Constructor. " alt="" coords="167,188,323,229"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFCSComponent.html#ad402808175fe500162a7e3bcd23aed5a" title="Constructor. " alt="" coords="391,5,581,47"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html#a73e9346f1da3130b73299159f4144d35" title="Retrieves property or properties matching the supplied string. " alt="" coords="164,1063,327,1104"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGFunction.html#a89b81df0d34de831a1e8c48903d1af64" title="Constructor. " alt="" coords="413,71,559,112"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGOutputType.html#a0b8d108c40ce8b06c3c849824ab18397" title="Init the output directives from an XML file (implement the FGModel interface). " alt="" coords="404,828,568,869"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="872,657,1072,683"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGTable.html#a6408aca30b15b5fbee7544f0e322263b" title="The constructor for a table. " alt="" coords="393,574,579,601"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGUDPInputSocket.html#a0b8d108c40ce8b06c3c849824ab18397" title="Reads the property names from an XML file. " alt="" coords="148,1128,343,1169"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1Element.html#aa9c4e9e17572561475562e52683bd726" title="Searches for the named element and returns the string data belonging to it. " alt="" coords="181,726,309,753"/>
+<area shape="rect" id="node23" href="$classJSBSim_1_1Element.html#aeed93f7828bb444f583f7940e4f0f8ad" title="Retrieves the element name. " alt="" coords="206,355,285,382"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInputSocket.html#a7323b6a37cd99bc6f5dad5a8d709a8a7" title="Generates the input. " alt="" coords="403,1063,569,1104"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGOutput.html#aac25385536a14c4bf0ae6aafa785e218" title="Load the output directives and adds a new output instance to the Output Manager list. " alt="" coords="641,657,812,683"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGOutputFile.html#a0b8d108c40ce8b06c3c849824ab18397" title="Init the output directives from an XML file. " alt="" coords="649,839,805,880"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGOutputSocket.html#a0b8d108c40ce8b06c3c849824ab18397" title="Init the output directives from an XML file. " alt="" coords="639,708,815,749"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGOutputType.html#adabacbab1576ff34429a7435ee9e23b9" title="Get the name identifier to which the output will be directed. " alt="" coords="645,773,809,815"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="635,439,818,480"/>
+<area shape="rect" id="node18" href="$classJSBSim_1_1FGLGear.html#a27044d02e736b462e84b6c61d1200f41" title="Constructor. " alt="" coords="631,505,823,531"/>
+<area shape="rect" id="node19" href="$classJSBSim_1_1FGLinearActuator.html#aa9a886685d7f93109a4077064af3c27b" title="Constructor. " alt="" coords="396,945,576,987"/>
+<area shape="rect" id="node20" href="$classJSBSim_1_1FGRotor.html#a4bc3dbf658386662ee7dc09a2a70383c" title="Constructor for FGRotor. " alt="" coords="393,726,579,753"/>
+<area shape="rect" id="node21" href="$classJSBSim_1_1FGTank.html#a3f836b4283222c9b9a1e556ab2205f5a" title="Constructor. " alt="" coords="637,555,817,582"/>
+<area shape="rect" id="node22" href="$classJSBSim_1_1Element.html#a70d21ba71614d39449ea585fd20432a9" title="Returns the name of the file in which the element has been read. " alt="" coords="677,606,776,633"/>
+<area shape="rect" id="node24" href="$classJSBSim_1_1FGFCS.html#a0b8d108c40ce8b06c3c849824ab18397" title="Loads the Flight Control System. " alt="" coords="647,227,806,254"/>
+<area shape="rect" id="node25" href="$classJSBSim_1_1FGModel.html#a42ce334dbfdce7ccb2a75f9d32d02065" title="Uploads this model in memory. " alt="" coords="396,406,576,433"/>
+<area shape="rect" id="node26" href="$classJSBSim_1_1FGRotor.html#a630c02bbc20b13cbbd9f10ebe27871be" title="Destructor for FGRotor. " alt="" coords="629,358,824,385"/>
+<area shape="rect" id="node27" href="$classJSBSim_1_1FGThruster.html#a18899cd20a4e7ceec9427ea4b4bdff4a" title="Constructor. " alt="" coords="414,289,558,331"/>
+<area shape="rect" id="node28" href="$classJSBSim_1_1Element.html#abf31eea79e3de7547610926decbb7b3d" title="Searches for the named element and converts and returns the data belonging to it. ..." alt="" coords="391,508,581,549"/>
+</map>

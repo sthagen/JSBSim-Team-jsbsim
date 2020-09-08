@@ -1,0 +1,5 @@
+<map id="operator&lt;&lt;" name="operator&lt;&lt;">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropertyManager.html#a8beb83bbfc05f5e10b0f5c39baf54cab" title="Property&#45;ify a name replaces spaces with &#39;&#45;&#39; and, optionally, makes name all lower case..." alt="" coords="152,5,347,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1Element.html#a947c5ac935ae1435154c6198c46fbb55" title="Return a string that contains a description of the location where the current XML element was read fr..." alt="" coords="152,71,347,98"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="139,122,360,149"/>
+</map>

@@ -1,0 +1,23 @@
+<map id="GetSeaLevelRadius" name="GetSeaLevelRadius">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInertial.html#abd717975bda0df2c6335256016010b30" title="Set the gravity type. " alt="" coords="192,333,327,375"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#a346a168487e721ed793f896774dbc12c" title="Gets the initial altitude above sea level. " alt="" coords="399,399,581,440"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGInitialCondition.html#adb6fe57c0d1ce470a4d12b8e3054f75b" title="Sets the altitude above sea level initial condition in feet. " alt="" coords="653,508,836,549"/>
+<area shape="rect" id="node18" href="$classJSBSim_1_1FGLocation.html#ad6d787090b71419e91678ceb91c6ef1f" title="Gets the geodetic altitude in feet. " alt="" coords="200,731,319,758"/>
+<area shape="rect" id="node22" href="$classJSBSim_1_1FGPropagate.html#a645621ae6613dac57bf228543069e829" title="Returns the current altitude above sea level. " alt="" coords="413,961,567,1003"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInertial.html#ad9453df496ad1736e08e3de3d0a23bc5" title="Get the gravity type. " alt="" coords="423,333,557,375"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGInitialCondition.html#a13d4b8fd402f41dcf6eef8ed0c11f435" title="Set equivalent airspeed initial condition in knots. " alt="" coords="884,121,1067,163"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="1115,413,1297,455"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a4b214047e1c25d93b9d706621f32f6ce" title="Set mach initial condition. " alt="" coords="884,239,1067,280"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#abaa026e39ca6d9c383ccffa8f9bbd936" title="Set calibrated airspeed initial condition in knots. " alt="" coords="884,304,1067,345"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGInitialCondition.html#a78752db06521e6974fad0089a5e31695" title="Sets the initial Altitude above ground level. " alt="" coords="653,676,836,717"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGInitialCondition.html#ab6f6dae970e40878a34789be7dfcb9a7" title="Sets the initial latitude. " alt="" coords="884,603,1067,644"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGInitialCondition.html#a777b283e5014563b30f96b47a9e6220a" title="Sets the initial geodetic latitude. " alt="" coords="884,523,1067,564"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="889,421,1062,447"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGInitialCondition.html#a5ff3b7823e19062dfc47fc7350e6384b" title="Gets the initial calibrated airspeed. " alt="" coords="653,340,836,381"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGInitialCondition.html#abe2a911da5e3610023f885e9e50939d1" title="Gets the initial equivalent airspeed. " alt="" coords="653,5,836,47"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1FGInitialCondition.html#a8576d36700cec35ab3aafe6b4591a354" title="Gets the initial mach. " alt="" coords="653,71,836,112"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1FGInitialCondition.html#afc878176c820859eb67f63414bbc0b45" title="Gets the initial longitude. " alt="" coords="653,741,836,783"/>
+<area shape="rect" id="node19" href="$classJSBSim_1_1FGDefaultGroundCallback.html#a8ea3c30532eecf47acf6932c7b8b86fb" title="Compute the altitude above ground. " alt="" coords="375,896,605,937"/>
+<area shape="rect" id="node20" href="$classJSBSim_1_1FGInertial.html#a362f841fccd857fbf35aecd9f0c38418" title="Set the altitude above ground level. " alt="" coords="423,636,557,677"/>
+<area shape="rect" id="node21" href="$classJSBSim_1_1FGInitialCondition.html#a5454247df3a6df9d8b0816529d6e6529" title="Gets the initial terrain elevation. " alt="" coords="399,753,581,795"/>
+</map>

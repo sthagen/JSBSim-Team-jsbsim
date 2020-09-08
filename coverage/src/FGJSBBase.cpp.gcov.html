@@ -1,0 +1,387 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/FGJSBBase.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - FGJSBBase.cpp<span style="font-size: 80%;"> (source / <a href="FGJSBBase.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">123</td>
+            <td class="headerCovTableEntry">124</td>
+            <td class="headerCovTableEntryHi">99.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGJSBBase.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 07/01/01
+<span class="lineNum">       6 </span>            :  Purpose:      Encapsulates the JSBBase object
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------------- Copyright (C) 2001  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      12 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      13 </span>            :  later version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      21 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      22 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      25 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      28 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : HISTORY
+<span class="lineNum">      31 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      32 </span>            : 07/01/01  JSB  Created
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      35 </span>            : INCLUDES
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : #define BASE
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      41 </span>            : #include &quot;models/FGAtmosphere.h&quot;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : using namespace std;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : namespace JSBSim {
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      48 </span>            : CLASS IMPLEMENTATION
+<span class="lineNum">      49 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : #ifndef _MSC_VER
+<span class="lineNum">      52 </span>            :     char FGJSBBase::highint[5]  = {27, '[', '1', 'm', '\0'      };
+<span class="lineNum">      53 </span>            :     char FGJSBBase::halfint[5]  = {27, '[', '2', 'm', '\0'      };
+<span class="lineNum">      54 </span>            :     char FGJSBBase::normint[6]  = {27, '[', '2', '2', 'm', '\0' };
+<span class="lineNum">      55 </span>            :     char FGJSBBase::reset[5]    = {27, '[', '0', 'm', '\0'      };
+<span class="lineNum">      56 </span>            :     char FGJSBBase::underon[5]  = {27, '[', '4', 'm', '\0'      };
+<span class="lineNum">      57 </span>            :     char FGJSBBase::underoff[6] = {27, '[', '2', '4', 'm', '\0' };
+<span class="lineNum">      58 </span>            :     char FGJSBBase::fgblue[6]   = {27, '[', '3', '4', 'm', '\0' };
+<span class="lineNum">      59 </span>            :     char FGJSBBase::fgcyan[6]   = {27, '[', '3', '6', 'm', '\0' };
+<span class="lineNum">      60 </span>            :     char FGJSBBase::fgred[6]    = {27, '[', '3', '1', 'm', '\0' };
+<span class="lineNum">      61 </span>            :     char FGJSBBase::fggreen[6]  = {27, '[', '3', '2', 'm', '\0' };
+<span class="lineNum">      62 </span>            :     char FGJSBBase::fgdef[6]    = {27, '[', '3', '9', 'm', '\0' };
+<span class="lineNum">      63 </span>            : #else
+<span class="lineNum">      64 </span>            :     char FGJSBBase::highint[5]  = {'\0' };
+<span class="lineNum">      65 </span>            :     char FGJSBBase::halfint[5]  = {'\0' };
+<span class="lineNum">      66 </span>            :     char FGJSBBase::normint[6]  = {'\0' };
+<span class="lineNum">      67 </span>            :     char FGJSBBase::reset[5]    = {'\0' };
+<span class="lineNum">      68 </span>            :     char FGJSBBase::underon[5]  = {'\0' };
+<span class="lineNum">      69 </span>            :     char FGJSBBase::underoff[6] = {'\0' };
+<span class="lineNum">      70 </span>            :     char FGJSBBase::fgblue[6]   = {'\0' };
+<span class="lineNum">      71 </span>            :     char FGJSBBase::fgcyan[6]   = {'\0' };
+<span class="lineNum">      72 </span>            :     char FGJSBBase::fgred[6]    = {'\0' };
+<span class="lineNum">      73 </span>            :     char FGJSBBase::fggreen[6]  = {'\0' };
+<span class="lineNum">      74 </span>            :     char FGJSBBase::fgdef[6]    = {'\0' };
+<span class="lineNum">      75 </span>            : #endif
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineCov">          4 : const string FGJSBBase::needed_cfg_version = &quot;2.0&quot;;</span>
+<span class="lineNum">      78 </span><span class="lineCov">          4 : const string FGJSBBase::JSBSim_version = JSBSIM_VERSION &quot; &quot; __DATE__ &quot; &quot; __TIME__ ;</span>
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span><span class="lineCov">          4 : queue &lt;FGJSBBase::Message&gt; FGJSBBase::Messages;</span>
+<span class="lineNum">      81 </span><span class="lineCov">          4 : FGJSBBase::Message FGJSBBase::localMsg;</span>
+<span class="lineNum">      82 </span>            : unsigned int FGJSBBase::messageId = 0;
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            : int FGJSBBase::gaussian_random_number_phase = 0;
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            : short FGJSBBase::debug_lvl  = 1;
+<span class="lineNum">      87 </span>            : 
+<a name="88"><span class="lineNum">      88 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span><span class="lineCov">          2 : void FGJSBBase::PutMessage(const Message&amp; msg)</span>
+<span class="lineNum">      91 </span>            : {
+<span class="lineNum">      92 </span><span class="lineCov">          2 :   Messages.push(msg);</span>
+<span class="lineNum">      93 </span><span class="lineCov">          2 : }</span>
+<span class="lineNum">      94 </span>            : 
+<a name="95"><span class="lineNum">      95 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineCov">          2 : void FGJSBBase::PutMessage(const string&amp; text)</span>
+<span class="lineNum">      98 </span>            : {
+<span class="lineNum">      99 </span><span class="lineCov">          4 :   Message msg;</span>
+<span class="lineNum">     100 </span><span class="lineCov">          2 :   msg.text = text;</span>
+<span class="lineNum">     101 </span><span class="lineCov">          2 :   msg.messageId = messageId++;</span>
+<span class="lineNum">     102 </span><span class="lineCov">          2 :   msg.subsystem = &quot;FDM&quot;;</span>
+<span class="lineNum">     103 </span><span class="lineCov">          2 :   msg.type = Message::eText;</span>
+<span class="lineNum">     104 </span><span class="lineCov">          2 :   Messages.push(msg);</span>
+<span class="lineNum">     105 </span><span class="lineCov">          2 : }</span>
+<span class="lineNum">     106 </span>            : 
+<a name="107"><span class="lineNum">     107 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineCov">          2 : void FGJSBBase::PutMessage(const string&amp; text, bool bVal)</span>
+<span class="lineNum">     110 </span>            : {
+<span class="lineNum">     111 </span><span class="lineCov">          4 :   Message msg;</span>
+<span class="lineNum">     112 </span><span class="lineCov">          2 :   msg.text = text;</span>
+<span class="lineNum">     113 </span><span class="lineCov">          2 :   msg.messageId = messageId++;</span>
+<span class="lineNum">     114 </span><span class="lineCov">          2 :   msg.subsystem = &quot;FDM&quot;;</span>
+<span class="lineNum">     115 </span><span class="lineCov">          2 :   msg.type = Message::eBool;</span>
+<span class="lineNum">     116 </span><span class="lineCov">          2 :   msg.bVal = bVal;</span>
+<span class="lineNum">     117 </span><span class="lineCov">          2 :   Messages.push(msg);</span>
+<span class="lineNum">     118 </span><span class="lineCov">          2 : }</span>
+<span class="lineNum">     119 </span>            : 
+<a name="120"><span class="lineNum">     120 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineCov">          2 : void FGJSBBase::PutMessage(const string&amp; text, int iVal)</span>
+<span class="lineNum">     123 </span>            : {
+<span class="lineNum">     124 </span><span class="lineCov">          4 :   Message msg;</span>
+<span class="lineNum">     125 </span><span class="lineCov">          2 :   msg.text = text;</span>
+<span class="lineNum">     126 </span><span class="lineCov">          2 :   msg.messageId = messageId++;</span>
+<span class="lineNum">     127 </span><span class="lineCov">          2 :   msg.subsystem = &quot;FDM&quot;;</span>
+<span class="lineNum">     128 </span><span class="lineCov">          2 :   msg.type = Message::eInteger;</span>
+<span class="lineNum">     129 </span><span class="lineCov">          2 :   msg.iVal = iVal;</span>
+<span class="lineNum">     130 </span><span class="lineCov">          2 :   Messages.push(msg);</span>
+<span class="lineNum">     131 </span><span class="lineCov">          2 : }</span>
+<span class="lineNum">     132 </span>            : 
+<a name="133"><span class="lineNum">     133 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span><span class="lineCov">          2 : void FGJSBBase::PutMessage(const string&amp; text, double dVal)</span>
+<span class="lineNum">     136 </span>            : {
+<span class="lineNum">     137 </span><span class="lineCov">          4 :   Message msg;</span>
+<span class="lineNum">     138 </span><span class="lineCov">          2 :   msg.text = text;</span>
+<span class="lineNum">     139 </span><span class="lineCov">          2 :   msg.messageId = messageId++;</span>
+<span class="lineNum">     140 </span><span class="lineCov">          2 :   msg.subsystem = &quot;FDM&quot;;</span>
+<span class="lineNum">     141 </span><span class="lineCov">          2 :   msg.type = Message::eDouble;</span>
+<span class="lineNum">     142 </span><span class="lineCov">          2 :   msg.dVal = dVal;</span>
+<span class="lineNum">     143 </span><span class="lineCov">          2 :   Messages.push(msg);</span>
+<span class="lineNum">     144 </span><span class="lineCov">          2 : }</span>
+<span class="lineNum">     145 </span>            : 
+<a name="146"><span class="lineNum">     146 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span><span class="lineCov">          6 : void FGJSBBase::ProcessMessage(void)</span>
+<span class="lineNum">     149 </span>            : {
+<span class="lineNum">     150 </span><span class="lineCov">          6 :   if (Messages.empty()) return;</span>
+<span class="lineNum">     151 </span><span class="lineCov">          1 :   localMsg = Messages.front();</span>
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span><span class="lineCov">          9 :   while (SomeMessages()) {</span>
+<span class="lineNum">     154 </span><span class="lineCov">          5 :       switch (localMsg.type) {</span>
+<span class="lineNum">     155 </span><span class="lineCov">          1 :       case JSBSim::FGJSBBase::Message::eText:</span>
+<span class="lineNum">     156 </span><span class="lineCov">          1 :         cout &lt;&lt; localMsg.messageId &lt;&lt; &quot;: &quot; &lt;&lt; localMsg.text &lt;&lt; endl;</span>
+<span class="lineNum">     157 </span><span class="lineCov">          1 :         break;</span>
+<span class="lineNum">     158 </span><span class="lineCov">          1 :       case JSBSim::FGJSBBase::Message::eBool:</span>
+<span class="lineNum">     159 </span><span class="lineCov">          1 :         cout &lt;&lt; localMsg.messageId &lt;&lt; &quot;: &quot; &lt;&lt; localMsg.text &lt;&lt; &quot; &quot; &lt;&lt; localMsg.bVal &lt;&lt; endl;</span>
+<span class="lineNum">     160 </span><span class="lineCov">          1 :         break;</span>
+<span class="lineNum">     161 </span><span class="lineCov">          1 :       case JSBSim::FGJSBBase::Message::eInteger:</span>
+<span class="lineNum">     162 </span><span class="lineCov">          1 :         cout &lt;&lt; localMsg.messageId &lt;&lt; &quot;: &quot; &lt;&lt; localMsg.text &lt;&lt; &quot; &quot; &lt;&lt; localMsg.iVal &lt;&lt; endl;</span>
+<span class="lineNum">     163 </span><span class="lineCov">          1 :         break;</span>
+<span class="lineNum">     164 </span><span class="lineCov">          1 :       case JSBSim::FGJSBBase::Message::eDouble:</span>
+<span class="lineNum">     165 </span><span class="lineCov">          1 :         cout &lt;&lt; localMsg.messageId &lt;&lt; &quot;: &quot; &lt;&lt; localMsg.text &lt;&lt; &quot; &quot; &lt;&lt; localMsg.dVal &lt;&lt; endl;</span>
+<span class="lineNum">     166 </span><span class="lineCov">          1 :         break;</span>
+<span class="lineNum">     167 </span><span class="lineCov">          1 :       default:</span>
+<span class="lineNum">     168 </span><span class="lineCov">          1 :         cerr &lt;&lt; &quot;Unrecognized message type.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     169 </span><span class="lineCov">          1 :         break;</span>
+<span class="lineNum">     170 </span>            :       }
+<span class="lineNum">     171 </span><span class="lineCov">          5 :       Messages.pop();</span>
+<span class="lineNum">     172 </span><span class="lineCov">          5 :       if (SomeMessages()) localMsg = Messages.front();</span>
+<span class="lineNum">     173 </span><span class="lineCov">          1 :       else break;</span>
+<span class="lineNum">     174 </span>            :   }
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            : }
+<span class="lineNum">     177 </span>            : 
+<a name="178"><span class="lineNum">     178 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span><span class="lineCov">         10 : FGJSBBase::Message* FGJSBBase::ProcessNextMessage(void)</span>
+<span class="lineNum">     181 </span>            : {
+<span class="lineNum">     182 </span><span class="lineCov">         10 :   if (Messages.empty()) return NULL;</span>
+<span class="lineNum">     183 </span><span class="lineCov">          5 :   localMsg = Messages.front();</span>
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span><span class="lineCov">          5 :   Messages.pop();</span>
+<span class="lineNum">     186 </span><span class="lineCov">          5 :   return &amp;localMsg;</span>
+<span class="lineNum">     187 </span>            : }
+<span class="lineNum">     188 </span>            : 
+<a name="189"><span class="lineNum">     189 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span><span class="lineCov">          1 : void FGJSBBase::disableHighLighting(void)</span>
+<span class="lineNum">     192 </span>            : {
+<span class="lineNum">     193 </span><span class="lineCov">          1 :   highint[0]='\0';</span>
+<span class="lineNum">     194 </span><span class="lineCov">          1 :   halfint[0]='\0';</span>
+<span class="lineNum">     195 </span><span class="lineCov">          1 :   normint[0]='\0';</span>
+<span class="lineNum">     196 </span><span class="lineCov">          1 :   reset[0]='\0';</span>
+<span class="lineNum">     197 </span><span class="lineCov">          1 :   underon[0]='\0';</span>
+<span class="lineNum">     198 </span><span class="lineCov">          1 :   underoff[0]='\0';</span>
+<span class="lineNum">     199 </span><span class="lineCov">          1 :   fgblue[0]='\0';</span>
+<span class="lineNum">     200 </span><span class="lineCov">          1 :   fgcyan[0]='\0';</span>
+<span class="lineNum">     201 </span><span class="lineCov">          1 :   fgred[0]='\0';</span>
+<span class="lineNum">     202 </span><span class="lineCov">          1 :   fggreen[0]='\0';</span>
+<span class="lineNum">     203 </span><span class="lineCov">          1 :   fgdef[0]='\0';</span>
+<span class="lineNum">     204 </span><span class="lineCov">          1 : }</span>
+<span class="lineNum">     205 </span>            : 
+<a name="206"><span class="lineNum">     206 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span><span class="lineCov">          6 : string FGJSBBase::CreateIndexedPropertyName(const string&amp; Property, int index)</span>
+<span class="lineNum">     209 </span>            : {
+<span class="lineNum">     210 </span><span class="lineCov">         12 :   ostringstream buf;</span>
+<span class="lineNum">     211 </span><span class="lineCov">          6 :   buf &lt;&lt; Property &lt;&lt; '[' &lt;&lt; index &lt;&lt; ']';</span>
+<span class="lineNum">     212 </span><span class="lineCov">         12 :   return buf.str();</span>
+<span class="lineNum">     213 </span>            : }
+<span class="lineNum">     214 </span>            : 
+<a name="215"><span class="lineNum">     215 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span><span class="lineCov">          2 : double FGJSBBase::GaussianRandomNumber(void)</span>
+<span class="lineNum">     218 </span>            : {
+<span class="lineNum">     219 </span>            :   static double V1, V2, S;
+<span class="lineNum">     220 </span>            :   double X;
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span><span class="lineCov">          2 :   if (gaussian_random_number_phase == 0) {</span>
+<span class="lineNum">     223 </span><span class="lineCov">          1 :     V1 = V2 = S = X = 0.0;</span>
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     do {</span>
+<span class="lineNum">     226 </span><span class="lineCov">          1 :       double U1 = (double)rand() / RAND_MAX;</span>
+<span class="lineNum">     227 </span><span class="lineCov">          1 :       double U2 = (double)rand() / RAND_MAX;</span>
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span><span class="lineCov">          1 :       V1 = 2 * U1 - 1;</span>
+<span class="lineNum">     230 </span><span class="lineCov">          1 :       V2 = 2 * U2 - 1;</span>
+<span class="lineNum">     231 </span><span class="lineCov">          1 :       S = V1 * V1 + V2 * V2;</span>
+<span class="lineNum">     232 </span><span class="lineCov">          1 :     } while(S &gt;= 1 || S == 0);</span>
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span><span class="lineCov">          1 :     X = V1 * sqrt(-2 * log(S) / S);</span>
+<span class="lineNum">     235 </span>            :   } else
+<span class="lineNum">     236 </span><span class="lineCov">          1 :     X = V2 * sqrt(-2 * log(S) / S);</span>
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span><span class="lineCov">          2 :   gaussian_random_number_phase = 1 - gaussian_random_number_phase;</span>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineCov">          2 :   return X;</span>
+<span class="lineNum">     241 </span>            : }
+<span class="lineNum">     242 </span>            : 
+<a name="243"><span class="lineNum">     243 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span><span class="lineCov">     206924 : double FGJSBBase::PitotTotalPressure(double mach, double p)</span>
+<span class="lineNum">     246 </span>            : {
+<span class="lineNum">     247 </span><span class="lineCov">     206924 :   if (mach &lt; 0) return p;</span>
+<span class="lineNum">     248 </span><span class="lineCov">     206923 :   if (mach &lt; 1)    //calculate total pressure assuming isentropic flow</span>
+<span class="lineNum">     249 </span><span class="lineCov">     206919 :     return p*pow((1 + 0.2*mach*mach),3.5);</span>
+<span class="lineNum">     250 </span>            :   else {
+<span class="lineNum">     251 </span>            :     // shock in front of pitot tube, we'll assume its normal and use
+<span class="lineNum">     252 </span>            :     // the Rayleigh Pitot Tube Formula, i.e. the ratio of total
+<span class="lineNum">     253 </span>            :     // pressure behind the shock to the static pressure in front of
+<span class="lineNum">     254 </span>            :     // the normal shock assumption should not be a bad one -- most supersonic
+<span class="lineNum">     255 </span>            :     // aircraft place the pitot probe out front so that it is the forward
+<span class="lineNum">     256 </span>            :     // most point on the aircraft.  The real shock would, of course, take
+<span class="lineNum">     257 </span>            :     // on something like the shape of a rounded-off cone but, here again,
+<span class="lineNum">     258 </span>            :     // the assumption should be good since the opening of the pitot probe
+<span class="lineNum">     259 </span>            :     // is very small and, therefore, the effects of the shock curvature
+<span class="lineNum">     260 </span>            :     // should be small as well. AFAIK, this approach is fairly well accepted
+<span class="lineNum">     261 </span>            :     // within the aerospace community
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span>            :     // The denominator below is zero for Mach ~ 0.38, for which
+<span class="lineNum">     264 </span>            :     // we'll never be here, so we're safe
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span><span class="lineCov">          4 :     return p*166.92158009316827*pow(mach,7.0)/pow(7*mach*mach-1,2.5);</span>
+<span class="lineNum">     267 </span>            :   }
+<span class="lineNum">     268 </span>            : }
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            : // Based on the formulas in the US Air Force Aircraft Performance Flight Testing 
+<a name="273"><span class="lineNum">     273 </span>            : // Manual (AFFTC-TIH-99-01). In particular sections 4.6 to 4.8.</a>
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span><span class="lineCov">     206924 : double FGJSBBase::MachFromImpactPressure(double qc, double p)</span>
+<span class="lineNum">     276 </span>            : {
+<span class="lineNum">     277 </span><span class="lineCov">     206924 :   double A = qc / p + 1;</span>
+<span class="lineNum">     278 </span><span class="lineCov">     206924 :   double M = sqrt(5.0*(pow(A, 1. / 3.5) - 1));  // Equation (4.12)</span>
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span><span class="lineCov">     206924 :   if (M &gt; 1.0)</span>
+<span class="lineNum">     281 </span><span class="lineCov">         33 :     for (unsigned int i = 0; i&lt;10; i++)</span>
+<span class="lineNum">     282 </span><span class="lineCov">         30 :       M = 0.8812848543473311*sqrt(A*pow(1 - 1.0 / (7.0*M*M), 2.5));  // Equation (4.17)</span>
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span><span class="lineCov">     206924 :   return M;</span>
+<span class="lineNum">     285 </span>            : }
+<span class="lineNum">     286 </span>            : 
+<a name="287"><span class="lineNum">     287 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span><span class="lineCov">     206920 : double FGJSBBase::VcalibratedFromMach(double mach, double p)</span>
+<span class="lineNum">     290 </span>            : {
+<span class="lineNum">     291 </span><span class="lineCov">     206920 :   double asl = FGAtmosphere::StdDaySLsoundspeed;</span>
+<span class="lineNum">     292 </span><span class="lineCov">     206920 :   double psl = FGAtmosphere::StdDaySLpressure;</span>
+<span class="lineNum">     293 </span><span class="lineCov">     206920 :   double qc = PitotTotalPressure(mach, p) - p;</span>
+<span class="lineNum">     294 </span>            : 
+<span class="lineNum">     295 </span><span class="lineCov">     206920 :   return asl * MachFromImpactPressure(qc, psl);  </span>
+<span class="lineNum">     296 </span>            : }
+<span class="lineNum">     297 </span>            : 
+<a name="298"><span class="lineNum">     298 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     299 </span>            : 
+<span class="lineNum">     300 </span><span class="lineCov">          4 : double FGJSBBase::MachFromVcalibrated(double vcas, double p)</span>
+<span class="lineNum">     301 </span>            : {
+<span class="lineNum">     302 </span><span class="lineCov">          4 :   double asl = FGAtmosphere::StdDaySLsoundspeed;</span>
+<span class="lineNum">     303 </span><span class="lineCov">          4 :   double psl = FGAtmosphere::StdDaySLpressure;</span>
+<span class="lineNum">     304 </span><span class="lineCov">          4 :   double qc = PitotTotalPressure(vcas / asl, psl) - psl;</span>
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span><span class="lineCov">          4 :   return MachFromImpactPressure(qc, p);</span>
+<span class="lineNum">     307 </span>            : }
+<a name="308"><span class="lineNum">     308 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span><span class="lineCov">         12 : } // namespace JSBSim</span>
+<span class="lineNum">     311 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

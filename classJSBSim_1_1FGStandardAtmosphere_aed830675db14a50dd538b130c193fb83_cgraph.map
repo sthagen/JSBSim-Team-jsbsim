@@ -1,0 +1,6 @@
+<map id="ResetSLTemperature" name="ResetSLTemperature">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGStandardAtmosphere.html#a319f3b800cb9b494befa279bb0a6f62f" title="Recalculate the lapse rate vectors when the temperature profile is altered in a way that would change..." alt="" coords="226,5,373,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGStandardAtmosphere.html#a86254b06f7adbbf9e4c61974adc2998c" title="Calculate (or recalculate) the atmospheric pressure breakpoints at the altitudes in the standard temp..." alt="" coords="200,56,399,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGStandardAtmosphere.html#ae1554711a7dac71879e2ebc4535411c1" title="Calculate the SL density and sound speed. " alt="" coords="204,107,395,149"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGStandardAtmosphere.html#a90c1d8ac6403484f48a69feb4d0148e2" title="Calculate the SL density. " alt="" coords="447,115,585,141"/>
+</map>

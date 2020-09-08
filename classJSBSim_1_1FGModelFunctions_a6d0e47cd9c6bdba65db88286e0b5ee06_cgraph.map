@@ -1,0 +1,5 @@
+<map id="GetFunctionStrings" name="GetFunctionStrings">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFunction.html#a2842714eb53693f6a053610d97a0bac9" title="Retrieves the name of the function. " alt="" coords="188,39,335,80"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFunction.html#a23a8ff3382453c209996391574e42b66" title="Does the function always return the same result (i.e. " alt="" coords="383,5,529,47"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGFunction.html#a23ddcda982a7bae0faf51a548f0aafeb" title="Specifies whether to cache the value of the function, so it is calculated only once per frame..." alt="" coords="383,71,529,112"/>
+</map>

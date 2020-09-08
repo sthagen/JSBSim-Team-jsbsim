@@ -1,0 +1,17 @@
+<map id="Calculate" name="Calculate">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGTurbine.html#a19ece223c6dc819db12351f6a5e371c6" title="A lag filter. " alt="" coords="178,363,230,389"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1FGFunction.html#a20153bedb4fc19a8b698f34dada67e5f" title="Retrieves the value of the function object. " alt="" coords="131,414,277,455"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1Element.html#a0290668d182e1035b626b551f2b552e7" title="Searches for a specified element. " alt="" coords="333,5,539,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1Element.html#a4fd4cb4d88046523b2cf729bf847e0e2" title="Retrieves an attribute. " alt="" coords="595,170,799,211"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1Element.html#a18dbe776038e11c6d5fcdee8457e5c06" title="Modifies an attribute. " alt="" coords="335,107,537,149"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1Element.html#ac49b58ae4fd6170ac11c2ed21d882666" title="Searches for the next element as specified. " alt="" coords="343,173,529,214"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGTurbine.html#a4b801a1a064406c4f0326121e82cd4bb" title="Resets the Engine parameters to the initial conditions. " alt="" coords="393,239,479,265"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1Element.html#abf31eea79e3de7547610926decbb7b3d" title="Searches for the named element and converts and returns the data belonging to it. ..." alt="" coords="333,290,539,331"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1Element.html#aee69786373509020c79e3deeb7bfe592" title="Searches for the named element and returns the data belonging to it as a number. " alt="" coords="333,355,539,397"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1Element.html#a4f8c2d4e26b46a88420356342b350305" title="Searches for the named element and returns the data belonging to it as a bool. " alt="" coords="333,421,539,462"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGModelFunctions.html#ae8e86a968924a20d6ff1eddc4c862df4" title="Get one of the &quot;pre&quot; function. " alt="" coords="342,486,530,527"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGFDMExec.html#ac042dec5a5ce80a50de478dbbe3531f7" title="Returns a pointer to the property manager object. " alt="" coords="355,551,517,593"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="325,617,547,644"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGFDMExec.html#adf760b99f286a726dde5b47a377fe243" title="Suspends the simulation and sets the delta T to zero. " alt="" coords="355,669,517,710"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGFDMExec.html#afb4e8e8c83a51c804cfc50d9d90f65a5" title="Resumes the simulation by resetting delta T to the correct value. " alt="" coords="355,734,517,775"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="FGAccelerations::Inputs" name="FGAccelerations::Inputs">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGColumnVector3.html" title="This class implements a 3 element column vector. " alt="" coords="5,5,136,32"/>
+<area shape="rect" id="node4" href="$structJSBSim_1_1LagrangeMultiplier.html" title="LagrangeMultiplier" alt="" coords="103,109,230,136"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGMatrix33.html" title="Handles matrix math operations. " alt="" coords="293,353,384,379"/>
+</map>

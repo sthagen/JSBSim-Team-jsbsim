@@ -1,0 +1,10 @@
+<map id="CalcOxidizerNeed" name="CalcOxidizerNeed">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGColumnVector3.html#a82906bcdb74ce0b1cb67a94efccb921e" title="Prints the contents of the vector. " alt="" coords="199,5,385,47"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="181,71,403,98"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGRocket.html#a98e9ed74ef58b438d588d634c8d94b0f" title="Gets the total impulse of the rocket. " alt="" coords="233,122,351,149"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGRocket.html#a85c188d812efbad709c6f7fad06649b0" title="Gets the total impulse of the rocket. " alt="" coords="221,173,363,199"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGRocket.html#af7901fb9e6bf9a4fdbdb1fbd45b2a652" title="Returns the thrust variation, if any. " alt="" coords="227,223,357,250"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGRocket.html#a5659c1631d1f5bc9b5a52c83f8c9efc4" title="Sets the thrust variation for a solid rocket engine. " alt="" coords="227,274,357,301"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGRocket.html#acf51a9780884219b0f8d67f708ec6ca3" title="Returns the Total Isp variation, if any. " alt="" coords="221,325,363,351"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGRocket.html#a2798d6d83ebace33b653df0b1d665360" title="Sets the variation in total motor energy. " alt="" coords="222,375,362,402"/>
+</map>

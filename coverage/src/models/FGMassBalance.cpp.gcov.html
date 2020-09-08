@@ -1,0 +1,632 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGMassBalance.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGMassBalance.cpp<span style="font-size: 80%;"> (source / <a href="FGMassBalance.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntry">267</td>
+            <td class="headerCovTableEntryLo">20.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGMassBalance.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 09/12/2000
+<span class="lineNum">       6 </span>            :  Purpose:      This module models weight and balance
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  ------------- Copyright (C) 2000  Jon S. Berndt (jon@jsbsim.org) --------------
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      11 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      12 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      13 </span>            :  later version.
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      16 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      17 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      18 </span>            :  details.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      21 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      22 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      25 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      28 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : This class models the change in weight and balance of the aircraft due to fuel
+<span class="lineNum">      31 </span>            : burnoff, etc.
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : HISTORY
+<span class="lineNum">      34 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      35 </span>            : 09/12/2000  JSB  Created
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : #include &quot;FGMassBalance.h&quot;
+<span class="lineNum">      44 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      45 </span>            : #include &quot;FGGroundReactions.h&quot;
+<span class="lineNum">      46 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : using namespace std;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : namespace JSBSim {
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      53 </span>            : CLASS IMPLEMENTATION
+<span class="lineNum">      54 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<a name="55"><span class="lineNum">      55 </span>            : </a>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span><span class="lineCov">          8 : FGMassBalance::FGMassBalance(FGFDMExec* fdmex)</span>
+<span class="lineNum">      58 </span><span class="lineCov">          8 :   : FGModel(fdmex), GroundReactions(nullptr)</span>
+<span class="lineNum">      59 </span>            : {
+<span class="lineNum">      60 </span><span class="lineCov">          8 :   Name = &quot;FGMassBalance&quot;;</span>
+<span class="lineNum">      61 </span><span class="lineCov">          8 :   Weight = EmptyWeight = Mass = 0.0;</span>
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span><span class="lineCov">          8 :   vbaseXYZcg.InitMatrix();</span>
+<span class="lineNum">      64 </span><span class="lineCov">          8 :   vXYZcg.InitMatrix();</span>
+<span class="lineNum">      65 </span><span class="lineCov">          8 :   vLastXYZcg.InitMatrix();</span>
+<span class="lineNum">      66 </span><span class="lineCov">          8 :   vDeltaXYZcg.InitMatrix();</span>
+<span class="lineNum">      67 </span><span class="lineCov">          8 :   baseJ.InitMatrix();</span>
+<span class="lineNum">      68 </span><span class="lineCov">          8 :   mJ.InitMatrix();</span>
+<span class="lineNum">      69 </span><span class="lineCov">          8 :   mJinv.InitMatrix();</span>
+<span class="lineNum">      70 </span><span class="lineCov">          8 :   pmJ.InitMatrix();</span>
+<span class="lineNum">      71 </span><span class="lineCov">          8 :   Propagate = fdmex-&gt;GetPropagate();</span>
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span><span class="lineCov">          8 :   bind();</span>
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">      76 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">      77 </span>            : 
+<a name="78"><span class="lineNum">      78 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span><span class="lineCov">         24 : FGMassBalance::~FGMassBalance()</span>
+<span class="lineNum">      81 </span>            : {
+<span class="lineNum">      82 </span><span class="lineCov">          8 :   for(auto pm: PointMasses) delete pm;</span>
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">      85 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">      86 </span>            : 
+<a name="87"><span class="lineNum">      87 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineCov">          8 : bool FGMassBalance::InitModel(void)</span>
+<span class="lineNum">      90 </span>            : {
+<span class="lineNum">      91 </span><span class="lineCov">          8 :   if (!FGModel::InitModel()) return false;</span>
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span><span class="lineCov">          8 :   GroundReactions = FDMExec-&gt;GetGroundReactions();</span>
+<span class="lineNum">      94 </span><span class="lineCov">          8 :   vLastXYZcg.InitMatrix();</span>
+<span class="lineNum">      95 </span><span class="lineCov">          8 :   vDeltaXYZcg.InitMatrix();</span>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineCov">          8 :   return true;</span>
+<span class="lineNum">      98 </span>            : }
+<span class="lineNum">      99 </span>            : 
+<a name="100"><span class="lineNum">     100 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 : static FGMatrix33 ReadInertiaMatrix(Element* document)</span>
+<span class="lineNum">     103 </span>            : {
+<span class="lineNum">     104 </span>            :   double bixx, biyy, bizz, bixy, bixz, biyz;
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   bixx = biyy = bizz = bixy = bixz = biyz = 0.0;</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :   if (document-&gt;FindElement(&quot;ixx&quot;))</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :     bixx = document-&gt;FindElementValueAsNumberConvertTo(&quot;ixx&quot;, &quot;SLUG*FT2&quot;);</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :   if (document-&gt;FindElement(&quot;iyy&quot;))</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :     biyy = document-&gt;FindElementValueAsNumberConvertTo(&quot;iyy&quot;, &quot;SLUG*FT2&quot;);</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :   if (document-&gt;FindElement(&quot;izz&quot;))</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :     bizz = document-&gt;FindElementValueAsNumberConvertTo(&quot;izz&quot;, &quot;SLUG*FT2&quot;);</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :   if (document-&gt;FindElement(&quot;ixy&quot;))</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :     bixy = document-&gt;FindElementValueAsNumberConvertTo(&quot;ixy&quot;, &quot;SLUG*FT2&quot;);</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :   if (document-&gt;FindElement(&quot;ixz&quot;))</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :     bixz = document-&gt;FindElementValueAsNumberConvertTo(&quot;ixz&quot;, &quot;SLUG*FT2&quot;);</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :   if (document-&gt;FindElement(&quot;iyz&quot;))</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :     biyz = document-&gt;FindElementValueAsNumberConvertTo(&quot;iyz&quot;, &quot;SLUG*FT2&quot;);</span>
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :   // Transform the inertia products from the structural frame to the body frame
+<span class="lineNum">     121 </span>            :   // and create the inertia matrix.
+<span class="lineNum">     122 </span>            :   return FGMatrix33( bixx, -bixy,  bixz,
+<span class="lineNum">     123 </span>            :                     -bixy,  biyy, -biyz,
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                      bixz, -biyz,  bizz );</span>
+<span class="lineNum">     125 </span>            : }
+<span class="lineNum">     126 </span>            : 
+<a name="127"><span class="lineNum">     127 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 : bool FGMassBalance::Load(Element* document)</span>
+<span class="lineNum">     130 </span>            : {
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :   string element_name = &quot;&quot;;</span>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :   Name = &quot;Mass Properties Model: &quot; + document-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :   // Perform base class Pre-Load
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :   if (!FGModel::Upload(document, true))</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :   SetAircraftBaseInertias(ReadInertiaMatrix(document));</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :   if (document-&gt;FindElement(&quot;emptywt&quot;)) {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :     EmptyWeight = document-&gt;FindElementValueAsNumberConvertTo(&quot;emptywt&quot;, &quot;LBS&quot;);</span>
+<span class="lineNum">     142 </span>            :   }
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :   Element *element = document-&gt;FindElement(&quot;location&quot;);</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :   while (element) {</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     element_name = element-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     if (element_name == &quot;CG&quot;) vbaseXYZcg = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     element = document-&gt;FindNextElement(&quot;location&quot;);</span>
+<span class="lineNum">     149 </span>            :   }
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            : // Find all POINTMASS elements that descend from this METRICS branch of the
+<span class="lineNum">     152 </span>            : // config file.
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :   element = document-&gt;FindElement(&quot;pointmass&quot;);</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :   while (element) {</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :     AddPointMass(element);</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :     element = document-&gt;FindNextElement(&quot;pointmass&quot;);</span>
+<span class="lineNum">     158 </span>            :   }
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :   double ChildFDMWeight = 0.0;</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :   for (int fdm=0; fdm&lt;FDMExec-&gt;GetFDMCount(); fdm++) {</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :     if (FDMExec-&gt;GetChildFDM(fdm)-&gt;mated) ChildFDMWeight += FDMExec-&gt;GetChildFDM(fdm)-&gt;exec-&gt;GetMassBalance()-&gt;GetWeight();</span>
+<span class="lineNum">     163 </span>            :   }
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :   Weight = EmptyWeight + in.TanksWeight + GetTotalPointMassWeight()</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :     + in.GasMass*slugtolb + ChildFDMWeight;</span>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :   Mass = lbtoslug*Weight;</span>
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :   PostLoad(document, FDMExec);</span>
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :   Debug(2);</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     174 </span>            : }
+<span class="lineNum">     175 </span>            : 
+<a name="176"><span class="lineNum">     176 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 : bool FGMassBalance::Run(bool Holding)</span>
+<span class="lineNum">     179 </span>            : {
+<span class="lineNum">     180 </span>            :   double denom, k1, k2, k3, k4, k5, k6;
+<span class="lineNum">     181 </span>            :   double Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :   if (FGModel::Run(Holding)) return true;</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :   if (Holding) return false;</span>
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :   RunPreFunctions();</span>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :   double ChildFDMWeight = 0.0;</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :   for (int fdm=0; fdm&lt;FDMExec-&gt;GetFDMCount(); fdm++) {</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     if (FDMExec-&gt;GetChildFDM(fdm)-&gt;mated) ChildFDMWeight += FDMExec-&gt;GetChildFDM(fdm)-&gt;exec-&gt;GetMassBalance()-&gt;GetWeight();</span>
+<span class="lineNum">     191 </span>            :   }
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :   Weight = EmptyWeight + in.TanksWeight + GetTotalPointMassWeight()</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :     + in.GasMass*slugtolb + ChildFDMWeight;</span>
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :   Mass = lbtoslug*Weight;</span>
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            : // Calculate new CG
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :   vXYZcg = (EmptyWeight*vbaseXYZcg</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :             + GetPointMassMoment()</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :             + in.TanksMoment</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :             + in.GasMoment) / Weight;</span>
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span>            :   // Track frame-by-frame delta CG, and move the EOM-tracked location
+<span class="lineNum">     206 </span>            :   // by this amount.
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :   if (vLastXYZcg.Magnitude() == 0.0) vLastXYZcg = vXYZcg;</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :   vDeltaXYZcg = vXYZcg - vLastXYZcg;</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :   vDeltaXYZcgBody = StructuralToBody(vLastXYZcg) - StructuralToBody(vXYZcg);</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :   vLastXYZcg = vXYZcg;</span>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            :   // Compensate displacements of the structural frame when the mass distribution
+<span class="lineNum">     213 </span>            :   // is modified while the aircraft is in contact with the ground.
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :   if (FDMExec-&gt;GetHoldDown() || GroundReactions-&gt;GetWOW())</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     Propagate-&gt;NudgeBodyLocation(vDeltaXYZcgBody);</span>
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            : // Calculate new total moments of inertia
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :   // At first it is the base configuration inertia matrix ...
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :   mJ = baseJ;</span>
+<span class="lineNum">     221 </span>            :   // ... with the additional term originating from the parallel axis theorem.
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   mJ += GetPointmassInertia( lbtoslug * EmptyWeight, vbaseXYZcg );</span>
+<span class="lineNum">     223 </span>            :   // Then add the contributions from the additional pointmasses.
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :   mJ += CalculatePMInertias();</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :   mJ += in.TankInertia;</span>
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :   mJ += in.GasInertia;</span>
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :   Ixx = mJ(1,1);</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :   Iyy = mJ(2,2);</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :   Izz = mJ(3,3);</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :   Ixy = -mJ(1,2);</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :   Ixz = -mJ(1,3);</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :   Iyz = -mJ(2,3);</span>
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            : // Calculate inertia matrix inverse (ref. Stevens and Lewis, &quot;Flight Control &amp;
+<span class="lineNum">     236 </span>            : // Simulation&quot;)
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :   k1 = (Iyy*Izz - Iyz*Iyz);</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :   k2 = (Iyz*Ixz + Ixy*Izz);</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :   k3 = (Ixy*Iyz + Iyy*Ixz);</span>
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :   denom = 1.0/(Ixx*k1 - Ixy*k2 - Ixz*k3 );</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :   k1 = k1*denom;</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :   k2 = k2*denom;</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :   k3 = k3*denom;</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   k4 = (Izz*Ixx - Ixz*Ixz)*denom;</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :   k5 = (Ixy*Ixz + Iyz*Ixx)*denom;</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :   k6 = (Ixx*Iyy - Ixy*Ixy)*denom;</span>
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :   mJinv = { k1, k2, k3,</span>
+<span class="lineNum">     251 </span>            :             k2, k4, k5,
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :             k3, k5, k6 };</span>
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   RunPostFunctions();</span>
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :   Debug(0);</span>
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     259 </span>            : }
+<span class="lineNum">     260 </span>            : 
+<a name="261"><span class="lineNum">     261 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 : void FGMassBalance::AddPointMass(Element* el)</span>
+<span class="lineNum">     264 </span>            : {
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :   Element* loc_element = el-&gt;FindElement(&quot;location&quot;);</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :   string pointmass_name = el-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :   if (!loc_element) {</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; el-&gt;ReadFrom() &lt;&lt; &quot;Pointmass &quot; &lt;&lt; pointmass_name</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; has no location.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :     exit(-1);</span>
+<span class="lineNum">     271 </span>            :   }
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :   double w = el-&gt;FindElementValueAsNumberConvertTo(&quot;weight&quot;, &quot;LBS&quot;);</span>
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :   FGColumnVector3 vXYZ = loc_element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :   PointMass *pm = new PointMass(w, vXYZ);</span>
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :   pm-&gt;SetName(pointmass_name);</span>
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :   Element* form_element = el-&gt;FindElement(&quot;form&quot;);</span>
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :   if (form_element) {</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :     double radius=0, length=0;</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :     string shape = form_element-&gt;GetAttributeValue(&quot;shape&quot;);</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :     Element* radius_element = form_element-&gt;FindElement(&quot;radius&quot;);</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :     Element* length_element = form_element-&gt;FindElement(&quot;length&quot;);</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :     if (radius_element) radius = form_element-&gt;FindElementValueAsNumberConvertTo(&quot;radius&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :     if (length_element) length = form_element-&gt;FindElementValueAsNumberConvertTo(&quot;length&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :     if (shape == &quot;tube&quot;) {</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :       pm-&gt;SetPointMassShapeType(PointMass::esTube);</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :       pm-&gt;SetRadius(radius);</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :       pm-&gt;SetLength(length);</span>
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :       pm-&gt;CalculateShapeInertia();</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :     } else if (shape == &quot;cylinder&quot;) {</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :       pm-&gt;SetPointMassShapeType(PointMass::esCylinder);</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :       pm-&gt;SetRadius(radius);</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :       pm-&gt;SetLength(length);</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :       pm-&gt;CalculateShapeInertia();</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :     } else if (shape == &quot;sphere&quot;) {</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :       pm-&gt;SetPointMassShapeType(PointMass::esSphere);</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :       pm-&gt;SetRadius(radius);</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :       pm-&gt;CalculateShapeInertia();</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :     } else if (shape == &quot;ball&quot;) {</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :       pm-&gt;SetPointMassShapeType(PointMass::esBall);</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :       pm-&gt;SetRadius(radius);</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :       pm-&gt;CalculateShapeInertia();</span>
+<span class="lineNum">     305 </span>            :     } else {
+<span class="lineNum">     306 </span>            :     }
+<span class="lineNum">     307 </span>            :   }
+<span class="lineNum">     308 </span>            :   else {
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :     pm-&gt;SetPointMassShapeType(PointMass::esUnspecified);</span>
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :     pm-&gt;SetPointMassMoI(ReadInertiaMatrix(el));</span>
+<span class="lineNum">     311 </span>            :   }
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :   pm-&gt;bind(PropertyManager, PointMasses.size());</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :   PointMasses.push_back(pm);</span>
+<span class="lineNum">     315 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     316 </span>            : 
+<a name="317"><span class="lineNum">     317 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 : double FGMassBalance::GetTotalPointMassWeight(void) const</span>
+<span class="lineNum">     320 </span>            : {
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :   double PM_total_weight = 0.0;</span>
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :   for(auto pm: PointMasses)</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :     PM_total_weight += pm-&gt;Weight;</span>
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :   return PM_total_weight;</span>
+<span class="lineNum">     327 </span>            : }
+<span class="lineNum">     328 </span>            : 
+<a name="329"><span class="lineNum">     329 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 : const FGColumnVector3&amp; FGMassBalance::GetPointMassMoment(void)</span>
+<span class="lineNum">     332 </span>            : {
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :   PointMassCG.InitMatrix();</span>
+<span class="lineNum">     334 </span>            : 
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :   for (auto pm: PointMasses)</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :     PointMassCG += pm-&gt;Weight * pm-&gt;Location;</span>
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :   return PointMassCG;</span>
+<span class="lineNum">     339 </span>            : }
+<span class="lineNum">     340 </span>            : 
+<a name="341"><span class="lineNum">     341 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 : const FGMatrix33&amp; FGMassBalance::CalculatePMInertias(void)</span>
+<span class="lineNum">     344 </span>            : {
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :   if (PointMasses.empty()) return pmJ;</span>
+<span class="lineNum">     346 </span>            : 
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :   pmJ.InitMatrix();</span>
+<span class="lineNum">     348 </span>            : 
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :   for (auto pm: PointMasses) {</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :     pmJ += GetPointmassInertia( lbtoslug * pm-&gt;Weight, pm-&gt;Location );</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :     pmJ += pm-&gt;GetPointMassInertia();</span>
+<span class="lineNum">     352 </span>            :   }
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :   return pmJ;</span>
+<span class="lineNum">     355 </span>            : }
+<span class="lineNum">     356 </span>            : 
+<a name="357"><span class="lineNum">     357 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span><span class="lineCov">         32 : FGColumnVector3 FGMassBalance::StructuralToBody(const FGColumnVector3&amp; r) const</span>
+<span class="lineNum">     360 </span>            : {
+<span class="lineNum">     361 </span>            :   // Under the assumption that in the structural frame the:
+<span class="lineNum">     362 </span>            :   //
+<span class="lineNum">     363 </span>            :   // - X-axis is directed afterwards,
+<span class="lineNum">     364 </span>            :   // - Y-axis is directed towards the right,
+<span class="lineNum">     365 </span>            :   // - Z-axis is directed upwards,
+<span class="lineNum">     366 </span>            :   //
+<span class="lineNum">     367 </span>            :   // (as documented in http://jsbsim.sourceforge.net/JSBSimCoordinates.pdf)
+<span class="lineNum">     368 </span>            :   // we have to subtract first the center of gravity of the plane which
+<span class="lineNum">     369 </span>            :   // is also defined in the structural frame:
+<span class="lineNum">     370 </span>            :   //
+<span class="lineNum">     371 </span>            :   //   FGColumnVector3 cgOff = r - vXYZcg;
+<span class="lineNum">     372 </span>            :   //
+<span class="lineNum">     373 </span>            :   // Next, we do a change of units:
+<span class="lineNum">     374 </span>            :   //
+<span class="lineNum">     375 </span>            :   //   cgOff *= inchtoft;
+<span class="lineNum">     376 </span>            :   //
+<span class="lineNum">     377 </span>            :   // And then a 180 degree rotation is done about the Y axis so that the:
+<span class="lineNum">     378 </span>            :   //
+<span class="lineNum">     379 </span>            :   // - X-axis is directed forward,
+<span class="lineNum">     380 </span>            :   // - Y-axis is directed towards the right,
+<span class="lineNum">     381 </span>            :   // - Z-axis is directed downward.
+<span class="lineNum">     382 </span>            :   //
+<span class="lineNum">     383 </span>            :   // This is needed because the structural and body frames are 180 degrees apart.
+<span class="lineNum">     384 </span>            : 
+<span class="lineNum">     385 </span><span class="lineCov">         32 :   return FGColumnVector3(inchtoft*(vXYZcg(1)-r(1)),</span>
+<span class="lineNum">     386 </span><span class="lineCov">         32 :                          inchtoft*(r(2)-vXYZcg(2)),</span>
+<span class="lineNum">     387 </span><span class="lineCov">         96 :                          inchtoft*(vXYZcg(3)-r(3)));</span>
+<span class="lineNum">     388 </span>            : }
+<span class="lineNum">     389 </span>            : 
+<a name="390"><span class="lineNum">     390 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     391 </span>            : 
+<span class="lineNum">     392 </span><span class="lineCov">          8 : void FGMassBalance::bind(void)</span>
+<span class="lineNum">     393 </span>            : {
+<span class="lineNum">     394 </span>            :   typedef double (FGMassBalance::*PMF)(int) const;
+<span class="lineNum">     395 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/mass-slugs&quot;, this,</span>
+<span class="lineNum">     396 </span>            :                        &amp;FGMassBalance::GetMass);
+<span class="lineNum">     397 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/weight-lbs&quot;, this,</span>
+<span class="lineNum">     398 </span>            :                        &amp;FGMassBalance::GetWeight);
+<span class="lineNum">     399 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/empty-weight-lbs&quot;, this,</span>
+<span class="lineNum">     400 </span>            :                        &amp;FGMassBalance::GetEmptyWeight);
+<span class="lineNum">     401 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/cg-x-in&quot;, this,1,</span>
+<span class="lineNum">     402 </span>            :                        (PMF)&amp;FGMassBalance::GetXYZcg);
+<span class="lineNum">     403 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/cg-y-in&quot;, this,2,</span>
+<span class="lineNum">     404 </span>            :                        (PMF)&amp;FGMassBalance::GetXYZcg);
+<span class="lineNum">     405 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/cg-z-in&quot;, this,3,</span>
+<span class="lineNum">     406 </span>            :                        (PMF)&amp;FGMassBalance::GetXYZcg);
+<span class="lineNum">     407 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/ixx-slugs_ft2&quot;, this,</span>
+<span class="lineNum">     408 </span>            :                        &amp;FGMassBalance::GetIxx);
+<span class="lineNum">     409 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/iyy-slugs_ft2&quot;, this,</span>
+<span class="lineNum">     410 </span>            :                        &amp;FGMassBalance::GetIyy);
+<span class="lineNum">     411 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/izz-slugs_ft2&quot;, this,</span>
+<span class="lineNum">     412 </span>            :                        &amp;FGMassBalance::GetIzz);
+<span class="lineNum">     413 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/ixy-slugs_ft2&quot;, this,</span>
+<span class="lineNum">     414 </span>            :                        &amp;FGMassBalance::GetIxy);
+<span class="lineNum">     415 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/ixz-slugs_ft2&quot;, this,</span>
+<span class="lineNum">     416 </span>            :                        &amp;FGMassBalance::GetIxz);
+<span class="lineNum">     417 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/iyz-slugs_ft2&quot;, this,</span>
+<span class="lineNum">     418 </span>            :                        &amp;FGMassBalance::GetIyz);
+<span class="lineNum">     419 </span>            :   typedef int (FGMassBalance::*iOPV)() const;
+<span class="lineNum">     420 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;inertia/print-mass-properties&quot;, this, (iOPV)0,</span>
+<span class="lineNum">     421 </span>            :                        &amp;FGMassBalance::GetMassPropertiesReport, false);
+<span class="lineNum">     422 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     425 </span>            : //
+<a name="426"><span class="lineNum">     426 </span>            : // This function binds properties for each pointmass object created.</a>
+<span class="lineNum">     427 </span>            : //
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 : void FGMassBalance::PointMass::bind(FGPropertyManager* PropertyManager,</span>
+<span class="lineNum">     429 </span>            :                                     unsigned int num) {
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :   string tmp = CreateIndexedPropertyName(&quot;inertia/pointmass-weight-lbs&quot;, num);</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( tmp.c_str(), this, &amp;PointMass::GetPointMassWeight,</span>
+<span class="lineNum">     432 </span>            :                                        &amp;PointMass::SetPointMassWeight);
+<span class="lineNum">     433 </span>            : 
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :   tmp = CreateIndexedPropertyName(&quot;inertia/pointmass-location-X-inches&quot;, num);</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( tmp.c_str(), this, eX, &amp;PointMass::GetPointMassLocation,</span>
+<span class="lineNum">     436 </span>            :                                            &amp;PointMass::SetPointMassLocation);
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :   tmp = CreateIndexedPropertyName(&quot;inertia/pointmass-location-Y-inches&quot;, num);</span>
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( tmp.c_str(), this, eY, &amp;PointMass::GetPointMassLocation,</span>
+<span class="lineNum">     439 </span>            :                                            &amp;PointMass::SetPointMassLocation);
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :   tmp = CreateIndexedPropertyName(&quot;inertia/pointmass-location-Z-inches&quot;, num);</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( tmp.c_str(), this, eZ, &amp;PointMass::GetPointMassLocation,</span>
+<span class="lineNum">     442 </span>            :                                            &amp;PointMass::SetPointMassLocation);
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     444 </span>            : 
+<a name="445"><span class="lineNum">     445 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 : void FGMassBalance::GetMassPropertiesReport(int i)</span>
+<span class="lineNum">     448 </span>            : {
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 :   cout &lt;&lt; endl &lt;&lt; fgblue &lt;&lt; highint </span>
+<span class="lineNum">     450 </span>            :        &lt;&lt; &quot;  Mass Properties Report (English units: lbf, in, slug-ft^2)&quot;
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :        &lt;&lt; reset &lt;&lt; endl;</span>
+<span class="lineNum">     452 </span>            :   cout &lt;&lt; &quot;                                  &quot; &lt;&lt; underon &lt;&lt; &quot;    Weight    CG-X    CG-Y&quot;
+<span class="lineNum">     453 </span>            :        &lt;&lt; &quot;    CG-Z         Ixx         Iyy         Izz&quot; 
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :        &lt;&lt; &quot;         Ixy         Ixz         Iyz&quot; &lt;&lt; underoff &lt;&lt; endl;</span>
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :   cout.precision(1);</span>
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :   cout &lt;&lt; highint &lt;&lt; setw(34) &lt;&lt; left &lt;&lt; &quot;    Base Vehicle &quot; &lt;&lt; normint</span>
+<span class="lineNum">     457 </span><span class="lineNoCov">          0 :        &lt;&lt; right &lt;&lt; setw(10) &lt;&lt; EmptyWeight</span>
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(8) &lt;&lt; vbaseXYZcg(eX) &lt;&lt; setw(8) &lt;&lt; vbaseXYZcg(eY) &lt;&lt; setw(8) &lt;&lt; vbaseXYZcg(eZ)</span>
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; baseJ(1,1) &lt;&lt; setw(12) &lt;&lt; baseJ(2,2) &lt;&lt; setw(12) &lt;&lt; baseJ(3,3)</span>
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; baseJ(1,2) &lt;&lt; setw(12) &lt;&lt; baseJ(1,3) &lt;&lt; setw(12) &lt;&lt; baseJ(2,3) &lt;&lt; endl;</span>
+<span class="lineNum">     461 </span>            : 
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :   for (unsigned int i=0;i&lt;PointMasses.size();i++) {</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :     PointMass* pm = PointMasses[i];</span>
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :     double pmweight = pm-&gt;GetPointMassWeight();</span>
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 :     cout &lt;&lt; highint &lt;&lt; left &lt;&lt; setw(4) &lt;&lt; i &lt;&lt; setw(30) &lt;&lt; pm-&gt;GetName() &lt;&lt; normint</span>
+<span class="lineNum">     466 </span><span class="lineNoCov">          0 :          &lt;&lt; right &lt;&lt; setw(10) &lt;&lt; pmweight &lt;&lt; setw(8) &lt;&lt; pm-&gt;GetLocation()(eX)</span>
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :          &lt;&lt; setw(8) &lt;&lt; pm-&gt;GetLocation()(eY) &lt;&lt; setw(8) &lt;&lt; pm-&gt;GetLocation()(eZ)</span>
+<span class="lineNum">     468 </span><span class="lineNoCov">          0 :          &lt;&lt; setw(12) &lt;&lt; pm-&gt;GetPointMassMoI(1,1) &lt;&lt; setw(12) &lt;&lt; pm-&gt;GetPointMassMoI(2,2) &lt;&lt; setw(12) &lt;&lt; pm-&gt;GetPointMassMoI(3,3)</span>
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :          &lt;&lt; setw(12) &lt;&lt; pm-&gt;GetPointMassMoI(1,2) &lt;&lt; setw(12) &lt;&lt; pm-&gt;GetPointMassMoI(1,3) &lt;&lt; setw(12) &lt;&lt; pm-&gt;GetPointMassMoI(2,3) &lt;&lt; endl;         </span>
+<span class="lineNum">     470 </span>            :   }
+<span class="lineNum">     471 </span>            : 
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :   cout &lt;&lt; FDMExec-&gt;GetPropulsionTankReport();</span>
+<span class="lineNum">     473 </span>            : 
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :   cout &lt;&lt; &quot;    &quot; &lt;&lt; underon &lt;&lt; setw(136) &lt;&lt; &quot; &quot; &lt;&lt; underoff &lt;&lt; endl;</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :   cout &lt;&lt; highint &lt;&lt; left &lt;&lt; setw(30) &lt;&lt; &quot;    Total: &quot; &lt;&lt; right &lt;&lt; setw(14) &lt;&lt; Weight </span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(8) &lt;&lt; vXYZcg(eX)</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(8) &lt;&lt; vXYZcg(eY)</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(8) &lt;&lt; vXYZcg(eZ)</span>
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; mJ(1,1)</span>
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; mJ(2,2)</span>
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; mJ(3,3)</span>
+<span class="lineNum">     482 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; mJ(1,2)</span>
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; mJ(1,3)</span>
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :        &lt;&lt; setw(12) &lt;&lt; mJ(2,3)</span>
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :        &lt;&lt; normint &lt;&lt; endl;</span>
+<span class="lineNum">     486 </span>            : 
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :   cout.setf(ios_base::fixed);</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     489 </span>            : 
+<span class="lineNum">     490 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     491 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     492 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     493 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     494 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     495 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     496 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     497 </span>            : //       whatsoever.
+<span class="lineNum">     498 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     499 </span>            : //       startup messages
+<span class="lineNum">     500 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     501 </span>            : //       a class is instantiated
+<span class="lineNum">     502 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     503 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     504 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     505 </span>            : //       are printed out periodically
+<span class="lineNum">     506 </span>            : //    16: When set various parameters are sanity checked and
+<a name="507"><span class="lineNum">     507 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span><span class="lineCov">         16 : void FGMassBalance::Debug(int from)</span>
+<span class="lineNum">     510 </span>            : {
+<span class="lineNum">     511 </span><span class="lineCov">         16 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     512 </span>            : 
+<span class="lineNum">     513 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     514 </span><span class="lineCov">         16 :     if (from == 2) { // Loading</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :       cout &lt;&lt; endl &lt;&lt; &quot;  Mass and Balance:&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    baseIxx: &quot; &lt;&lt; baseJ(1,1) &lt;&lt; &quot; slug-ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    baseIyy: &quot; &lt;&lt; baseJ(2,2) &lt;&lt; &quot; slug-ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    baseIzz: &quot; &lt;&lt; baseJ(3,3) &lt;&lt; &quot; slug-ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    baseIxy: &quot; &lt;&lt; baseJ(1,2) &lt;&lt; &quot; slug-ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    baseIxz: &quot; &lt;&lt; baseJ(1,3) &lt;&lt; &quot; slug-ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    baseIyz: &quot; &lt;&lt; baseJ(2,3) &lt;&lt; &quot; slug-ft2&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    Empty Weight: &quot; &lt;&lt; EmptyWeight &lt;&lt; &quot; lbm&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    CG (x, y, z): &quot; &lt;&lt; vbaseXYZcg &lt;&lt; endl;</span>
+<span class="lineNum">     524 </span>            :       // ToDo: Need to add point mass outputs here
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :       for (unsigned int i=0; i&lt;PointMasses.size(); i++) {</span>
+<span class="lineNum">     526 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;    Point Mass Object: &quot; &lt;&lt; PointMasses[i]-&gt;Weight &lt;&lt; &quot; lbs. at &quot;</span>
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :                    &lt;&lt; &quot;X, Y, Z (in.): &quot; &lt;&lt; PointMasses[i]-&gt;Location(eX) &lt;&lt; &quot;  &quot;</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :                    &lt;&lt; PointMasses[i]-&gt;Location(eY) &lt;&lt; &quot;  &quot;</span>
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :                    &lt;&lt; PointMasses[i]-&gt;Location(eZ) &lt;&lt; endl;</span>
+<span class="lineNum">     530 </span>            :       }
+<span class="lineNum">     531 </span>            :     }
+<span class="lineNum">     532 </span>            :   }
+<span class="lineNum">     533 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGMassBalance&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGMassBalance&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     536 </span>            :   }
+<span class="lineNum">     537 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     538 </span>            :   }
+<span class="lineNum">     539 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     540 </span>            :   }
+<span class="lineNum">     541 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     542 </span><span class="lineNoCov">          0 :     if (from == 2) {</span>
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :       if (EmptyWeight &lt;= 0.0 || EmptyWeight &gt; 1e9)</span>
+<span class="lineNum">     544 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;MassBalance::EmptyWeight out of bounds: &quot; &lt;&lt; EmptyWeight &lt;&lt; endl;</span>
+<span class="lineNum">     545 </span><span class="lineNoCov">          0 :       if (Weight &lt;= 0.0 || Weight &gt; 1e9)</span>
+<span class="lineNum">     546 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;MassBalance::Weight out of bounds: &quot; &lt;&lt; Weight &lt;&lt; endl;</span>
+<span class="lineNum">     547 </span><span class="lineNoCov">          0 :       if (Mass &lt;= 0.0 || Mass &gt; 1e9)</span>
+<span class="lineNum">     548 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;MassBalance::Mass out of bounds: &quot; &lt;&lt; Mass &lt;&lt; endl;</span>
+<span class="lineNum">     549 </span>            :     }
+<span class="lineNum">     550 </span>            :   }
+<span class="lineNum">     551 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     552 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     553 </span>            :     }
+<a name="554"><span class="lineNum">     554 </span>            :   }</a>
+<span class="lineNum">     555 </span>            : }
+<span class="lineNum">     556 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+<map id="InitializeDerivatives" name="InitializeDerivatives">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="189,5,411,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGAccelerations.html#a7948e6ba800dadd2c1a516fcb3b5ad58" title="Retrieves the body axis angular acceleration vector. " alt="" coords="255,56,345,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGAccelerations.html#ac4ba640757a83900db48561555b3642d" title="Retrieves the body axis acceleration. " alt="" coords="253,107,347,133"/>
+</map>

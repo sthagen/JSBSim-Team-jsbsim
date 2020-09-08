@@ -1,0 +1,1025 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGLGear.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGLGear.cpp<span style="font-size: 80%;"> (source / <a href="FGLGear.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">487</td>
+            <td class="headerCovTableEntryLo">0.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntryLo">8.3 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGLGear.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :                Norman H. Princen
+<span class="lineNum">       6 </span>            :                Bertrand Coconnier
+<span class="lineNum">       7 </span>            :  Date started: 11/18/99
+<span class="lineNum">       8 </span>            :  Purpose:      Encapsulates the landing gear elements
+<span class="lineNum">       9 </span>            :  Called by:    FGAircraft
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      14 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      15 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      16 </span>            :  later version.
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      19 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      20 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      21 </span>            :  details.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      24 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      25 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      28 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      31 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : HISTORY
+<span class="lineNum">      34 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      35 </span>            : 11/18/99   JSB   Created
+<span class="lineNum">      36 </span>            : 01/30/01   NHP   Extended gear model to properly simulate steering and braking
+<span class="lineNum">      37 </span>            : 07/08/09   BC    Modified gear model to support large angles between aircraft
+<span class="lineNum">      38 </span>            :                  and ground
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : /%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      41 </span>            : INCLUDES
+<span class="lineNum">      42 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : #include &quot;FGLGear.h&quot;
+<span class="lineNum">      45 </span>            : #include &quot;models/FGGroundReactions.h&quot;
+<span class="lineNum">      46 </span>            : #include &quot;math/FGTable.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;models/FGInertial.h&quot;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : using namespace std;
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : namespace JSBSim {
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      55 </span>            : DEFINITIONS
+<span class="lineNum">      56 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      59 </span>            : GLOBAL DATA
+<span class="lineNum">      60 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : // Body To Structural (body frame is rotated 180 deg about Y and lengths are
+<span class="lineNum">      63 </span>            : // given in ft instead of inches)
+<span class="lineNum">      64 </span><span class="lineCov">          4 : const FGMatrix33 FGLGear::Tb2s(-1./inchtoft, 0., 0., 0., 1./inchtoft, 0., 0., 0., -1./inchtoft);</span>
+<span class="lineNum">      65 </span><span class="lineCov">          4 : const FGMatrix33 FGLGear::Ts2b(-inchtoft, 0., 0., 0., inchtoft, 0., 0., 0., -inchtoft);</span>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      68 </span>            : CLASS IMPLEMENTATION
+<a name="69"><span class="lineNum">      69 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 : FGLGear::FGLGear(Element* el, FGFDMExec* fdmex, int number, const struct Inputs&amp; inputs) :</span>
+<span class="lineNum">      72 </span>            :   FGSurface(fdmex, number),
+<span class="lineNum">      73 </span>            :   FGForce(fdmex),
+<span class="lineNum">      74 </span>            :   in(inputs),
+<span class="lineNum">      75 </span>            :   GearNumber(number),
+<span class="lineNum">      76 </span>            :   SteerAngle(0.0),
+<span class="lineNum">      77 </span>            :   Castered(false),
+<span class="lineNum">      78 </span>            :   StaticFriction(false),
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   eSteerType(stSteer)</span>
+<span class="lineNum">      80 </span>            : {
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :   kSpring = bDamp = bDampRebound = dynamicFCoeff = staticFCoeff = rollingFCoeff = maxSteerAngle = 0;</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :   isRetractable = false;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   eDampType = dtLinear;</span>
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :   eDampTypeRebound = dtLinear;</span>
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   name = el-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :   string sContactType = el-&gt;GetAttributeValue(&quot;type&quot;);</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :   if (sContactType == &quot;BOGEY&quot;) {</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :     eContactType = ctBOGEY;</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :   } else if (sContactType == &quot;STRUCTURE&quot;) {</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :     eContactType = ctSTRUCTURE;</span>
+<span class="lineNum">      92 </span>            :   } else {
+<span class="lineNum">      93 </span>            :     // Unknown contact point types will be treated as STRUCTURE.
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :     eContactType = ctSTRUCTURE;</span>
+<span class="lineNum">      95 </span>            :   }
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            :   // Default values for structural contact points
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   if (eContactType == ctSTRUCTURE) {</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :     kSpring = in.EmptyWeight;</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :     bDamp = kSpring;</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :     bDampRebound = kSpring * 10;</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :     staticFCoeff = 1.0;</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :     dynamicFCoeff = 1.0;</span>
+<span class="lineNum">     104 </span>            :   }
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   PropertyManager = fdmex-&gt;GetPropertyManager();</span>
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :   fStrutForce = 0;</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :   Element* strutForce = el-&gt;FindElement(&quot;strut_force&quot;);</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :   if (strutForce) {</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :     Element* springFunc = strutForce-&gt;FindElement(&quot;function&quot;);</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :     fStrutForce = new FGFunction(fdmex, springFunc);</span>
+<span class="lineNum">     113 </span>            :   }
+<span class="lineNum">     114 </span>            :   else {
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;spring_coeff&quot;))</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :       kSpring = el-&gt;FindElementValueAsNumberConvertTo(&quot;spring_coeff&quot;, &quot;LBS/FT&quot;);</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;damping_coeff&quot;)) {</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :       Element* dampCoeff = el-&gt;FindElement(&quot;damping_coeff&quot;);</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :       if (dampCoeff-&gt;GetAttributeValue(&quot;type&quot;) == &quot;SQUARE&quot;) {</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :         eDampType = dtSquare;</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :         bDamp   = el-&gt;FindElementValueAsNumberConvertTo(&quot;damping_coeff&quot;, &quot;LBS/FT2/SEC2&quot;);</span>
+<span class="lineNum">     122 </span>            :       } else {
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :         bDamp   = el-&gt;FindElementValueAsNumberConvertTo(&quot;damping_coeff&quot;, &quot;LBS/FT/SEC&quot;);</span>
+<span class="lineNum">     124 </span>            :       }
+<span class="lineNum">     125 </span>            :     }
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :     if (el-&gt;FindElement(&quot;damping_coeff_rebound&quot;)) {</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :       Element* dampCoeffRebound = el-&gt;FindElement(&quot;damping_coeff_rebound&quot;);</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :       if (dampCoeffRebound-&gt;GetAttributeValue(&quot;type&quot;) == &quot;SQUARE&quot;) {</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         eDampTypeRebound = dtSquare;</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :         bDampRebound   = el-&gt;FindElementValueAsNumberConvertTo(&quot;damping_coeff_rebound&quot;, &quot;LBS/FT2/SEC2&quot;);</span>
+<span class="lineNum">     132 </span>            :       } else {
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :         bDampRebound   = el-&gt;FindElementValueAsNumberConvertTo(&quot;damping_coeff_rebound&quot;, &quot;LBS/FT/SEC&quot;);</span>
+<span class="lineNum">     134 </span>            :       }
+<span class="lineNum">     135 </span>            :     } else {
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :       bDampRebound   = bDamp;</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :       eDampTypeRebound = eDampType;</span>
+<span class="lineNum">     138 </span>            :     }
+<span class="lineNum">     139 </span>            :   }
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;dynamic_friction&quot;))</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :     dynamicFCoeff = el-&gt;FindElementValueAsNumber(&quot;dynamic_friction&quot;);</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;static_friction&quot;))</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     staticFCoeff = el-&gt;FindElementValueAsNumber(&quot;static_friction&quot;);</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;rolling_friction&quot;))</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     rollingFCoeff = el-&gt;FindElementValueAsNumber(&quot;rolling_friction&quot;);</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;retractable&quot;))</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     isRetractable = ((unsigned int)el-&gt;FindElementValueAsNumber(&quot;retractable&quot;))&gt;0.0?true:false;</span>
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;max_steer&quot;))</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :     maxSteerAngle = el-&gt;FindElementValueAsNumberConvertTo(&quot;max_steer&quot;, &quot;DEG&quot;);</span>
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :   Element* castered_el = el-&gt;FindElement(&quot;castered&quot;);</span>
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :   if ((maxSteerAngle == 360 &amp;&amp; !castered_el)</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :       || (castered_el &amp;&amp; castered_el-&gt;GetDataAsNumber() != 0.0)) {</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :     eSteerType = stCaster;</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     Castered = true;</span>
+<span class="lineNum">     159 </span>            :   }
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :   else if (maxSteerAngle == 0.0) {</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :     eSteerType = stFixed;</span>
+<span class="lineNum">     162 </span>            :   }
+<span class="lineNum">     163 </span>            :   else
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     eSteerType = stSteer;</span>
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :   GroundReactions = fdmex-&gt;GetGroundReactions();</span>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :   ForceY_Table = 0;</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :   Element* force_table = el-&gt;FindElement(&quot;table&quot;);</span>
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :   while (force_table) {</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :     string force_type = force_table-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :     if (force_type == &quot;CORNERING_COEFF&quot;) {</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :       ForceY_Table = new FGTable(PropertyManager, force_table);</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     175 </span>            :     } else {
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :       cerr &lt;&lt; &quot;Undefined force table for &quot; &lt;&lt; name &lt;&lt; &quot; contact point&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     177 </span>            :     }
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :     force_table = el-&gt;FindNextElement(&quot;table&quot;);</span>
+<span class="lineNum">     179 </span>            :   }
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :   Element* element = el-&gt;FindElement(&quot;location&quot;);</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :   if (element) vXYZn = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :   else {cerr &lt;&lt; &quot;No location given for contact &quot; &lt;&lt; name &lt;&lt; endl; exit(-1);}</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :   SetTransformType(FGForce::tCustom);</span>
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :   element = el-&gt;FindElement(&quot;orientation&quot;);</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :   if (element &amp;&amp; (eContactType == ctBOGEY)) {</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :     FGQuaternion quatFromEuler(element-&gt;FindElementTripletConvertTo(&quot;RAD&quot;));</span>
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     mTGear = quatFromEuler.GetT();</span>
+<span class="lineNum">     191 </span>            :   }
+<span class="lineNum">     192 </span>            :   else {
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :     mTGear(1,1) = 1.;</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :     mTGear(2,2) = 1.;</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :     mTGear(3,3) = 1.;</span>
+<span class="lineNum">     196 </span>            :   }
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :   string sBrakeGroup = el-&gt;FindElementValue(&quot;brake_group&quot;);</span>
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :   if      (sBrakeGroup == &quot;LEFT&quot;  ) eBrakeGrp = bgLeft;</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :   else if (sBrakeGroup == &quot;RIGHT&quot; ) eBrakeGrp = bgRight;</span>
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :   else if (sBrakeGroup == &quot;CENTER&quot;) eBrakeGrp = bgCenter;</span>
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :   else if (sBrakeGroup == &quot;NOSE&quot;  ) eBrakeGrp = bgCenter; // Nose brake is not supported by FGFCS</span>
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :   else if (sBrakeGroup == &quot;TAIL&quot;  ) eBrakeGrp = bgCenter; // Tail brake is not supported by FGFCS</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :   else if (sBrakeGroup == &quot;NONE&quot;  ) eBrakeGrp = bgNone;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :   else if (sBrakeGroup.empty()    ) eBrakeGrp = bgNone;</span>
+<span class="lineNum">     207 </span>            :   else {
+<span class="lineNum">     208 </span>            :     cerr &lt;&lt; &quot;Improper braking group specification in config file: &quot;
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :          &lt;&lt; sBrakeGroup &lt;&lt; &quot; is undefined.&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     210 </span>            :   }
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            : // Add some AI here to determine if gear is located properly according to its
+<span class="lineNum">     213 </span>            : // brake group type ??
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :   useFCSGearPos = false;</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :   ReportEnable = true;</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :   TakeoffReported = LandingReported = false;</span>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :   // Set Pacejka terms
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   Stiffness = 0.06;</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   Shape = 2.8;</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :   Peak = staticFCoeff;</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :   Curvature = 1.03;</span>
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :   ResetToIC();</span>
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :   Debug(0);</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     230 </span>            : 
+<a name="231"><span class="lineNum">     231 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 : FGLGear::~FGLGear()</span>
+<span class="lineNum">     234 </span>            : {
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :   delete ForceY_Table;</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :   delete fStrutForce;</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :   Debug(1);</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     239 </span>            : 
+<a name="240"><span class="lineNum">     240 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 : void FGLGear::ResetToIC(void)</span>
+<span class="lineNum">     243 </span>            : {
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :   GearPos  = 1.0;</span>
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   WOW = lastWOW = false;</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :   FirstContact = false;</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :   StartedGroundRun = false;</span>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :   LandingDistanceTraveled = TakeoffDistanceTraveled = TakeoffDistanceTraveled50ft = 0.0;</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :   MaximumStrutForce = MaximumStrutTravel = 0.0;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :   SinkRate = GroundSpeed = 0.0;</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   SteerAngle = 0.0;</span>
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   vWhlVelVec.InitMatrix();</span>
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :   compressLength  = 0.0;</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :   compressSpeed   = 0.0;</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   maxCompLen      = 0.0;</span>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :   WheelSlip = 0.0;</span>
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span>            :   // Initialize Lagrange multipliers
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :   for (int i=0; i &lt; 3; i++) {</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :     LMultiplier[i].ForceJacobian.InitMatrix();</span>
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :     LMultiplier[i].LeverArm.InitMatrix();</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :     LMultiplier[i].Min = 0.0;</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :     LMultiplier[i].Max = 0.0;</span>
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :     LMultiplier[i].value = 0.0;</span>
+<span class="lineNum">     269 </span>            :   }
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     271 </span>            : 
+<a name="272"><span class="lineNum">     272 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 : const FGColumnVector3&amp; FGLGear::GetBodyForces(FGSurface *surface)</span>
+<span class="lineNum">     275 </span>            : {
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :   double gearPos = 1.0;</span>
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :   vFn.InitMatrix();</span>
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :   if (isRetractable) gearPos = GetGearUnitPos();</span>
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :   if (gearPos &gt; 0.99) { // Gear DOWN</span>
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :     FGColumnVector3 normal, terrainVel, dummy;</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :     FGLocation gearLoc, contact;</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :     FGColumnVector3 vWhlBodyVec = Ts2b * (vXYZn - in.vXYZcg);</span>
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :     vLocalGear = in.Tb2l * vWhlBodyVec; // Get local frame wheel location</span>
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :     gearLoc = in.Location.LocalToLocation(vLocalGear);</span>
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span>            :     // Compute the height of the theoretical location of the wheel (if strut is
+<span class="lineNum">     291 </span>            :     // not compressed) with respect to the ground level
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :     double height = fdmex-&gt;GetInertial()-&gt;GetContactPoint(gearLoc, contact,</span>
+<span class="lineNum">     293 </span>            :                                                           normal, terrainVel,
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :                                                           dummy);</span>
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span>            :     // Does this surface contact point interact with another surface?
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :     if (surface) {</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :       if (!fdmex-&gt;GetTrimStatus())</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :         height -= (*surface).GetBumpHeight();</span>
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :       staticFFactor = (*surface).GetStaticFFactor();</span>
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :       rollingFFactor = (*surface).GetRollingFFactor();</span>
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :       maximumForce = (*surface).GetMaximumForce();</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :       isSolid =  (*surface).GetSolid();</span>
+<span class="lineNum">     304 </span>            :     }
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :     FGColumnVector3 vWhlDisplVec;</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :     double LGearProj = 1.0;</span>
+<span class="lineNum">     308 </span>            : 
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :     if (height &lt; 0.0) {</span>
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :       WOW = true;</span>
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :       vGroundNormal = in.Tec2b * normal;</span>
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span>            :       // The height returned by GetGroundCallback() is the AGL and is expressed
+<span class="lineNum">     314 </span>            :       // in the Z direction of the local coordinate frame. We now need to
+<span class="lineNum">     315 </span>            :       // transform this height in actual compression of the strut (BOGEY) or in
+<span class="lineNum">     316 </span>            :       // the normal direction to the ground (STRUCTURE)
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :       double normalZ = (in.Tec2l*normal)(eZ);</span>
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :       LGearProj = -(mTGear.Transposed() * vGroundNormal)(eZ);</span>
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span>            :       // The following equations use the vector to the tire contact patch
+<span class="lineNum">     321 </span>            :       // including the strut compression.
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :       switch(eContactType) {</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :       case ctBOGEY:</span>
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :         if (isSolid) {</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :           compressLength = LGearProj &gt; 0.0 ? height * normalZ / LGearProj : 0.0;</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :           vWhlDisplVec = mTGear * FGColumnVector3(0., 0., -compressLength);</span>
+<span class="lineNum">     327 </span>            :         } else {
+<span class="lineNum">     328 </span>            :           // Gears don't (or hardly) compress in liquids
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :           WOW = false;</span>
+<span class="lineNum">     330 </span>            :         }
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :       case ctSTRUCTURE:</span>
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :         compressLength = height * normalZ / DotProduct(normal, normal);</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :         vWhlDisplVec = compressLength * vGroundNormal;</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     336 </span>            :       }
+<span class="lineNum">     337 </span>            :     }
+<span class="lineNum">     338 </span>            :     else
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :       WOW = false;</span>
+<span class="lineNum">     340 </span>            : 
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :     if (WOW) {</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :       FGColumnVector3 vWhlContactVec = vWhlBodyVec + vWhlDisplVec;</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :       vActingXYZn = vXYZn + Tb2s * vWhlDisplVec;</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :       FGColumnVector3 vBodyWhlVel = in.PQR * vWhlContactVec;</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :       vBodyWhlVel += in.UVW - in.Tec2b * terrainVel;</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :       vWhlVelVec = mTGear.Transposed() * vBodyWhlVel;</span>
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :       InitializeReporting();</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :       ComputeSteeringAngle();</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :       ComputeGroundFrame();</span>
+<span class="lineNum">     351 </span>            : 
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :       vGroundWhlVel = mT.Transposed() * vBodyWhlVel;</span>
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :       if (fdmex-&gt;GetTrimStatus() || in.TotalDeltaT == 0.0)</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :         compressSpeed = 0.0; // Steady state is sought during trimming</span>
+<span class="lineNum">     356 </span>            :       else {
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :         compressSpeed = -vGroundWhlVel(eZ);</span>
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :         if (eContactType == ctBOGEY)</span>
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :           compressSpeed /= LGearProj;</span>
+<span class="lineNum">     360 </span>            : 
+<span class="lineNum">     361 </span>            :         // If the gear is entering in contact with the ground during the current
+<span class="lineNum">     362 </span>            :         // time step, the compression speed might actually be lower than the
+<span class="lineNum">     363 </span>            :         // aircraft velocity projected along the gear leg (compressSpeed).
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :         double maxCompressSpeed = compressLength/in.TotalDeltaT;</span>
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :         if (fabs(compressSpeed) &gt; maxCompressSpeed)</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :           compressSpeed = sign(compressSpeed)*maxCompressSpeed;</span>
+<span class="lineNum">     367 </span>            :       }
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :       ComputeVerticalStrutForce();</span>
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span>            :       // Compute the friction coefficients in the wheel ground plane.
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :       if (eContactType == ctBOGEY) {</span>
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :         ComputeSlipAngle();</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :         ComputeBrakeForceCoefficient();</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :         ComputeSideForceCoefficient();</span>
+<span class="lineNum">     376 </span>            :       }
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            :       // Prepare the Jacobians and the Lagrange multipliers for later friction
+<span class="lineNum">     379 </span>            :       // forces calculations.
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :       ComputeJacobian(vWhlContactVec);</span>
+<span class="lineNum">     381 </span>            :     } else { // Gear is NOT compressed
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :       compressLength = 0.0;</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :       compressSpeed = 0.0;</span>
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 :       WheelSlip = 0.0;</span>
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :       StrutForce = 0.0;</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :       vWhlDisplVec.InitMatrix();</span>
+<span class="lineNum">     387 </span>            : 
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :       LMultiplier[ftRoll].value = 0.0;</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :       LMultiplier[ftSide].value = 0.0;</span>
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :       LMultiplier[ftDynamic].value = 0.0;</span>
+<span class="lineNum">     391 </span>            : 
+<span class="lineNum">     392 </span>            :       // Return to neutral position between 1.0 and 0.8 gear pos.
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :       SteerAngle *= max(gearPos-0.8, 0.0)/0.2;</span>
+<span class="lineNum">     394 </span>            : 
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :       ResetReporting();</span>
+<span class="lineNum">     396 </span>            :     }
+<span class="lineNum">     397 </span>            :   }
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :   if (!WOW) {</span>
+<span class="lineNum">     400 </span>            :     // Let wheel spin down slowly
+<span class="lineNum">     401 </span><span class="lineNoCov">          0 :     vWhlVelVec(eX) -= 13.0 * in.TotalDeltaT;</span>
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :     if (vWhlVelVec(eX) &lt; 0.0) vWhlVelVec(eX) = 0.0;</span>
+<span class="lineNum">     403 </span>            :   }
+<span class="lineNum">     404 </span>            : 
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :   if (!fdmex-&gt;GetTrimStatus()) {</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :     ReportTakeoffOrLanding();</span>
+<span class="lineNum">     407 </span>            : 
+<span class="lineNum">     408 </span>            :     // Require both WOW and LastWOW to be true before checking crash conditions
+<span class="lineNum">     409 </span>            :     // to allow the WOW flag to be used in terminating a scripted run.
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :     if (WOW &amp;&amp; lastWOW) CrashDetect();</span>
+<span class="lineNum">     411 </span>            : 
+<span class="lineNum">     412 </span><span class="lineNoCov">          0 :     lastWOW = WOW;</span>
+<span class="lineNum">     413 </span>            :   }
+<span class="lineNum">     414 </span>            : 
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :   return FGForce::GetBodyForces();</span>
+<span class="lineNum">     416 </span>            : }
+<span class="lineNum">     417 </span>            : 
+<span class="lineNum">     418 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     419 </span>            : // Build a local &quot;ground&quot; coordinate system defined by
+<span class="lineNum">     420 </span>            : //  eX : projection of the rolling direction on the ground
+<span class="lineNum">     421 </span>            : //  eY : projection of the sliping direction on the ground
+<a name="422"><span class="lineNum">     422 </span>            : //  eZ : normal to the ground</a>
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 : void FGLGear::ComputeGroundFrame(void)</span>
+<span class="lineNum">     425 </span>            : {
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :   FGColumnVector3 roll = mTGear * FGColumnVector3(cos(SteerAngle), sin(SteerAngle), 0.);</span>
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :   FGColumnVector3 side = vGroundNormal * roll;</span>
+<span class="lineNum">     428 </span>            : 
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :   roll -= DotProduct(roll, vGroundNormal) * vGroundNormal;</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :   roll.Normalize();</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :   side.Normalize();</span>
+<span class="lineNum">     432 </span>            : 
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :   mT(eX,eX) = roll(eX);</span>
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :   mT(eY,eX) = roll(eY);</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :   mT(eZ,eX) = roll(eZ);</span>
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :   mT(eX,eY) = side(eX);</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :   mT(eY,eY) = side(eY);</span>
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :   mT(eZ,eY) = side(eZ);</span>
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :   mT(eX,eZ) = vGroundNormal(eX);</span>
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :   mT(eY,eZ) = vGroundNormal(eY);</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :   mT(eZ,eZ) = vGroundNormal(eZ);</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="445"><span class="lineNum">     445 </span>            : // Calculate tire slip angle.</a>
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 : void FGLGear::ComputeSlipAngle(void)</span>
+<span class="lineNum">     448 </span>            : {
+<span class="lineNum">     449 </span>            : // Check that the speed is non-null otherwise keep the current angle
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :   if (vGroundWhlVel.Magnitude(eX,eY) &gt; 1E-3)</span>
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :     WheelSlip = -atan2(vGroundWhlVel(eY), fabs(vGroundWhlVel(eX)))*radtodeg;</span>
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     453 </span>            : 
+<span class="lineNum">     454 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     455 </span>            : // Compute the steering angle in any case.
+<a name="456"><span class="lineNum">     456 </span>            : // This will also make sure that animations will look right.</a>
+<span class="lineNum">     457 </span>            : 
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 : void FGLGear::ComputeSteeringAngle(void)</span>
+<span class="lineNum">     459 </span>            : {
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :   if (Castered) {</span>
+<span class="lineNum">     461 </span>            :       // Check that the speed is non-null otherwise keep the current angle
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :       if (vWhlVelVec.Magnitude(eX,eY) &gt; 0.1)</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :         SteerAngle = atan2(vWhlVelVec(eY), fabs(vWhlVelVec(eX)));</span>
+<span class="lineNum">     464 </span>            :   }
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="468"><span class="lineNum">     468 </span>            : // Reset reporting functionality after takeoff</a>
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 : void FGLGear::ResetReporting(void)</span>
+<span class="lineNum">     471 </span>            : {
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :   if (in.DistanceAGL &gt; 200.0) {</span>
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :     FirstContact = false;</span>
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :     StartedGroundRun = false;</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :     LandingReported = false;</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :     TakeoffReported = true;</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :     LandingDistanceTraveled = 0.0;</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :     MaximumStrutForce = MaximumStrutTravel = 0.0;</span>
+<span class="lineNum">     479 </span>            :   }
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     481 </span>            : 
+<a name="482"><span class="lineNum">     482 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     483 </span>            : 
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 : void FGLGear::InitializeReporting(void)</span>
+<span class="lineNum">     485 </span>            : {
+<span class="lineNum">     486 </span>            :   // If this is the first time the wheel has made contact, remember some values
+<span class="lineNum">     487 </span>            :   // for later printout.
+<span class="lineNum">     488 </span>            : 
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :   if (!FirstContact) {</span>
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :     FirstContact  = true;</span>
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :     SinkRate      =  compressSpeed;</span>
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :     GroundSpeed   =  in.Vground;</span>
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :     TakeoffReported = false;</span>
+<span class="lineNum">     494 </span>            :   }
+<span class="lineNum">     495 </span>            : 
+<span class="lineNum">     496 </span>            :   // If the takeoff run is starting, initialize.
+<span class="lineNum">     497 </span>            : 
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 :   if ((in.Vground &gt; 0.1) &amp;&amp;</span>
+<span class="lineNum">     499 </span><span class="lineNoCov">          0 :       (in.BrakePos[bgLeft] == 0) &amp;&amp;</span>
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :       (in.BrakePos[bgRight] == 0) &amp;&amp;</span>
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :       (in.TakeoffThrottle &amp;&amp; !StartedGroundRun))</span>
+<span class="lineNum">     502 </span>            :   {
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :     TakeoffDistanceTraveled = 0;</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :     TakeoffDistanceTraveled50ft = 0;</span>
+<span class="lineNum">     505 </span><span class="lineNoCov">          0 :     StartedGroundRun = true;</span>
+<span class="lineNum">     506 </span>            :   }
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="510"><span class="lineNum">     510 </span>            : // Takeoff and landing reporting functionality</a>
+<span class="lineNum">     511 </span>            : 
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 : void FGLGear::ReportTakeoffOrLanding(void)</span>
+<span class="lineNum">     513 </span>            : {
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :   if (FirstContact)</span>
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :     LandingDistanceTraveled += in.Vground * in.TotalDeltaT;</span>
+<span class="lineNum">     516 </span>            : 
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :   if (StartedGroundRun) {</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :     TakeoffDistanceTraveled50ft += in.Vground * in.TotalDeltaT;</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :     if (WOW) TakeoffDistanceTraveled += in.Vground * in.TotalDeltaT;</span>
+<span class="lineNum">     520 </span>            :   }
+<span class="lineNum">     521 </span>            : 
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :   if ( ReportEnable</span>
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :        &amp;&amp; in.Vground &lt;= 0.05</span>
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :        &amp;&amp; !LandingReported</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :        &amp;&amp; in.WOW)</span>
+<span class="lineNum">     526 </span>            :   {
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :     if (debug_lvl &gt; 0) Report(erLand);</span>
+<span class="lineNum">     528 </span>            :   }
+<span class="lineNum">     529 </span>            : 
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :   if ( ReportEnable</span>
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :        &amp;&amp; !TakeoffReported</span>
+<span class="lineNum">     532 </span><span class="lineNoCov">          0 :        &amp;&amp; (in.DistanceAGL - vLocalGear(eZ)) &gt; 50.0</span>
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :        &amp;&amp; !in.WOW)</span>
+<span class="lineNum">     534 </span>            :   {
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :     if (debug_lvl &gt; 0) Report(erTakeoff);</span>
+<span class="lineNum">     536 </span>            :   }
+<span class="lineNum">     537 </span>            : 
+<span class="lineNum">     538 </span><span class="lineNoCov">          0 :   if (lastWOW != WOW)</span>
+<span class="lineNum">     539 </span>            :   {
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 :     ostringstream buf;</span>
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :     buf &lt;&lt; &quot;GEAR_CONTACT: &quot; &lt;&lt; fdmex-&gt;GetSimTime() &lt;&lt; &quot; seconds: &quot; &lt;&lt; name;</span>
+<span class="lineNum">     542 </span><span class="lineNoCov">          0 :     PutMessage(buf.str(), WOW);</span>
+<span class="lineNum">     543 </span>            :   }
+<span class="lineNum">     544 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     545 </span>            : 
+<span class="lineNum">     546 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<a name="547"><span class="lineNum">     547 </span>            : // Crash detection logic (really out-of-bounds detection)</a>
+<span class="lineNum">     548 </span>            : 
+<span class="lineNum">     549 </span><span class="lineNoCov">          0 : void FGLGear::CrashDetect(void)</span>
+<span class="lineNum">     550 </span>            : {
+<span class="lineNum">     551 </span><span class="lineNoCov">          0 :   if ( (compressLength &gt; 500.0 ||</span>
+<span class="lineNum">     552 </span><span class="lineNoCov">          0 :       vFn.Magnitude() &gt; 100000000.0 ||</span>
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :       GetMoments().Magnitude() &gt; 5000000000.0 ||</span>
+<span class="lineNum">     554 </span><span class="lineNoCov">          0 :       SinkRate &gt; 1.4666*30 ) &amp;&amp; !fdmex-&gt;IntegrationSuspended())</span>
+<span class="lineNum">     555 </span>            :   {
+<span class="lineNum">     556 </span><span class="lineNoCov">          0 :     ostringstream buf;</span>
+<span class="lineNum">     557 </span><span class="lineNoCov">          0 :     buf &lt;&lt; &quot;*CRASH DETECTED* &quot; &lt;&lt; fdmex-&gt;GetSimTime() &lt;&lt; &quot; seconds: &quot; &lt;&lt; name;</span>
+<span class="lineNum">     558 </span><span class="lineNoCov">          0 :     PutMessage(buf.str());</span>
+<span class="lineNum">     559 </span>            :     // fdmex-&gt;SuspendIntegration();
+<span class="lineNum">     560 </span>            :   }
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     562 </span>            : 
+<span class="lineNum">     563 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     564 </span>            : // The following needs work regarding friction coefficients and braking and
+<span class="lineNum">     565 </span>            : // steering The BrakeFCoeff formula assumes that an anti-skid system is used.
+<span class="lineNum">     566 </span>            : // It also assumes that we won't be turning and braking at the same time.
+<span class="lineNum">     567 </span>            : // Will fix this later.
+<span class="lineNum">     568 </span>            : // [JSB] The braking force coefficients include normal rolling coefficient +
+<a name="569"><span class="lineNum">     569 </span>            : // a percentage of the static friction coefficient based on braking applied.</a>
+<span class="lineNum">     570 </span>            : 
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 : void FGLGear::ComputeBrakeForceCoefficient(void)</span>
+<span class="lineNum">     572 </span>            : {
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :   BrakeFCoeff = rollingFFactor * rollingFCoeff;</span>
+<span class="lineNum">     574 </span>            : 
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :   if (eBrakeGrp != bgNone)</span>
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :     BrakeFCoeff += in.BrakePos[eBrakeGrp] * staticFFactor * (staticFCoeff - rollingFCoeff);</span>
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     578 </span>            : 
+<span class="lineNum">     579 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     580 </span>            : // Compute the sideforce coefficients using Pacejka's Magic Formula.
+<span class="lineNum">     581 </span>            : //
+<span class="lineNum">     582 </span>            : //   y(x) = D sin {C arctan [Bx - E(Bx - arctan Bx)]}
+<span class="lineNum">     583 </span>            : //
+<span class="lineNum">     584 </span>            : // Where: B = Stiffness Factor (0.06, here)
+<span class="lineNum">     585 </span>            : //        C = Shape Factor (2.8, here)
+<span class="lineNum">     586 </span>            : //        D = Peak Factor (0.8, here)
+<a name="587"><span class="lineNum">     587 </span>            : //        E = Curvature Factor (1.03, here)</a>
+<span class="lineNum">     588 </span>            : 
+<span class="lineNum">     589 </span><span class="lineNoCov">          0 : void FGLGear::ComputeSideForceCoefficient(void)</span>
+<span class="lineNum">     590 </span>            : {
+<span class="lineNum">     591 </span><span class="lineNoCov">          0 :   if (ForceY_Table) {</span>
+<span class="lineNum">     592 </span><span class="lineNoCov">          0 :     FCoeff = ForceY_Table-&gt;GetValue(WheelSlip);</span>
+<span class="lineNum">     593 </span>            :   } else {
+<span class="lineNum">     594 </span><span class="lineNoCov">          0 :     double StiffSlip = Stiffness*WheelSlip;</span>
+<span class="lineNum">     595 </span><span class="lineNoCov">          0 :     FCoeff = Peak * sin(Shape*atan(StiffSlip - Curvature*(StiffSlip - atan(StiffSlip))));</span>
+<span class="lineNum">     596 </span>            :   }
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :   FCoeff *= staticFFactor;</span>
+<span class="lineNum">     598 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     599 </span>            : 
+<span class="lineNum">     600 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     601 </span>            : // Compute the vertical force on the wheel using square-law damping (per comment
+<span class="lineNum">     602 </span>            : // in paper AIAA-2000-4303 - see header prologue comments). We might consider
+<span class="lineNum">     603 </span>            : // allowing for both square and linear damping force calculation. Also need to
+<span class="lineNum">     604 </span>            : // possibly give a &quot;rebound damping factor&quot; that differs from the compression
+<a name="605"><span class="lineNum">     605 </span>            : // case.</a>
+<span class="lineNum">     606 </span>            : 
+<span class="lineNum">     607 </span><span class="lineNoCov">          0 : void FGLGear::ComputeVerticalStrutForce()</span>
+<span class="lineNum">     608 </span>            : {
+<span class="lineNum">     609 </span><span class="lineNoCov">          0 :   if (fStrutForce)</span>
+<span class="lineNum">     610 </span><span class="lineNoCov">          0 :     StrutForce = min(fStrutForce-&gt;GetValue(), (double)0.0);</span>
+<span class="lineNum">     611 </span>            :   else {
+<span class="lineNum">     612 </span><span class="lineNoCov">          0 :     double springForce = -compressLength * kSpring;</span>
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 :     double dampForce = 0;</span>
+<span class="lineNum">     614 </span>            : 
+<span class="lineNum">     615 </span><span class="lineNoCov">          0 :     if (compressSpeed &gt;= 0.0) {</span>
+<span class="lineNum">     616 </span>            : 
+<span class="lineNum">     617 </span><span class="lineNoCov">          0 :       if (eDampType == dtLinear)</span>
+<span class="lineNum">     618 </span><span class="lineNoCov">          0 :         dampForce = -compressSpeed * bDamp;</span>
+<span class="lineNum">     619 </span>            :       else
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 :         dampForce = -compressSpeed * compressSpeed * bDamp;</span>
+<span class="lineNum">     621 </span>            : 
+<span class="lineNum">     622 </span>            :     } else {
+<span class="lineNum">     623 </span>            : 
+<span class="lineNum">     624 </span><span class="lineNoCov">          0 :       if (eDampTypeRebound == dtLinear)</span>
+<span class="lineNum">     625 </span><span class="lineNoCov">          0 :         dampForce   = -compressSpeed * bDampRebound;</span>
+<span class="lineNum">     626 </span>            :       else
+<span class="lineNum">     627 </span><span class="lineNoCov">          0 :         dampForce   =  compressSpeed * compressSpeed * bDampRebound;</span>
+<span class="lineNum">     628 </span>            : 
+<span class="lineNum">     629 </span>            :     }
+<span class="lineNum">     630 </span>            : 
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 :     StrutForce = min(springForce + dampForce, (double)0.0);</span>
+<span class="lineNum">     632 </span><span class="lineNoCov">          0 :     if (StrutForce &gt; maximumForce) {</span>
+<span class="lineNum">     633 </span><span class="lineNoCov">          0 :       StrutForce = maximumForce;</span>
+<span class="lineNum">     634 </span><span class="lineNoCov">          0 :       compressLength = -StrutForce / kSpring;</span>
+<span class="lineNum">     635 </span>            :     }
+<span class="lineNum">     636 </span>            :   }
+<span class="lineNum">     637 </span>            : 
+<span class="lineNum">     638 </span>            :   // The reaction force of the wheel is always normal to the ground
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 :   switch (eContactType) {</span>
+<span class="lineNum">     640 </span><span class="lineNoCov">          0 :   case ctBOGEY:</span>
+<span class="lineNum">     641 </span>            :     // Project back the strut force in the local coordinate frame of the ground
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 :     vFn(eZ) = StrutForce / (mTGear.Transposed()*vGroundNormal)(eZ);</span>
+<span class="lineNum">     643 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     644 </span><span class="lineNoCov">          0 :   case ctSTRUCTURE:</span>
+<span class="lineNum">     645 </span><span class="lineNoCov">          0 :     vFn(eZ) = -StrutForce;</span>
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     647 </span>            :   }
+<span class="lineNum">     648 </span>            : 
+<span class="lineNum">     649 </span>            :   // Remember these values for reporting
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 :   MaximumStrutForce = max(MaximumStrutForce, fabs(StrutForce));</span>
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :   MaximumStrutTravel = max(MaximumStrutTravel, fabs(compressLength));</span>
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     653 </span>            : 
+<a name="654"><span class="lineNum">     654 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     655 </span>            : 
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 : double FGLGear::GetGearUnitPos(void) const</span>
+<span class="lineNum">     657 </span>            : {
+<span class="lineNum">     658 </span>            :   // hack to provide backward compatibility to gear/gear-pos-norm property
+<span class="lineNum">     659 </span><span class="lineNoCov">          0 :   if( useFCSGearPos || in.FCSGearPos != 1.0 ) {</span>
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :     useFCSGearPos = true;</span>
+<span class="lineNum">     661 </span><span class="lineNoCov">          0 :     return in.FCSGearPos;</span>
+<span class="lineNum">     662 </span>            :   }
+<span class="lineNum">     663 </span><span class="lineNoCov">          0 :   return GearPos;</span>
+<span class="lineNum">     664 </span>            : }
+<span class="lineNum">     665 </span>            : 
+<span class="lineNum">     666 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     667 </span>            : // Compute the jacobian entries for the friction forces resolution later
+<a name="668"><span class="lineNum">     668 </span>            : // in FGPropagate</a>
+<span class="lineNum">     669 </span>            : 
+<span class="lineNum">     670 </span><span class="lineNoCov">          0 : void FGLGear::ComputeJacobian(const FGColumnVector3&amp; vWhlContactVec)</span>
+<span class="lineNum">     671 </span>            : {
+<span class="lineNum">     672 </span>            :   // When the point of contact is moving, dynamic friction is used
+<span class="lineNum">     673 </span>            :   // This type of friction is limited to ctSTRUCTURE elements because their
+<span class="lineNum">     674 </span>            :   // friction coefficient is the same in every directions
+<span class="lineNum">     675 </span><span class="lineNoCov">          0 :   if ((eContactType == ctSTRUCTURE) &amp;&amp; (vGroundWhlVel.Magnitude(eX,eY) &gt; 1E-3)) {</span>
+<span class="lineNum">     676 </span>            : 
+<span class="lineNum">     677 </span><span class="lineNoCov">          0 :     FGColumnVector3 velocityDirection = vGroundWhlVel;</span>
+<span class="lineNum">     678 </span>            : 
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :     StaticFriction = false;</span>
+<span class="lineNum">     680 </span>            : 
+<span class="lineNum">     681 </span><span class="lineNoCov">          0 :     velocityDirection(eZ) = 0.;</span>
+<span class="lineNum">     682 </span><span class="lineNoCov">          0 :     velocityDirection.Normalize();</span>
+<span class="lineNum">     683 </span>            : 
+<span class="lineNum">     684 </span><span class="lineNoCov">          0 :     LMultiplier[ftDynamic].ForceJacobian = mT * velocityDirection;</span>
+<span class="lineNum">     685 </span><span class="lineNoCov">          0 :     LMultiplier[ftDynamic].Max = 0.;</span>
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :     LMultiplier[ftDynamic].Min = -fabs(staticFFactor * dynamicFCoeff * vFn(eZ));</span>
+<span class="lineNum">     687 </span><span class="lineNoCov">          0 :     LMultiplier[ftDynamic].LeverArm = vWhlContactVec;</span>
+<span class="lineNum">     688 </span>            : 
+<span class="lineNum">     689 </span>            :     // The Lagrange multiplier value obtained from the previous iteration is
+<span class="lineNum">     690 </span>            :     // kept. This is supposed to accelerate the convergence of the projected
+<span class="lineNum">     691 </span>            :     // Gauss-Seidel algorithm. The code just below is to make sure that the
+<span class="lineNum">     692 </span>            :     // initial value is consistent with the current friction coefficient and
+<span class="lineNum">     693 </span>            :     // normal reaction.
+<span class="lineNum">     694 </span><span class="lineNoCov">          0 :     LMultiplier[ftDynamic].value = Constrain(LMultiplier[ftDynamic].Min, LMultiplier[ftDynamic].value, LMultiplier[ftDynamic].Max);</span>
+<span class="lineNum">     695 </span>            : 
+<span class="lineNum">     696 </span><span class="lineNoCov">          0 :     GroundReactions-&gt;RegisterLagrangeMultiplier(&amp;LMultiplier[ftDynamic]);</span>
+<span class="lineNum">     697 </span>            :   }
+<span class="lineNum">     698 </span>            :   else {
+<span class="lineNum">     699 </span>            :     // Static friction is used for ctSTRUCTURE when the contact point is not
+<span class="lineNum">     700 </span>            :     // moving. It is always used for ctBOGEY elements because the friction
+<span class="lineNum">     701 </span>            :     // coefficients of a tyre depend on the direction of the movement (roll &amp;
+<span class="lineNum">     702 </span>            :     // side directions). This cannot be handled properly by the so-called
+<span class="lineNum">     703 </span>            :     // &quot;dynamic friction&quot;.
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :     StaticFriction = true;</span>
+<span class="lineNum">     705 </span>            : 
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :     LMultiplier[ftRoll].ForceJacobian = mT * FGColumnVector3(1.,0.,0.);</span>
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :     LMultiplier[ftSide].ForceJacobian = mT * FGColumnVector3(0.,1.,0.);</span>
+<span class="lineNum">     708 </span><span class="lineNoCov">          0 :     LMultiplier[ftRoll].LeverArm = vWhlContactVec;</span>
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :     LMultiplier[ftSide].LeverArm = vWhlContactVec;</span>
+<span class="lineNum">     710 </span>            : 
+<span class="lineNum">     711 </span><span class="lineNoCov">          0 :     switch(eContactType) {</span>
+<span class="lineNum">     712 </span><span class="lineNoCov">          0 :     case ctBOGEY:</span>
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :       LMultiplier[ftRoll].Max = fabs(BrakeFCoeff * vFn(eZ));</span>
+<span class="lineNum">     714 </span><span class="lineNoCov">          0 :       LMultiplier[ftSide].Max = fabs(FCoeff * vFn(eZ));</span>
+<span class="lineNum">     715 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     716 </span><span class="lineNoCov">          0 :     case ctSTRUCTURE:</span>
+<span class="lineNum">     717 </span><span class="lineNoCov">          0 :       LMultiplier[ftRoll].Max = fabs(staticFFactor * staticFCoeff * vFn(eZ));</span>
+<span class="lineNum">     718 </span><span class="lineNoCov">          0 :       LMultiplier[ftSide].Max = LMultiplier[ftRoll].Max;</span>
+<span class="lineNum">     719 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     720 </span>            :     }
+<span class="lineNum">     721 </span>            : 
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 :     LMultiplier[ftRoll].Min = -LMultiplier[ftRoll].Max;</span>
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :     LMultiplier[ftSide].Min = -LMultiplier[ftSide].Max;</span>
+<span class="lineNum">     724 </span>            : 
+<span class="lineNum">     725 </span>            :     // The Lagrange multiplier value obtained from the previous iteration is
+<span class="lineNum">     726 </span>            :     // kept. This is supposed to accelerate the convergence of the projected
+<span class="lineNum">     727 </span>            :     // Gauss-Seidel algorithm. The code just below is to make sure that the
+<span class="lineNum">     728 </span>            :     // initial value is consistent with the current friction coefficient and
+<span class="lineNum">     729 </span>            :     // normal reaction.
+<span class="lineNum">     730 </span><span class="lineNoCov">          0 :     LMultiplier[ftRoll].value = Constrain(LMultiplier[ftRoll].Min, LMultiplier[ftRoll].value, LMultiplier[ftRoll].Max);</span>
+<span class="lineNum">     731 </span><span class="lineNoCov">          0 :     LMultiplier[ftSide].value = Constrain(LMultiplier[ftSide].Min, LMultiplier[ftSide].value, LMultiplier[ftSide].Max);</span>
+<span class="lineNum">     732 </span>            : 
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :     GroundReactions-&gt;RegisterLagrangeMultiplier(&amp;LMultiplier[ftRoll]);</span>
+<span class="lineNum">     734 </span><span class="lineNoCov">          0 :     GroundReactions-&gt;RegisterLagrangeMultiplier(&amp;LMultiplier[ftSide]);</span>
+<span class="lineNum">     735 </span>            :   }
+<span class="lineNum">     736 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     737 </span>            : 
+<span class="lineNum">     738 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     739 </span>            : // This routine is called after the Lagrange multiplier has been computed in
+<a name="740"><span class="lineNum">     740 </span>            : // the FGAccelerations class. The friction forces of the landing gear are then</a>
+<span class="lineNum">     741 </span>            : // updated accordingly.
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 : void FGLGear::UpdateForces(void)</span>
+<span class="lineNum">     743 </span>            : {
+<span class="lineNum">     744 </span><span class="lineNoCov">          0 :   if (StaticFriction) {</span>
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 :     vFn(eX) = LMultiplier[ftRoll].value;</span>
+<span class="lineNum">     746 </span><span class="lineNoCov">          0 :     vFn(eY) = LMultiplier[ftSide].value;</span>
+<span class="lineNum">     747 </span>            :   }
+<span class="lineNum">     748 </span>            :   else {
+<span class="lineNum">     749 </span><span class="lineNoCov">          0 :     FGColumnVector3 forceDir = mT.Transposed() * LMultiplier[ftDynamic].ForceJacobian;</span>
+<span class="lineNum">     750 </span><span class="lineNoCov">          0 :     vFn(eX) = LMultiplier[ftDynamic].value * forceDir(eX);</span>
+<span class="lineNum">     751 </span><span class="lineNoCov">          0 :     vFn(eY) = LMultiplier[ftDynamic].value * forceDir(eY);</span>
+<span class="lineNum">     752 </span>            :   }
+<span class="lineNum">     753 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     754 </span>            : 
+<a name="755"><span class="lineNum">     755 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     756 </span>            : 
+<span class="lineNum">     757 </span><span class="lineNoCov">          0 : void FGLGear::SetstaticFCoeff(double coeff)</span>
+<span class="lineNum">     758 </span>            : {
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :   staticFCoeff = coeff;</span>
+<span class="lineNum">     760 </span><span class="lineNoCov">          0 :   Peak = coeff;</span>
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     762 </span>            : 
+<a name="763"><span class="lineNum">     763 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     764 </span>            : 
+<span class="lineNum">     765 </span><span class="lineNoCov">          0 : void FGLGear::bind(void)</span>
+<span class="lineNum">     766 </span>            : {
+<span class="lineNum">     767 </span><span class="lineNoCov">          0 :   string property_name;</span>
+<span class="lineNum">     768 </span><span class="lineNoCov">          0 :   string base_property_name;</span>
+<span class="lineNum">     769 </span>            : 
+<span class="lineNum">     770 </span><span class="lineNoCov">          0 :   switch(eContactType) {</span>
+<span class="lineNum">     771 </span><span class="lineNoCov">          0 :   case ctBOGEY:</span>
+<span class="lineNum">     772 </span><span class="lineNoCov">          0 :     eSurfaceType = FGSurface::ctBOGEY;</span>
+<span class="lineNum">     773 </span><span class="lineNoCov">          0 :     base_property_name = CreateIndexedPropertyName(&quot;gear/unit&quot;, GearNumber);</span>
+<span class="lineNum">     774 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     775 </span><span class="lineNoCov">          0 :   case ctSTRUCTURE:</span>
+<span class="lineNum">     776 </span><span class="lineNoCov">          0 :     eSurfaceType = FGSurface::ctSTRUCTURE;</span>
+<span class="lineNum">     777 </span><span class="lineNoCov">          0 :     base_property_name = CreateIndexedPropertyName(&quot;contact/unit&quot;, GearNumber);</span>
+<span class="lineNum">     778 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     779 </span><span class="lineNoCov">          0 :   default:</span>
+<span class="lineNum">     780 </span><span class="lineNoCov">          0 :     return;</span>
+<span class="lineNum">     781 </span>            :   }
+<span class="lineNum">     782 </span><span class="lineNoCov">          0 :   FGSurface::bind();</span>
+<span class="lineNum">     783 </span>            : 
+<span class="lineNum">     784 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/WOW&quot;;</span>
+<span class="lineNum">     785 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;WOW );</span>
+<span class="lineNum">     786 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/x-position&quot;;</span>
+<span class="lineNum">     787 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGForce*)this,</span>
+<span class="lineNum">     788 </span>            :                         &amp;FGForce::GetLocationX, &amp;FGForce::SetLocationX);
+<span class="lineNum">     789 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/y-position&quot;;</span>
+<span class="lineNum">     790 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGForce*)this,</span>
+<span class="lineNum">     791 </span>            :                         &amp;FGForce::GetLocationY, &amp;FGForce::SetLocationY);
+<span class="lineNum">     792 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/z-position&quot;;</span>
+<span class="lineNum">     793 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGForce*)this,</span>
+<span class="lineNum">     794 </span>            :                         &amp;FGForce::GetLocationZ, &amp;FGForce::SetLocationZ);
+<span class="lineNum">     795 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/compression-ft&quot;;</span>
+<span class="lineNum">     796 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;compressLength );</span>
+<span class="lineNum">     797 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/compression-velocity-fps&quot;;</span>
+<span class="lineNum">     798 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;compressSpeed );</span>
+<span class="lineNum">     799 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/static_friction_coeff&quot;;</span>
+<span class="lineNum">     800 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), (FGLGear*)this,</span>
+<span class="lineNum">     801 </span>            :                         &amp;FGLGear::GetstaticFCoeff, &amp;FGLGear::SetstaticFCoeff);
+<span class="lineNum">     802 </span><span class="lineNoCov">          0 :   property_name = base_property_name + &quot;/dynamic_friction_coeff&quot;;</span>
+<span class="lineNum">     803 </span><span class="lineNoCov">          0 :   PropertyManager-&gt;Tie( property_name.c_str(), &amp;dynamicFCoeff );</span>
+<span class="lineNum">     804 </span>            : 
+<span class="lineNum">     805 </span><span class="lineNoCov">          0 :   if (eContactType == ctBOGEY) {</span>
+<span class="lineNum">     806 </span><span class="lineNoCov">          0 :     property_name = base_property_name + &quot;/slip-angle-deg&quot;;</span>
+<span class="lineNum">     807 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie( property_name.c_str(), &amp;WheelSlip );</span>
+<span class="lineNum">     808 </span><span class="lineNoCov">          0 :     property_name = base_property_name + &quot;/wheel-speed-fps&quot;;</span>
+<span class="lineNum">     809 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie( property_name.c_str(), (FGLGear*)this,</span>
+<span class="lineNum">     810 </span>            :                           &amp;FGLGear::GetWheelRollVel);
+<span class="lineNum">     811 </span><span class="lineNoCov">          0 :     property_name = base_property_name + &quot;/side_friction_coeff&quot;;</span>
+<span class="lineNum">     812 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie( property_name.c_str(), &amp;FCoeff );</span>
+<span class="lineNum">     813 </span><span class="lineNoCov">          0 :     property_name = base_property_name + &quot;/rolling_friction_coeff&quot;;</span>
+<span class="lineNum">     814 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie( property_name.c_str(), &amp;rollingFCoeff );</span>
+<span class="lineNum">     815 </span>            : 
+<span class="lineNum">     816 </span><span class="lineNoCov">          0 :     if (eSteerType == stCaster) {</span>
+<span class="lineNum">     817 </span><span class="lineNoCov">          0 :       property_name = base_property_name + &quot;/steering-angle-deg&quot;;</span>
+<span class="lineNum">     818 </span><span class="lineNoCov">          0 :       PropertyManager-&gt;Tie( property_name.c_str(), this, &amp;FGLGear::GetSteerAngleDeg );</span>
+<span class="lineNum">     819 </span><span class="lineNoCov">          0 :       property_name = base_property_name + &quot;/castered&quot;;</span>
+<span class="lineNum">     820 </span><span class="lineNoCov">          0 :       PropertyManager-&gt;Tie( property_name.c_str(), &amp;Castered);</span>
+<span class="lineNum">     821 </span>            :     }
+<span class="lineNum">     822 </span>            :   }
+<span class="lineNum">     823 </span>            : 
+<span class="lineNum">     824 </span><span class="lineNoCov">          0 :   if( isRetractable ) {</span>
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :     property_name = base_property_name + &quot;/pos-norm&quot;;</span>
+<span class="lineNum">     826 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie( property_name.c_str(), &amp;GearPos );</span>
+<span class="lineNum">     827 </span>            :   }
+<span class="lineNum">     828 </span>            : 
+<span class="lineNum">     829 </span><span class="lineNoCov">          0 :   if (eSteerType != stFixed) {</span>
+<span class="lineNum">     830 </span>            :     // This property allows the FCS to override the steering position angle that
+<span class="lineNum">     831 </span>            :     // is set by the property fcs/steer-cmd-norm. The prefix fcs/ has been kept
+<span class="lineNum">     832 </span>            :     // for backward compatibility.
+<span class="lineNum">     833 </span><span class="lineNoCov">          0 :     string tmp = CreateIndexedPropertyName(&quot;fcs/steer-pos-deg&quot;, GearNumber);</span>
+<span class="lineNum">     834 </span><span class="lineNoCov">          0 :     PropertyManager-&gt;Tie(tmp.c_str(), this, &amp;FGLGear::GetSteerAngleDeg, &amp;FGLGear::SetSteerAngleDeg);</span>
+<span class="lineNum">     835 </span>            :   }
+<span class="lineNum">     836 </span>            : }
+<span class="lineNum">     837 </span>            : 
+<a name="838"><span class="lineNum">     838 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     839 </span>            : 
+<span class="lineNum">     840 </span><span class="lineNoCov">          0 : void FGLGear::Report(ReportType repType)</span>
+<span class="lineNum">     841 </span>            : {
+<span class="lineNum">     842 </span><span class="lineNoCov">          0 :   if (fabs(TakeoffDistanceTraveled) &lt; 0.001) return; // Don't print superfluous reports</span>
+<span class="lineNum">     843 </span>            : 
+<span class="lineNum">     844 </span><span class="lineNoCov">          0 :   switch(repType) {</span>
+<span class="lineNum">     845 </span><span class="lineNoCov">          0 :   case erLand:</span>
+<span class="lineNum">     846 </span><span class="lineNoCov">          0 :     cout &lt;&lt; endl &lt;&lt; &quot;Touchdown report for &quot; &lt;&lt; name &lt;&lt; &quot; (WOW at time: &quot;</span>
+<span class="lineNum">     847 </span><span class="lineNoCov">          0 :          &lt;&lt; fdmex-&gt;GetSimTime() &lt;&lt; &quot; seconds)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     848 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  Sink rate at contact:  &quot; &lt;&lt; SinkRate                &lt;&lt; &quot; fps,    &quot;</span>
+<span class="lineNum">     849 </span><span class="lineNoCov">          0 :                                 &lt;&lt; SinkRate*0.3048          &lt;&lt; &quot; mps&quot;     &lt;&lt; endl;</span>
+<span class="lineNum">     850 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  Contact ground speed:  &quot; &lt;&lt; GroundSpeed*.5925       &lt;&lt; &quot; knots,  &quot;</span>
+<span class="lineNum">     851 </span><span class="lineNoCov">          0 :                                 &lt;&lt; GroundSpeed*0.3048       &lt;&lt; &quot; mps&quot;     &lt;&lt; endl;</span>
+<span class="lineNum">     852 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  Maximum contact force: &quot; &lt;&lt; MaximumStrutForce       &lt;&lt; &quot; lbs,    &quot;</span>
+<span class="lineNum">     853 </span><span class="lineNoCov">          0 :                                 &lt;&lt; MaximumStrutForce*4.448  &lt;&lt; &quot; Newtons&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     854 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  Maximum strut travel:  &quot; &lt;&lt; MaximumStrutTravel*12.0 &lt;&lt; &quot; inches, &quot;</span>
+<span class="lineNum">     855 </span><span class="lineNoCov">          0 :                                 &lt;&lt; MaximumStrutTravel*30.48 &lt;&lt; &quot; cm&quot;      &lt;&lt; endl;</span>
+<span class="lineNum">     856 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  Distance traveled:     &quot; &lt;&lt; LandingDistanceTraveled        &lt;&lt; &quot; ft,     &quot;</span>
+<span class="lineNum">     857 </span><span class="lineNoCov">          0 :                                 &lt;&lt; LandingDistanceTraveled*0.3048  &lt;&lt; &quot; meters&quot;  &lt;&lt; endl;</span>
+<span class="lineNum">     858 </span><span class="lineNoCov">          0 :     LandingReported = true;</span>
+<span class="lineNum">     859 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     860 </span><span class="lineNoCov">          0 :   case erTakeoff:</span>
+<span class="lineNum">     861 </span><span class="lineNoCov">          0 :     cout &lt;&lt; endl &lt;&lt; &quot;Takeoff report for &quot; &lt;&lt; name &lt;&lt; &quot; (Liftoff at time: &quot;</span>
+<span class="lineNum">     862 </span><span class="lineNoCov">          0 :         &lt;&lt; fdmex-&gt;GetSimTime() &lt;&lt; &quot; seconds)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     863 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  Distance traveled:                &quot; &lt;&lt; TakeoffDistanceTraveled</span>
+<span class="lineNum">     864 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; ft,     &quot; &lt;&lt; TakeoffDistanceTraveled*0.3048  &lt;&lt; &quot; meters&quot;  &lt;&lt; endl;</span>
+<span class="lineNum">     865 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  Distance traveled (over 50'):     &quot; &lt;&lt; TakeoffDistanceTraveled50ft</span>
+<span class="lineNum">     866 </span><span class="lineNoCov">          0 :          &lt;&lt; &quot; ft,     &quot; &lt;&lt; TakeoffDistanceTraveled50ft*0.3048 &lt;&lt; &quot; meters&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     867 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  [Altitude (ASL): &quot; &lt;&lt; in.DistanceASL &lt;&lt; &quot; ft. / &quot;</span>
+<span class="lineNum">     868 </span><span class="lineNoCov">          0 :          &lt;&lt; in.DistanceASL*FGJSBBase::fttom &lt;&lt; &quot; m  | Temperature: &quot;</span>
+<span class="lineNum">     869 </span><span class="lineNoCov">          0 :          &lt;&lt; in.Temperature - 459.67 &lt;&lt; &quot; F / &quot;</span>
+<span class="lineNum">     870 </span><span class="lineNoCov">          0 :          &lt;&lt; RankineToCelsius(in.Temperature) &lt;&lt; &quot; C]&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     871 </span><span class="lineNoCov">          0 :     cout &lt;&lt; &quot;  [Velocity (KCAS): &quot; &lt;&lt; in.VcalibratedKts &lt;&lt; &quot;]&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     872 </span><span class="lineNoCov">          0 :     TakeoffReported = true;</span>
+<span class="lineNum">     873 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     874 </span><span class="lineNoCov">          0 :   case erNone:</span>
+<span class="lineNum">     875 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     876 </span>            :   }
+<span class="lineNum">     877 </span>            : }
+<span class="lineNum">     878 </span>            : 
+<span class="lineNum">     879 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     880 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     881 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     882 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     883 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     884 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     885 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     886 </span>            : //       whatsoever.
+<span class="lineNum">     887 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     888 </span>            : //       startup messages
+<span class="lineNum">     889 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     890 </span>            : //       a class is instantiated
+<span class="lineNum">     891 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     892 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     893 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     894 </span>            : //       are printed out periodically
+<span class="lineNum">     895 </span>            : //    16: When set various parameters are sanity checked and
+<a name="896"><span class="lineNum">     896 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     897 </span>            : 
+<span class="lineNum">     898 </span><span class="lineNoCov">          0 : void FGLGear::Debug(int from)</span>
+<span class="lineNum">     899 </span>            : {
+<span class="lineNum">     900 </span>            :   static const char* sSteerType[] = {&quot;STEERABLE&quot;, &quot;FIXED&quot;, &quot;CASTERED&quot; };
+<span class="lineNum">     901 </span>            :   static const char* sBrakeGroup[] = {&quot;NONE&quot;, &quot;LEFT&quot;, &quot;RIGHT&quot;, &quot;CENTER&quot;, &quot;NOSE&quot;, &quot;TAIL&quot;};
+<span class="lineNum">     902 </span>            :   static const char* sContactType[] = {&quot;BOGEY&quot;, &quot;STRUCTURE&quot; };
+<span class="lineNum">     903 </span>            : 
+<span class="lineNum">     904 </span><span class="lineNoCov">          0 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     905 </span>            : 
+<span class="lineNum">     906 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     907 </span><span class="lineNoCov">          0 :     if (from == 0) { // Constructor - loading and initialization</span>
+<span class="lineNum">     908 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    &quot; &lt;&lt; sContactType[eContactType] &lt;&lt; &quot; &quot; &lt;&lt; name          &lt;&lt; endl;</span>
+<span class="lineNum">     909 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Location: &quot;         &lt;&lt; vXYZn          &lt;&lt; endl;</span>
+<span class="lineNum">     910 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Spring Constant:  &quot; &lt;&lt; kSpring       &lt;&lt; endl;</span>
+<span class="lineNum">     911 </span>            : 
+<span class="lineNum">     912 </span><span class="lineNoCov">          0 :       if (eDampType == dtLinear)</span>
+<span class="lineNum">     913 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Damping Constant: &quot; &lt;&lt; bDamp &lt;&lt; &quot; (linear)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     914 </span>            :       else
+<span class="lineNum">     915 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Damping Constant: &quot; &lt;&lt; bDamp &lt;&lt; &quot; (square law)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     916 </span>            : 
+<span class="lineNum">     917 </span><span class="lineNoCov">          0 :       if (eDampTypeRebound == dtLinear)</span>
+<span class="lineNum">     918 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Rebound Damping Constant: &quot; &lt;&lt; bDampRebound &lt;&lt; &quot; (linear)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     919 </span>            :       else
+<span class="lineNum">     920 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Rebound Damping Constant: &quot; &lt;&lt; bDampRebound &lt;&lt; &quot; (square law)&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     921 </span>            : 
+<span class="lineNum">     922 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Dynamic Friction: &quot; &lt;&lt; dynamicFCoeff &lt;&lt; endl;</span>
+<span class="lineNum">     923 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;      Static Friction:  &quot; &lt;&lt; staticFCoeff  &lt;&lt; endl;</span>
+<span class="lineNum">     924 </span><span class="lineNoCov">          0 :       if (eContactType == ctBOGEY) {</span>
+<span class="lineNum">     925 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Rolling Friction: &quot; &lt;&lt; rollingFCoeff &lt;&lt; endl;</span>
+<span class="lineNum">     926 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Steering Type:    &quot; &lt;&lt; sSteerType[eSteerType] &lt;&lt; endl;</span>
+<span class="lineNum">     927 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Grouping:         &quot; &lt;&lt; sBrakeGroup[eBrakeGrp] &lt;&lt; endl;</span>
+<span class="lineNum">     928 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Max Steer Angle:  &quot; &lt;&lt; maxSteerAngle &lt;&lt; endl;</span>
+<span class="lineNum">     929 </span><span class="lineNoCov">          0 :         cout &lt;&lt; &quot;      Retractable:      &quot; &lt;&lt; isRetractable  &lt;&lt; endl;</span>
+<span class="lineNum">     930 </span>            :       }
+<span class="lineNum">     931 </span>            :     }
+<span class="lineNum">     932 </span>            :   }
+<span class="lineNum">     933 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     934 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGLGear&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     935 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGLGear&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     936 </span>            :   }
+<span class="lineNum">     937 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     938 </span>            :   }
+<span class="lineNum">     939 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     940 </span>            :   }
+<span class="lineNum">     941 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     942 </span>            :   }
+<span class="lineNum">     943 </span><span class="lineNoCov">          0 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     944 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     945 </span>            :     }
+<span class="lineNum">     946 </span>            :   }
+<a name="947"><span class="lineNum">     947 </span>            : }</a>
+<span class="lineNum">     948 </span>            : 
+<span class="lineNum">     949 </span><span class="lineCov">         12 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

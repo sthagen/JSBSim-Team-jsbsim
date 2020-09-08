@@ -1,0 +1,5 @@
+<map id="GetPreFunction" name="GetPreFunction">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGTurbine.html#a19ece223c6dc819db12351f6a5e371c6" title="A lag filter. " alt="" coords="167,13,344,39"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGTurboProp.html#ab8e468ac293692df96698709be40cb14" title="Destructor. " alt="" coords="177,64,333,105"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGTurbine.html#a308031836dd2661401a194f63483bdf6" title="Calculates the thrust of the engine, and other engine functions. " alt="" coords="392,5,539,47"/>
+</map>

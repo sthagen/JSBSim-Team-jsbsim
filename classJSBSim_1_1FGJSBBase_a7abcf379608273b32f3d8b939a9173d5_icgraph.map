@@ -1,0 +1,6 @@
+<map id="RankineToKelvin" name="RankineToKelvin">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPiston.html#a4b801a1a064406c4f0326121e82cd4bb" title="Resets the Engine parameters to the initial conditions. " alt="" coords="184,5,389,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGPiston.html#a308031836dd2661401a194f63483bdf6" title="Calculates the thrust of the engine, and other engine functions. " alt="" coords="189,56,385,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGPiston.html#a8c1a9250c6bf27f558c9584afd9fd3d3" title="The fuel need is calculated based on power levels and flow rate for that power level. " alt="" coords="175,107,399,133"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPiston.html#a7db5fe477b255ce4ce71fe89817d98ef" title="Constructor. " alt="" coords="447,5,643,32"/>
+</map>

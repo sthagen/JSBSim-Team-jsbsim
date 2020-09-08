@@ -1,0 +1,6 @@
+<map id="FGPropagate::VehicleState" name="FGPropagate::VehicleState">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGColumnVector3.html" title="This class implements a 3 element column vector. " alt="" coords="149,88,280,115"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGQuaternion.html" title="Models the Quaternion representation of rotations. " alt="" coords="163,275,266,301"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGJSBBase.html" title="JSBSim Base class. " alt="" coords="5,309,100,336"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGLocation.html" title="FGLocation holds an arbitrary location in the Earth centered Earth fixed reference frame (ECEF)..." alt="" coords="304,325,393,352"/>
+</map>

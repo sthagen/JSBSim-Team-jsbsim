@@ -1,0 +1,7 @@
+<map id="Load" name="Load">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a4824f36ca8f38ef52be1bcaa785c404f" title="Gets the target normal load factor set from IC. " alt="" coords="165,5,276,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInput.html#a8204557b6f2865b7e6e29b3a3a9d524d" title="Adds a new input instance to the Input Manager. " alt="" coords="104,56,337,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="121,107,321,133"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGTrim.html#ab8b8c986a483a9dcb1e7c94234957933" title="Initializes the trimming class. " alt="" coords="385,5,560,32"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGFDMExec.html#a3a5c816fd2db9ddca6c3f209f2b456d0" title="Loads a script. " alt="" coords="391,99,554,141"/>
+</map>

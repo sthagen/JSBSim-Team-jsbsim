@@ -1,0 +1,10 @@
+<map id="SetGeodLatitudeDegIC" name="SetGeodLatitudeDegIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a777b283e5014563b30f96b47a9e6220a" title="Sets the initial geodetic latitude. " alt="" coords="211,151,368,178"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGLocation.html#a804f3713901ade7ce31549d97d197583" title="Get the longitude. " alt="" coords="611,32,757,73"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#a84eb5205c00cea25382e8961e77a4784" title="Gets the initial altitude above ground level. " alt="" coords="416,202,555,228"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGFDMExec.html#a93876fb8e8a2302e3880f9ebfb3ce6d5" title="Returns the FGInertial pointer. " alt="" coords="603,194,765,236"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGLocation.html#af0f103b7c1f4c5c8cdceb15a55305fe2" title="Sets the longitude, latitude and the distance above the reference spheroid. " alt="" coords="609,97,759,138"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInertial.html#a362f841fccd857fbf35aecd9f0c38418" title="Set the altitude above ground level. " alt="" coords="418,34,553,76"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#a346a168487e721ed793f896774dbc12c" title="Gets the initial altitude above sea level. " alt="" coords="615,282,753,308"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGInitialCondition.html#adb6fe57c0d1ce470a4d12b8e3054f75b" title="Sets the altitude above sea level initial condition in feet. " alt="" coords="417,151,554,178"/>
+</map>

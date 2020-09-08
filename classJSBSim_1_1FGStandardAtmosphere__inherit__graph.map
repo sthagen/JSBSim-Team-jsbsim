@@ -1,0 +1,4 @@
+<map id="FGStandardAtmosphere" name="FGStandardAtmosphere">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAtmosphere.html" title="Models an empty, abstract base atmosphere class. " alt="" coords="31,80,142,107"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGModel.html" title="Base class for all scheduled JSBSim models. " alt="" coords="49,5,124,32"/>
+</map>

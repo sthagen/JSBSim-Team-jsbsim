@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGExternalReactions.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGExternalReactions.h<span style="font-size: 80%;"> (source / <a href="FGExternalReactions.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGExternalReactions.h
+<span class="lineNum">       4 </span>            :  Author:       David P. Culp
+<span class="lineNum">       5 </span>            :  Date started: 17/11/06
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2006  David P. Culp (daveculp@cox.net) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      11 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      12 </span>            :  version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      20 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      21 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      24 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 17/11/06   DPC   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGEXTERNALREACTIONS_H
+<span class="lineNum">      35 </span>            : #define FGEXTERNALREACTIONS_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      42 </span>            : #include &quot;FGModel.h&quot;
+<span class="lineNum">      43 </span>            : #include &quot;math/FGColumnVector3.h&quot;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      46 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      47 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : namespace JSBSim {
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : class Element;
+<span class="lineNum">      52 </span>            : class FGExternalForce;
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      55 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      56 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : /** Manages the external and/or arbitrary forces and moments.
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            :     The external reactions capability in JSBSim really should be named
+<span class="lineNum">      61 </span>            :     &quot;arbitrary forces and moments&quot;, because this feature can be used to model a
+<span class="lineNum">      62 </span>            :     wide variety of forces and moments that act on a vehicle. Some examples
+<span class="lineNum">      63 </span>            :     include: parachutes, catapult, arresting hook, and tow line.
+<span class="lineNum">      64 </span>            :     
+<span class="lineNum">      65 </span>            :     This class acts similarly to the other &quot;manager classes&quot; (FGPropulsion,
+<span class="lineNum">      66 </span>            :     FGFCS, FGGroundReactions, FGAerodynamics) because it manages collections of
+<span class="lineNum">      67 </span>            :     constituent elements. The individual forces and moments are implemented with
+<span class="lineNum">      68 </span>            :     the FGExternalForce class.
+<span class="lineNum">      69 </span>            :     
+<span class="lineNum">      70 </span>            :     The format of the &lt;em&gt;optional&lt;/em&gt; external reactions section in the config
+<span class="lineNum">      71 </span>            :     file is as follows:
+<span class="lineNum">      72 </span>            :     
+<span class="lineNum">      73 </span>            :     @code
+<span class="lineNum">      74 </span>            : &lt;external_reactions&gt;
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :   &lt;!-- Interface properties, a.k.a. property declarations --&gt;
+<span class="lineNum">      77 </span>            :   &lt;property&gt; ... &lt;/property&gt;
+<span class="lineNum">      78 </span>            :     
+<span class="lineNum">      79 </span>            :   &lt;force name=&quot;name&quot; frame=&quot;BODY | LOCAL | WIND&quot;&gt;
+<span class="lineNum">      80 </span>            :     ...
+<span class="lineNum">      81 </span>            :   &lt;/force&gt;
+<span class="lineNum">      82 </span>            :   &lt;moment name=&quot;name&quot; frame=&quot;BODY | LOCAL | WIND&quot;&gt;
+<span class="lineNum">      83 </span>            :     ...
+<span class="lineNum">      84 </span>            :   &lt;/moment&gt;
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            :   &lt;!-- Additional force and moment definitions may follow --&gt;
+<span class="lineNum">      87 </span>            :   &lt;force name=&quot;name&quot; frame=&quot;BODY | LOCAL | WIND&quot;&gt;
+<span class="lineNum">      88 </span>            :     ...
+<span class="lineNum">      89 </span>            :   &lt;/force&gt;
+<span class="lineNum">      90 </span>            :   &lt;moment name=&quot;name&quot; frame=&quot;BODY | LOCAL | WIND&quot;&gt;
+<span class="lineNum">      91 </span>            :     ...
+<span class="lineNum">      92 </span>            :   &lt;/moment&gt;
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            : &lt;/external_reactions&gt;
+<span class="lineNum">      95 </span>            :     @endcode
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            :     See the FGExternalForce class for more information on the format of the
+<span class="lineNum">      98 </span>            :     force and moment specifications.
+<span class="lineNum">      99 </span>            :     
+<span class="lineNum">     100 </span>            :     When force or moment elements are encountered in the configuration file, a
+<span class="lineNum">     101 </span>            :     new instance of the FGExternalForce class is created and a pointer to the
+<span class="lineNum">     102 </span>            :     class is pushed onto the Forces vector.
+<span class="lineNum">     103 </span>            :     
+<span class="lineNum">     104 </span>            :     This class is one of a few of the manager classes that allows properties to
+<span class="lineNum">     105 </span>            :     be &quot;declared&quot;. In code, these are represented by the
+<span class="lineNum">     106 </span>            :     &lt;em&gt;interface_properties&lt;/em&gt; vector. Properties that have not yet been
+<span class="lineNum">     107 </span>            :     created in an already parsed section of the configuration file and that are
+<span class="lineNum">     108 </span>            :     used in the definition of an external force or moment should be declared in
+<span class="lineNum">     109 </span>            :     the external_reactions section because they will not be created
+<span class="lineNum">     110 </span>            :     automatically, and so would cause an error, since the property cannot be
+<span class="lineNum">     111 </span>            :     found to exist.
+<span class="lineNum">     112 </span>            :         
+<span class="lineNum">     113 </span>            :     See the FGExternalForce documentation for details on how forces and moments
+<span class="lineNum">     114 </span>            :     are actually calculated.
+<span class="lineNum">     115 </span>            :   */
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     118 </span>            : CLASS DECLARATION
+<span class="lineNum">     119 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : class FGExternalReactions : public FGModel
+<span class="lineNum">     122 </span>            : {
+<span class="lineNum">     123 </span>            : public:
+<span class="lineNum">     124 </span>            :   /** Constructor.
+<span class="lineNum">     125 </span>            :       @param fdmex pointer to the main executive class.
+<span class="lineNum">     126 </span>            :   */
+<span class="lineNum">     127 </span>            :   FGExternalReactions(FGFDMExec* fdmex);
+<span class="lineNum">     128 </span>            :   
+<span class="lineNum">     129 </span>            :   /** Destructor.
+<span class="lineNum">     130 </span>            :       Within the destructor the Forces and interface_properties vectors are
+<span class="lineNum">     131 </span>            :       cleared out and the items pointed to are deleted.
+<span class="lineNum">     132 </span>            :   */
+<span class="lineNum">     133 </span>            :   ~FGExternalReactions(void) override;
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :   bool InitModel(void) override;
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :   /** Sum all the constituent forces for this cycle.
+<span class="lineNum">     138 </span>            :       Can pass in a value indicating if the executive is directing the simulation to Hold.
+<span class="lineNum">     139 </span>            :       @param Holding if true, the executive has been directed to hold the sim from 
+<span class="lineNum">     140 </span>            :                      advancing time. Some models may ignore this flag, such as the Input
+<span class="lineNum">     141 </span>            :                      model, which may need to be active to listen on a socket for the
+<span class="lineNum">     142 </span>            :                      &quot;Resume&quot; command to be given.
+<span class="lineNum">     143 </span>            :       @return true always.  */
+<span class="lineNum">     144 </span>            :   bool Run(bool Holding) override;
+<span class="lineNum">     145 </span>            :   
+<span class="lineNum">     146 </span>            :   /** Loads the external forces from the XML configuration file.
+<span class="lineNum">     147 </span>            :       If the external_reactions section is encountered in the vehicle configuration
+<span class="lineNum">     148 </span>            :       file, this Load() method is called. All external forces will be parsed, and 
+<span class="lineNum">     149 </span>            :       a FGExternalForce object will be instantiated for each force definition.
+<span class="lineNum">     150 </span>            :       @param el a pointer to the XML element holding the external reactions definition.
+<span class="lineNum">     151 </span>            :   */
+<span class="lineNum">     152 </span>            :   bool Load(Element* el) override;
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            :   /** Retrieves the total forces defined in the external reactions.
+<a name="155"><span class="lineNum">     155 </span>            :       @return the total force in pounds.</a>
+<a name="156"><span class="lineNum">     156 </span>            :   */</a>
+<span class="lineNum">     157 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetForces(void) const {return vTotalForces;}</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :   double GetForces(int idx) const {return vTotalForces(idx);}</span>
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :   /** Retrieves the total moment resulting from the forces defined in the external reactions.
+<a name="161"><span class="lineNum">     161 </span>            :       @return the total moment in foot-pounds.</a>
+<a name="162"><span class="lineNum">     162 </span>            :   */</a>
+<span class="lineNum">     163 </span><span class="lineCov">          8 :   const FGColumnVector3&amp; GetMoments(void) const {return vTotalMoments;}</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :   double GetMoments(int idx) const {return vTotalMoments(idx);}</span>
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            : private:
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            :   std::vector &lt;FGExternalForce*&gt; Forces;
+<span class="lineNum">     169 </span>            :   //unsigned int numForces;
+<span class="lineNum">     170 </span>            :   FGColumnVector3 vTotalForces;
+<span class="lineNum">     171 </span>            :   FGColumnVector3 vTotalMoments;
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :   void bind(void);
+<span class="lineNum">     174 </span>            :   void Debug(int from) override;
+<span class="lineNum">     175 </span>            : };
+<span class="lineNum">     176 </span>            : }
+<span class="lineNum">     177 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     178 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

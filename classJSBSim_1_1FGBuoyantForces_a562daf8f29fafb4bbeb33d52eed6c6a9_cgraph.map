@@ -1,0 +1,11 @@
+<map id="GetMoments" name="GetMoments">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGBuoyantForces.html#ae7970238d0f0ea42f02b5d641643f1b5" title="Gets the total gas mass. " alt="" coords="175,5,273,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGBuoyantForces.html#afe4ed8949395c67f65489d0356f87d94" title="Gets the total moment from the gas mass. " alt="" coords="151,56,297,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGBuoyantForces.html#a5c2733974d6eea4a73ac61917e80945c" title="Gets the total moments of inertia for the gas mass in the body frame. " alt="" coords="157,107,291,133"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGBuoyantForces.html#a489b0b6989e243d010ac2db60e198f3b" title="Gets the strings for the current set of gas cells. " alt="" coords="153,157,295,184"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGBuoyantForces.html#aeae01c8f65fb18564d584f8a9bab962c" title="Gets the coefficient values. " alt="" coords="153,209,295,236"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGMatrix33.html#adc92bad5b7ab05e017993818f6821ffc" title="Initialize the matrix. " alt="" coords="383,97,529,138"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGPropertyManager.html#a6285265032c989f4286e7ba47d268733" title="Tie a property to an external bool variable. " alt="" coords="345,163,567,189"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGBuoyantForces.html#a678e24d562b7c55f5ac2d55461af3c54" title="Gets the total Buoyancy moment vector. " alt="" coords="407,213,505,240"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1FGBuoyantForces.html#aa6b3caafb0b7ac3778d88c68ca11cd3a" title="Gets the total Buoyant force vector. " alt="" coords="415,264,497,291"/>
+</map>

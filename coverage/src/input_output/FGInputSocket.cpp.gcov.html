@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGInputSocket.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGInputSocket.cpp<span style="font-size: 80%;"> (source / <a href="FGInputSocket.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">119</td>
+            <td class="headerCovTableEntryLo">0.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryLo">25.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGInputSocket.cpp
+<span class="lineNum">       4 </span>            :  Author:       Paul Chavent
+<span class="lineNum">       5 </span>            :  Date started: 01/20/15
+<span class="lineNum">       6 </span>            :  Purpose:      Manage input of sim parameters to a socket
+<span class="lineNum">       7 </span>            :  Called by:    FGInput
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 2015 Paul Chavent -------------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      13 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      14 </span>            :  version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      22 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      23 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      26 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : This is the place where you create input routines to dump data for perusal
+<span class="lineNum">      31 </span>            : later.
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : HISTORY
+<span class="lineNum">      34 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      35 </span>            : 01/20/15   PC   Created
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &lt;cstring&gt;
+<span class="lineNum">      42 </span>            : #include &lt;cstdlib&gt;
+<span class="lineNum">      43 </span>            : #include &lt;sstream&gt;
+<span class="lineNum">      44 </span>            : #include &lt;iomanip&gt;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : #include &quot;FGInputSocket.h&quot;
+<span class="lineNum">      47 </span>            : #include &quot;FGFDMExec.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;models/FGAircraft.h&quot;
+<span class="lineNum">      49 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : using namespace std;
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : namespace JSBSim {
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      56 </span>            : CLASS IMPLEMENTATION
+<a name="57"><span class="lineNum">      57 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 : FGInputSocket::FGInputSocket(FGFDMExec* fdmex) :</span>
+<span class="lineNum">      60 </span>            :   FGInputType(fdmex), socket(0), SockProtocol(FGfdmSocket::ptTCP),
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :   BlockingInput(false)</span>
+<span class="lineNum">      62 </span>            : {
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      64 </span>            : 
+<a name="65"><span class="lineNum">      65 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 : FGInputSocket::~FGInputSocket()</span>
+<span class="lineNum">      68 </span>            : {
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   delete socket;</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      71 </span>            : 
+<a name="72"><span class="lineNum">      72 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 : bool FGInputSocket::Load(Element* el)</span>
+<span class="lineNum">      75 </span>            : {
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :   if (!FGInputType::Load(el))</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   SockPort = atoi(el-&gt;GetAttributeValue(&quot;port&quot;).c_str());</span>
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :   if (SockPort == 0) {</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :     cerr &lt;&lt; endl &lt;&lt; &quot;No port assigned in input element&quot; &lt;&lt; endl;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">      84 </span>            :   }
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   string action = el-&gt;GetAttributeValue(&quot;action&quot;);</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :   if (to_upper(action) == &quot;BLOCKING_INPUT&quot;)</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :     BlockingInput = true;</span>
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">      91 </span>            : }
+<span class="lineNum">      92 </span>            : 
+<a name="93"><span class="lineNum">      93 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 : bool FGInputSocket::InitModel(void)</span>
+<span class="lineNum">      96 </span>            : {
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :   if (FGInputType::InitModel()) {</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :     delete socket;</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :     socket = new FGfdmSocket(SockPort, SockProtocol);</span>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :     if (socket == 0) return false;</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :     if (!socket-&gt;GetConnectStatus()) return false;</span>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     105 </span>            :   }
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     108 </span>            : }
+<span class="lineNum">     109 </span>            : 
+<a name="110"><span class="lineNum">     110 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 : void FGInputSocket::Read(bool Holding)</span>
+<span class="lineNum">     113 </span>            : {
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :   string line, token;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :   size_t start=0, string_start=0, string_end=0;</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :   double value=0;</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :   FGPropertyNode* node=0;</span>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :   if (socket == 0) return;</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :   if (!socket-&gt;GetConnectStatus()) return;</span>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :   if (BlockingInput)</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :     socket-&gt;WaitUntilReadable(); // block until a transmission is received</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :   data = socket-&gt;Receive(); // read data</span>
+<span class="lineNum">     125 </span>            : 
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :   if (data.size() &gt; 0) {</span>
+<span class="lineNum">     127 </span>            :     // parse lines
+<span class="lineNum">     128 </span>            :     while (1) {
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :       string_start = data.find_first_not_of(&quot;\r\n&quot;, start);</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :       if (string_start == string::npos) break;</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :       string_end = data.find_first_of(&quot;\r\n&quot;, string_start);</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :       if (string_end == string::npos) break;</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :       line = data.substr(string_start, string_end-string_start);</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :       if (line.size() == 0) break;</span>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            :       // now parse individual line
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :       vector &lt;string&gt; tokens = split(line,' ');</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :       string command=&quot;&quot;, argument=&quot;&quot;, str_value=&quot;&quot;;</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :       if (tokens.size() &gt; 0) {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :         command = to_lower(tokens[0]);</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :         if (tokens.size() &gt; 1) {</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :           argument = trim(tokens[1]);</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :           if (tokens.size() &gt; 2) {</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :             str_value = trim(tokens[2]);</span>
+<span class="lineNum">     146 </span>            :           }
+<span class="lineNum">     147 </span>            :         }
+<span class="lineNum">     148 </span>            :       }
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :       if (command == &quot;set&quot;) {                       // SET PROPERTY</span>
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :         if (argument.size() == 0) {</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;No property argument supplied.\n&quot;);</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     155 </span>            :         }
+<span class="lineNum">     156 </span>            :         try {
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :           node = PropertyManager-&gt;GetNode(argument);</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :         } catch(...) {</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;Badly formed property query\n&quot;);</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     161 </span>            :         }
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :         if (node == 0) {</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;Unknown property\n&quot;);</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :         } else if (!node-&gt;hasValue()) {</span>
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;Not a leaf property\n&quot;);</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     169 </span>            :         } else {
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :           value = atof(str_value.c_str());</span>
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :           node-&gt;setDoubleValue(value);</span>
+<span class="lineNum">     172 </span>            :         }
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(&quot;set successful\n&quot;);</span>
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :       } else if (command == &quot;get&quot;) {             // GET PROPERTY</span>
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :         if (argument.size() == 0) {</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;No property argument supplied.\n&quot;);</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     180 </span>            :         }
+<span class="lineNum">     181 </span>            :         try {
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :           node = PropertyManager-&gt;GetNode(argument);</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :         } catch(...) {</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;Badly formed property query\n&quot;);</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     186 </span>            :         }
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :         if (node == 0) {</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;Unknown property\n&quot;);</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :         } else if (!node-&gt;hasValue()) {</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :           if (Holding) { // if holding can query property list</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :             string query = FDMExec-&gt;QueryPropertyCatalog(argument);</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :             socket-&gt;Reply(query);</span>
+<span class="lineNum">     195 </span>            :           } else {
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :             socket-&gt;Reply(&quot;Must be in HOLD to search properties\n&quot;);</span>
+<span class="lineNum">     197 </span>            :           }
+<span class="lineNum">     198 </span>            :         } else {
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :           ostringstream buf;</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :           buf &lt;&lt; argument &lt;&lt; &quot; = &quot; &lt;&lt; setw(12) &lt;&lt; setprecision(6) &lt;&lt; node-&gt;getDoubleValue() &lt;&lt; endl;</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(buf.str());</span>
+<span class="lineNum">     202 </span>            :         }
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :       } else if (command == &quot;hold&quot;) {               // PAUSE</span>
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :         FDMExec-&gt;Hold();</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(&quot;Holding\n&quot;);</span>
+<span class="lineNum">     208 </span>            : 
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :       } else if (command == &quot;resume&quot;) {             // RESUME</span>
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :         FDMExec-&gt;Resume();</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(&quot;Resuming\n&quot;);</span>
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :       } else if (command == &quot;iterate&quot;) {            // ITERATE</span>
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span>            :         int argumentInt;
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :         istringstream (argument) &gt;&gt; argumentInt;</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :         if (argument.size() == 0) {</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;No argument supplied for number of iterations.\n&quot;);</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     221 </span>            :         }
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :         if ( !(argumentInt &gt; 0) ){</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :           socket-&gt;Reply(&quot;Required argument must be a positive Integer.\n&quot;);</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">     225 </span>            :         }
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :         FDMExec-&gt;EnableIncrementThenHold( argumentInt );</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :         FDMExec-&gt;Resume();</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(&quot;Iterations performed\n&quot;);</span>
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :       } else if (command == &quot;quit&quot;) {               // QUIT</span>
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :         // close the socket connection
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(&quot;Closing connection\n&quot;);</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :         socket-&gt;Close();</span>
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :       } else if (command == &quot;info&quot;) {               // INFO</span>
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            :         // get info about the sim run and/or aircraft, etc.
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :         ostringstream info;</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :         info &lt;&lt; &quot;JSBSim version: &quot; &lt;&lt; JSBSim_version &lt;&lt; endl;</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :         info &lt;&lt; &quot;Config File version: &quot; &lt;&lt; needed_cfg_version &lt;&lt; endl;</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :         info &lt;&lt; &quot;Aircraft simulated: &quot; &lt;&lt; FDMExec-&gt;GetAircraft()-&gt;GetAircraftName() &lt;&lt; endl;</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :         info &lt;&lt; &quot;Simulation time: &quot; &lt;&lt; setw(8) &lt;&lt; setprecision(3) &lt;&lt; FDMExec-&gt;GetSimTime() &lt;&lt; endl;</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(info.str());</span>
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :       } else if (command == &quot;help&quot;) {               // HELP</span>
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(</span>
+<span class="lineNum">     249 </span>            :         &quot; JSBSim Server commands:\n\n&quot;
+<span class="lineNum">     250 </span>            :         &quot;   get {property name}\n&quot;
+<span class="lineNum">     251 </span>            :         &quot;   set {property name} {value}\n&quot;
+<span class="lineNum">     252 </span>            :         &quot;   hold\n&quot;
+<span class="lineNum">     253 </span>            :         &quot;   resume\n&quot;
+<span class="lineNum">     254 </span>            :         &quot;   iterate {value}\n&quot;
+<span class="lineNum">     255 </span>            :         &quot;   help\n&quot;
+<span class="lineNum">     256 </span>            :         &quot;   quit\n&quot;
+<span class="lineNum">     257 </span>            :         &quot;   info\n\n&quot;);
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span>            :       } else {
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :         socket-&gt;Reply(string(&quot;Unknown command: &quot;) +  token + string(&quot;\n&quot;));</span>
+<span class="lineNum">     261 </span>            :       }
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :       start = string_end;</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">     265 </span>            :   }
+<span class="lineNum">     266 </span>            : 
+<a name="267"><span class="lineNum">     267 </span>            : }</a>
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span><span class="lineCov">         12 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

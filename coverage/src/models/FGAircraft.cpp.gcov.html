@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/FGAircraft.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/models</a> - FGAircraft.cpp<span style="font-size: 80%;"> (source / <a href="FGAircraft.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntry">120</td>
+            <td class="headerCovTableEntryLo">45.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryMed">80.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Module:       FGAircraft.cpp
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 12/12/98
+<span class="lineNum">       6 </span>            :  Purpose:      Encapsulates an aircraft
+<span class="lineNum">       7 </span>            :  Called by:    FGFDMExec
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      12 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      13 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      14 </span>            :  later version.
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      17 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      18 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      19 </span>            :  details.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      22 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      23 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      26 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      29 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      30 </span>            : Models the aircraft reactions and forces. This class is instantiated by the
+<span class="lineNum">      31 </span>            : FGFDMExec class and scheduled as an FDM entry.
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      34 </span>            : COMMENTS, REFERENCES,  and NOTES
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &quot;FGAircraft.h&quot;
+<span class="lineNum">      42 </span>            : #include &quot;input_output/FGXMLElement.h&quot;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : using namespace std;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : namespace JSBSim {
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      49 </span>            : CLASS IMPLEMENTATION
+<a name="50"><span class="lineNum">      50 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/</a>
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span><span class="lineCov">          8 : FGAircraft::FGAircraft(FGFDMExec* fdmex) : FGModel(fdmex)</span>
+<span class="lineNum">      53 </span>            : {
+<span class="lineNum">      54 </span><span class="lineCov">          8 :   Name = &quot;FGAircraft&quot;;</span>
+<span class="lineNum">      55 </span><span class="lineCov">          8 :   WingSpan = 0.0;</span>
+<span class="lineNum">      56 </span><span class="lineCov">          8 :   WingArea = 0.0;</span>
+<span class="lineNum">      57 </span><span class="lineCov">          8 :   cbar = 0.0;</span>
+<span class="lineNum">      58 </span><span class="lineCov">          8 :   HTailArea = VTailArea = 0.0;</span>
+<span class="lineNum">      59 </span><span class="lineCov">          8 :   HTailArm  = VTailArm  = 0.0;</span>
+<span class="lineNum">      60 </span><span class="lineCov">          8 :   lbarh = lbarv = 0.0;</span>
+<span class="lineNum">      61 </span><span class="lineCov">          8 :   vbarh = vbarv = 0.0;</span>
+<span class="lineNum">      62 </span><span class="lineCov">          8 :   WingIncidence = 0.0;</span>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineCov">          8 :   bind();</span>
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span><span class="lineCov">          8 :   Debug(0);</span>
+<span class="lineNum">      67 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">      68 </span>            : 
+<a name="69"><span class="lineNum">      69 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineCov">         24 : FGAircraft::~FGAircraft()</span>
+<span class="lineNum">      72 </span>            : {
+<span class="lineNum">      73 </span><span class="lineCov">          8 :   Debug(1);</span>
+<span class="lineNum">      74 </span><span class="lineCov">         16 : }</span>
+<span class="lineNum">      75 </span>            : 
+<a name="76"><span class="lineNum">      76 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineCov">          8 : bool FGAircraft::InitModel(void)</span>
+<span class="lineNum">      79 </span>            : {
+<span class="lineNum">      80 </span><span class="lineCov">          8 :   if (!FGModel::InitModel()) return false;</span>
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineCov">          8 :   vForces.InitMatrix();</span>
+<span class="lineNum">      83 </span><span class="lineCov">          8 :   vMoments.InitMatrix();</span>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineCov">          8 :   return true;</span>
+<span class="lineNum">      86 </span>            : }
+<span class="lineNum">      87 </span>            : 
+<a name="88"><span class="lineNum">      88 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 : bool FGAircraft::Run(bool Holding)</span>
+<span class="lineNum">      91 </span>            : {
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :   if (FGModel::Run(Holding)) return true;</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :   if (Holding) return false;</span>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :   RunPreFunctions();</span>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :   vForces = in.AeroForce;</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   vForces += in.PropForce;</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :   vForces += in.GroundForce;</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :   vForces += in.ExternalForce;</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :   vForces += in.BuoyantForce;</span>
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :   vMoments = in.AeroMoment;</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :   vMoments += in.PropMoment;</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :   vMoments += in.GroundMoment;</span>
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   vMoments += in.ExternalMoment;</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :   vMoments += in.BuoyantMoment;</span>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :   RunPostFunctions();</span>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     112 </span>            : }
+<span class="lineNum">     113 </span>            : 
+<a name="114"><span class="lineNum">     114 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 : bool FGAircraft::Load(Element* el)</span>
+<span class="lineNum">     117 </span>            : {
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :   string element_name;</span>
+<span class="lineNum">     119 </span>            :   Element* element;
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :   if (!FGModel::Upload(el, true)) return false;</span>
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;wingarea&quot;))</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :     WingArea = el-&gt;FindElementValueAsNumberConvertTo(&quot;wingarea&quot;, &quot;FT2&quot;);</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;wingspan&quot;))</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :     WingSpan = el-&gt;FindElementValueAsNumberConvertTo(&quot;wingspan&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;chord&quot;))</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :     cbar = el-&gt;FindElementValueAsNumberConvertTo(&quot;chord&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;wing_incidence&quot;))</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :     WingIncidence = el-&gt;FindElementValueAsNumberConvertTo(&quot;wing_incidence&quot;, &quot;RAD&quot;);</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;htailarea&quot;))</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :     HTailArea = el-&gt;FindElementValueAsNumberConvertTo(&quot;htailarea&quot;, &quot;FT2&quot;);</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;htailarm&quot;))</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :     HTailArm = el-&gt;FindElementValueAsNumberConvertTo(&quot;htailarm&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;vtailarea&quot;))</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :     VTailArea = el-&gt;FindElementValueAsNumberConvertTo(&quot;vtailarea&quot;, &quot;FT2&quot;);</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :   if (el-&gt;FindElement(&quot;vtailarm&quot;))</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :     VTailArm = el-&gt;FindElementValueAsNumberConvertTo(&quot;vtailarm&quot;, &quot;FT&quot;);</span>
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            :   // Find all LOCATION elements that descend from this METRICS branch of the
+<span class="lineNum">     141 </span>            :   // config file. This would be CG location, eyepoint, etc.
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :   element = el-&gt;FindElement(&quot;location&quot;);</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :   while (element) {</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :     element_name = element-&gt;GetAttributeValue(&quot;name&quot;);</span>
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     if (element_name == &quot;AERORP&quot;) vXYZrp = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     else if (element_name == &quot;EYEPOINT&quot;) vXYZep = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :     else if (element_name == &quot;VRP&quot;) vXYZvrp = element-&gt;FindElementTripletConvertTo(&quot;IN&quot;);</span>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :     element = el-&gt;FindNextElement(&quot;location&quot;);</span>
+<span class="lineNum">     152 </span>            :   }
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            :   // calculate some derived parameters
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :   if (cbar != 0.0) {</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :     lbarh = HTailArm/cbar;</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :     lbarv = VTailArm/cbar;</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     if (WingArea != 0.0) {</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :       vbarh = HTailArm*HTailArea / (cbar*WingArea);</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :       vbarv = VTailArm*VTailArea / (WingSpan*WingArea);</span>
+<span class="lineNum">     161 </span>            :     }
+<span class="lineNum">     162 </span>            :   }
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :   PostLoad(el, FDMExec);</span>
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :   Debug(2);</span>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :   return true;</span>
+<span class="lineNum">     169 </span>            : }
+<span class="lineNum">     170 </span>            : 
+<a name="171"><span class="lineNum">     171 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineCov">          8 : void FGAircraft::bind(void)</span>
+<span class="lineNum">     174 </span>            : {
+<span class="lineNum">     175 </span>            :   typedef double (FGAircraft::*PMF)(int) const;
+<span class="lineNum">     176 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/Sw-sqft&quot;, this, &amp;FGAircraft::GetWingArea, &amp;FGAircraft::SetWingArea);</span>
+<span class="lineNum">     177 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/bw-ft&quot;, this, &amp;FGAircraft::GetWingSpan);</span>
+<span class="lineNum">     178 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/cbarw-ft&quot;, this, &amp;FGAircraft::Getcbar);</span>
+<span class="lineNum">     179 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/iw-rad&quot;, this, &amp;FGAircraft::GetWingIncidence);</span>
+<span class="lineNum">     180 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/iw-deg&quot;, this, &amp;FGAircraft::GetWingIncidenceDeg);</span>
+<span class="lineNum">     181 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/Sh-sqft&quot;, this, &amp;FGAircraft::GetHTailArea);</span>
+<span class="lineNum">     182 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/lh-ft&quot;, this, &amp;FGAircraft::GetHTailArm);</span>
+<span class="lineNum">     183 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/Sv-sqft&quot;, this, &amp;FGAircraft::GetVTailArea);</span>
+<span class="lineNum">     184 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/lv-ft&quot;, this, &amp;FGAircraft::GetVTailArm);</span>
+<span class="lineNum">     185 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/lh-norm&quot;, this, &amp;FGAircraft::Getlbarh);</span>
+<span class="lineNum">     186 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/lv-norm&quot;, this, &amp;FGAircraft::Getlbarv);</span>
+<span class="lineNum">     187 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/vbarh-norm&quot;, this, &amp;FGAircraft::Getvbarh);</span>
+<span class="lineNum">     188 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/vbarv-norm&quot;, this, &amp;FGAircraft::Getvbarv);</span>
+<span class="lineNum">     189 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/aero-rp-x-in&quot;, this, eX, (PMF)&amp;FGAircraft::GetXYZrp, &amp;FGAircraft::SetXYZrp);</span>
+<span class="lineNum">     190 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/aero-rp-y-in&quot;, this, eY, (PMF)&amp;FGAircraft::GetXYZrp, &amp;FGAircraft::SetXYZrp);</span>
+<span class="lineNum">     191 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/aero-rp-z-in&quot;, this, eZ, (PMF)&amp;FGAircraft::GetXYZrp, &amp;FGAircraft::SetXYZrp);</span>
+<span class="lineNum">     192 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/eyepoint-x-in&quot;, this, eX, (PMF)&amp;FGAircraft::GetXYZep);</span>
+<span class="lineNum">     193 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/eyepoint-y-in&quot;, this, eY,(PMF)&amp;FGAircraft::GetXYZep);</span>
+<span class="lineNum">     194 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/eyepoint-z-in&quot;, this, eZ, (PMF)&amp;FGAircraft::GetXYZep);</span>
+<span class="lineNum">     195 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/visualrefpoint-x-in&quot;, this, eX, (PMF)&amp;FGAircraft::GetXYZvrp);</span>
+<span class="lineNum">     196 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/visualrefpoint-y-in&quot;, this, eY, (PMF)&amp;FGAircraft::GetXYZvrp);</span>
+<span class="lineNum">     197 </span><span class="lineCov">          8 :   PropertyManager-&gt;Tie(&quot;metrics/visualrefpoint-z-in&quot;, this, eZ, (PMF)&amp;FGAircraft::GetXYZvrp);</span>
+<span class="lineNum">     198 </span><span class="lineCov">          8 : }</span>
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     201 </span>            : //    The bitmasked value choices are as follows:
+<span class="lineNum">     202 </span>            : //    unset: In this case (the default) JSBSim would only print
+<span class="lineNum">     203 </span>            : //       out the normally expected messages, essentially echoing
+<span class="lineNum">     204 </span>            : //       the config files as they are read. If the environment
+<span class="lineNum">     205 </span>            : //       variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     206 </span>            : //    0: This requests JSBSim not to output any messages
+<span class="lineNum">     207 </span>            : //       whatsoever.
+<span class="lineNum">     208 </span>            : //    1: This value explicity requests the normal JSBSim
+<span class="lineNum">     209 </span>            : //       startup messages
+<span class="lineNum">     210 </span>            : //    2: This value asks for a message to be printed out when
+<span class="lineNum">     211 </span>            : //       a class is instantiated
+<span class="lineNum">     212 </span>            : //    4: When this value is set, a message is displayed when a
+<span class="lineNum">     213 </span>            : //       FGModel object executes its Run() method
+<span class="lineNum">     214 </span>            : //    8: When this value is set, various runtime state variables
+<span class="lineNum">     215 </span>            : //       are printed out periodically
+<span class="lineNum">     216 </span>            : //    16: When set various parameters are sanity checked and
+<a name="217"><span class="lineNum">     217 </span>            : //       a message is printed out when they go out of bounds</a>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span><span class="lineCov">         16 : void FGAircraft::Debug(int from)</span>
+<span class="lineNum">     220 </span>            : {
+<span class="lineNum">     221 </span><span class="lineCov">         16 :   if (debug_lvl &lt;= 0) return;</span>
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 1) { // Standard console startup message output</span>
+<span class="lineNum">     224 </span><span class="lineCov">         16 :     if (from == 2) { // Loading</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :       cout &lt;&lt; endl &lt;&lt; &quot;  Aircraft Metrics:&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    WingArea: &quot; &lt;&lt; WingArea  &lt;&lt; endl;</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    WingSpan: &quot; &lt;&lt; WingSpan  &lt;&lt; endl;</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    Incidence: &quot; &lt;&lt; WingIncidence &lt;&lt; endl;</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    Chord: &quot; &lt;&lt; cbar &lt;&lt; endl;</span>
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    H. Tail Area: &quot; &lt;&lt; HTailArea &lt;&lt; endl;</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    H. Tail Arm: &quot; &lt;&lt; HTailArm &lt;&lt; endl;</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    V. Tail Area: &quot; &lt;&lt; VTailArea &lt;&lt; endl;</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    V. Tail Arm: &quot; &lt;&lt; VTailArm &lt;&lt; endl;</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    Eyepoint (x, y, z): &quot; &lt;&lt; vXYZep &lt;&lt; endl;</span>
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    Ref Pt (x, y, z): &quot; &lt;&lt; vXYZrp &lt;&lt; endl;</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :       cout &lt;&lt; &quot;    Visual Ref Pt (x, y, z): &quot; &lt;&lt; vXYZvrp &lt;&lt; endl;</span>
+<span class="lineNum">     237 </span>            :     }
+<span class="lineNum">     238 </span>            :   }
+<span class="lineNum">     239 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 2 ) { // Instantiation/Destruction notification</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :     if (from == 0) cout &lt;&lt; &quot;Instantiated: FGAircraft&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :     if (from == 1) cout &lt;&lt; &quot;Destroyed:    FGAircraft&quot; &lt;&lt; endl;</span>
+<span class="lineNum">     242 </span>            :   }
+<span class="lineNum">     243 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 4 ) { // Run() method entry print for FGModel-derived objects</span>
+<span class="lineNum">     244 </span>            :   }
+<span class="lineNum">     245 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 8 ) { // Runtime state variables</span>
+<span class="lineNum">     246 </span>            :   }
+<span class="lineNum">     247 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 16) { // Sanity checking</span>
+<span class="lineNum">     248 </span>            :   }
+<span class="lineNum">     249 </span><span class="lineCov">         16 :   if (debug_lvl &amp; 64) {</span>
+<span class="lineNum">     250 </span>            :     if (from == 0) { // Constructor
+<span class="lineNum">     251 </span>            :     }
+<span class="lineNum">     252 </span>            :   }
+<a name="253"><span class="lineNum">     253 </span>            : }</a>
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span><span class="lineCov">         12 : } // namespace JSBSim</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

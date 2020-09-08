@@ -1,0 +1,4 @@
+<map id="FGInertial::Inputs" name="FGInertial::Inputs">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGLocation.html" title="FGLocation holds an arbitrary location in the Earth centered Earth fixed reference frame (ECEF)..." alt="" coords="22,81,111,108"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGJSBBase.html" title="JSBSim Base class. " alt="" coords="19,5,114,32"/>
+</map>

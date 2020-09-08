@@ -1,0 +1,343 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/input_output/FGScript.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/input_output</a> - FGScript.h<span style="font-size: 80%;"> (source / <a href="FGScript.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            :  Header:       FGScript.h
+<span class="lineNum">       3 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       4 </span>            :  Date started: 12/21/2001
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            :  ------------- Copyright (C) 2001  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">       9 </span>            :  the terms of the GNU Lesser General Public License as published by the Free Software
+<span class="lineNum">      10 </span>            :  Foundation; either version 2 of the License, or (at your option) any later
+<span class="lineNum">      11 </span>            :  version.
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      14 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      15 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      16 </span>            :  details.
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            :  You should have received a copy of the GNU Lesser General Public License along with
+<span class="lineNum">      19 </span>            :  this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+<span class="lineNum">      20 </span>            :  Place - Suite 330, Boston, MA  02111-1307, USA.
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            :  Further information about the GNU Lesser General Public License can also be found on
+<span class="lineNum">      23 </span>            :  the world wide web at http://www.gnu.org.
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : HISTORY
+<span class="lineNum">      26 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      27 </span>            : 12/21/01   JSB   Created
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      30 </span>            : SENTRY
+<span class="lineNum">      31 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : #ifndef FGSCRIPT_HEADER_H
+<span class="lineNum">      34 </span>            : #define FGSCRIPT_HEADER_H
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : INCLUDES
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      41 </span>            : #include &lt;map&gt;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      44 </span>            : #include &quot;FGPropertyReader.h&quot;
+<span class="lineNum">      45 </span>            : #include &quot;input_output/FGPropertyManager.h&quot;
+<span class="lineNum">      46 </span>            : #include &quot;simgear/misc/sg_path.hxx&quot;
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      49 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      50 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : namespace JSBSim {
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : class FGFDMExec;
+<span class="lineNum">      55 </span>            : class FGCondition;
+<span class="lineNum">      56 </span>            : class FGFunction;
+<span class="lineNum">      57 </span>            : class FGPropertyValue;
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      60 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      61 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : /** Encapsulates the JSBSim scripting capability.
+<span class="lineNum">      64 </span>            :     &lt;h4&gt;Scripting support provided via FGScript.&lt;/h4&gt;
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :     &lt;p&gt;There is support for scripting provided in the FGScript
+<span class="lineNum">      67 </span>            :     class. Commands are specified using the &lt;em&gt;Scripting
+<span class="lineNum">      68 </span>            :     Directives for JSBSim&lt;/em&gt;. The script file is in XML
+<span class="lineNum">      69 </span>            :     format. A test condition (or conditions) can be set up in an event in a
+<span class="lineNum">      70 </span>            :     script and when the condition evaluates to true, the specified
+<span class="lineNum">      71 </span>            :     action[s] is/are taken. An event can be &lt;em&gt;persistent&lt;/em&gt;,
+<span class="lineNum">      72 </span>            :     meaning that at every time the test condition first evaluates to true
+<span class="lineNum">      73 </span>            :     (toggling from false to true) then the specified &lt;em&gt;set&lt;/em&gt; actions take
+<span class="lineNum">      74 </span>            :     place. An event can also be defined to execute or evaluate continuously
+<span class="lineNum">      75 </span>            :     while the condition is true. When the set of tests evaluates to true for a given
+<span class="lineNum">      76 </span>            :     condition, an item may be set to another value. This value may
+<span class="lineNum">      77 </span>            :     be a value, or a delta value, and the change from the
+<span class="lineNum">      78 </span>            :     current value to the new value can be either via a step action,
+<span class="lineNum">      79 </span>            :     a ramp, or an exponential approach. The speed of a ramp or exponential
+<span class="lineNum">      80 </span>            :     approach is specified via the time constant. Here is an example
+<span class="lineNum">      81 </span>            :     illustrating the format of the script file:
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            :     @code
+<span class="lineNum">      84 </span>            : &lt;?xml version=&quot;1.0&quot;?&gt;
+<span class="lineNum">      85 </span>            : &lt;runscript name=&quot;C172-01A takeoff run&quot;&gt;
+<span class="lineNum">      86 </span>            :   &lt;!--
+<span class="lineNum">      87 </span>            :     This run is for testing the C172 altitude hold autopilot
+<span class="lineNum">      88 </span>            :   --&gt;
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            :   &lt;use aircraft=&quot;c172x&quot;/&gt;
+<span class="lineNum">      91 </span>            :   &lt;use initialize=&quot;reset00&quot;/&gt;
+<span class="lineNum">      92 </span>            :   &lt;run start=&quot;0.0&quot; end=&quot;3000&quot; dt=&quot;0.0083333&quot;&gt;
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :     &lt;event name=&quot;engine start&quot;&gt;
+<span class="lineNum">      95 </span>            :       &lt;notify/&gt;
+<span class="lineNum">      96 </span>            :       &lt;condition&gt;
+<span class="lineNum">      97 </span>            :         sim-time-sec &gt;= 0.25
+<span class="lineNum">      98 </span>            :       &lt;/condition&gt;
+<span class="lineNum">      99 </span>            :       &lt;set name=&quot;fcs/throttle-cmd-norm&quot; value=&quot;1.0&quot; action=&quot;FG_RAMP&quot; tc =&quot;0.5&quot;/&gt;
+<span class="lineNum">     100 </span>            :       &lt;set name=&quot;fcs/mixture-cmd-norm&quot; value=&quot;0.87&quot; action=&quot;FG_RAMP&quot; tc =&quot;0.5&quot;/&gt;
+<span class="lineNum">     101 </span>            :       &lt;set name=&quot;propulsion/magneto_cmd&quot; value=&quot;3&quot;/&gt;
+<span class="lineNum">     102 </span>            :       &lt;set name=&quot;propulsion/starter_cmd&quot; value=&quot;1&quot;/&gt;
+<span class="lineNum">     103 </span>            :     &lt;/event&gt;
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            :     &lt;event name=&quot;set heading hold&quot;&gt;
+<span class="lineNum">     106 </span>            :       &lt;!-- Set Heading when reach 5 ft --&gt;
+<span class="lineNum">     107 </span>            :       &lt;notify/&gt;
+<span class="lineNum">     108 </span>            :       &lt;condition&gt;
+<span class="lineNum">     109 </span>            :         position/h-agl-ft &gt;= 5
+<span class="lineNum">     110 </span>            :       &lt;/condition&gt;
+<span class="lineNum">     111 </span>            :       &lt;set name=&quot;ap/heading_setpoint&quot; value=&quot;200&quot;/&gt;
+<span class="lineNum">     112 </span>            :       &lt;set name=&quot;ap/attitude_hold&quot; value=&quot;0&quot;/&gt;
+<span class="lineNum">     113 </span>            :       &lt;set name=&quot;ap/heading_hold&quot; value=&quot;1&quot;/&gt;
+<span class="lineNum">     114 </span>            :     &lt;/event&gt;
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span>            :     &lt;event name=&quot;set autopilot&quot;&gt;
+<span class="lineNum">     117 </span>            :       &lt;!-- Set Autopilot for 20 ft --&gt;
+<span class="lineNum">     118 </span>            :       &lt;notify/&gt;
+<span class="lineNum">     119 </span>            :       &lt;condition&gt;
+<span class="lineNum">     120 </span>            :         aero/qbar-psf &gt;= 4
+<span class="lineNum">     121 </span>            :       &lt;/condition&gt;
+<span class="lineNum">     122 </span>            :       &lt;set name=&quot;ap/altitude_setpoint&quot; value=&quot;100.0&quot; action=&quot;FG_EXP&quot; tc =&quot;2.0&quot;/&gt;
+<span class="lineNum">     123 </span>            :       &lt;set name=&quot;ap/altitude_hold&quot; value=&quot;1&quot;/&gt;
+<span class="lineNum">     124 </span>            :       &lt;set name=&quot;fcs/flap-cmd-norm&quot; value=&quot;.33&quot;/&gt;
+<span class="lineNum">     125 </span>            :     &lt;/event&gt;
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :     &lt;event name=&quot;set autopilot 2&quot; persistent=&quot;true&quot;&gt;
+<span class="lineNum">     128 </span>            :       &lt;!-- Set Autopilot for 6000 ft --&gt;
+<span class="lineNum">     129 </span>            :       &lt;notify/&gt;
+<span class="lineNum">     130 </span>            :       &lt;condition&gt;
+<span class="lineNum">     131 </span>            :         aero/qbar-psf &gt; 5
+<span class="lineNum">     132 </span>            :       &lt;/condition&gt;
+<span class="lineNum">     133 </span>            :       &lt;set name=&quot;ap/altitude_setpoint&quot; value=&quot;6000.0&quot;/&gt;
+<span class="lineNum">     134 </span>            :     &lt;/event&gt;
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            :     &lt;event name=&quot;Time Notify&quot;&gt;
+<span class="lineNum">     137 </span>            :       &lt;notify/&gt;
+<span class="lineNum">     138 </span>            :       &lt;condition&gt; sim-time-sec &gt;= 500 &lt;/condition&gt;
+<span class="lineNum">     139 </span>            :     &lt;/event&gt;
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span>            :     &lt;event name=&quot;Time Notify&quot;&gt;
+<span class="lineNum">     142 </span>            :       &lt;notify/&gt;
+<span class="lineNum">     143 </span>            :       &lt;condition&gt; sim-time-sec &gt;= 1000 &lt;/condition&gt;
+<span class="lineNum">     144 </span>            :     &lt;/event&gt;
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            :   &lt;/run&gt;
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span>            : &lt;/runscript&gt;
+<span class="lineNum">     149 </span>            :     @endcode
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            :     The first line must always be present - it identifies the file
+<span class="lineNum">     152 </span>            :     as an XML format file. The second line
+<span class="lineNum">     153 </span>            :     identifies this file as a script file, and gives a descriptive
+<span class="lineNum">     154 </span>            :     name to the script file. Comments are next, delineated by the
+<span class="lineNum">     155 </span>            :     &amp;lt;!-- and --&amp;gt; symbols. The aircraft and initialization files
+<span class="lineNum">     156 </span>            :     to be used are specified in the &amp;quot;use&amp;quot; lines. Next,
+<span class="lineNum">     157 </span>            :     comes the &amp;quot;run&amp;quot; section, where the conditions are
+<span class="lineNum">     158 </span>            :     described in &amp;quot;event&amp;quot; clauses.&lt;/p&gt;
+<span class="lineNum">     159 </span>            :     @author Jon S. Berndt
+<span class="lineNum">     160 </span>            : */
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     163 </span>            : CLASS DECLARATION
+<span class="lineNum">     164 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            : class FGScript : public FGJSBBase
+<span class="lineNum">     167 </span>            : {
+<span class="lineNum">     168 </span>            : public:
+<span class="lineNum">     169 </span>            :   /// Default constructor
+<span class="lineNum">     170 </span>            :   FGScript(FGFDMExec* exec);
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :   /// Default destructor
+<span class="lineNum">     173 </span>            :   ~FGScript();
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span>            :   /** Loads a script to drive JSBSim (usually in standalone mode).
+<span class="lineNum">     176 </span>            :       The language is the Script Directives for JSBSim. If a simulation step
+<span class="lineNum">     177 </span>            :       size has been supplied on the command line, it will override the script
+<span class="lineNum">     178 </span>            :       specified simulation step size.
+<span class="lineNum">     179 </span>            :       @param script the filename (including path name, if any) for the script.
+<span class="lineNum">     180 </span>            :       @param default_dT the default simulation step size if no value is specified
+<span class="lineNum">     181 </span>            :                         in the script
+<span class="lineNum">     182 </span>            :       @param initfile An optional initialization file name passed in, empty by
+<span class="lineNum">     183 </span>            :                       default. If a file name is passed in, it will override the
+<span class="lineNum">     184 </span>            :                       one present in the script.
+<span class="lineNum">     185 </span>            :       @return true if successful */
+<span class="lineNum">     186 </span>            :   bool LoadScript(const SGPath&amp; script, double default_dT,
+<span class="lineNum">     187 </span>            :                   const SGPath&amp; initfile);
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span>            :   /** This function is called each pass through the executive Run() method IF
+<span class="lineNum">     190 </span>            :       scripting is enabled.
+<span class="lineNum">     191 </span>            :       @return false if script should exit (i.e. if time limits are violated */
+<span class="lineNum">     192 </span>            :   bool RunScript(void);
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span>            :   void ResetEvents(void);
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            : private:
+<span class="lineNum">     197 </span>            :   enum eAction {
+<span class="lineNum">     198 </span>            :     FG_RAMP  = 1,
+<span class="lineNum">     199 </span>            :     FG_STEP  = 2,
+<span class="lineNum">     200 </span>            :     FG_EXP   = 3
+<span class="lineNum">     201 </span>            :   };
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            :   enum eType {
+<span class="lineNum">     204 </span>            :     FG_VALUE = 1,
+<span class="lineNum">     205 </span>            :     FG_DELTA = 2,
+<span class="lineNum">     206 </span>            :     FG_BOOL  = 3
+<a name="207"><span class="lineNum">     207 </span>            :   };</a>
+<span class="lineNum">     208 </span>            : 
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :   struct event {</span>
+<span class="lineNum">     210 </span>            :     FGCondition     *Condition;
+<span class="lineNum">     211 </span>            :     bool             Persistent;
+<span class="lineNum">     212 </span>            :     bool             Continuous;
+<span class="lineNum">     213 </span>            :     bool             Triggered;
+<span class="lineNum">     214 </span>            :     bool             Notify;
+<span class="lineNum">     215 </span>            :     bool             NotifyKML;
+<span class="lineNum">     216 </span>            :     bool             Notified;
+<span class="lineNum">     217 </span>            :     double           Delay;
+<span class="lineNum">     218 </span>            :     double           StartTime;
+<span class="lineNum">     219 </span>            :     double           TimeSpan;
+<span class="lineNum">     220 </span>            :     std::string           Name;
+<span class="lineNum">     221 </span>            :     std::string           Description;
+<span class="lineNum">     222 </span>            :     std::vector &lt;FGPropertyNode_ptr&gt;  SetParam;
+<span class="lineNum">     223 </span>            :     std::vector &lt;std::string&gt;  SetParamName;
+<span class="lineNum">     224 </span>            :     std::vector &lt;FGPropertyValue*&gt;  NotifyProperties;
+<span class="lineNum">     225 </span>            :     std::vector &lt;std::string&gt;              DisplayString;
+<span class="lineNum">     226 </span>            :     std::vector &lt;eAction&gt; Action;
+<span class="lineNum">     227 </span>            :     std::vector &lt;eType&gt;   Type;
+<span class="lineNum">     228 </span>            :     std::vector &lt;double&gt;  SetValue;
+<span class="lineNum">     229 </span>            :     std::vector &lt;double&gt;  TC;
+<span class="lineNum">     230 </span>            :     std::vector &lt;double&gt;  newValue;
+<span class="lineNum">     231 </span>            :     std::vector &lt;double&gt;  OriginalValue;
+<span class="lineNum">     232 </span>            :     std::vector &lt;double&gt;  ValueSpan;
+<span class="lineNum">     233 </span>            :     std::vector &lt;bool&gt;    Transiting;
+<a name="234"><span class="lineNum">     234 </span>            :     std::vector &lt;FGFunction*&gt; Functions;</a>
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :     event() {</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :       Triggered = false;</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :       Persistent = false;</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :       Continuous = false;</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :       Delay = 0.0;</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :       Notify = Notified = NotifyKML = false;</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :       Name = &quot;&quot;;</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :       StartTime = 0.0;</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :       TimeSpan = 0.0;</span>
+<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     }</span></a>
+<span class="lineNum">     246 </span>            : 
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :     void reset(void) {</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :       Triggered = false;</span>
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :       Notified = false;</span>
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :       StartTime = 0.0;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">     252 </span>            :   };
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span>            :   std::string  ScriptName;
+<span class="lineNum">     255 </span>            :   double  StartTime;
+<span class="lineNum">     256 </span>            :   double  EndTime;
+<span class="lineNum">     257 </span>            :   std::vector &lt;struct event&gt; Events;
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span>            :   FGPropertyReader LocalProperties;
+<span class="lineNum">     260 </span>            : 
+<span class="lineNum">     261 </span>            :   FGFDMExec* FDMExec;
+<span class="lineNum">     262 </span>            :   FGPropertyManager* PropertyManager;
+<span class="lineNum">     263 </span>            :   void Debug(int from);
+<span class="lineNum">     264 </span>            : };
+<span class="lineNum">     265 </span>            : }
+<span class="lineNum">     266 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     267 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

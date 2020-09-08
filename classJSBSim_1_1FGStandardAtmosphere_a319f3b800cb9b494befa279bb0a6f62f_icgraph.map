@@ -1,0 +1,7 @@
+<map id="CalculateLapseRates" name="CalculateLapseRates">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGStandardAtmosphere.html#aac7c1e551afab2db966dea34647c5dc3" title="Constructor. " alt="" coords="213,5,375,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGStandardAtmosphere.html#a8e31ff522ecbbf9cfaf78b61b85dc8fc" title="Sets the temperature delta value at the supplied altitude/elevation above sea level, to be added to the standard temperature and ramped out by 86 km. " alt="" coords="200,56,388,83"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGStandardAtmosphere.html#aed830675db14a50dd538b130c193fb83" title="This function resets the model to apply no bias or delta gradient to the temperature. " alt="" coords="465,107,611,133"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGStandardAtmosphere.html#ae1ec723136d5b58e3b3d4fcb966d0c12" title="Sets a Sea Level temperature delta that is ramped out by 86 km. " alt="" coords="436,5,640,32"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGStandardAtmosphere.html#a35789c83cd390c95759e43ac7814e228" title="Returns the temperature gradient to be applied on top of the standard temperature gradient..." alt="" coords="688,56,884,83"/>
+</map>

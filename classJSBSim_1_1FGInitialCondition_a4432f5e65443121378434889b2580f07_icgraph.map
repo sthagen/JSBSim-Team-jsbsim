@@ -1,0 +1,5 @@
+<map id="SetFlightPathAngleRadIC" name="SetFlightPathAngleRadIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#a1fabb78d427d8f826631eb863fccce28" title="Resets the IC data structure to new values. " alt="" coords="225,5,296,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="505,31,556,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a122dacd64147e2d1b1db97e719de2989" title="Sets pitch angle initial condition in degrees. " alt="" coords="344,5,457,32"/>
+</map>

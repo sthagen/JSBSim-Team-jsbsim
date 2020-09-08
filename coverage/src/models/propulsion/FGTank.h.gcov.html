@@ -1,0 +1,449 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/propulsion/FGTank.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/propulsion</a> - FGTank.h<span style="font-size: 80%;"> (source / <a href="FGTank.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">25</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">25</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGTank.h
+<span class="lineNum">       4 </span>            :  Author:       Jon S. Berndt
+<span class="lineNum">       5 </span>            :  Date started: 01/21/99
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : FUNCTIONAL DESCRIPTION
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : Based on Flightgear code, which is based on LaRCSim. This class simulates
+<span class="lineNum">      30 </span>            : a generic Tank.
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : HISTORY
+<span class="lineNum">      33 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      34 </span>            : 01/21/99   JSB   Created
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      37 </span>            : SENTRY
+<span class="lineNum">      38 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #ifndef FGTank_H
+<span class="lineNum">      41 </span>            : #define FGTank_H
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      44 </span>            : INCLUDES
+<span class="lineNum">      45 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : #include &quot;FGJSBBase.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;math/FGColumnVector3.h&quot;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      51 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      52 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : namespace JSBSim {
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : class Element;
+<span class="lineNum">      57 </span>            : class FGPropertyManager;
+<span class="lineNum">      58 </span>            : class FGFDMExec;
+<span class="lineNum">      59 </span>            : class FGFunction;
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      62 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      63 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            : /** Models a fuel tank.
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            : &lt;h3&gt;Fuel Temperature:&lt;/h3&gt;
+<span class="lineNum">      68 </span>            :  
+<span class="lineNum">      69 </span>            :     Fuel temperature is calculated using the following assumptions:
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            :     Fuel temperature will only be calculated for tanks which have an initial
+<span class="lineNum">      72 </span>            :     fuel temperature specified in the configuration file.
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :     The surface area of the tank is estimated from the capacity in pounds.  It
+<span class="lineNum">      75 </span>            :     is assumed that the tank is a wing tank with dimensions h by 4h by 10h. The
+<span class="lineNum">      76 </span>            :     volume of the tank is then 40(h)(h)(h). The area of the upper or lower 
+<span class="lineNum">      77 </span>            :     surface is then 40(h)(h).  The volume is also equal to the capacity divided
+<span class="lineNum">      78 </span>            :     by 49.368 lbs/cu-ft, for jet fuel.  The surface area of one side can then be
+<span class="lineNum">      79 </span>            :     derived from the tank's capacity.  
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :     The heat capacity of jet fuel is assumed to be 900 Joules/lbm/K, and the 
+<span class="lineNum">      82 </span>            :     heat transfer factor of the tank is 1.115 Watts/sq-ft/K.
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            : &lt;h3&gt;Fuel Dump:&lt;/h3&gt;
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            :     Fuel dumping is handled by the FGPropulsion class.  A standpipe can be
+<span class="lineNum">      87 </span>            :     defined here for each tank which sets the level of contents (in pounds)
+<span class="lineNum">      88 </span>            :     which is not dumpable.  Default standpipe level is zero, making all contents
+<span class="lineNum">      89 </span>            :     dumpable.
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            : &lt;h3&gt;Fuel Transfer:&lt;/h3&gt;
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            :     Fuel transfer is handled by the FGPropulsion class, however the contents of
+<span class="lineNum">      94 </span>            :     tanks may be manipulated directly using the SetContents() function here, or
+<span class="lineNum">      95 </span>            :     via the property tree at &lt;tt&gt;propulsion/tank[i]/contents-lbs&lt;/tt&gt;, where i
+<span class="lineNum">      96 </span>            :     is the tank number (Tanks are automatically numbered, starting at zero, in
+<span class="lineNum">      97 </span>            :     the order in which they are read in the aircraft configuration file).  The
+<span class="lineNum">      98 </span>            :     latter method allows one to use a system of FCS components to control tank
+<span class="lineNum">      99 </span>            :     contents.
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :     There is also a property
+<span class="lineNum">     102 </span>            :     &lt;tt&gt;propulsion/tank[i]/external-flow-rate-pps&lt;/tt&gt;. Setting this property to
+<span class="lineNum">     103 </span>            :     a positive value causes the tank to fill at the rate specified.  Setting a
+<span class="lineNum">     104 </span>            :     negative number causes the tank to drain. The value is the rate in pounds of
+<span class="lineNum">     105 </span>            :     fuel per second. The tank will not fill past 100% full and will not drain
+<span class="lineNum">     106 </span>            :     below 0%.  Fuel may be transfered between two tanks by setting the source
+<span class="lineNum">     107 </span>            :     tank's external flow rate to a negative value and the destination's external
+<span class="lineNum">     108 </span>            :     flow rate to the same positive value.  Care must be taken to stop fuel flow
+<span class="lineNum">     109 </span>            :     before the source tank becomes empty to prevent phantom fuel being created.
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            : &lt;h3&gt;Configuration File Format:&lt;/h3&gt;
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            : @code
+<span class="lineNum">     114 </span>            : &lt;tank type=&quot;{FUEL | OXIDIZER}&quot;&gt;
+<span class="lineNum">     115 </span>            :   &lt;grain_config type=&quot;{CYLINDRICAL | ENDBURNING | FUNCTION}&quot;&gt;
+<span class="lineNum">     116 </span>            :     &lt;length unit=&quot;{IN | FT | M}&quot;&gt; {number} &lt;/length&gt;
+<span class="lineNum">     117 </span>            :     &lt;bore_diameter unit=&quot;{IN | FT | M}&quot;&gt; {number} &lt;/bore_diameter&gt;
+<span class="lineNum">     118 </span>            :     [&lt;ixx unit=&quot;{IN | FT | M}&quot;&gt; {function} &lt;/ixx&gt;
+<span class="lineNum">     119 </span>            :     &lt;iyy unit=&quot;{IN | FT | M}&quot;&gt; {function} &lt;/iyy&gt;
+<span class="lineNum">     120 </span>            :     &lt;izz unit=&quot;{IN | FT | M}&quot;&gt; {function} &lt;/izz&gt;]
+<span class="lineNum">     121 </span>            :   &lt;/grain_config&gt;
+<span class="lineNum">     122 </span>            :   &lt;location unit=&quot;{FT | M | IN}&quot;&gt;
+<span class="lineNum">     123 </span>            :     &lt;x&gt; {number} &lt;/x&gt;
+<span class="lineNum">     124 </span>            :     &lt;y&gt; {number} &lt;/y&gt;
+<span class="lineNum">     125 </span>            :     &lt;z&gt; {number} &lt;/z&gt;
+<span class="lineNum">     126 </span>            :   &lt;/location&gt;
+<span class="lineNum">     127 </span>            :   &lt;drain_location unit=&quot;{FT | M | IN}&quot;&gt;
+<span class="lineNum">     128 </span>            :     &lt;x&gt; {number} &lt;/x&gt;
+<span class="lineNum">     129 </span>            :     &lt;y&gt; {number} &lt;/y&gt;
+<span class="lineNum">     130 </span>            :     &lt;z&gt; {number} &lt;/z&gt;
+<span class="lineNum">     131 </span>            :   &lt;/drain_location&gt;
+<span class="lineNum">     132 </span>            :   &lt;radius unit=&quot;{IN | FT | M}&quot;&gt; {number} &lt;/radius&gt;
+<span class="lineNum">     133 </span>            :   &lt;capacity unit=&quot;{LBS | KG}&quot;&gt; {number} &lt;/capacity&gt;
+<span class="lineNum">     134 </span>            :   &lt;inertia_factor&gt; {number:0-1} &lt;/inertia_factor&gt;
+<span class="lineNum">     135 </span>            :   &lt;contents unit=&quot;{LBS | KG}&quot;&gt; {number} &lt;/contents&gt;
+<span class="lineNum">     136 </span>            :   &lt;temperature&gt; {number} &lt;/temperature&gt; &lt;!-- must be degrees fahrenheit --&gt;
+<span class="lineNum">     137 </span>            :   &lt;standpipe unit=&quot;{LBS | KG&quot;}&gt; {number} &lt;/standpipe&gt;
+<span class="lineNum">     138 </span>            :   &lt;unusable unit=&quot;{GAL | LTR | M3 | IN3 | FT3 | CC}&quot;&gt; {number} &lt;/unusable&gt;
+<span class="lineNum">     139 </span>            :   &lt;priority&gt; {integer} &lt;/priority&gt;
+<span class="lineNum">     140 </span>            :   &lt;density unit=&quot;{KG/L | LBS/GAL}&quot;&gt; {number} &lt;/density&gt;
+<span class="lineNum">     141 </span>            :   &lt;type&gt; {string} &lt;/type&gt; &lt;!-- will override previous density setting --&gt;
+<span class="lineNum">     142 </span>            : &lt;/tank&gt;
+<span class="lineNum">     143 </span>            : @endcode
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            : &lt;h3&gt;Definition of the tank configuration file parameters:&lt;/h3&gt;
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            : - \b type - One of FUEL or OXIDIZER.  This is required.
+<span class="lineNum">     148 </span>            : - \b radius - Equivalent radius of tank for modeling slosh, defaults to inches.
+<span class="lineNum">     149 </span>            : - \b grain_config type - One of CYLINDRICAL or ENDBURNING.
+<span class="lineNum">     150 </span>            : - \b length - length of tank for modeling solid fuel propellant grain, defaults
+<span class="lineNum">     151 </span>            :               to inches.
+<span class="lineNum">     152 </span>            : - \b capacity - Capacity, defaults to pounds.
+<span class="lineNum">     153 </span>            : - \b contents - Initial contents, defaults to pounds.
+<span class="lineNum">     154 </span>            : - \b temperature - Initial temperature, defaults to degrees Fahrenheit.
+<span class="lineNum">     155 </span>            : - \b standpipe - Minimum contents to which tank can dump, defaults to pounds.
+<span class="lineNum">     156 </span>            : - \b unusable - Contents that cannot be used for combustion in the engine,
+<span class="lineNum">     157 </span>            :                 defaults to gallons.
+<span class="lineNum">     158 </span>            : - \b priority - Establishes feed sequence of tank. &quot;1&quot; is the highest priority.
+<span class="lineNum">     159 </span>            : - \b density - Density of liquid tank contents.
+<span class="lineNum">     160 </span>            : - \b type - Named fuel type. One of AVGAS, JET-A, JET-A1, JET-B, JP-1, JP-2,
+<span class="lineNum">     161 </span>            :             JP-3, JP-4, JP-5, JP-6, JP-7, JP-8, JP-8+100, RP-1, T-1, ETHANOL,
+<span class="lineNum">     162 </span>            :             HYDRAZINE, F-34, F-35, F-40, F-44, AVTAG, AVCAT
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            : location:
+<span class="lineNum">     165 </span>            : - \b x - Location of tank on aircraft's x-axis, defaults to inches.
+<span class="lineNum">     166 </span>            : - \b y - Location of tank on aircraft's y-axis, defaults to inches.
+<span class="lineNum">     167 </span>            : - \b z - Location of tank on aircraft's z-axis, defaults to inches.
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            : drain_location:
+<span class="lineNum">     170 </span>            : - \b x - Location of tank drain on aircraft's x-axis, defaults to inches.
+<span class="lineNum">     171 </span>            : - \b y - Location of tank drain on aircraft's y-axis, defaults to inches.
+<span class="lineNum">     172 </span>            : - \b z - Location of tank drain on aircraft's z-axis, defaults to inches.
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span>            : &lt;h3&gt;Default values of the tank configuration file parameters:&lt;/h3&gt;
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            : - \b type - ttUNKNOWN  (causes a load error in the propulsion configuration)
+<span class="lineNum">     177 </span>            : - \b location, \b drain_location - both optional, but a warning message will
+<span class="lineNum">     178 </span>            : be printed to the console if the location is not given
+<span class="lineNum">     179 </span>            : - \b x - 0.0  (both full and drained CG locations)
+<span class="lineNum">     180 </span>            : - \b y - 0.0  (both full and drained CG locations)
+<span class="lineNum">     181 </span>            : - \b z - 0.0  (both full and drained CG locations)
+<span class="lineNum">     182 </span>            : - \b radius - 0.0
+<span class="lineNum">     183 </span>            : - \b capacity - 0.00001 (tank capacity must not be zero)
+<span class="lineNum">     184 </span>            : - \b contents - 0.0
+<span class="lineNum">     185 </span>            : - \b temperature - -9999.0 (flag which indicates no temperature is set)
+<span class="lineNum">     186 </span>            : - \b standpipe - 0.0 (all contents may be dumped)
+<span class="lineNum">     187 </span>            : - \b unusable - 0.0 (all contents may be burnt)
+<span class="lineNum">     188 </span>            : - \b priority - 1 (highest feed sequence priority)
+<span class="lineNum">     189 </span>            : - \b density - 6.6
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :     @author Jon Berndt, Dave Culp
+<span class="lineNum">     192 </span>            :     @see Akbar, Raza et al. &quot;A Simple Analysis of Fuel Addition to the CWT of
+<span class="lineNum">     193 </span>            :     747&quot;, California Institute of Technology, 1998,
+<span class="lineNum">     194 </span>            :     http://www.galcit.caltech.edu/EDL/projects/JetA/reports/lumped.pdf
+<span class="lineNum">     195 </span>            : */
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     198 </span>            : CLASS DECLARATION
+<span class="lineNum">     199 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     200 </span>            : 
+<span class="lineNum">     201 </span>            : class FGTank : public FGJSBBase
+<span class="lineNum">     202 </span>            : {
+<span class="lineNum">     203 </span>            : public:
+<span class="lineNum">     204 </span>            :   /** Constructor.
+<span class="lineNum">     205 </span>            :       The constructor reads in the defining parameters from a configuration
+<span class="lineNum">     206 </span>            :       file.
+<span class="lineNum">     207 </span>            :       @param exec a pointer to the base FGFDMExec instance.
+<span class="lineNum">     208 </span>            :       @param el a pointer to the Tank element.
+<span class="lineNum">     209 </span>            :       @param tank_number the tank number (zero based).
+<span class="lineNum">     210 </span>            :   */
+<span class="lineNum">     211 </span>            :   FGTank(FGFDMExec* exec, Element* el, int tank_number);
+<span class="lineNum">     212 </span>            :   /// Destructor
+<span class="lineNum">     213 </span>            :   ~FGTank();
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span>            :   enum TankType {ttUNKNOWN, ttFUEL, ttOXIDIZER};
+<span class="lineNum">     216 </span>            :   enum GrainType {gtUNKNOWN, gtCYLINDRICAL, gtENDBURNING, gtFUNCTION};
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :   /** Removes fuel from the tank.
+<span class="lineNum">     219 </span>            :       This function removes fuel from a tank. If the tank empties, it is
+<span class="lineNum">     220 </span>            :       deselected.
+<span class="lineNum">     221 </span>            :       @param used the amount of fuel used in lbs.
+<span class="lineNum">     222 </span>            :       @return the remaining contents of the tank in lbs.
+<span class="lineNum">     223 </span>            :   */
+<span class="lineNum">     224 </span>            :   double Drain(double used);
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :   /** Performs local, tanks-specific calculations, such as fuel temperature.
+<span class="lineNum">     227 </span>            :       This function calculates the temperature of the fuel in the tank.
+<span class="lineNum">     228 </span>            :       @param dt the time step for this model.
+<span class="lineNum">     229 </span>            :       @param TempC the Total Air Temperature in degrees Celsius.
+<span class="lineNum">     230 </span>            :       @return the current temperature in degrees Celsius.
+<span class="lineNum">     231 </span>            :   */
+<span class="lineNum">     232 </span>            :   double Calculate(double dt, double TempC);
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            :   /** Retrieves the type of tank: Fuel or Oxidizer.
+<a name="235"><span class="lineNum">     235 </span>            :       @return the tank type, 0 for undefined, 1 for fuel, and 2 for oxidizer.</a>
+<span class="lineNum">     236 </span>            :   */
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :   int GetType(void) const {return Type;}</span>
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            :   /** Resets the tank parameters to the initial conditions */
+<span class="lineNum">     240 </span>            :   void ResetToIC(void);
+<span class="lineNum">     241 </span>            : 
+<a name="242"><span class="lineNum">     242 </span>            :   /** If the tank is set to supply fuel, this function returns true.</a>
+<span class="lineNum">     243 </span>            :       @return true if this tank is set to a non-zero priority.*/
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :   bool GetSelected(void) const {return Selected;}</span>
+<span class="lineNum">     245 </span>            : 
+<a name="246"><span class="lineNum">     246 </span>            :   /** Gets the tank fill level.</a>
+<span class="lineNum">     247 </span>            :       @return the fill level in percent, from 0 to 100.*/
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :   double GetPctFull(void) const {return PctFull;}</span>
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span>            :   /** Gets the capacity of the tank.
+<span class="lineNum">     251 </span>            :       @return the capacity of the tank in pounds. */
+<span class="lineNum">     252 </span>            :   double GetCapacity(void) const {return Capacity;}
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span>            :   /** Gets the capacity of the tank.
+<span class="lineNum">     255 </span>            :       @return the capacity of the tank in gallons. */
+<span class="lineNum">     256 </span>            :   double GetCapacityGallons(void) const {return Capacity/Density;}
+<span class="lineNum">     257 </span>            : 
+<a name="258"><span class="lineNum">     258 </span>            :   /** Gets the contents of the tank.</a>
+<span class="lineNum">     259 </span>            :       @return the contents of the tank in pounds. */
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :   double GetContents(void) const {return Contents;}</span>
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span>            :   /** Gets the contents of the tank.
+<span class="lineNum">     263 </span>            :       @return the contents of the tank in gallons. */
+<span class="lineNum">     264 </span>            :   double GetContentsGallons(void) const {return Contents/Density;}
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span>            :   /** Gets the temperature of the fuel.
+<span class="lineNum">     267 </span>            :       The temperature of the fuel is calculated if an initial tempearture is
+<span class="lineNum">     268 </span>            :       given in the configuration file. 
+<span class="lineNum">     269 </span>            :       @return the temperature of the fuel in degrees C IF an initial temperature
+<span class="lineNum">     270 </span>            :       is given, otherwise 0.0 C is returned. */
+<span class="lineNum">     271 </span>            :   double GetTemperature_degC(void) const {return Temperature;}
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span>            :   /** Gets the temperature of the fuel.
+<span class="lineNum">     274 </span>            :       The temperature of the fuel is calculated if an initial tempearture is
+<span class="lineNum">     275 </span>            :       given in the configuration file. 
+<span class="lineNum">     276 </span>            :       @return the temperature of the fuel in degrees F IF an initial temperature
+<span class="lineNum">     277 </span>            :       is given, otherwise 32 degrees F is returned. */
+<span class="lineNum">     278 </span>            :   double GetTemperature(void) const {return CelsiusToFahrenheit(Temperature);}
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span>            :   /** Returns the density of a named fuel type.
+<span class="lineNum">     281 </span>            :       @return the density, in lbs/gal, or 6.6 if name cannot be resolved. */
+<span class="lineNum">     282 </span>            :   double ProcessFuelName(const std::string&amp; name);
+<span class="lineNum">     283 </span>            : 
+<a name="284"><span class="lineNum">     284 </span>            :   /** Returns the amount of unusable fuel in the tank.</a>
+<span class="lineNum">     285 </span>            :       @return the amount in lbs. */
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :   double GetUnusable(void) const {return UnusableVol*Density;}</span>
+<span class="lineNum">     287 </span>            : 
+<a name="288"><span class="lineNum">     288 </span>            :   /** Returns the unusable volume of fuel in the tank.</a>
+<span class="lineNum">     289 </span>            :       @return the volume in gal. */
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :   double GetUnusableVolume(void) const {return UnusableVol;}</span>
+<span class="lineNum">     291 </span>            : 
+<a name="292"><span class="lineNum">     292 </span>            :   /** Sets the volume of unusable fuel in the tank.</a>
+<span class="lineNum">     293 </span>            :       @param amount the amount of unusable fuel in gal. */
+<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :   void SetUnusableVolume(double volume) {UnusableVol = volume;}</span></a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :   double GetIxx(void) const {return Ixx;}</span></a>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :   double GetIyy(void) const {return Iyy;}</span>
+<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :   double GetIzz(void) const {return Izz;}</span></a>
+<a name="299"><span class="lineNum">     299 </span>            : </a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :   inline double GetLocationX(void) const { return vXYZ(eX); }</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :   inline double GetLocationY(void) const { return vXYZ(eY); }</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :   inline double GetLocationZ(void) const { return vXYZ(eZ); }</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :   inline void SetLocationX(double x) { vXYZ(eX) = x; }</span></a>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :   inline void SetLocationY(double y) { vXYZ(eY) = y; }</span>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :   inline void SetLocationZ(double z) { vXYZ(eZ) = z; }</span></a>
+<span class="lineNum">     306 </span>            : 
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :   double GetStandpipe(void) const {return Standpipe;}</span></a>
+<a name="308"><span class="lineNum">     308 </span>            : </a>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :   int  GetPriority(void) const {return Priority;}</span>
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :   void SetPriority(int p) { Priority = p; Selected = p&gt;0 ? true:false; } </span>
+<span class="lineNum">     311 </span>            : 
+<a name="312"><span class="lineNum">     312 </span>            :   /** Returns the fuel density.</a>
+<span class="lineNum">     313 </span>            :       @return the density in lbs/gal. */
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :   double GetDensity(void) const {return Density;}</span>
+<span class="lineNum">     315 </span>            :   /** Sets the fuel density.
+<span class="lineNum">     316 </span>            :       @param d the density in lbs/gal. */
+<a name="317"><span class="lineNum">     317 </span>            :   void   SetDensity(double d) { Density = d; }</a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :   double GetExternalFlow(void) const {return ExternalFlow;}</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :   void   SetExternalFlow(double f) { ExternalFlow = f; }</span>
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span>            :   FGColumnVector3 GetXYZ(void) const;
+<a name="323"><span class="lineNum">     323 </span>            :   double GetXYZ(int idx) const;</a>
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :   GrainType GetGrainType(void) const {return grainType;}</span>
+<span class="lineNum">     326 </span>            : 
+<span class="lineNum">     327 </span>            :   double Fill(double amount);
+<a name="328"><span class="lineNum">     328 </span>            :   void SetContents(double amount);</a>
+<a name="329"><span class="lineNum">     329 </span>            :   void SetContentsGallons(double gallons);</a>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :   void SetTemperature(double temp) { Temperature = temp; }</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :   void SetStandpipe(double amount) { Standpipe = amount; }</span>
+<span class="lineNum">     332 </span>            :   void SetSelected(bool sel) { sel==true ? SetPriority(1):SetPriority(0); }
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span>            : private:
+<span class="lineNum">     335 </span>            :   TankType Type;
+<span class="lineNum">     336 </span>            :   GrainType grainType;
+<span class="lineNum">     337 </span>            :   int TankNumber;
+<span class="lineNum">     338 </span>            :   std::string type;
+<span class="lineNum">     339 </span>            :   std::string strGType;
+<span class="lineNum">     340 </span>            :   double ixx_unit;
+<span class="lineNum">     341 </span>            :   double iyy_unit;
+<span class="lineNum">     342 </span>            :   double izz_unit;
+<span class="lineNum">     343 </span>            :   FGColumnVector3 vXYZ;
+<span class="lineNum">     344 </span>            :   FGColumnVector3 vXYZ_drain;
+<span class="lineNum">     345 </span>            :   FGFunction* function_ixx;
+<span class="lineNum">     346 </span>            :   FGFunction* function_iyy;
+<span class="lineNum">     347 </span>            :   FGFunction* function_izz;
+<span class="lineNum">     348 </span>            :   double Capacity, UnusableVol;
+<span class="lineNum">     349 </span>            :   double Radius;
+<span class="lineNum">     350 </span>            :   double InnerRadius;
+<span class="lineNum">     351 </span>            :   double Length;
+<span class="lineNum">     352 </span>            :   double Volume;
+<span class="lineNum">     353 </span>            :   double Density;
+<span class="lineNum">     354 </span>            :   double Ixx;
+<span class="lineNum">     355 </span>            :   double Iyy;
+<span class="lineNum">     356 </span>            :   double Izz;
+<span class="lineNum">     357 </span>            :   double InertiaFactor;
+<span class="lineNum">     358 </span>            :   double PctFull;
+<span class="lineNum">     359 </span>            :   double Contents, InitialContents;
+<span class="lineNum">     360 </span>            :   double Area;
+<span class="lineNum">     361 </span>            :   double Temperature, InitialTemperature;
+<span class="lineNum">     362 </span>            :   double Standpipe, InitialStandpipe;
+<span class="lineNum">     363 </span>            :   double ExternalFlow;
+<span class="lineNum">     364 </span>            :   bool  Selected;
+<span class="lineNum">     365 </span>            :   int Priority, InitialPriority;
+<span class="lineNum">     366 </span>            : 
+<span class="lineNum">     367 </span>            :   void CalculateInertias(void);
+<span class="lineNum">     368 </span>            :   void bind(FGPropertyManager* PropertyManager);
+<span class="lineNum">     369 </span>            :   void Debug(int from);
+<span class="lineNum">     370 </span>            : };
+<span class="lineNum">     371 </span>            : }
+<span class="lineNum">     372 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     373 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

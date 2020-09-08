@@ -1,0 +1,489 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/atmosphere/FGWinds.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/atmosphere</a> - FGWinds.h<span style="font-size: 80%;"> (source / <a href="FGWinds.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntry">62</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">45</td>
+            <td class="headerCovTableEntryLo">44.4 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGWinds.h
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt, Andreas Gaeb, David Culp
+<span class="lineNum">       5 </span>            :  Date started: 5/2011
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2011  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 5/2011   JSB   Created
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGWINDS_H
+<span class="lineNum">      35 </span>            : #define FGWINDS_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &quot;models/FGModel.h&quot;
+<span class="lineNum">      42 </span>            : #include &quot;math/FGMatrix33.h&quot;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      45 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      46 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : namespace JSBSim {
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : class FGTable;
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      53 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      54 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : /** Models atmospheric disturbances: winds, gusts, turbulence, downbursts, etc.
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            :     &lt;h2&gt;Turbulence&lt;/h2&gt;
+<span class="lineNum">      59 </span>            :     Various turbulence models are available. They are specified
+<span class="lineNum">      60 </span>            :     via the property &lt;tt&gt;atmosphere/turb-type&lt;/tt&gt;. The following models are
+<span class="lineNum">      61 </span>            :     available:
+<span class="lineNum">      62 </span>            :     - 0: ttNone (turbulence disabled)
+<span class="lineNum">      63 </span>            :     - 1: ttStandard
+<span class="lineNum">      64 </span>            :     - 2: ttCulp
+<span class="lineNum">      65 </span>            :     - 3: ttMilspec (Dryden spectrum)
+<span class="lineNum">      66 </span>            :     - 4: ttTustin (Dryden spectrum)
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            :     The Milspec and Tustin models are described in the Yeager report cited
+<span class="lineNum">      69 </span>            :     below.  They both use a Dryden spectrum model whose parameters (scale
+<span class="lineNum">      70 </span>            :     lengths and intensities) are modelled according to MIL-F-8785C. Parameters
+<span class="lineNum">      71 </span>            :     are modelled differently for altitudes below 1000ft and above 2000ft, for
+<span class="lineNum">      72 </span>            :     altitudes in between they are interpolated linearly.
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :     The two models differ in the implementation of the transfer functions
+<span class="lineNum">      75 </span>            :     described in the milspec.
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :     To use one of these two models, set &lt;tt&gt;atmosphere/turb-type&lt;/tt&gt; to 4
+<span class="lineNum">      78 </span>            :     resp. 5, and specify values for
+<span class="lineNum">      79 </span>            :     &lt;tt&gt;atmosphere/turbulence/milspec/windspeed_at_20ft_AGL-fps&lt;/tt&gt; and
+<span class="lineNum">      80 </span>            :     &lt;tt&gt;atmosphere/turbulence/milspec/severity&lt;/tt&gt; (the latter corresponds to
+<span class="lineNum">      81 </span>            :     the probability of exceedence curves from Fig.&amp;nbsp;7 of the milspec,
+<span class="lineNum">      82 </span>            :     allowable range is 0 (disabled) to 7). &lt;tt&gt;atmosphere/psiw-rad&lt;/tt&gt; is
+<span class="lineNum">      83 </span>            :     respected as well; note that you have to specify a positive wind magnitude
+<span class="lineNum">      84 </span>            :     to prevent psiw from being reset to zero.
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            :     Reference values (cf. figures 7 and 9 from the milspec):
+<span class="lineNum">      87 </span>            :     &lt;table&gt;
+<span class="lineNum">      88 </span>            :       &lt;tr&gt;&lt;td&gt;&lt;b&gt;Intensity&lt;/b&gt;&lt;/td&gt;
+<span class="lineNum">      89 </span>            :           &lt;td&gt;&lt;b&gt;&lt;tt&gt;windspeed_at_20ft_AGL-fps&lt;/tt&gt;&lt;/b&gt;&lt;/td&gt;
+<span class="lineNum">      90 </span>            :           &lt;td&gt;&lt;b&gt;&lt;tt&gt;severity&lt;/tt&gt;&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+<span class="lineNum">      91 </span>            :       &lt;tr&gt;&lt;td&gt;light&lt;/td&gt;
+<span class="lineNum">      92 </span>            :           &lt;td&gt;25 (15 knots)&lt;/td&gt;
+<span class="lineNum">      93 </span>            :           &lt;td&gt;3&lt;/td&gt;&lt;/tr&gt;
+<span class="lineNum">      94 </span>            :       &lt;tr&gt;&lt;td&gt;moderate&lt;/td&gt;
+<span class="lineNum">      95 </span>            :           &lt;td&gt;50 (30 knots)&lt;/td&gt;
+<span class="lineNum">      96 </span>            :           &lt;td&gt;4&lt;/td&gt;&lt;/tr&gt;
+<span class="lineNum">      97 </span>            :       &lt;tr&gt;&lt;td&gt;severe&lt;/td&gt;
+<span class="lineNum">      98 </span>            :           &lt;td&gt;75 (45 knots)&lt;/td&gt;
+<span class="lineNum">      99 </span>            :           &lt;td&gt;6&lt;/td&gt;&lt;/tr&gt;
+<span class="lineNum">     100 </span>            :     &lt;/table&gt;
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :     &lt;h2&gt;Cosine Gust&lt;/h2&gt;
+<span class="lineNum">     103 </span>            :     A one minus cosine gust model is available. This permits a configurable,
+<span class="lineNum">     104 </span>            :     predictable gust to be input to JSBSim for testing handling and
+<span class="lineNum">     105 </span>            :     dynamics. Here is how a gust can be entered in a script:
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :     ~~~{.xml}
+<span class="lineNum">     108 </span>            :     &lt;event name=&quot;Introduce gust&quot;&gt;
+<span class="lineNum">     109 </span>            :       &lt;condition&gt; simulation/sim-time-sec ge 10 &lt;/condition&gt;
+<span class="lineNum">     110 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/startup-duration-sec&quot; value=&quot;5&quot;/&gt;
+<span class="lineNum">     111 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/steady-duration-sec&quot; value=&quot;1&quot;/&gt;
+<span class="lineNum">     112 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/end-duration-sec&quot; value=&quot;5&quot;/&gt;
+<span class="lineNum">     113 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/magnitude-ft_sec&quot; value=&quot;30&quot;/&gt;
+<span class="lineNum">     114 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/frame&quot; value=&quot;2&quot;/&gt;
+<span class="lineNum">     115 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/X-velocity-ft_sec&quot; value=&quot;-1&quot;/&gt;
+<span class="lineNum">     116 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/Y-velocity-ft_sec&quot; value=&quot;0&quot;/&gt;
+<span class="lineNum">     117 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/Z-velocity-ft_sec&quot; value=&quot;0&quot;/&gt;
+<span class="lineNum">     118 </span>            :       &lt;set name=&quot;atmosphere/cosine-gust/start&quot; value=&quot;1&quot;/&gt;
+<span class="lineNum">     119 </span>            :       &lt;notify/&gt;
+<span class="lineNum">     120 </span>            :     &lt;/event&gt;
+<span class="lineNum">     121 </span>            :     ~~~
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :     The x, y, z velocity components are meant to define the direction vector.
+<span class="lineNum">     124 </span>            :     The vector will be normalized by the routine, so it does not need to be a
+<span class="lineNum">     125 </span>            :     unit vector.
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :     The startup duration is the time it takes to build up to full strength
+<span class="lineNum">     128 </span>            :     (magnitude-ft_sec) from zero. Steady duration is the time the gust stays at
+<span class="lineNum">     129 </span>            :     the specified magnitude. End duration is the time it takes to dwindle to
+<span class="lineNum">     130 </span>            :     zero from the specified magnitude. The start and end transients are in a
+<span class="lineNum">     131 </span>            :     smooth cosine shape.
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            :     The frame is specified from the following enum:
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :     enum eGustFrame {gfNone=0, gfBody, gfWind, gfLocal};
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :     That is, if you specify the X, Y, Z gust direction vector in the body frame,
+<span class="lineNum">     138 </span>            :     frame will be &quot;1&quot;. If the X, Y, and Z gust direction vector is in the Wind
+<span class="lineNum">     139 </span>            :     frame, use frame = 2. If you specify the gust direction vector in the local
+<span class="lineNum">     140 </span>            :     frame (N-E-D) use frame = 3. Note that an internal local frame direction
+<span class="lineNum">     141 </span>            :     vector is created based on the X, Y, Z direction vector you specify and the
+<span class="lineNum">     142 </span>            :     frame *at the time the gust is begun*. The direction vector is not updated
+<span class="lineNum">     143 </span>            :     after the initial creation. This is to keep the gust at the same direction
+<span class="lineNum">     144 </span>            :     independent of aircraft dynamics.
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            :     The gust is triggered when the property atmosphere/cosine-gust/start is set
+<span class="lineNum">     147 </span>            :     to 1. It can be used repeatedly - the gust resets itself after it has
+<span class="lineNum">     148 </span>            :     completed.
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :     The cosine gust is global: it affects the whole world not just the vicinity
+<span class="lineNum">     151 </span>            :     of the aircraft.
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :     @see Yeager, Jessie C.: &quot;Implementation and Testing of Turbulence Models for
+<span class="lineNum">     154 </span>            :          the F18-HARV&quot; (&lt;a
+<span class="lineNum">     155 </span>            :          href=&quot;http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19980028448_1998081596.pdf&quot;&gt;
+<span class="lineNum">     156 </span>            :          pdf&lt;/a&gt;), NASA CR-1998-206937, 1998
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span>            :     @see MIL-F-8785C: Military Specification: Flying Qualities of Piloted Aircraft
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            : */
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     163 </span>            : CLASS DECLARATION
+<span class="lineNum">     164 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            : class FGWinds : public FGModel {
+<span class="lineNum">     167 </span>            : public:
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            :   /// Constructor
+<span class="lineNum">     170 </span>            :   explicit FGWinds(FGFDMExec*);
+<span class="lineNum">     171 </span>            :   /// Destructor
+<span class="lineNum">     172 </span>            :   ~FGWinds();
+<span class="lineNum">     173 </span>            :   /** Runs the winds model; called by the Executive
+<span class="lineNum">     174 </span>            :       Can pass in a value indicating if the executive is directing the simulation to Hold.
+<span class="lineNum">     175 </span>            :       @param Holding if true, the executive has been directed to hold the sim
+<span class="lineNum">     176 </span>            :                      from advancing time. Some models may ignore this flag, such
+<span class="lineNum">     177 </span>            :                      as the Input model, which may need to be active to listen
+<span class="lineNum">     178 </span>            :                      on a socket for the &quot;Resume&quot; command to be given.
+<span class="lineNum">     179 </span>            :       @return false if no error */
+<span class="lineNum">     180 </span>            :   bool Run(bool Holding) override;
+<span class="lineNum">     181 </span>            :   bool InitModel(void) override;
+<span class="lineNum">     182 </span>            :   enum tType {ttNone, ttStandard, ttCulp, ttMilspec, ttTustin} turbType;
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            :   // TOTAL WIND access functions (wind + gust + turbulence)
+<a name="185"><span class="lineNum">     185 </span>            : </a>
+<span class="lineNum">     186 </span>            :   /// Retrieves the total wind components in NED frame.
+<span class="lineNum">     187 </span><span class="lineCov">          8 :   virtual const FGColumnVector3&amp; GetTotalWindNED(void) const { return vTotalWindNED; }</span>
+<a name="188"><span class="lineNum">     188 </span>            : </a>
+<span class="lineNum">     189 </span>            :   /// Retrieves a total wind component in NED frame.
+<span class="lineNum">     190 </span><span class="lineCov">         24 :   virtual double GetTotalWindNED(int idx) const {return vTotalWindNED(idx);}</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            :   // WIND access functions
+<a name="193"><span class="lineNum">     193 </span>            : </a>
+<span class="lineNum">     194 </span>            :   /// Sets the wind components in NED frame.
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :   virtual void SetWindNED(double wN, double wE, double wD) { vWindNED(1)=wN; vWindNED(2)=wE; vWindNED(3)=wD;}</span>
+<a name="196"><span class="lineNum">     196 </span>            : </a>
+<span class="lineNum">     197 </span>            :   /// Sets a wind component in NED frame.
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :   virtual void SetWindNED(int idx, double wind) { vWindNED(idx)=wind;}</span>
+<a name="199"><span class="lineNum">     199 </span>            : </a>
+<span class="lineNum">     200 </span>            :   /// Sets the wind components in NED frame.
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :   virtual void SetWindNED(const FGColumnVector3&amp; wind) { vWindNED=wind; }</span>
+<a name="202"><span class="lineNum">     202 </span>            : </a>
+<span class="lineNum">     203 </span>            :   /// Retrieves the wind components in NED frame.
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :   virtual const FGColumnVector3&amp; GetWindNED(void) const { return vWindNED; }</span>
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<span class="lineNum">     206 </span>            :   /// Retrieves a wind component in NED frame.
+<span class="lineNum">     207 </span><span class="lineCov">         24 :   virtual double GetWindNED(int idx) const {return vWindNED(idx);}</span>
+<span class="lineNum">     208 </span>            : 
+<span class="lineNum">     209 </span>            :   /** Retrieves the direction that the wind is coming from.
+<a name="210"><span class="lineNum">     210 </span>            :       The direction is defined as north=0 and increases counterclockwise.</a>
+<span class="lineNum">     211 </span>            :       The wind heading is returned in radians.*/
+<span class="lineNum">     212 </span><span class="lineCov">          8 :   virtual double GetWindPsi(void) const { return psiw; }</span>
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span>            :   /** Sets the direction that the wind is coming from.
+<span class="lineNum">     215 </span>            :       The direction is defined as north=0 and increases counterclockwise to 2*pi
+<span class="lineNum">     216 </span>            :       (radians). The vertical component of wind is assumed to be zero - and is
+<span class="lineNum">     217 </span>            :       forcibly set to zero. This function sets the vWindNED vector components
+<span class="lineNum">     218 </span>            :       based on the supplied direction. The magnitude of the wind set in the
+<span class="lineNum">     219 </span>            :       vector is preserved (assuming the vertical component is non-zero).
+<span class="lineNum">     220 </span>            :       @param dir wind direction in the horizontal plane, in radians.*/
+<span class="lineNum">     221 </span>            :   virtual void SetWindPsi(double dir);
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            :   virtual void SetWindspeed(double speed);
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            :   virtual double GetWindspeed(void) const;
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :   // GUST access functions
+<a name="228"><span class="lineNum">     228 </span>            : </a>
+<span class="lineNum">     229 </span>            :   /// Sets a gust component in NED frame.
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :   virtual void SetGustNED(int idx, double gust) { vGustNED(idx)=gust;}</span>
+<a name="231"><span class="lineNum">     231 </span>            : </a>
+<span class="lineNum">     232 </span>            :   /// Sets a turbulence component in NED frame.
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :   virtual void SetTurbNED(int idx, double turb) { vTurbulenceNED(idx)=turb;}</span>
+<a name="234"><span class="lineNum">     234 </span>            : </a>
+<span class="lineNum">     235 </span>            :   /// Sets the gust components in NED frame.
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :   virtual void SetGustNED(double gN, double gE, double gD) { vGustNED(eNorth)=gN; vGustNED(eEast)=gE; vGustNED(eDown)=gD;}</span>
+<a name="237"><span class="lineNum">     237 </span>            : </a>
+<span class="lineNum">     238 </span>            :   /// Retrieves a gust component in NED frame.
+<span class="lineNum">     239 </span><span class="lineCov">         24 :   virtual double GetGustNED(int idx) const {return vGustNED(idx);}</span>
+<a name="240"><span class="lineNum">     240 </span>            : </a>
+<span class="lineNum">     241 </span>            :   /// Retrieves a turbulence component in NED frame.
+<span class="lineNum">     242 </span><span class="lineCov">         24 :   virtual double GetTurbNED(int idx) const {return vTurbulenceNED(idx);}</span>
+<a name="243"><span class="lineNum">     243 </span>            : </a>
+<span class="lineNum">     244 </span>            :   /// Retrieves the gust components in NED frame.
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :   virtual const FGColumnVector3&amp; GetGustNED(void) const {return vGustNED;}</span>
+<span class="lineNum">     246 </span>            : 
+<a name="247"><span class="lineNum">     247 </span>            :   /** Turbulence models available: ttNone, ttStandard, ttBerndt, ttCulp,</a>
+<a name="248"><span class="lineNum">     248 </span>            :       ttMilspec, ttTustin */</a>
+<span class="lineNum">     249 </span><span class="lineCov">          8 :   virtual void   SetTurbType(tType tt) {turbType = tt;}</span>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">          8 :   virtual tType  GetTurbType() const {return turbType;}</span></a>
+<a name="251"><span class="lineNum">     251 </span>            : </a>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   virtual void   SetTurbGain(double tg) {TurbGain = tg;}</span>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">          8 :   virtual double GetTurbGain() const {return TurbGain;}</span></a>
+<a name="254"><span class="lineNum">     254 </span>            : </a>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :   virtual void   SetTurbRate(double tr) {TurbRate = tr;}</span>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">          8 :   virtual double GetTurbRate() const {return TurbRate;}</span></a>
+<a name="257"><span class="lineNum">     257 </span>            : </a>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :   virtual void   SetRhythmicity(double r) {Rhythmicity=r;}</span>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">          8 :   virtual double GetRhythmicity() const {return Rhythmicity;}</span></a>
+<a name="260"><span class="lineNum">     260 </span>            : </a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">         24 :   virtual double GetTurbPQR(int idx) const {return vTurbPQR(idx);}</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :   virtual double GetTurbMagnitude(void) const {return vTurbulenceNED.Magnitude();}</span></a>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :   virtual double GetTurbDirection(void) const {return TurbDirection;}</span>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">          8 :   virtual const FGColumnVector3&amp; GetTurbPQR(void) const {return vTurbPQR;}</span></a>
+<a name="265"><span class="lineNum">     265 </span>            : </a>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :   virtual void   SetWindspeed20ft(double ws) { windspeed_at_20ft = ws;}</span>
+<span class="lineNum">     267 </span><span class="lineCov">          8 :   virtual double GetWindspeed20ft() const { return windspeed_at_20ft;}</span>
+<a name="268"><span class="lineNum">     268 </span>            : </a>
+<a name="269"><span class="lineNum">     269 </span>            :   /// allowable range: 0-7, 3=light, 4=moderate, 6=severe turbulence</a>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :   virtual void   SetProbabilityOfExceedence( int idx) {probability_of_exceedence_index = idx;}</span>
+<span class="lineNum">     271 </span><span class="lineCov">          8 :   virtual int    GetProbabilityOfExceedence() const { return probability_of_exceedence_index;}</span>
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span>            :   // Stores data defining a 1 - cosine gust profile that builds up, holds steady
+<span class="lineNum">     274 </span>            :   // and fades out over specified durations.
+<span class="lineNum">     275 </span>            :   struct OneMinusCosineProfile {
+<span class="lineNum">     276 </span>            :     bool Running;           ///&lt;- This flag is set true through FGWinds::StartGust().
+<span class="lineNum">     277 </span>            :     double elapsedTime;     ///&lt;- Stores the elapsed time for the ongoing gust.
+<span class="lineNum">     278 </span>            :     double startupDuration; ///&lt;- Specifies the time it takes for the gust startup transient.
+<a name="279"><span class="lineNum">     279 </span>            :     double steadyDuration;  ///&lt;- Specifies the duration of the steady gust.</a>
+<span class="lineNum">     280 </span>            :     double endDuration;     ///&lt;- Specifies the time it takes for the gust to subsude.
+<span class="lineNum">     281 </span><span class="lineCov">          8 :     OneMinusCosineProfile() ///&lt;- The constructor.</span>
+<span class="lineNum">     282 </span><span class="lineCov">          8 :     {</span>
+<span class="lineNum">     283 </span><span class="lineCov">          8 :       elapsedTime = 0.0;</span>
+<span class="lineNum">     284 </span><span class="lineCov">          8 :       Running = false;</span>
+<span class="lineNum">     285 </span><span class="lineCov">          8 :       startupDuration = 2;</span>
+<span class="lineNum">     286 </span><span class="lineCov">          8 :       steadyDuration = 4;</span>
+<span class="lineNum">     287 </span><span class="lineCov">          8 :       endDuration = 2;</span>
+<span class="lineNum">     288 </span><span class="lineCov">          8 :     }</span>
+<span class="lineNum">     289 </span>            :   };
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            :   enum eGustFrame {gfNone=0, gfBody, gfWind, gfLocal};
+<a name="292"><span class="lineNum">     292 </span>            : </a>
+<span class="lineNum">     293 </span>            :   /// Stores the information about a single one minus cosine gust instance.
+<span class="lineNum">     294 </span><span class="lineCov">          8 :   struct OneMinusCosineGust {</span>
+<span class="lineNum">     295 </span>            :     FGColumnVector3 vWind;                    ///&lt;- The input normalized wind vector.
+<span class="lineNum">     296 </span>            :     FGColumnVector3 vWindTransformed;         ///&lt;- The transformed normal vector at the time the gust is started.
+<span class="lineNum">     297 </span>            :     double magnitude;                         ///&lt;- The magnitude of the wind vector.
+<a name="298"><span class="lineNum">     298 </span>            :     eGustFrame gustFrame;                     ///&lt;- The frame that the wind vector is specified in.</a>
+<span class="lineNum">     299 </span>            :     struct OneMinusCosineProfile gustProfile; ///&lt;- The gust shape (profile) data for this gust.
+<span class="lineNum">     300 </span><span class="lineCov">          8 :     OneMinusCosineGust()                      ///&lt;- Constructor.</span>
+<span class="lineNum">     301 </span><span class="lineCov">          8 :     {</span>
+<span class="lineNum">     302 </span><span class="lineCov">          8 :       vWind.InitMatrix(0.0);</span>
+<span class="lineNum">     303 </span><span class="lineCov">          8 :       gustFrame = gfLocal;</span>
+<span class="lineNum">     304 </span><span class="lineCov">          8 :       magnitude = 1.0;</span>
+<span class="lineNum">     305 </span><span class="lineCov">          8 :     };</span>
+<span class="lineNum">     306 </span>            :   };
+<span class="lineNum">     307 </span>            : 
+<span class="lineNum">     308 </span>            :   /// Stores information about a specified Up- or Down-burst.
+<span class="lineNum">     309 </span>            :   struct UpDownBurst {
+<span class="lineNum">     310 </span>            :     double ringLatitude;                           ///&lt;- The latitude of the downburst run (radians)
+<span class="lineNum">     311 </span>            :     double ringLongitude;                          ///&lt;- The longitude of the downburst run (radians)
+<span class="lineNum">     312 </span>            :     double ringAltitude;                           ///&lt;- The altitude of the ring (feet).
+<span class="lineNum">     313 </span>            :     double ringRadius;                             ///&lt;- The radius of the ring (feet).
+<span class="lineNum">     314 </span>            :     double ringCoreRadius;                         ///&lt;- The cross-section &quot;core&quot; radius of the ring (feet).
+<a name="315"><span class="lineNum">     315 </span>            :     double circulation;                            ///&lt;- The circulation (gamma) (feet-squared per second).</a>
+<span class="lineNum">     316 </span>            :     struct OneMinusCosineProfile oneMCosineProfile;///&lt;- A gust profile structure.
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :     UpDownBurst() {                                ///&lt;- Constructor</span>
+<span class="lineNum">     318 </span><span class="lineNoCov">          0 :       ringLatitude = ringLongitude = 0.0;</span>
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :       ringAltitude = 1000.0;</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :       ringRadius = 2000.0;</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :       ringCoreRadius = 100.0;</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :       circulation = 100000.0;</span>
+<span class="lineNum">     323 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">     324 </span>            :   };
+<span class="lineNum">     325 </span>            : 
+<a name="326"><span class="lineNum">     326 </span>            :   // 1 - Cosine gust setters</a>
+<span class="lineNum">     327 </span>            :   /// Initiates the execution of the gust.
+<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :   virtual void StartGust(bool running) {oneMinusCosineGust.gustProfile.Running = running;}</span></a>
+<span class="lineNum">     329 </span>            :   ///Specifies the duration of the startup portion of the gust.
+<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :   virtual void StartupGustDuration(double dur) {oneMinusCosineGust.gustProfile.startupDuration = dur;}</span></a>
+<span class="lineNum">     331 </span>            :   ///Specifies the length of time that the gust is at a steady, full strength.
+<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :   virtual void SteadyGustDuration(double dur) {oneMinusCosineGust.gustProfile.steadyDuration = dur;}</span></a>
+<span class="lineNum">     333 </span>            :   /// Specifies the length of time it takes for the gust to return to zero velocity.
+<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :   virtual void EndGustDuration(double dur) {oneMinusCosineGust.gustProfile.endDuration = dur;}</span></a>
+<span class="lineNum">     335 </span>            :   /// Specifies the magnitude of the gust in feet/second.
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :   virtual void GustMagnitude(double mag) {oneMinusCosineGust.magnitude = mag;}</span>
+<span class="lineNum">     337 </span>            :   /** Specifies the frame that the gust direction vector components are specified in. The 
+<span class="lineNum">     338 </span>            :       body frame is defined with the X direction forward, and the Y direction positive out
+<span class="lineNum">     339 </span>            :       the right wing. The wind frame is defined with the X axis pointing into the velocity
+<span class="lineNum">     340 </span>            :       vector, the Z axis perpendicular to the X axis, in the aircraft XZ plane, and the Y
+<span class="lineNum">     341 </span>            :       axis completing the system. The local axis is a navigational frame with X pointing north,
+<a name="342"><span class="lineNum">     342 </span>            :       Y pointing east, and Z pointing down. This is a locally vertical, locally horizontal</a>
+<span class="lineNum">     343 </span>            :       frame, with the XY plane tangent to the geocentric surface. */
+<a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :   virtual void GustFrame(eGustFrame gFrame) {oneMinusCosineGust.gustFrame = gFrame;}</span></a>
+<span class="lineNum">     345 </span>            :   /// Specifies the X component of velocity in the specified gust frame (ft/sec).
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :   virtual void GustXComponent(double x) {oneMinusCosineGust.vWind(eX) = x;}</span></a>
+<span class="lineNum">     347 </span>            :   /// Specifies the Y component of velocity in the specified gust frame (ft/sec).
+<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 :   virtual void GustYComponent(double y) {oneMinusCosineGust.vWind(eY) = y;}</span></a>
+<span class="lineNum">     349 </span>            :   /// Specifies the Z component of velocity in the specified gust frame (ft/sec).
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :   virtual void GustZComponent(double z) {oneMinusCosineGust.vWind(eZ) = z;}</span>
+<span class="lineNum">     351 </span>            : 
+<span class="lineNum">     352 </span>            :   // Up- Down-burst functions
+<a name="353"><span class="lineNum">     353 </span>            :   void NumberOfUpDownburstCells(int num);</a>
+<span class="lineNum">     354 </span>            : 
+<span class="lineNum">     355 </span><span class="lineCov">         16 :   struct Inputs {</span>
+<span class="lineNum">     356 </span>            :     double V;
+<span class="lineNum">     357 </span>            :     double wingspan;
+<span class="lineNum">     358 </span>            :     double DistanceAGL;
+<span class="lineNum">     359 </span>            :     double AltitudeASL;
+<span class="lineNum">     360 </span>            :     double longitude;
+<span class="lineNum">     361 </span>            :     double latitude;
+<span class="lineNum">     362 </span>            :     double planetRadius;
+<span class="lineNum">     363 </span>            :     FGMatrix33 Tl2b;
+<span class="lineNum">     364 </span>            :     FGMatrix33 Tw2b;
+<span class="lineNum">     365 </span>            :     double totalDeltaT;
+<span class="lineNum">     366 </span>            :   } in;
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span>            : private:
+<span class="lineNum">     369 </span>            : 
+<span class="lineNum">     370 </span>            :   double MagnitudedAccelDt, MagnitudeAccel, Magnitude, TurbDirection;
+<span class="lineNum">     371 </span>            :   //double h;
+<span class="lineNum">     372 </span>            :   double TurbGain;
+<span class="lineNum">     373 </span>            :   double TurbRate;
+<span class="lineNum">     374 </span>            :   double Rhythmicity;
+<span class="lineNum">     375 </span>            :   double wind_from_clockwise;
+<span class="lineNum">     376 </span>            :   double spike, target_time, strength;
+<span class="lineNum">     377 </span>            :   FGColumnVector3 vTurbulenceGrad;
+<span class="lineNum">     378 </span>            :   FGColumnVector3 vBodyTurbGrad;
+<span class="lineNum">     379 </span>            :   FGColumnVector3 vTurbPQR;
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            :   struct OneMinusCosineGust oneMinusCosineGust;
+<span class="lineNum">     382 </span>            :   std::vector &lt;struct UpDownBurst*&gt; UpDownBurstCells;
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span>            :   // Dryden turbulence model
+<span class="lineNum">     385 </span>            :   double windspeed_at_20ft; ///&lt; in ft/s
+<span class="lineNum">     386 </span>            :   int probability_of_exceedence_index; ///&lt; this is bound as the severity property
+<span class="lineNum">     387 </span>            :   FGTable *POE_Table; ///&lt; probability of exceedence table
+<span class="lineNum">     388 </span>            : 
+<span class="lineNum">     389 </span>            :   double psiw;
+<span class="lineNum">     390 </span>            :   FGColumnVector3 vTotalWindNED;
+<span class="lineNum">     391 </span>            :   FGColumnVector3 vWindNED;
+<span class="lineNum">     392 </span>            :   FGColumnVector3 vGustNED;
+<span class="lineNum">     393 </span>            :   FGColumnVector3 vCosineGust;
+<span class="lineNum">     394 </span>            :   FGColumnVector3 vBurstGust;
+<span class="lineNum">     395 </span>            :   FGColumnVector3 vTurbulenceNED;
+<span class="lineNum">     396 </span>            : 
+<span class="lineNum">     397 </span>            :   void Turbulence(double h);
+<span class="lineNum">     398 </span>            :   void UpDownBurst();
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span>            :   void CosineGust();
+<span class="lineNum">     401 </span>            :   double CosineGustProfile( double startDuration, double steadyDuration,
+<span class="lineNum">     402 </span>            :                             double endDuration, double elapsedTime);
+<span class="lineNum">     403 </span>            :   double DistanceFromRingCenter(double lat, double lon);
+<span class="lineNum">     404 </span>            : 
+<span class="lineNum">     405 </span>            :   virtual void bind(void);
+<span class="lineNum">     406 </span>            :   void Debug(int from) override;
+<span class="lineNum">     407 </span>            : };
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span>            : } // namespace JSBSim
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     412 </span>            : #endif
+<span class="lineNum">     413 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

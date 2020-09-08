@@ -1,0 +1,5 @@
+<map id="SetTemperatureGradedDelta" name="SetTemperatureGradedDelta">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGStandardAtmosphere.html#ae1ec723136d5b58e3b3d4fcb966d0c12" title="Sets a Sea Level temperature delta that is ramped out by 86 km. " alt="" coords="241,56,445,83"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGStandardAtmosphere.html#a35789c83cd390c95759e43ac7814e228" title="Returns the temperature gradient to be applied on top of the standard temperature gradient..." alt="" coords="725,31,921,57"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGStandardAtmosphere.html#ae2ea4c880e365482c78e2b0579fd2922" title="Sets the vapor mass per million of dry air mass units. " alt="" coords="493,5,677,32"/>
+</map>

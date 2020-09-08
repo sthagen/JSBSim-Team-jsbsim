@@ -1,0 +1,6 @@
+<map id="GetLocalTerrainRadius" name="GetLocalTerrainRadius">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGPropagate.html#a269d067d10ad81cf2b04e951dc1af761" title="Retrieves the Euler angles (in degrees) that define the vehicle orientation. " alt="" coords="324,5,421,32"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGPropagate.html#a21e73db757464873633de46e50b9ac1b" title="Returns the current altitude rate. " alt="" coords="208,56,276,83"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGPropagate.html#a047e6db657595b4371db02dc26ecf823" title="Retrieves the Euler angles that define the vehicle orientation. " alt="" coords="469,5,543,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGOutputFG.html#ac139d3edf9cdfcdd83a3eba596995817" title="Evaluate the output directives from an XML file. " alt="" coords="591,23,744,65"/>
+</map>

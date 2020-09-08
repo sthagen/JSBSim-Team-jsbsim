@@ -1,0 +1,1713 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/simgear/xml/xmltok.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/simgear/xml</a> - xmltok.c<span style="font-size: 80%;"> (source / <a href="xmltok.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">470</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">37</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd</a>
+<span class="lineNum">       2 </span>            :    See the file COPYING for copying permission.
+<span class="lineNum">       3 </span>            : */
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : #include &lt;stddef.h&gt;
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : #ifdef COMPILED_FROM_DSP
+<span class="lineNum">       8 </span>            : #include &quot;winconfig.h&quot;
+<span class="lineNum">       9 </span>            : #elif defined(MACOS_CLASSIC)
+<span class="lineNum">      10 </span>            : #include &quot;macconfig.h&quot;
+<span class="lineNum">      11 </span>            : #else
+<span class="lineNum">      12 </span>            : #ifdef HAVE_EXPAT_CONFIG_H
+<span class="lineNum">      13 </span>            : #include &quot;expat_config.h&quot;
+<span class="lineNum">      14 </span>            : #endif
+<span class="lineNum">      15 </span>            : #endif /* ndef COMPILED_FROM_DSP */
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #include &quot;expat_external.h&quot;
+<span class="lineNum">      18 </span>            : #include &quot;internal.h&quot;
+<span class="lineNum">      19 </span>            : #include &quot;xmltok.h&quot;
+<span class="lineNum">      20 </span>            : #include &quot;nametab.h&quot;
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            : #ifdef XML_DTD
+<span class="lineNum">      23 </span>            : #define IGNORE_SECTION_TOK_VTABLE , PREFIX(ignoreSectionTok)
+<span class="lineNum">      24 </span>            : #else
+<span class="lineNum">      25 </span>            : #define IGNORE_SECTION_TOK_VTABLE /* as nothing */
+<span class="lineNum">      26 </span>            : #endif
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : #define VTABLE1 \
+<span class="lineNum">      29 </span>            :   { PREFIX(prologTok), PREFIX(contentTok), \
+<span class="lineNum">      30 </span>            :     PREFIX(cdataSectionTok) IGNORE_SECTION_TOK_VTABLE }, \
+<span class="lineNum">      31 </span>            :   { PREFIX(attributeValueTok), PREFIX(entityValueTok) }, \
+<span class="lineNum">      32 </span>            :   PREFIX(sameName), \
+<span class="lineNum">      33 </span>            :   PREFIX(nameMatchesAscii), \
+<span class="lineNum">      34 </span>            :   PREFIX(nameLength), \
+<span class="lineNum">      35 </span>            :   PREFIX(skipS), \
+<span class="lineNum">      36 </span>            :   PREFIX(getAtts), \
+<span class="lineNum">      37 </span>            :   PREFIX(charRefNumber), \
+<span class="lineNum">      38 </span>            :   PREFIX(predefinedEntityName), \
+<span class="lineNum">      39 </span>            :   PREFIX(updatePosition), \
+<span class="lineNum">      40 </span>            :   PREFIX(isPublicId)
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : #define VTABLE VTABLE1, PREFIX(toUtf8), PREFIX(toUtf16)
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : #define UCS2_GET_NAMING(pages, hi, lo) \
+<span class="lineNum">      45 </span>            :    (namingBitmap[(pages[hi] &lt;&lt; 3) + ((lo) &gt;&gt; 5)] &amp; (1 &lt;&lt; ((lo) &amp; 0x1F)))
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : /* A 2 byte UTF-8 representation splits the characters 11 bits between
+<span class="lineNum">      48 </span>            :    the bottom 5 and 6 bits of the bytes.  We need 8 bits to index into
+<span class="lineNum">      49 </span>            :    pages, 3 bits to add to that index and 5 bits to generate the mask.
+<span class="lineNum">      50 </span>            : */
+<span class="lineNum">      51 </span>            : #define UTF8_GET_NAMING2(pages, byte) \
+<span class="lineNum">      52 </span>            :     (namingBitmap[((pages)[(((byte)[0]) &gt;&gt; 2) &amp; 7] &lt;&lt; 3) \
+<span class="lineNum">      53 </span>            :                       + ((((byte)[0]) &amp; 3) &lt;&lt; 1) \
+<span class="lineNum">      54 </span>            :                       + ((((byte)[1]) &gt;&gt; 5) &amp; 1)] \
+<span class="lineNum">      55 </span>            :          &amp; (1 &lt;&lt; (((byte)[1]) &amp; 0x1F)))
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : /* A 3 byte UTF-8 representation splits the characters 16 bits between
+<span class="lineNum">      58 </span>            :    the bottom 4, 6 and 6 bits of the bytes.  We need 8 bits to index
+<span class="lineNum">      59 </span>            :    into pages, 3 bits to add to that index and 5 bits to generate the
+<span class="lineNum">      60 </span>            :    mask.
+<span class="lineNum">      61 </span>            : */
+<span class="lineNum">      62 </span>            : #define UTF8_GET_NAMING3(pages, byte) \
+<span class="lineNum">      63 </span>            :   (namingBitmap[((pages)[((((byte)[0]) &amp; 0xF) &lt;&lt; 4) \
+<span class="lineNum">      64 </span>            :                              + ((((byte)[1]) &gt;&gt; 2) &amp; 0xF)] \
+<span class="lineNum">      65 </span>            :                        &lt;&lt; 3) \
+<span class="lineNum">      66 </span>            :                       + ((((byte)[1]) &amp; 3) &lt;&lt; 1) \
+<span class="lineNum">      67 </span>            :                       + ((((byte)[2]) &gt;&gt; 5) &amp; 1)] \
+<span class="lineNum">      68 </span>            :          &amp; (1 &lt;&lt; (((byte)[2]) &amp; 0x1F)))
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            : #define UTF8_GET_NAMING(pages, p, n) \
+<span class="lineNum">      71 </span>            :   ((n) == 2 \
+<span class="lineNum">      72 </span>            :   ? UTF8_GET_NAMING2(pages, (const unsigned char *)(p)) \
+<span class="lineNum">      73 </span>            :   : ((n) == 3 \
+<span class="lineNum">      74 </span>            :      ? UTF8_GET_NAMING3(pages, (const unsigned char *)(p)) \
+<span class="lineNum">      75 </span>            :      : 0))
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : /* Detection of invalid UTF-8 sequences is based on Table 3.1B
+<span class="lineNum">      78 </span>            :    of Unicode 3.2: http://www.unicode.org/unicode/reports/tr28/
+<span class="lineNum">      79 </span>            :    with the additional restriction of not allowing the Unicode
+<span class="lineNum">      80 </span>            :    code points 0xFFFF and 0xFFFE (sequences EF,BF,BF and EF,BF,BE).
+<span class="lineNum">      81 </span>            :    Implementation details:
+<span class="lineNum">      82 </span>            :      (A &amp; 0x80) == 0     means A &lt; 0x80
+<span class="lineNum">      83 </span>            :    and
+<span class="lineNum">      84 </span>            :      (A &amp; 0xC0) == 0xC0  means A &gt; 0xBF
+<span class="lineNum">      85 </span>            : */
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            : #define UTF8_INVALID2(p) \
+<span class="lineNum">      88 </span>            :   ((*p) &lt; 0xC2 || ((p)[1] &amp; 0x80) == 0 || ((p)[1] &amp; 0xC0) == 0xC0)
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            : #define UTF8_INVALID3(p) \
+<span class="lineNum">      91 </span>            :   (((p)[2] &amp; 0x80) == 0 \
+<span class="lineNum">      92 </span>            :   || \
+<span class="lineNum">      93 </span>            :   ((*p) == 0xEF &amp;&amp; (p)[1] == 0xBF \
+<span class="lineNum">      94 </span>            :     ? \
+<span class="lineNum">      95 </span>            :     (p)[2] &gt; 0xBD \
+<span class="lineNum">      96 </span>            :     : \
+<span class="lineNum">      97 </span>            :     ((p)[2] &amp; 0xC0) == 0xC0) \
+<span class="lineNum">      98 </span>            :   || \
+<span class="lineNum">      99 </span>            :   ((*p) == 0xE0 \
+<span class="lineNum">     100 </span>            :     ? \
+<span class="lineNum">     101 </span>            :     (p)[1] &lt; 0xA0 || ((p)[1] &amp; 0xC0) == 0xC0 \
+<span class="lineNum">     102 </span>            :     : \
+<span class="lineNum">     103 </span>            :     ((p)[1] &amp; 0x80) == 0 \
+<span class="lineNum">     104 </span>            :     || \
+<span class="lineNum">     105 </span>            :     ((*p) == 0xED ? (p)[1] &gt; 0x9F : ((p)[1] &amp; 0xC0) == 0xC0)))
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            : #define UTF8_INVALID4(p) \
+<span class="lineNum">     108 </span>            :   (((p)[3] &amp; 0x80) == 0 || ((p)[3] &amp; 0xC0) == 0xC0 \
+<span class="lineNum">     109 </span>            :   || \
+<span class="lineNum">     110 </span>            :   ((p)[2] &amp; 0x80) == 0 || ((p)[2] &amp; 0xC0) == 0xC0 \
+<span class="lineNum">     111 </span>            :   || \
+<span class="lineNum">     112 </span>            :   ((*p) == 0xF0 \
+<span class="lineNum">     113 </span>            :     ? \
+<span class="lineNum">     114 </span>            :     (p)[1] &lt; 0x90 || ((p)[1] &amp; 0xC0) == 0xC0 \
+<span class="lineNum">     115 </span>            :     : \
+<span class="lineNum">     116 </span>            :     ((p)[1] &amp; 0x80) == 0 \
+<span class="lineNum">     117 </span>            :     || \
+<span class="lineNum">     118 </span>            :     ((*p) == 0xF4 ? (p)[1] &gt; 0x8F : ((p)[1] &amp; 0xC0) == 0xC0)))
+<a name="119"><span class="lineNum">     119 </span>            : </a>
+<span class="lineNum">     120 </span>            : static int PTRFASTCALL
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 : isNever(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     122 </span>            : {
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :   return 0;</span>
+<span class="lineNum">     124 </span>            : }
+<a name="125"><span class="lineNum">     125 </span>            : </a>
+<span class="lineNum">     126 </span>            : static int PTRFASTCALL
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 : utf8_isName2(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     128 </span>            : {
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :   return UTF8_GET_NAMING2(namePages, (const unsigned char *)p);</span>
+<span class="lineNum">     130 </span>            : }
+<a name="131"><span class="lineNum">     131 </span>            : </a>
+<span class="lineNum">     132 </span>            : static int PTRFASTCALL
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 : utf8_isName3(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     134 </span>            : {
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :   return UTF8_GET_NAMING3(namePages, (const unsigned char *)p);</span>
+<span class="lineNum">     136 </span>            : }
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            : #define utf8_isName4 isNever
+<a name="139"><span class="lineNum">     139 </span>            : </a>
+<span class="lineNum">     140 </span>            : static int PTRFASTCALL
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 : utf8_isNmstrt2(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     142 </span>            : {
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :   return UTF8_GET_NAMING2(nmstrtPages, (const unsigned char *)p);</span>
+<span class="lineNum">     144 </span>            : }
+<a name="145"><span class="lineNum">     145 </span>            : </a>
+<span class="lineNum">     146 </span>            : static int PTRFASTCALL
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 : utf8_isNmstrt3(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     148 </span>            : {
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :   return UTF8_GET_NAMING3(nmstrtPages, (const unsigned char *)p);</span>
+<span class="lineNum">     150 </span>            : }
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            : #define utf8_isNmstrt4 isNever
+<a name="153"><span class="lineNum">     153 </span>            : </a>
+<span class="lineNum">     154 </span>            : static int PTRFASTCALL
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 : utf8_isInvalid2(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     156 </span>            : {
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :   return UTF8_INVALID2((const unsigned char *)p);</span>
+<span class="lineNum">     158 </span>            : }
+<a name="159"><span class="lineNum">     159 </span>            : </a>
+<span class="lineNum">     160 </span>            : static int PTRFASTCALL
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 : utf8_isInvalid3(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     162 </span>            : {
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :   return UTF8_INVALID3((const unsigned char *)p);</span>
+<span class="lineNum">     164 </span>            : }
+<a name="165"><span class="lineNum">     165 </span>            : </a>
+<span class="lineNum">     166 </span>            : static int PTRFASTCALL
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 : utf8_isInvalid4(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">     168 </span>            : {
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :   return UTF8_INVALID4((const unsigned char *)p);</span>
+<span class="lineNum">     170 </span>            : }
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            : struct normal_encoding {
+<span class="lineNum">     173 </span>            :   ENCODING enc;
+<span class="lineNum">     174 </span>            :   unsigned char type[256];
+<span class="lineNum">     175 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     176 </span>            :   int (PTRFASTCALL *byteType)(const ENCODING *, const char *);
+<span class="lineNum">     177 </span>            :   int (PTRFASTCALL *isNameMin)(const ENCODING *, const char *);
+<span class="lineNum">     178 </span>            :   int (PTRFASTCALL *isNmstrtMin)(const ENCODING *, const char *);
+<span class="lineNum">     179 </span>            :   int (PTRFASTCALL *byteToAscii)(const ENCODING *, const char *);
+<span class="lineNum">     180 </span>            :   int (PTRCALL *charMatches)(const ENCODING *, const char *, int);
+<span class="lineNum">     181 </span>            : #endif /* XML_MIN_SIZE */
+<span class="lineNum">     182 </span>            :   int (PTRFASTCALL *isName2)(const ENCODING *, const char *);
+<span class="lineNum">     183 </span>            :   int (PTRFASTCALL *isName3)(const ENCODING *, const char *);
+<span class="lineNum">     184 </span>            :   int (PTRFASTCALL *isName4)(const ENCODING *, const char *);
+<span class="lineNum">     185 </span>            :   int (PTRFASTCALL *isNmstrt2)(const ENCODING *, const char *);
+<span class="lineNum">     186 </span>            :   int (PTRFASTCALL *isNmstrt3)(const ENCODING *, const char *);
+<span class="lineNum">     187 </span>            :   int (PTRFASTCALL *isNmstrt4)(const ENCODING *, const char *);
+<span class="lineNum">     188 </span>            :   int (PTRFASTCALL *isInvalid2)(const ENCODING *, const char *);
+<span class="lineNum">     189 </span>            :   int (PTRFASTCALL *isInvalid3)(const ENCODING *, const char *);
+<span class="lineNum">     190 </span>            :   int (PTRFASTCALL *isInvalid4)(const ENCODING *, const char *);
+<span class="lineNum">     191 </span>            : };
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span>            : #define AS_NORMAL_ENCODING(enc)   ((const struct normal_encoding *) (enc))
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            : #define STANDARD_VTABLE(E) \
+<span class="lineNum">     198 </span>            :  E ## byteType, \
+<span class="lineNum">     199 </span>            :  E ## isNameMin, \
+<span class="lineNum">     200 </span>            :  E ## isNmstrtMin, \
+<span class="lineNum">     201 </span>            :  E ## byteToAscii, \
+<span class="lineNum">     202 </span>            :  E ## charMatches,
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span>            : #else
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            : #define STANDARD_VTABLE(E) /* as nothing */
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            : #endif
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span>            : #define NORMAL_VTABLE(E) \
+<span class="lineNum">     211 </span>            :  E ## isName2, \
+<span class="lineNum">     212 </span>            :  E ## isName3, \
+<span class="lineNum">     213 </span>            :  E ## isName4, \
+<span class="lineNum">     214 </span>            :  E ## isNmstrt2, \
+<span class="lineNum">     215 </span>            :  E ## isNmstrt3, \
+<span class="lineNum">     216 </span>            :  E ## isNmstrt4, \
+<span class="lineNum">     217 </span>            :  E ## isInvalid2, \
+<span class="lineNum">     218 </span>            :  E ## isInvalid3, \
+<span class="lineNum">     219 </span>            :  E ## isInvalid4
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span>            : static int FASTCALL checkCharRefNumber(int);
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            : #include &quot;xmltok_impl.h&quot;
+<span class="lineNum">     224 </span>            : #include &quot;ascii.h&quot;
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     227 </span>            : #define sb_isNameMin isNever
+<span class="lineNum">     228 </span>            : #define sb_isNmstrtMin isNever
+<span class="lineNum">     229 </span>            : #endif
+<span class="lineNum">     230 </span>            : 
+<span class="lineNum">     231 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     232 </span>            : #define MINBPC(enc) ((enc)-&gt;minBytesPerChar)
+<span class="lineNum">     233 </span>            : #else
+<span class="lineNum">     234 </span>            : /* minimum bytes per character */
+<span class="lineNum">     235 </span>            : #define MINBPC(enc) 1
+<span class="lineNum">     236 </span>            : #endif
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            : #define SB_BYTE_TYPE(enc, p) \
+<span class="lineNum">     239 </span>            :   (((struct normal_encoding *)(enc))-&gt;type[(unsigned char)*(p)])
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     242 </span>            : static int PTRFASTCALL
+<span class="lineNum">     243 </span>            : sb_byteType(const ENCODING *enc, const char *p)
+<span class="lineNum">     244 </span>            : {
+<span class="lineNum">     245 </span>            :   return SB_BYTE_TYPE(enc, p);
+<span class="lineNum">     246 </span>            : }
+<span class="lineNum">     247 </span>            : #define BYTE_TYPE(enc, p) \
+<span class="lineNum">     248 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;byteType(enc, p))
+<span class="lineNum">     249 </span>            : #else
+<span class="lineNum">     250 </span>            : #define BYTE_TYPE(enc, p) SB_BYTE_TYPE(enc, p)
+<span class="lineNum">     251 </span>            : #endif
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     254 </span>            : #define BYTE_TO_ASCII(enc, p) \
+<span class="lineNum">     255 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;byteToAscii(enc, p))
+<span class="lineNum">     256 </span>            : static int PTRFASTCALL
+<span class="lineNum">     257 </span>            : sb_byteToAscii(const ENCODING *enc, const char *p)
+<span class="lineNum">     258 </span>            : {
+<span class="lineNum">     259 </span>            :   return *p;
+<span class="lineNum">     260 </span>            : }
+<span class="lineNum">     261 </span>            : #else
+<span class="lineNum">     262 </span>            : #define BYTE_TO_ASCII(enc, p) (*(p))
+<span class="lineNum">     263 </span>            : #endif
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            : #define IS_NAME_CHAR(enc, p, n) \
+<span class="lineNum">     266 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;isName ## n(enc, p))
+<span class="lineNum">     267 </span>            : #define IS_NMSTRT_CHAR(enc, p, n) \
+<span class="lineNum">     268 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;isNmstrt ## n(enc, p))
+<span class="lineNum">     269 </span>            : #define IS_INVALID_CHAR(enc, p, n) \
+<span class="lineNum">     270 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;isInvalid ## n(enc, p))
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     273 </span>            : #define IS_NAME_CHAR_MINBPC(enc, p) \
+<span class="lineNum">     274 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;isNameMin(enc, p))
+<span class="lineNum">     275 </span>            : #define IS_NMSTRT_CHAR_MINBPC(enc, p) \
+<span class="lineNum">     276 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;isNmstrtMin(enc, p))
+<span class="lineNum">     277 </span>            : #else
+<span class="lineNum">     278 </span>            : #define IS_NAME_CHAR_MINBPC(enc, p) (0)
+<span class="lineNum">     279 </span>            : #define IS_NMSTRT_CHAR_MINBPC(enc, p) (0)
+<span class="lineNum">     280 </span>            : #endif
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     283 </span>            : #define CHAR_MATCHES(enc, p, c) \
+<span class="lineNum">     284 </span>            :  (AS_NORMAL_ENCODING(enc)-&gt;charMatches(enc, p, c))
+<span class="lineNum">     285 </span>            : static int PTRCALL
+<span class="lineNum">     286 </span>            : sb_charMatches(const ENCODING *enc, const char *p, int c)
+<span class="lineNum">     287 </span>            : {
+<span class="lineNum">     288 </span>            :   return *p == c;
+<span class="lineNum">     289 </span>            : }
+<span class="lineNum">     290 </span>            : #else
+<span class="lineNum">     291 </span>            : /* c is an ASCII character */
+<span class="lineNum">     292 </span>            : #define CHAR_MATCHES(enc, p, c) (*(p) == c)
+<span class="lineNum">     293 </span>            : #endif
+<span class="lineNum">     294 </span>            : 
+<span class="lineNum">     295 </span>            : #define PREFIX(ident) normal_ ## ident
+<span class="lineNum">     296 </span>            : #include &quot;xmltok_impl.c&quot;
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span>            : #undef MINBPC
+<span class="lineNum">     299 </span>            : #undef BYTE_TYPE
+<span class="lineNum">     300 </span>            : #undef BYTE_TO_ASCII
+<span class="lineNum">     301 </span>            : #undef CHAR_MATCHES
+<span class="lineNum">     302 </span>            : #undef IS_NAME_CHAR
+<span class="lineNum">     303 </span>            : #undef IS_NAME_CHAR_MINBPC
+<span class="lineNum">     304 </span>            : #undef IS_NMSTRT_CHAR
+<span class="lineNum">     305 </span>            : #undef IS_NMSTRT_CHAR_MINBPC
+<span class="lineNum">     306 </span>            : #undef IS_INVALID_CHAR
+<span class="lineNum">     307 </span>            : 
+<span class="lineNum">     308 </span>            : enum {  /* UTF8_cvalN is value of masked first byte of N byte sequence */
+<span class="lineNum">     309 </span>            :   UTF8_cval1 = 0x00,
+<span class="lineNum">     310 </span>            :   UTF8_cval2 = 0xc0,
+<span class="lineNum">     311 </span>            :   UTF8_cval3 = 0xe0,
+<span class="lineNum">     312 </span>            :   UTF8_cval4 = 0xf0
+<span class="lineNum">     313 </span>            : };
+<a name="314"><span class="lineNum">     314 </span>            : </a>
+<span class="lineNum">     315 </span>            : static void PTRCALL
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 : utf8_toUtf8(const ENCODING *enc,</span>
+<span class="lineNum">     317 </span>            :             const char **fromP, const char *fromLim,
+<span class="lineNum">     318 </span>            :             char **toP, const char *toLim)
+<span class="lineNum">     319 </span>            : {
+<span class="lineNum">     320 </span>            :   char *to;
+<span class="lineNum">     321 </span>            :   const char *from;
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :   if (fromLim - *fromP &gt; toLim - *toP) {</span>
+<span class="lineNum">     323 </span>            :     /* Avoid copying partial characters. */
+<span class="lineNum">     324 </span><span class="lineNoCov">          0 :     for (fromLim = *fromP + (toLim - *toP); fromLim &gt; *fromP; fromLim--)</span>
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :       if (((unsigned char)fromLim[-1] &amp; 0xc0) != 0x80)</span>
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     327 </span>            :   }
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :   for (to = *toP, from = *fromP; from != fromLim; from++, to++)</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :     *to = *from;</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :   *fromP = from;</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :   *toP = to;</span>
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 : }</span>
+<a name="333"><span class="lineNum">     333 </span>            : </a>
+<span class="lineNum">     334 </span>            : static void PTRCALL
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 : utf8_toUtf16(const ENCODING *enc,</span>
+<span class="lineNum">     336 </span>            :              const char **fromP, const char *fromLim,
+<span class="lineNum">     337 </span>            :              unsigned short **toP, const unsigned short *toLim)
+<span class="lineNum">     338 </span>            : {
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :   unsigned short *to = *toP;</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   const char *from = *fromP;</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :   while (from != fromLim &amp;&amp; to != toLim) {</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :     switch (((struct normal_encoding *)enc)-&gt;type[(unsigned char)*from]) {</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :     case BT_LEAD2:</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :       *to++ = (unsigned short)(((from[0] &amp; 0x1f) &lt;&lt; 6) | (from[1] &amp; 0x3f));</span>
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :       from += 2;</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :     case BT_LEAD3:</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :       *to++ = (unsigned short)(((from[0] &amp; 0xf) &lt;&lt; 12)</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :                                | ((from[1] &amp; 0x3f) &lt;&lt; 6) | (from[2] &amp; 0x3f));</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :       from += 3;</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :     case BT_LEAD4:</span>
+<span class="lineNum">     353 </span>            :       {
+<span class="lineNum">     354 </span>            :         unsigned long n;
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :         if (to + 1 == toLim)</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :           goto after;</span>
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :         n = ((from[0] &amp; 0x7) &lt;&lt; 18) | ((from[1] &amp; 0x3f) &lt;&lt; 12)</span>
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :             | ((from[2] &amp; 0x3f) &lt;&lt; 6) | (from[3] &amp; 0x3f);</span>
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :         n -= 0x10000;</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :         to[0] = (unsigned short)((n &gt;&gt; 10) | 0xD800);</span>
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :         to[1] = (unsigned short)((n &amp; 0x3FF) | 0xDC00);</span>
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :         to += 2;</span>
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :         from += 4;</span>
+<span class="lineNum">     364 </span>            :       }
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :       *to++ = *from++;</span>
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     369 </span>            :     }
+<span class="lineNum">     370 </span>            :   }
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 : after:</span>
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :   *fromP = from;</span>
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :   *toP = to;</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     375 </span>            : 
+<span class="lineNum">     376 </span>            : #ifdef XML_NS
+<span class="lineNum">     377 </span>            : static const struct normal_encoding utf8_encoding_ns = {
+<span class="lineNum">     378 </span>            :   { VTABLE1, utf8_toUtf8, utf8_toUtf16, 1, 1, 0 },
+<span class="lineNum">     379 </span>            :   {
+<span class="lineNum">     380 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     381 </span>            : #include &quot;utf8tab.h&quot;
+<span class="lineNum">     382 </span>            :   },
+<span class="lineNum">     383 </span>            :   STANDARD_VTABLE(sb_) NORMAL_VTABLE(utf8_)
+<span class="lineNum">     384 </span>            : };
+<span class="lineNum">     385 </span>            : #endif
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span>            : static const struct normal_encoding utf8_encoding = {
+<span class="lineNum">     388 </span>            :   { VTABLE1, utf8_toUtf8, utf8_toUtf16, 1, 1, 0 },
+<span class="lineNum">     389 </span>            :   {
+<span class="lineNum">     390 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     391 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     392 </span>            : #undef BT_COLON
+<span class="lineNum">     393 </span>            : #include &quot;utf8tab.h&quot;
+<span class="lineNum">     394 </span>            :   },
+<span class="lineNum">     395 </span>            :   STANDARD_VTABLE(sb_) NORMAL_VTABLE(utf8_)
+<span class="lineNum">     396 </span>            : };
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span>            : #ifdef XML_NS
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span>            : static const struct normal_encoding internal_utf8_encoding_ns = {
+<span class="lineNum">     401 </span>            :   { VTABLE1, utf8_toUtf8, utf8_toUtf16, 1, 1, 0 },
+<span class="lineNum">     402 </span>            :   {
+<span class="lineNum">     403 </span>            : #include &quot;iasciitab.h&quot;
+<span class="lineNum">     404 </span>            : #include &quot;utf8tab.h&quot;
+<span class="lineNum">     405 </span>            :   },
+<span class="lineNum">     406 </span>            :   STANDARD_VTABLE(sb_) NORMAL_VTABLE(utf8_)
+<span class="lineNum">     407 </span>            : };
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span>            : #endif
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            : static const struct normal_encoding internal_utf8_encoding = {
+<span class="lineNum">     412 </span>            :   { VTABLE1, utf8_toUtf8, utf8_toUtf16, 1, 1, 0 },
+<span class="lineNum">     413 </span>            :   {
+<span class="lineNum">     414 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     415 </span>            : #include &quot;iasciitab.h&quot;
+<span class="lineNum">     416 </span>            : #undef BT_COLON
+<span class="lineNum">     417 </span>            : #include &quot;utf8tab.h&quot;
+<span class="lineNum">     418 </span>            :   },
+<span class="lineNum">     419 </span>            :   STANDARD_VTABLE(sb_) NORMAL_VTABLE(utf8_)
+<span class="lineNum">     420 </span>            : };
+<a name="421"><span class="lineNum">     421 </span>            : </a>
+<span class="lineNum">     422 </span>            : static void PTRCALL
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 : latin1_toUtf8(const ENCODING *enc,</span>
+<span class="lineNum">     424 </span>            :               const char **fromP, const char *fromLim,
+<span class="lineNum">     425 </span>            :               char **toP, const char *toLim)
+<span class="lineNum">     426 </span>            : {
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :   for (;;) {</span>
+<span class="lineNum">     428 </span>            :     unsigned char c;
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :     if (*fromP == fromLim)</span>
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :     c = (unsigned char)**fromP;</span>
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :     if (c &amp; 0x80) {</span>
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :       if (toLim - *toP &lt; 2)</span>
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :       *(*toP)++ = (char)((c &gt;&gt; 6) | UTF8_cval2);</span>
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :       *(*toP)++ = (char)((c &amp; 0x3f) | 0x80);</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :       (*fromP)++;</span>
+<span class="lineNum">     438 </span>            :     }
+<span class="lineNum">     439 </span>            :     else {
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :       if (*toP == toLim)</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :       *(*toP)++ = *(*fromP)++;</span>
+<span class="lineNum">     443 </span>            :     }
+<span class="lineNum">     444 </span>            :   }
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 : }</span>
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<span class="lineNum">     447 </span>            : static void PTRCALL
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 : latin1_toUtf16(const ENCODING *enc,</span>
+<span class="lineNum">     449 </span>            :                const char **fromP, const char *fromLim,
+<span class="lineNum">     450 </span>            :                unsigned short **toP, const unsigned short *toLim)
+<span class="lineNum">     451 </span>            : {
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 :   while (*fromP != fromLim &amp;&amp; *toP != toLim)</span>
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :     *(*toP)++ = (unsigned char)*(*fromP)++;</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     455 </span>            : 
+<span class="lineNum">     456 </span>            : #ifdef XML_NS
+<span class="lineNum">     457 </span>            : 
+<span class="lineNum">     458 </span>            : static const struct normal_encoding latin1_encoding_ns = {
+<span class="lineNum">     459 </span>            :   { VTABLE1, latin1_toUtf8, latin1_toUtf16, 1, 0, 0 },
+<span class="lineNum">     460 </span>            :   {
+<span class="lineNum">     461 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     462 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     463 </span>            :   },
+<span class="lineNum">     464 </span>            :   STANDARD_VTABLE(sb_)
+<span class="lineNum">     465 </span>            : };
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span>            : #endif
+<span class="lineNum">     468 </span>            : 
+<span class="lineNum">     469 </span>            : static const struct normal_encoding latin1_encoding = {
+<span class="lineNum">     470 </span>            :   { VTABLE1, latin1_toUtf8, latin1_toUtf16, 1, 0, 0 },
+<span class="lineNum">     471 </span>            :   {
+<span class="lineNum">     472 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     473 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     474 </span>            : #undef BT_COLON
+<span class="lineNum">     475 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     476 </span>            :   },
+<span class="lineNum">     477 </span>            :   STANDARD_VTABLE(sb_)
+<span class="lineNum">     478 </span>            : };
+<a name="479"><span class="lineNum">     479 </span>            : </a>
+<span class="lineNum">     480 </span>            : static void PTRCALL
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 : ascii_toUtf8(const ENCODING *enc,</span>
+<span class="lineNum">     482 </span>            :              const char **fromP, const char *fromLim,
+<span class="lineNum">     483 </span>            :              char **toP, const char *toLim)
+<span class="lineNum">     484 </span>            : {
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :   while (*fromP != fromLim &amp;&amp; *toP != toLim)</span>
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :     *(*toP)++ = *(*fromP)++;</span>
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     488 </span>            : 
+<span class="lineNum">     489 </span>            : #ifdef XML_NS
+<span class="lineNum">     490 </span>            : 
+<span class="lineNum">     491 </span>            : static const struct normal_encoding ascii_encoding_ns = {
+<span class="lineNum">     492 </span>            :   { VTABLE1, ascii_toUtf8, latin1_toUtf16, 1, 1, 0 },
+<span class="lineNum">     493 </span>            :   {
+<span class="lineNum">     494 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     495 </span>            : /* BT_NONXML == 0 */
+<span class="lineNum">     496 </span>            :   },
+<span class="lineNum">     497 </span>            :   STANDARD_VTABLE(sb_)
+<span class="lineNum">     498 </span>            : };
+<span class="lineNum">     499 </span>            : 
+<span class="lineNum">     500 </span>            : #endif
+<span class="lineNum">     501 </span>            : 
+<span class="lineNum">     502 </span>            : static const struct normal_encoding ascii_encoding = {
+<span class="lineNum">     503 </span>            :   { VTABLE1, ascii_toUtf8, latin1_toUtf16, 1, 1, 0 },
+<span class="lineNum">     504 </span>            :   {
+<span class="lineNum">     505 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     506 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     507 </span>            : #undef BT_COLON
+<span class="lineNum">     508 </span>            : /* BT_NONXML == 0 */
+<span class="lineNum">     509 </span>            :   },
+<span class="lineNum">     510 </span>            :   STANDARD_VTABLE(sb_)
+<span class="lineNum">     511 </span>            : };
+<a name="512"><span class="lineNum">     512 </span>            : </a>
+<span class="lineNum">     513 </span>            : static int PTRFASTCALL
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 : unicode_byte_type(char hi, char lo)</span>
+<span class="lineNum">     515 </span>            : {
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :   switch ((unsigned char)hi) {</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :   case 0xD8: case 0xD9: case 0xDA: case 0xDB:</span>
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :     return BT_LEAD4;</span>
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :   case 0xDC: case 0xDD: case 0xDE: case 0xDF:</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :     return BT_TRAIL;</span>
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :   case 0xFF:</span>
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :     switch ((unsigned char)lo) {</span>
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :     case 0xFF:</span>
+<span class="lineNum">     524 </span>            :     case 0xFE:
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :       return BT_NONXML;</span>
+<span class="lineNum">     526 </span>            :     }
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">     528 </span>            :   }
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :   return BT_NONASCII;</span>
+<span class="lineNum">     530 </span>            : }
+<span class="lineNum">     531 </span>            : 
+<span class="lineNum">     532 </span>            : #define DEFINE_UTF16_TO_UTF8(E) \
+<span class="lineNum">     533 </span>            : static void  PTRCALL \
+<span class="lineNum">     534 </span>            : E ## toUtf8(const ENCODING *enc, \
+<span class="lineNum">     535 </span>            :             const char **fromP, const char *fromLim, \
+<span class="lineNum">     536 </span>            :             char **toP, const char *toLim) \
+<span class="lineNum">     537 </span>            : { \
+<span class="lineNum">     538 </span>            :   const char *from; \
+<span class="lineNum">     539 </span>            :   for (from = *fromP; from != fromLim; from += 2) { \
+<span class="lineNum">     540 </span>            :     int plane; \
+<span class="lineNum">     541 </span>            :     unsigned char lo2; \
+<span class="lineNum">     542 </span>            :     unsigned char lo = GET_LO(from); \
+<span class="lineNum">     543 </span>            :     unsigned char hi = GET_HI(from); \
+<span class="lineNum">     544 </span>            :     switch (hi) { \
+<span class="lineNum">     545 </span>            :     case 0: \
+<span class="lineNum">     546 </span>            :       if (lo &lt; 0x80) { \
+<span class="lineNum">     547 </span>            :         if (*toP == toLim) { \
+<span class="lineNum">     548 </span>            :           *fromP = from; \
+<span class="lineNum">     549 </span>            :           return; \
+<span class="lineNum">     550 </span>            :         } \
+<span class="lineNum">     551 </span>            :         *(*toP)++ = lo; \
+<span class="lineNum">     552 </span>            :         break; \
+<span class="lineNum">     553 </span>            :       } \
+<span class="lineNum">     554 </span>            :       /* fall through */ \
+<span class="lineNum">     555 </span>            :     case 0x1: case 0x2: case 0x3: \
+<span class="lineNum">     556 </span>            :     case 0x4: case 0x5: case 0x6: case 0x7: \
+<span class="lineNum">     557 </span>            :       if (toLim -  *toP &lt; 2) { \
+<span class="lineNum">     558 </span>            :         *fromP = from; \
+<span class="lineNum">     559 </span>            :         return; \
+<span class="lineNum">     560 </span>            :       } \
+<span class="lineNum">     561 </span>            :       *(*toP)++ = ((lo &gt;&gt; 6) | (hi &lt;&lt; 2) |  UTF8_cval2); \
+<span class="lineNum">     562 </span>            :       *(*toP)++ = ((lo &amp; 0x3f) | 0x80); \
+<span class="lineNum">     563 </span>            :       break; \
+<span class="lineNum">     564 </span>            :     default: \
+<span class="lineNum">     565 </span>            :       if (toLim -  *toP &lt; 3)  { \
+<span class="lineNum">     566 </span>            :         *fromP = from; \
+<span class="lineNum">     567 </span>            :         return; \
+<span class="lineNum">     568 </span>            :       } \
+<span class="lineNum">     569 </span>            :       /* 16 bits divided 4, 6, 6 amongst 3 bytes */ \
+<span class="lineNum">     570 </span>            :       *(*toP)++ = ((hi &gt;&gt; 4) | UTF8_cval3); \
+<span class="lineNum">     571 </span>            :       *(*toP)++ = (((hi &amp; 0xf) &lt;&lt; 2) | (lo &gt;&gt; 6) | 0x80); \
+<span class="lineNum">     572 </span>            :       *(*toP)++ = ((lo &amp; 0x3f) | 0x80); \
+<span class="lineNum">     573 </span>            :       break; \
+<span class="lineNum">     574 </span>            :     case 0xD8: case 0xD9: case 0xDA: case 0xDB: \
+<span class="lineNum">     575 </span>            :       if (toLim -  *toP &lt; 4) { \
+<span class="lineNum">     576 </span>            :         *fromP = from; \
+<span class="lineNum">     577 </span>            :         return; \
+<span class="lineNum">     578 </span>            :       } \
+<span class="lineNum">     579 </span>            :       plane = (((hi &amp; 0x3) &lt;&lt; 2) | ((lo &gt;&gt; 6) &amp; 0x3)) + 1; \
+<span class="lineNum">     580 </span>            :       *(*toP)++ = ((plane &gt;&gt; 2) | UTF8_cval4); \
+<span class="lineNum">     581 </span>            :       *(*toP)++ = (((lo &gt;&gt; 2) &amp; 0xF) | ((plane &amp; 0x3) &lt;&lt; 4) | 0x80); \
+<span class="lineNum">     582 </span>            :       from += 2; \
+<span class="lineNum">     583 </span>            :       lo2 = GET_LO(from); \
+<span class="lineNum">     584 </span>            :       *(*toP)++ = (((lo &amp; 0x3) &lt;&lt; 4) \
+<span class="lineNum">     585 </span>            :                    | ((GET_HI(from) &amp; 0x3) &lt;&lt; 2) \
+<span class="lineNum">     586 </span>            :                    | (lo2 &gt;&gt; 6) \
+<span class="lineNum">     587 </span>            :                    | 0x80); \
+<span class="lineNum">     588 </span>            :       *(*toP)++ = ((lo2 &amp; 0x3f) | 0x80); \
+<span class="lineNum">     589 </span>            :       break; \
+<span class="lineNum">     590 </span>            :     } \
+<span class="lineNum">     591 </span>            :   } \
+<span class="lineNum">     592 </span>            :   *fromP = from; \
+<span class="lineNum">     593 </span>            : }
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span>            : #define DEFINE_UTF16_TO_UTF16(E) \
+<span class="lineNum">     596 </span>            : static void  PTRCALL \
+<span class="lineNum">     597 </span>            : E ## toUtf16(const ENCODING *enc, \
+<span class="lineNum">     598 </span>            :              const char **fromP, const char *fromLim, \
+<span class="lineNum">     599 </span>            :              unsigned short **toP, const unsigned short *toLim) \
+<span class="lineNum">     600 </span>            : { \
+<span class="lineNum">     601 </span>            :   /* Avoid copying first half only of surrogate */ \
+<span class="lineNum">     602 </span>            :   if (fromLim - *fromP &gt; ((toLim - *toP) &lt;&lt; 1) \
+<span class="lineNum">     603 </span>            :       &amp;&amp; (GET_HI(fromLim - 2) &amp; 0xF8) == 0xD8) \
+<span class="lineNum">     604 </span>            :     fromLim -= 2; \
+<span class="lineNum">     605 </span>            :   for (; *fromP != fromLim &amp;&amp; *toP != toLim; *fromP += 2) \
+<span class="lineNum">     606 </span>            :     *(*toP)++ = (GET_HI(*fromP) &lt;&lt; 8) | GET_LO(*fromP); \
+<span class="lineNum">     607 </span>            : }
+<span class="lineNum">     608 </span>            : 
+<span class="lineNum">     609 </span>            : #define SET2(ptr, ch) \
+<span class="lineNum">     610 </span>            :   (((ptr)[0] = ((ch) &amp; 0xff)), ((ptr)[1] = ((ch) &gt;&gt; 8)))
+<span class="lineNum">     611 </span>            : #define GET_LO(ptr) ((unsigned char)(ptr)[0])
+<a name="612"><span class="lineNum">     612 </span>            : #define GET_HI(ptr) ((unsigned char)(ptr)[1])</a>
+<a name="613"><span class="lineNum">     613 </span>            : </a>
+<span class="lineNum">     614 </span><span class="lineNoCov">          0 : DEFINE_UTF16_TO_UTF8(little2_)</span>
+<span class="lineNum">     615 </span><span class="lineNoCov">          0 : DEFINE_UTF16_TO_UTF16(little2_)</span>
+<span class="lineNum">     616 </span>            : 
+<span class="lineNum">     617 </span>            : #undef SET2
+<span class="lineNum">     618 </span>            : #undef GET_LO
+<span class="lineNum">     619 </span>            : #undef GET_HI
+<span class="lineNum">     620 </span>            : 
+<span class="lineNum">     621 </span>            : #define SET2(ptr, ch) \
+<span class="lineNum">     622 </span>            :   (((ptr)[0] = ((ch) &gt;&gt; 8)), ((ptr)[1] = ((ch) &amp; 0xFF)))
+<span class="lineNum">     623 </span>            : #define GET_LO(ptr) ((unsigned char)(ptr)[1])
+<a name="624"><span class="lineNum">     624 </span>            : #define GET_HI(ptr) ((unsigned char)(ptr)[0])</a>
+<a name="625"><span class="lineNum">     625 </span>            : </a>
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 : DEFINE_UTF16_TO_UTF8(big2_)</span>
+<span class="lineNum">     627 </span><span class="lineNoCov">          0 : DEFINE_UTF16_TO_UTF16(big2_)</span>
+<span class="lineNum">     628 </span>            : 
+<span class="lineNum">     629 </span>            : #undef SET2
+<span class="lineNum">     630 </span>            : #undef GET_LO
+<span class="lineNum">     631 </span>            : #undef GET_HI
+<span class="lineNum">     632 </span>            : 
+<span class="lineNum">     633 </span>            : #define LITTLE2_BYTE_TYPE(enc, p) \
+<span class="lineNum">     634 </span>            :  ((p)[1] == 0 \
+<span class="lineNum">     635 </span>            :   ? ((struct normal_encoding *)(enc))-&gt;type[(unsigned char)*(p)] \
+<span class="lineNum">     636 </span>            :   : unicode_byte_type((p)[1], (p)[0]))
+<span class="lineNum">     637 </span>            : #define LITTLE2_BYTE_TO_ASCII(enc, p) ((p)[1] == 0 ? (p)[0] : -1)
+<span class="lineNum">     638 </span>            : #define LITTLE2_CHAR_MATCHES(enc, p, c) ((p)[1] == 0 &amp;&amp; (p)[0] == c)
+<span class="lineNum">     639 </span>            : #define LITTLE2_IS_NAME_CHAR_MINBPC(enc, p) \
+<span class="lineNum">     640 </span>            :   UCS2_GET_NAMING(namePages, (unsigned char)p[1], (unsigned char)p[0])
+<span class="lineNum">     641 </span>            : #define LITTLE2_IS_NMSTRT_CHAR_MINBPC(enc, p) \
+<span class="lineNum">     642 </span>            :   UCS2_GET_NAMING(nmstrtPages, (unsigned char)p[1], (unsigned char)p[0])
+<span class="lineNum">     643 </span>            : 
+<span class="lineNum">     644 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     645 </span>            : 
+<span class="lineNum">     646 </span>            : static int PTRFASTCALL
+<span class="lineNum">     647 </span>            : little2_byteType(const ENCODING *enc, const char *p)
+<span class="lineNum">     648 </span>            : {
+<span class="lineNum">     649 </span>            :   return LITTLE2_BYTE_TYPE(enc, p);
+<span class="lineNum">     650 </span>            : }
+<span class="lineNum">     651 </span>            : 
+<span class="lineNum">     652 </span>            : static int PTRFASTCALL
+<span class="lineNum">     653 </span>            : little2_byteToAscii(const ENCODING *enc, const char *p)
+<span class="lineNum">     654 </span>            : {
+<span class="lineNum">     655 </span>            :   return LITTLE2_BYTE_TO_ASCII(enc, p);
+<span class="lineNum">     656 </span>            : }
+<span class="lineNum">     657 </span>            : 
+<span class="lineNum">     658 </span>            : static int PTRCALL
+<span class="lineNum">     659 </span>            : little2_charMatches(const ENCODING *enc, const char *p, int c)
+<span class="lineNum">     660 </span>            : {
+<span class="lineNum">     661 </span>            :   return LITTLE2_CHAR_MATCHES(enc, p, c);
+<span class="lineNum">     662 </span>            : }
+<span class="lineNum">     663 </span>            : 
+<span class="lineNum">     664 </span>            : static int PTRFASTCALL
+<span class="lineNum">     665 </span>            : little2_isNameMin(const ENCODING *enc, const char *p)
+<span class="lineNum">     666 </span>            : {
+<span class="lineNum">     667 </span>            :   return LITTLE2_IS_NAME_CHAR_MINBPC(enc, p);
+<span class="lineNum">     668 </span>            : }
+<span class="lineNum">     669 </span>            : 
+<span class="lineNum">     670 </span>            : static int PTRFASTCALL
+<span class="lineNum">     671 </span>            : little2_isNmstrtMin(const ENCODING *enc, const char *p)
+<span class="lineNum">     672 </span>            : {
+<span class="lineNum">     673 </span>            :   return LITTLE2_IS_NMSTRT_CHAR_MINBPC(enc, p);
+<span class="lineNum">     674 </span>            : }
+<span class="lineNum">     675 </span>            : 
+<span class="lineNum">     676 </span>            : #undef VTABLE
+<span class="lineNum">     677 </span>            : #define VTABLE VTABLE1, little2_toUtf8, little2_toUtf16
+<span class="lineNum">     678 </span>            : 
+<span class="lineNum">     679 </span>            : #else /* not XML_MIN_SIZE */
+<span class="lineNum">     680 </span>            : 
+<span class="lineNum">     681 </span>            : #undef PREFIX
+<span class="lineNum">     682 </span>            : #define PREFIX(ident) little2_ ## ident
+<span class="lineNum">     683 </span>            : #define MINBPC(enc) 2
+<span class="lineNum">     684 </span>            : /* CHAR_MATCHES is guaranteed to have MINBPC bytes available. */
+<span class="lineNum">     685 </span>            : #define BYTE_TYPE(enc, p) LITTLE2_BYTE_TYPE(enc, p)
+<span class="lineNum">     686 </span>            : #define BYTE_TO_ASCII(enc, p) LITTLE2_BYTE_TO_ASCII(enc, p)
+<span class="lineNum">     687 </span>            : #define CHAR_MATCHES(enc, p, c) LITTLE2_CHAR_MATCHES(enc, p, c)
+<span class="lineNum">     688 </span>            : #define IS_NAME_CHAR(enc, p, n) 0
+<span class="lineNum">     689 </span>            : #define IS_NAME_CHAR_MINBPC(enc, p) LITTLE2_IS_NAME_CHAR_MINBPC(enc, p)
+<span class="lineNum">     690 </span>            : #define IS_NMSTRT_CHAR(enc, p, n) (0)
+<span class="lineNum">     691 </span>            : #define IS_NMSTRT_CHAR_MINBPC(enc, p) LITTLE2_IS_NMSTRT_CHAR_MINBPC(enc, p)
+<span class="lineNum">     692 </span>            : 
+<span class="lineNum">     693 </span>            : #include &quot;xmltok_impl.c&quot;
+<span class="lineNum">     694 </span>            : 
+<span class="lineNum">     695 </span>            : #undef MINBPC
+<span class="lineNum">     696 </span>            : #undef BYTE_TYPE
+<span class="lineNum">     697 </span>            : #undef BYTE_TO_ASCII
+<span class="lineNum">     698 </span>            : #undef CHAR_MATCHES
+<span class="lineNum">     699 </span>            : #undef IS_NAME_CHAR
+<span class="lineNum">     700 </span>            : #undef IS_NAME_CHAR_MINBPC
+<span class="lineNum">     701 </span>            : #undef IS_NMSTRT_CHAR
+<span class="lineNum">     702 </span>            : #undef IS_NMSTRT_CHAR_MINBPC
+<span class="lineNum">     703 </span>            : #undef IS_INVALID_CHAR
+<span class="lineNum">     704 </span>            : 
+<span class="lineNum">     705 </span>            : #endif /* not XML_MIN_SIZE */
+<span class="lineNum">     706 </span>            : 
+<span class="lineNum">     707 </span>            : #ifdef XML_NS
+<span class="lineNum">     708 </span>            : 
+<span class="lineNum">     709 </span>            : static const struct normal_encoding little2_encoding_ns = {
+<span class="lineNum">     710 </span>            :   { VTABLE, 2, 0,
+<span class="lineNum">     711 </span>            : #if BYTEORDER == 1234
+<span class="lineNum">     712 </span>            :     1
+<span class="lineNum">     713 </span>            : #else
+<span class="lineNum">     714 </span>            :     0
+<span class="lineNum">     715 </span>            : #endif
+<span class="lineNum">     716 </span>            :   },
+<span class="lineNum">     717 </span>            :   {
+<span class="lineNum">     718 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     719 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     720 </span>            :   },
+<span class="lineNum">     721 </span>            :   STANDARD_VTABLE(little2_)
+<span class="lineNum">     722 </span>            : };
+<span class="lineNum">     723 </span>            : 
+<span class="lineNum">     724 </span>            : #endif
+<span class="lineNum">     725 </span>            : 
+<span class="lineNum">     726 </span>            : static const struct normal_encoding little2_encoding = {
+<span class="lineNum">     727 </span>            :   { VTABLE, 2, 0,
+<span class="lineNum">     728 </span>            : #if BYTEORDER == 1234
+<span class="lineNum">     729 </span>            :     1
+<span class="lineNum">     730 </span>            : #else
+<span class="lineNum">     731 </span>            :     0
+<span class="lineNum">     732 </span>            : #endif
+<span class="lineNum">     733 </span>            :   },
+<span class="lineNum">     734 </span>            :   {
+<span class="lineNum">     735 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     736 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     737 </span>            : #undef BT_COLON
+<span class="lineNum">     738 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     739 </span>            :   },
+<span class="lineNum">     740 </span>            :   STANDARD_VTABLE(little2_)
+<span class="lineNum">     741 </span>            : };
+<span class="lineNum">     742 </span>            : 
+<span class="lineNum">     743 </span>            : #if BYTEORDER != 4321
+<span class="lineNum">     744 </span>            : 
+<span class="lineNum">     745 </span>            : #ifdef XML_NS
+<span class="lineNum">     746 </span>            : 
+<span class="lineNum">     747 </span>            : static const struct normal_encoding internal_little2_encoding_ns = {
+<span class="lineNum">     748 </span>            :   { VTABLE, 2, 0, 1 },
+<span class="lineNum">     749 </span>            :   {
+<span class="lineNum">     750 </span>            : #include &quot;iasciitab.h&quot;
+<span class="lineNum">     751 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     752 </span>            :   },
+<span class="lineNum">     753 </span>            :   STANDARD_VTABLE(little2_)
+<span class="lineNum">     754 </span>            : };
+<span class="lineNum">     755 </span>            : 
+<span class="lineNum">     756 </span>            : #endif
+<span class="lineNum">     757 </span>            : 
+<span class="lineNum">     758 </span>            : static const struct normal_encoding internal_little2_encoding = {
+<span class="lineNum">     759 </span>            :   { VTABLE, 2, 0, 1 },
+<span class="lineNum">     760 </span>            :   {
+<span class="lineNum">     761 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     762 </span>            : #include &quot;iasciitab.h&quot;
+<span class="lineNum">     763 </span>            : #undef BT_COLON
+<span class="lineNum">     764 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     765 </span>            :   },
+<span class="lineNum">     766 </span>            :   STANDARD_VTABLE(little2_)
+<span class="lineNum">     767 </span>            : };
+<span class="lineNum">     768 </span>            : 
+<span class="lineNum">     769 </span>            : #endif
+<span class="lineNum">     770 </span>            : 
+<span class="lineNum">     771 </span>            : 
+<span class="lineNum">     772 </span>            : #define BIG2_BYTE_TYPE(enc, p) \
+<span class="lineNum">     773 </span>            :  ((p)[0] == 0 \
+<span class="lineNum">     774 </span>            :   ? ((struct normal_encoding *)(enc))-&gt;type[(unsigned char)(p)[1]] \
+<span class="lineNum">     775 </span>            :   : unicode_byte_type((p)[0], (p)[1]))
+<span class="lineNum">     776 </span>            : #define BIG2_BYTE_TO_ASCII(enc, p) ((p)[0] == 0 ? (p)[1] : -1)
+<span class="lineNum">     777 </span>            : #define BIG2_CHAR_MATCHES(enc, p, c) ((p)[0] == 0 &amp;&amp; (p)[1] == c)
+<span class="lineNum">     778 </span>            : #define BIG2_IS_NAME_CHAR_MINBPC(enc, p) \
+<span class="lineNum">     779 </span>            :   UCS2_GET_NAMING(namePages, (unsigned char)p[0], (unsigned char)p[1])
+<span class="lineNum">     780 </span>            : #define BIG2_IS_NMSTRT_CHAR_MINBPC(enc, p) \
+<span class="lineNum">     781 </span>            :   UCS2_GET_NAMING(nmstrtPages, (unsigned char)p[0], (unsigned char)p[1])
+<span class="lineNum">     782 </span>            : 
+<span class="lineNum">     783 </span>            : #ifdef XML_MIN_SIZE
+<span class="lineNum">     784 </span>            : 
+<span class="lineNum">     785 </span>            : static int PTRFASTCALL
+<span class="lineNum">     786 </span>            : big2_byteType(const ENCODING *enc, const char *p)
+<span class="lineNum">     787 </span>            : {
+<span class="lineNum">     788 </span>            :   return BIG2_BYTE_TYPE(enc, p);
+<span class="lineNum">     789 </span>            : }
+<span class="lineNum">     790 </span>            : 
+<span class="lineNum">     791 </span>            : static int PTRFASTCALL
+<span class="lineNum">     792 </span>            : big2_byteToAscii(const ENCODING *enc, const char *p)
+<span class="lineNum">     793 </span>            : {
+<span class="lineNum">     794 </span>            :   return BIG2_BYTE_TO_ASCII(enc, p);
+<span class="lineNum">     795 </span>            : }
+<span class="lineNum">     796 </span>            : 
+<span class="lineNum">     797 </span>            : static int PTRCALL
+<span class="lineNum">     798 </span>            : big2_charMatches(const ENCODING *enc, const char *p, int c)
+<span class="lineNum">     799 </span>            : {
+<span class="lineNum">     800 </span>            :   return BIG2_CHAR_MATCHES(enc, p, c);
+<span class="lineNum">     801 </span>            : }
+<span class="lineNum">     802 </span>            : 
+<span class="lineNum">     803 </span>            : static int PTRFASTCALL
+<span class="lineNum">     804 </span>            : big2_isNameMin(const ENCODING *enc, const char *p)
+<span class="lineNum">     805 </span>            : {
+<span class="lineNum">     806 </span>            :   return BIG2_IS_NAME_CHAR_MINBPC(enc, p);
+<span class="lineNum">     807 </span>            : }
+<span class="lineNum">     808 </span>            : 
+<span class="lineNum">     809 </span>            : static int PTRFASTCALL
+<span class="lineNum">     810 </span>            : big2_isNmstrtMin(const ENCODING *enc, const char *p)
+<span class="lineNum">     811 </span>            : {
+<span class="lineNum">     812 </span>            :   return BIG2_IS_NMSTRT_CHAR_MINBPC(enc, p);
+<span class="lineNum">     813 </span>            : }
+<span class="lineNum">     814 </span>            : 
+<span class="lineNum">     815 </span>            : #undef VTABLE
+<span class="lineNum">     816 </span>            : #define VTABLE VTABLE1, big2_toUtf8, big2_toUtf16
+<span class="lineNum">     817 </span>            : 
+<span class="lineNum">     818 </span>            : #else /* not XML_MIN_SIZE */
+<span class="lineNum">     819 </span>            : 
+<span class="lineNum">     820 </span>            : #undef PREFIX
+<span class="lineNum">     821 </span>            : #define PREFIX(ident) big2_ ## ident
+<span class="lineNum">     822 </span>            : #define MINBPC(enc) 2
+<span class="lineNum">     823 </span>            : /* CHAR_MATCHES is guaranteed to have MINBPC bytes available. */
+<span class="lineNum">     824 </span>            : #define BYTE_TYPE(enc, p) BIG2_BYTE_TYPE(enc, p)
+<span class="lineNum">     825 </span>            : #define BYTE_TO_ASCII(enc, p) BIG2_BYTE_TO_ASCII(enc, p)
+<span class="lineNum">     826 </span>            : #define CHAR_MATCHES(enc, p, c) BIG2_CHAR_MATCHES(enc, p, c)
+<span class="lineNum">     827 </span>            : #define IS_NAME_CHAR(enc, p, n) 0
+<span class="lineNum">     828 </span>            : #define IS_NAME_CHAR_MINBPC(enc, p) BIG2_IS_NAME_CHAR_MINBPC(enc, p)
+<span class="lineNum">     829 </span>            : #define IS_NMSTRT_CHAR(enc, p, n) (0)
+<span class="lineNum">     830 </span>            : #define IS_NMSTRT_CHAR_MINBPC(enc, p) BIG2_IS_NMSTRT_CHAR_MINBPC(enc, p)
+<span class="lineNum">     831 </span>            : 
+<span class="lineNum">     832 </span>            : #include &quot;xmltok_impl.c&quot;
+<span class="lineNum">     833 </span>            : 
+<span class="lineNum">     834 </span>            : #undef MINBPC
+<span class="lineNum">     835 </span>            : #undef BYTE_TYPE
+<span class="lineNum">     836 </span>            : #undef BYTE_TO_ASCII
+<span class="lineNum">     837 </span>            : #undef CHAR_MATCHES
+<span class="lineNum">     838 </span>            : #undef IS_NAME_CHAR
+<span class="lineNum">     839 </span>            : #undef IS_NAME_CHAR_MINBPC
+<span class="lineNum">     840 </span>            : #undef IS_NMSTRT_CHAR
+<span class="lineNum">     841 </span>            : #undef IS_NMSTRT_CHAR_MINBPC
+<span class="lineNum">     842 </span>            : #undef IS_INVALID_CHAR
+<span class="lineNum">     843 </span>            : 
+<span class="lineNum">     844 </span>            : #endif /* not XML_MIN_SIZE */
+<span class="lineNum">     845 </span>            : 
+<span class="lineNum">     846 </span>            : #ifdef XML_NS
+<span class="lineNum">     847 </span>            : 
+<span class="lineNum">     848 </span>            : static const struct normal_encoding big2_encoding_ns = {
+<span class="lineNum">     849 </span>            :   { VTABLE, 2, 0,
+<span class="lineNum">     850 </span>            : #if BYTEORDER == 4321
+<span class="lineNum">     851 </span>            :   1
+<span class="lineNum">     852 </span>            : #else
+<span class="lineNum">     853 </span>            :   0
+<span class="lineNum">     854 </span>            : #endif
+<span class="lineNum">     855 </span>            :   },
+<span class="lineNum">     856 </span>            :   {
+<span class="lineNum">     857 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     858 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     859 </span>            :   },
+<span class="lineNum">     860 </span>            :   STANDARD_VTABLE(big2_)
+<span class="lineNum">     861 </span>            : };
+<span class="lineNum">     862 </span>            : 
+<span class="lineNum">     863 </span>            : #endif
+<span class="lineNum">     864 </span>            : 
+<span class="lineNum">     865 </span>            : static const struct normal_encoding big2_encoding = {
+<span class="lineNum">     866 </span>            :   { VTABLE, 2, 0,
+<span class="lineNum">     867 </span>            : #if BYTEORDER == 4321
+<span class="lineNum">     868 </span>            :   1
+<span class="lineNum">     869 </span>            : #else
+<span class="lineNum">     870 </span>            :   0
+<span class="lineNum">     871 </span>            : #endif
+<span class="lineNum">     872 </span>            :   },
+<span class="lineNum">     873 </span>            :   {
+<span class="lineNum">     874 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     875 </span>            : #include &quot;asciitab.h&quot;
+<span class="lineNum">     876 </span>            : #undef BT_COLON
+<span class="lineNum">     877 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     878 </span>            :   },
+<span class="lineNum">     879 </span>            :   STANDARD_VTABLE(big2_)
+<span class="lineNum">     880 </span>            : };
+<span class="lineNum">     881 </span>            : 
+<span class="lineNum">     882 </span>            : #if BYTEORDER != 1234
+<span class="lineNum">     883 </span>            : 
+<span class="lineNum">     884 </span>            : #ifdef XML_NS
+<span class="lineNum">     885 </span>            : 
+<span class="lineNum">     886 </span>            : static const struct normal_encoding internal_big2_encoding_ns = {
+<span class="lineNum">     887 </span>            :   { VTABLE, 2, 0, 1 },
+<span class="lineNum">     888 </span>            :   {
+<span class="lineNum">     889 </span>            : #include &quot;iasciitab.h&quot;
+<span class="lineNum">     890 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     891 </span>            :   },
+<span class="lineNum">     892 </span>            :   STANDARD_VTABLE(big2_)
+<span class="lineNum">     893 </span>            : };
+<span class="lineNum">     894 </span>            : 
+<span class="lineNum">     895 </span>            : #endif
+<span class="lineNum">     896 </span>            : 
+<span class="lineNum">     897 </span>            : static const struct normal_encoding internal_big2_encoding = {
+<span class="lineNum">     898 </span>            :   { VTABLE, 2, 0, 1 },
+<span class="lineNum">     899 </span>            :   {
+<span class="lineNum">     900 </span>            : #define BT_COLON BT_NMSTRT
+<span class="lineNum">     901 </span>            : #include &quot;iasciitab.h&quot;
+<span class="lineNum">     902 </span>            : #undef BT_COLON
+<span class="lineNum">     903 </span>            : #include &quot;latin1tab.h&quot;
+<span class="lineNum">     904 </span>            :   },
+<span class="lineNum">     905 </span>            :   STANDARD_VTABLE(big2_)
+<span class="lineNum">     906 </span>            : };
+<span class="lineNum">     907 </span>            : 
+<span class="lineNum">     908 </span>            : #endif
+<span class="lineNum">     909 </span>            : 
+<span class="lineNum">     910 </span>            : #undef PREFIX
+<a name="911"><span class="lineNum">     911 </span>            : </a>
+<span class="lineNum">     912 </span>            : static int FASTCALL
+<span class="lineNum">     913 </span><span class="lineNoCov">          0 : streqci(const char *s1, const char *s2)</span>
+<span class="lineNum">     914 </span>            : {
+<span class="lineNum">     915 </span><span class="lineNoCov">          0 :   for (;;) {</span>
+<span class="lineNum">     916 </span><span class="lineNoCov">          0 :     char c1 = *s1++;</span>
+<span class="lineNum">     917 </span><span class="lineNoCov">          0 :     char c2 = *s2++;</span>
+<span class="lineNum">     918 </span><span class="lineNoCov">          0 :     if (ASCII_a &lt;= c1 &amp;&amp; c1 &lt;= ASCII_z)</span>
+<span class="lineNum">     919 </span><span class="lineNoCov">          0 :       c1 += ASCII_A - ASCII_a;</span>
+<span class="lineNum">     920 </span><span class="lineNoCov">          0 :     if (ASCII_a &lt;= c2 &amp;&amp; c2 &lt;= ASCII_z)</span>
+<span class="lineNum">     921 </span><span class="lineNoCov">          0 :       c2 += ASCII_A - ASCII_a;</span>
+<span class="lineNum">     922 </span><span class="lineNoCov">          0 :     if (c1 != c2)</span>
+<span class="lineNum">     923 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">     924 </span><span class="lineNoCov">          0 :     if (!c1)</span>
+<span class="lineNum">     925 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     926 </span>            :   }
+<span class="lineNum">     927 </span><span class="lineNoCov">          0 :   return 1;</span>
+<span class="lineNum">     928 </span>            : }
+<a name="929"><span class="lineNum">     929 </span>            : </a>
+<span class="lineNum">     930 </span>            : static void PTRCALL
+<span class="lineNum">     931 </span><span class="lineNoCov">          0 : initUpdatePosition(const ENCODING *enc, const char *ptr,</span>
+<span class="lineNum">     932 </span>            :                    const char *end, POSITION *pos)
+<span class="lineNum">     933 </span>            : {
+<span class="lineNum">     934 </span><span class="lineNoCov">          0 :   normal_updatePosition(&amp;utf8_encoding.enc, ptr, end, pos);</span>
+<span class="lineNum">     935 </span><span class="lineNoCov">          0 : }</span>
+<a name="936"><span class="lineNum">     936 </span>            : </a>
+<span class="lineNum">     937 </span>            : static int
+<span class="lineNum">     938 </span><span class="lineNoCov">          0 : toAscii(const ENCODING *enc, const char *ptr, const char *end)</span>
+<span class="lineNum">     939 </span>            : {
+<span class="lineNum">     940 </span>            :   char buf[1];
+<span class="lineNum">     941 </span><span class="lineNoCov">          0 :   char *p = buf;</span>
+<span class="lineNum">     942 </span><span class="lineNoCov">          0 :   XmlUtf8Convert(enc, &amp;ptr, end, &amp;p, p + 1);</span>
+<span class="lineNum">     943 </span><span class="lineNoCov">          0 :   if (p == buf)</span>
+<span class="lineNum">     944 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">     945 </span>            :   else
+<span class="lineNum">     946 </span><span class="lineNoCov">          0 :     return buf[0];</span>
+<span class="lineNum">     947 </span>            : }
+<a name="948"><span class="lineNum">     948 </span>            : </a>
+<span class="lineNum">     949 </span>            : static int FASTCALL
+<span class="lineNum">     950 </span><span class="lineNoCov">          0 : isSpace(int c)</span>
+<span class="lineNum">     951 </span>            : {
+<span class="lineNum">     952 </span><span class="lineNoCov">          0 :   switch (c) {</span>
+<span class="lineNum">     953 </span><span class="lineNoCov">          0 :   case 0x20:</span>
+<span class="lineNum">     954 </span>            :   case 0xD:
+<span class="lineNum">     955 </span>            :   case 0xA:
+<span class="lineNum">     956 </span>            :   case 0x9:
+<span class="lineNum">     957 </span><span class="lineNoCov">          0 :     return 1;</span>
+<span class="lineNum">     958 </span>            :   }
+<span class="lineNum">     959 </span><span class="lineNoCov">          0 :   return 0;</span>
+<span class="lineNum">     960 </span>            : }
+<span class="lineNum">     961 </span>            : 
+<span class="lineNum">     962 </span>            : /* Return 1 if there's just optional white space or there's an S
+<span class="lineNum">     963 </span>            :    followed by name=val.
+<a name="964"><span class="lineNum">     964 </span>            : */</a>
+<span class="lineNum">     965 </span>            : static int
+<span class="lineNum">     966 </span><span class="lineNoCov">          0 : parsePseudoAttribute(const ENCODING *enc,</span>
+<span class="lineNum">     967 </span>            :                      const char *ptr,
+<span class="lineNum">     968 </span>            :                      const char *end,
+<span class="lineNum">     969 </span>            :                      const char **namePtr,
+<span class="lineNum">     970 </span>            :                      const char **nameEndPtr,
+<span class="lineNum">     971 </span>            :                      const char **valPtr,
+<span class="lineNum">     972 </span>            :                      const char **nextTokPtr)
+<span class="lineNum">     973 </span>            : {
+<span class="lineNum">     974 </span>            :   int c;
+<span class="lineNum">     975 </span>            :   char open;
+<span class="lineNum">     976 </span><span class="lineNoCov">          0 :   if (ptr == end) {</span>
+<span class="lineNum">     977 </span><span class="lineNoCov">          0 :     *namePtr = NULL;</span>
+<span class="lineNum">     978 </span><span class="lineNoCov">          0 :     return 1;</span>
+<span class="lineNum">     979 </span>            :   }
+<span class="lineNum">     980 </span><span class="lineNoCov">          0 :   if (!isSpace(toAscii(enc, ptr, end))) {</span>
+<span class="lineNum">     981 </span><span class="lineNoCov">          0 :     *nextTokPtr = ptr;</span>
+<span class="lineNum">     982 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">     983 </span>            :   }
+<span class="lineNum">     984 </span>            :   do {
+<span class="lineNum">     985 </span><span class="lineNoCov">          0 :     ptr += enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">     986 </span><span class="lineNoCov">          0 :   } while (isSpace(toAscii(enc, ptr, end)));</span>
+<span class="lineNum">     987 </span><span class="lineNoCov">          0 :   if (ptr == end) {</span>
+<span class="lineNum">     988 </span><span class="lineNoCov">          0 :     *namePtr = NULL;</span>
+<span class="lineNum">     989 </span><span class="lineNoCov">          0 :     return 1;</span>
+<span class="lineNum">     990 </span>            :   }
+<span class="lineNum">     991 </span><span class="lineNoCov">          0 :   *namePtr = ptr;</span>
+<span class="lineNum">     992 </span>            :   for (;;) {
+<span class="lineNum">     993 </span><span class="lineNoCov">          0 :     c = toAscii(enc, ptr, end);</span>
+<span class="lineNum">     994 </span><span class="lineNoCov">          0 :     if (c == -1) {</span>
+<span class="lineNum">     995 </span><span class="lineNoCov">          0 :       *nextTokPtr = ptr;</span>
+<span class="lineNum">     996 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">     997 </span>            :     }
+<span class="lineNum">     998 </span><span class="lineNoCov">          0 :     if (c == ASCII_EQUALS) {</span>
+<span class="lineNum">     999 </span><span class="lineNoCov">          0 :       *nameEndPtr = ptr;</span>
+<span class="lineNum">    1000 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">    1001 </span>            :     }
+<span class="lineNum">    1002 </span><span class="lineNoCov">          0 :     if (isSpace(c)) {</span>
+<span class="lineNum">    1003 </span><span class="lineNoCov">          0 :       *nameEndPtr = ptr;</span>
+<span class="lineNum">    1004 </span>            :       do {
+<span class="lineNum">    1005 </span><span class="lineNoCov">          0 :         ptr += enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1006 </span><span class="lineNoCov">          0 :       } while (isSpace(c = toAscii(enc, ptr, end)));</span>
+<span class="lineNum">    1007 </span><span class="lineNoCov">          0 :       if (c != ASCII_EQUALS) {</span>
+<span class="lineNum">    1008 </span><span class="lineNoCov">          0 :         *nextTokPtr = ptr;</span>
+<span class="lineNum">    1009 </span><span class="lineNoCov">          0 :         return 0;</span>
+<span class="lineNum">    1010 </span>            :       }
+<span class="lineNum">    1011 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">    1012 </span>            :     }
+<span class="lineNum">    1013 </span><span class="lineNoCov">          0 :     ptr += enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1014 </span>            :   }
+<span class="lineNum">    1015 </span><span class="lineNoCov">          0 :   if (ptr == *namePtr) {</span>
+<span class="lineNum">    1016 </span><span class="lineNoCov">          0 :     *nextTokPtr = ptr;</span>
+<span class="lineNum">    1017 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1018 </span>            :   }
+<span class="lineNum">    1019 </span><span class="lineNoCov">          0 :   ptr += enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1020 </span><span class="lineNoCov">          0 :   c = toAscii(enc, ptr, end);</span>
+<span class="lineNum">    1021 </span><span class="lineNoCov">          0 :   while (isSpace(c)) {</span>
+<span class="lineNum">    1022 </span><span class="lineNoCov">          0 :     ptr += enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1023 </span><span class="lineNoCov">          0 :     c = toAscii(enc, ptr, end);</span>
+<span class="lineNum">    1024 </span>            :   }
+<span class="lineNum">    1025 </span><span class="lineNoCov">          0 :   if (c != ASCII_QUOT &amp;&amp; c != ASCII_APOS) {</span>
+<span class="lineNum">    1026 </span><span class="lineNoCov">          0 :     *nextTokPtr = ptr;</span>
+<span class="lineNum">    1027 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1028 </span>            :   }
+<span class="lineNum">    1029 </span><span class="lineNoCov">          0 :   open = (char)c;</span>
+<span class="lineNum">    1030 </span><span class="lineNoCov">          0 :   ptr += enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1031 </span><span class="lineNoCov">          0 :   *valPtr = ptr;</span>
+<span class="lineNum">    1032 </span><span class="lineNoCov">          0 :   for (;; ptr += enc-&gt;minBytesPerChar) {</span>
+<span class="lineNum">    1033 </span><span class="lineNoCov">          0 :     c = toAscii(enc, ptr, end);</span>
+<span class="lineNum">    1034 </span><span class="lineNoCov">          0 :     if (c == open)</span>
+<span class="lineNum">    1035 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">    1036 </span><span class="lineNoCov">          0 :     if (!(ASCII_a &lt;= c &amp;&amp; c &lt;= ASCII_z)</span>
+<span class="lineNum">    1037 </span><span class="lineNoCov">          0 :         &amp;&amp; !(ASCII_A &lt;= c &amp;&amp; c &lt;= ASCII_Z)</span>
+<span class="lineNum">    1038 </span><span class="lineNoCov">          0 :         &amp;&amp; !(ASCII_0 &lt;= c &amp;&amp; c &lt;= ASCII_9)</span>
+<span class="lineNum">    1039 </span><span class="lineNoCov">          0 :         &amp;&amp; c != ASCII_PERIOD</span>
+<span class="lineNum">    1040 </span><span class="lineNoCov">          0 :         &amp;&amp; c != ASCII_MINUS</span>
+<span class="lineNum">    1041 </span><span class="lineNoCov">          0 :         &amp;&amp; c != ASCII_UNDERSCORE) {</span>
+<span class="lineNum">    1042 </span><span class="lineNoCov">          0 :       *nextTokPtr = ptr;</span>
+<span class="lineNum">    1043 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">    1044 </span>            :     }
+<span class="lineNum">    1045 </span>            :   }
+<span class="lineNum">    1046 </span><span class="lineNoCov">          0 :   *nextTokPtr = ptr + enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1047 </span><span class="lineNoCov">          0 :   return 1;</span>
+<span class="lineNum">    1048 </span>            : }
+<span class="lineNum">    1049 </span>            : 
+<span class="lineNum">    1050 </span>            : static const char KW_version[] = {
+<span class="lineNum">    1051 </span>            :   ASCII_v, ASCII_e, ASCII_r, ASCII_s, ASCII_i, ASCII_o, ASCII_n, '\0'
+<span class="lineNum">    1052 </span>            : };
+<span class="lineNum">    1053 </span>            : 
+<span class="lineNum">    1054 </span>            : static const char KW_encoding[] = {
+<span class="lineNum">    1055 </span>            :   ASCII_e, ASCII_n, ASCII_c, ASCII_o, ASCII_d, ASCII_i, ASCII_n, ASCII_g, '\0'
+<span class="lineNum">    1056 </span>            : };
+<span class="lineNum">    1057 </span>            : 
+<span class="lineNum">    1058 </span>            : static const char KW_standalone[] = {
+<span class="lineNum">    1059 </span>            :   ASCII_s, ASCII_t, ASCII_a, ASCII_n, ASCII_d, ASCII_a, ASCII_l, ASCII_o,
+<span class="lineNum">    1060 </span>            :   ASCII_n, ASCII_e, '\0'
+<span class="lineNum">    1061 </span>            : };
+<span class="lineNum">    1062 </span>            : 
+<span class="lineNum">    1063 </span>            : static const char KW_yes[] = {
+<span class="lineNum">    1064 </span>            :   ASCII_y, ASCII_e, ASCII_s,  '\0'
+<span class="lineNum">    1065 </span>            : };
+<span class="lineNum">    1066 </span>            : 
+<span class="lineNum">    1067 </span>            : static const char KW_no[] = {
+<span class="lineNum">    1068 </span>            :   ASCII_n, ASCII_o,  '\0'
+<span class="lineNum">    1069 </span>            : };
+<a name="1070"><span class="lineNum">    1070 </span>            : </a>
+<span class="lineNum">    1071 </span>            : static int
+<span class="lineNum">    1072 </span><span class="lineNoCov">          0 : doParseXmlDecl(const ENCODING *(*encodingFinder)(const ENCODING *,</span>
+<span class="lineNum">    1073 </span>            :                                                  const char *,
+<span class="lineNum">    1074 </span>            :                                                  const char *),
+<span class="lineNum">    1075 </span>            :                int isGeneralTextEntity,
+<span class="lineNum">    1076 </span>            :                const ENCODING *enc,
+<span class="lineNum">    1077 </span>            :                const char *ptr,
+<span class="lineNum">    1078 </span>            :                const char *end,
+<span class="lineNum">    1079 </span>            :                const char **badPtr,
+<span class="lineNum">    1080 </span>            :                const char **versionPtr,
+<span class="lineNum">    1081 </span>            :                const char **versionEndPtr,
+<span class="lineNum">    1082 </span>            :                const char **encodingName,
+<span class="lineNum">    1083 </span>            :                const ENCODING **encoding,
+<span class="lineNum">    1084 </span>            :                int *standalone)
+<span class="lineNum">    1085 </span>            : {
+<span class="lineNum">    1086 </span><span class="lineNoCov">          0 :   const char *val = NULL;</span>
+<span class="lineNum">    1087 </span><span class="lineNoCov">          0 :   const char *name = NULL;</span>
+<span class="lineNum">    1088 </span><span class="lineNoCov">          0 :   const char *nameEnd = NULL;</span>
+<span class="lineNum">    1089 </span><span class="lineNoCov">          0 :   ptr += 5 * enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1090 </span><span class="lineNoCov">          0 :   end -= 2 * enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1091 </span><span class="lineNoCov">          0 :   if (!parsePseudoAttribute(enc, ptr, end, &amp;name, &amp;nameEnd, &amp;val, &amp;ptr)</span>
+<span class="lineNum">    1092 </span><span class="lineNoCov">          0 :       || !name) {</span>
+<span class="lineNum">    1093 </span><span class="lineNoCov">          0 :     *badPtr = ptr;</span>
+<span class="lineNum">    1094 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1095 </span>            :   }
+<span class="lineNum">    1096 </span><span class="lineNoCov">          0 :   if (!XmlNameMatchesAscii(enc, name, nameEnd, KW_version)) {</span>
+<span class="lineNum">    1097 </span><span class="lineNoCov">          0 :     if (!isGeneralTextEntity) {</span>
+<span class="lineNum">    1098 </span><span class="lineNoCov">          0 :       *badPtr = name;</span>
+<span class="lineNum">    1099 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">    1100 </span>            :     }
+<span class="lineNum">    1101 </span>            :   }
+<span class="lineNum">    1102 </span>            :   else {
+<span class="lineNum">    1103 </span><span class="lineNoCov">          0 :     if (versionPtr)</span>
+<span class="lineNum">    1104 </span><span class="lineNoCov">          0 :       *versionPtr = val;</span>
+<span class="lineNum">    1105 </span><span class="lineNoCov">          0 :     if (versionEndPtr)</span>
+<span class="lineNum">    1106 </span><span class="lineNoCov">          0 :       *versionEndPtr = ptr;</span>
+<span class="lineNum">    1107 </span><span class="lineNoCov">          0 :     if (!parsePseudoAttribute(enc, ptr, end, &amp;name, &amp;nameEnd, &amp;val, &amp;ptr)) {</span>
+<span class="lineNum">    1108 </span><span class="lineNoCov">          0 :       *badPtr = ptr;</span>
+<span class="lineNum">    1109 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">    1110 </span>            :     }
+<span class="lineNum">    1111 </span><span class="lineNoCov">          0 :     if (!name) {</span>
+<span class="lineNum">    1112 </span><span class="lineNoCov">          0 :       if (isGeneralTextEntity) {</span>
+<span class="lineNum">    1113 </span>            :         /* a TextDecl must have an EncodingDecl */
+<span class="lineNum">    1114 </span><span class="lineNoCov">          0 :         *badPtr = ptr;</span>
+<span class="lineNum">    1115 </span><span class="lineNoCov">          0 :         return 0;</span>
+<span class="lineNum">    1116 </span>            :       }
+<span class="lineNum">    1117 </span><span class="lineNoCov">          0 :       return 1;</span>
+<span class="lineNum">    1118 </span>            :     }
+<span class="lineNum">    1119 </span>            :   }
+<span class="lineNum">    1120 </span><span class="lineNoCov">          0 :   if (XmlNameMatchesAscii(enc, name, nameEnd, KW_encoding)) {</span>
+<span class="lineNum">    1121 </span><span class="lineNoCov">          0 :     int c = toAscii(enc, val, end);</span>
+<span class="lineNum">    1122 </span><span class="lineNoCov">          0 :     if (!(ASCII_a &lt;= c &amp;&amp; c &lt;= ASCII_z) &amp;&amp; !(ASCII_A &lt;= c &amp;&amp; c &lt;= ASCII_Z)) {</span>
+<span class="lineNum">    1123 </span><span class="lineNoCov">          0 :       *badPtr = val;</span>
+<span class="lineNum">    1124 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">    1125 </span>            :     }
+<span class="lineNum">    1126 </span><span class="lineNoCov">          0 :     if (encodingName)</span>
+<span class="lineNum">    1127 </span><span class="lineNoCov">          0 :       *encodingName = val;</span>
+<span class="lineNum">    1128 </span><span class="lineNoCov">          0 :     if (encoding)</span>
+<span class="lineNum">    1129 </span><span class="lineNoCov">          0 :       *encoding = encodingFinder(enc, val, ptr - enc-&gt;minBytesPerChar);</span>
+<span class="lineNum">    1130 </span><span class="lineNoCov">          0 :     if (!parsePseudoAttribute(enc, ptr, end, &amp;name, &amp;nameEnd, &amp;val, &amp;ptr)) {</span>
+<span class="lineNum">    1131 </span><span class="lineNoCov">          0 :       *badPtr = ptr;</span>
+<span class="lineNum">    1132 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">    1133 </span>            :     }
+<span class="lineNum">    1134 </span><span class="lineNoCov">          0 :     if (!name)</span>
+<span class="lineNum">    1135 </span><span class="lineNoCov">          0 :       return 1;</span>
+<span class="lineNum">    1136 </span>            :   }
+<span class="lineNum">    1137 </span><span class="lineNoCov">          0 :   if (!XmlNameMatchesAscii(enc, name, nameEnd, KW_standalone)</span>
+<span class="lineNum">    1138 </span><span class="lineNoCov">          0 :       || isGeneralTextEntity) {</span>
+<span class="lineNum">    1139 </span><span class="lineNoCov">          0 :     *badPtr = name;</span>
+<span class="lineNum">    1140 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1141 </span>            :   }
+<span class="lineNum">    1142 </span><span class="lineNoCov">          0 :   if (XmlNameMatchesAscii(enc, val, ptr - enc-&gt;minBytesPerChar, KW_yes)) {</span>
+<span class="lineNum">    1143 </span><span class="lineNoCov">          0 :     if (standalone)</span>
+<span class="lineNum">    1144 </span><span class="lineNoCov">          0 :       *standalone = 1;</span>
+<span class="lineNum">    1145 </span>            :   }
+<span class="lineNum">    1146 </span><span class="lineNoCov">          0 :   else if (XmlNameMatchesAscii(enc, val, ptr - enc-&gt;minBytesPerChar, KW_no)) {</span>
+<span class="lineNum">    1147 </span><span class="lineNoCov">          0 :     if (standalone)</span>
+<span class="lineNum">    1148 </span><span class="lineNoCov">          0 :       *standalone = 0;</span>
+<span class="lineNum">    1149 </span>            :   }
+<span class="lineNum">    1150 </span>            :   else {
+<span class="lineNum">    1151 </span><span class="lineNoCov">          0 :     *badPtr = val;</span>
+<span class="lineNum">    1152 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1153 </span>            :   }
+<span class="lineNum">    1154 </span><span class="lineNoCov">          0 :   while (isSpace(toAscii(enc, ptr, end)))</span>
+<span class="lineNum">    1155 </span><span class="lineNoCov">          0 :     ptr += enc-&gt;minBytesPerChar;</span>
+<span class="lineNum">    1156 </span><span class="lineNoCov">          0 :   if (ptr != end) {</span>
+<span class="lineNum">    1157 </span><span class="lineNoCov">          0 :     *badPtr = ptr;</span>
+<span class="lineNum">    1158 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1159 </span>            :   }
+<span class="lineNum">    1160 </span><span class="lineNoCov">          0 :   return 1;</span>
+<span class="lineNum">    1161 </span>            : }
+<a name="1162"><span class="lineNum">    1162 </span>            : </a>
+<span class="lineNum">    1163 </span>            : static int FASTCALL
+<span class="lineNum">    1164 </span><span class="lineNoCov">          0 : checkCharRefNumber(int result)</span>
+<span class="lineNum">    1165 </span>            : {
+<span class="lineNum">    1166 </span><span class="lineNoCov">          0 :   switch (result &gt;&gt; 8) {</span>
+<span class="lineNum">    1167 </span><span class="lineNoCov">          0 :   case 0xD8: case 0xD9: case 0xDA: case 0xDB:</span>
+<span class="lineNum">    1168 </span>            :   case 0xDC: case 0xDD: case 0xDE: case 0xDF:
+<span class="lineNum">    1169 </span><span class="lineNoCov">          0 :     return -1;</span>
+<span class="lineNum">    1170 </span><span class="lineNoCov">          0 :   case 0:</span>
+<span class="lineNum">    1171 </span><span class="lineNoCov">          0 :     if (latin1_encoding.type[result] == BT_NONXML)</span>
+<span class="lineNum">    1172 </span><span class="lineNoCov">          0 :       return -1;</span>
+<span class="lineNum">    1173 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">    1174 </span><span class="lineNoCov">          0 :   case 0xFF:</span>
+<span class="lineNum">    1175 </span><span class="lineNoCov">          0 :     if (result == 0xFFFE || result == 0xFFFF)</span>
+<span class="lineNum">    1176 </span><span class="lineNoCov">          0 :       return -1;</span>
+<span class="lineNum">    1177 </span><span class="lineNoCov">          0 :     break;</span>
+<span class="lineNum">    1178 </span>            :   }
+<span class="lineNum">    1179 </span><span class="lineNoCov">          0 :   return result;</span>
+<span class="lineNum">    1180 </span>            : }
+<a name="1181"><span class="lineNum">    1181 </span>            : </a>
+<span class="lineNum">    1182 </span>            : int FASTCALL
+<span class="lineNum">    1183 </span><span class="lineNoCov">          0 : XmlUtf8Encode(int c, char *buf)</span>
+<span class="lineNum">    1184 </span>            : {
+<span class="lineNum">    1185 </span>            :   enum {
+<span class="lineNum">    1186 </span>            :     /* minN is minimum legal resulting value for N byte sequence */
+<span class="lineNum">    1187 </span>            :     min2 = 0x80,
+<span class="lineNum">    1188 </span>            :     min3 = 0x800,
+<span class="lineNum">    1189 </span>            :     min4 = 0x10000
+<span class="lineNum">    1190 </span>            :   };
+<span class="lineNum">    1191 </span>            : 
+<span class="lineNum">    1192 </span><span class="lineNoCov">          0 :   if (c &lt; 0)</span>
+<span class="lineNum">    1193 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1194 </span><span class="lineNoCov">          0 :   if (c &lt; min2) {</span>
+<span class="lineNum">    1195 </span><span class="lineNoCov">          0 :     buf[0] = (char)(c | UTF8_cval1);</span>
+<span class="lineNum">    1196 </span><span class="lineNoCov">          0 :     return 1;</span>
+<span class="lineNum">    1197 </span>            :   }
+<span class="lineNum">    1198 </span><span class="lineNoCov">          0 :   if (c &lt; min3) {</span>
+<span class="lineNum">    1199 </span><span class="lineNoCov">          0 :     buf[0] = (char)((c &gt;&gt; 6) | UTF8_cval2);</span>
+<span class="lineNum">    1200 </span><span class="lineNoCov">          0 :     buf[1] = (char)((c &amp; 0x3f) | 0x80);</span>
+<span class="lineNum">    1201 </span><span class="lineNoCov">          0 :     return 2;</span>
+<span class="lineNum">    1202 </span>            :   }
+<span class="lineNum">    1203 </span><span class="lineNoCov">          0 :   if (c &lt; min4) {</span>
+<span class="lineNum">    1204 </span><span class="lineNoCov">          0 :     buf[0] = (char)((c &gt;&gt; 12) | UTF8_cval3);</span>
+<span class="lineNum">    1205 </span><span class="lineNoCov">          0 :     buf[1] = (char)(((c &gt;&gt; 6) &amp; 0x3f) | 0x80);</span>
+<span class="lineNum">    1206 </span><span class="lineNoCov">          0 :     buf[2] = (char)((c &amp; 0x3f) | 0x80);</span>
+<span class="lineNum">    1207 </span><span class="lineNoCov">          0 :     return 3;</span>
+<span class="lineNum">    1208 </span>            :   }
+<span class="lineNum">    1209 </span><span class="lineNoCov">          0 :   if (c &lt; 0x110000) {</span>
+<span class="lineNum">    1210 </span><span class="lineNoCov">          0 :     buf[0] = (char)((c &gt;&gt; 18) | UTF8_cval4);</span>
+<span class="lineNum">    1211 </span><span class="lineNoCov">          0 :     buf[1] = (char)(((c &gt;&gt; 12) &amp; 0x3f) | 0x80);</span>
+<span class="lineNum">    1212 </span><span class="lineNoCov">          0 :     buf[2] = (char)(((c &gt;&gt; 6) &amp; 0x3f) | 0x80);</span>
+<span class="lineNum">    1213 </span><span class="lineNoCov">          0 :     buf[3] = (char)((c &amp; 0x3f) | 0x80);</span>
+<span class="lineNum">    1214 </span><span class="lineNoCov">          0 :     return 4;</span>
+<span class="lineNum">    1215 </span>            :   }
+<span class="lineNum">    1216 </span><span class="lineNoCov">          0 :   return 0;</span>
+<span class="lineNum">    1217 </span>            : }
+<a name="1218"><span class="lineNum">    1218 </span>            : </a>
+<span class="lineNum">    1219 </span>            : int FASTCALL
+<span class="lineNum">    1220 </span><span class="lineNoCov">          0 : XmlUtf16Encode(int charNum, unsigned short *buf)</span>
+<span class="lineNum">    1221 </span>            : {
+<span class="lineNum">    1222 </span><span class="lineNoCov">          0 :   if (charNum &lt; 0)</span>
+<span class="lineNum">    1223 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1224 </span><span class="lineNoCov">          0 :   if (charNum &lt; 0x10000) {</span>
+<span class="lineNum">    1225 </span><span class="lineNoCov">          0 :     buf[0] = (unsigned short)charNum;</span>
+<span class="lineNum">    1226 </span><span class="lineNoCov">          0 :     return 1;</span>
+<span class="lineNum">    1227 </span>            :   }
+<span class="lineNum">    1228 </span><span class="lineNoCov">          0 :   if (charNum &lt; 0x110000) {</span>
+<span class="lineNum">    1229 </span><span class="lineNoCov">          0 :     charNum -= 0x10000;</span>
+<span class="lineNum">    1230 </span><span class="lineNoCov">          0 :     buf[0] = (unsigned short)((charNum &gt;&gt; 10) + 0xD800);</span>
+<span class="lineNum">    1231 </span><span class="lineNoCov">          0 :     buf[1] = (unsigned short)((charNum &amp; 0x3FF) + 0xDC00);</span>
+<span class="lineNum">    1232 </span><span class="lineNoCov">          0 :     return 2;</span>
+<span class="lineNum">    1233 </span>            :   }
+<span class="lineNum">    1234 </span><span class="lineNoCov">          0 :   return 0;</span>
+<span class="lineNum">    1235 </span>            : }
+<span class="lineNum">    1236 </span>            : 
+<span class="lineNum">    1237 </span>            : struct unknown_encoding {
+<span class="lineNum">    1238 </span>            :   struct normal_encoding normal;
+<span class="lineNum">    1239 </span>            :   CONVERTER convert;
+<span class="lineNum">    1240 </span>            :   void *userData;
+<span class="lineNum">    1241 </span>            :   unsigned short utf16[256];
+<span class="lineNum">    1242 </span>            :   char utf8[256][4];
+<span class="lineNum">    1243 </span>            : };
+<span class="lineNum">    1244 </span>            : 
+<span class="lineNum">    1245 </span>            : #define AS_UNKNOWN_ENCODING(enc)  ((const struct unknown_encoding *) (enc))
+<a name="1246"><span class="lineNum">    1246 </span>            : </a>
+<span class="lineNum">    1247 </span>            : int
+<span class="lineNum">    1248 </span><span class="lineNoCov">          0 : XmlSizeOfUnknownEncoding(void)</span>
+<span class="lineNum">    1249 </span>            : {
+<span class="lineNum">    1250 </span><span class="lineNoCov">          0 :   return sizeof(struct unknown_encoding);</span>
+<span class="lineNum">    1251 </span>            : }
+<a name="1252"><span class="lineNum">    1252 </span>            : </a>
+<span class="lineNum">    1253 </span>            : static int PTRFASTCALL
+<span class="lineNum">    1254 </span><span class="lineNoCov">          0 : unknown_isName(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">    1255 </span>            : {
+<span class="lineNum">    1256 </span><span class="lineNoCov">          0 :   const struct unknown_encoding *uenc = AS_UNKNOWN_ENCODING(enc);</span>
+<span class="lineNum">    1257 </span><span class="lineNoCov">          0 :   int c = uenc-&gt;convert(uenc-&gt;userData, p);</span>
+<span class="lineNum">    1258 </span><span class="lineNoCov">          0 :   if (c &amp; ~0xFFFF)</span>
+<span class="lineNum">    1259 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1260 </span><span class="lineNoCov">          0 :   return UCS2_GET_NAMING(namePages, c &gt;&gt; 8, c &amp; 0xFF);</span>
+<span class="lineNum">    1261 </span>            : }
+<a name="1262"><span class="lineNum">    1262 </span>            : </a>
+<span class="lineNum">    1263 </span>            : static int PTRFASTCALL
+<span class="lineNum">    1264 </span><span class="lineNoCov">          0 : unknown_isNmstrt(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">    1265 </span>            : {
+<span class="lineNum">    1266 </span><span class="lineNoCov">          0 :   const struct unknown_encoding *uenc = AS_UNKNOWN_ENCODING(enc);</span>
+<span class="lineNum">    1267 </span><span class="lineNoCov">          0 :   int c = uenc-&gt;convert(uenc-&gt;userData, p);</span>
+<span class="lineNum">    1268 </span><span class="lineNoCov">          0 :   if (c &amp; ~0xFFFF)</span>
+<span class="lineNum">    1269 </span><span class="lineNoCov">          0 :     return 0;</span>
+<span class="lineNum">    1270 </span><span class="lineNoCov">          0 :   return UCS2_GET_NAMING(nmstrtPages, c &gt;&gt; 8, c &amp; 0xFF);</span>
+<span class="lineNum">    1271 </span>            : }
+<a name="1272"><span class="lineNum">    1272 </span>            : </a>
+<span class="lineNum">    1273 </span>            : static int PTRFASTCALL
+<span class="lineNum">    1274 </span><span class="lineNoCov">          0 : unknown_isInvalid(const ENCODING *enc, const char *p)</span>
+<span class="lineNum">    1275 </span>            : {
+<span class="lineNum">    1276 </span><span class="lineNoCov">          0 :   const struct unknown_encoding *uenc = AS_UNKNOWN_ENCODING(enc);</span>
+<span class="lineNum">    1277 </span><span class="lineNoCov">          0 :   int c = uenc-&gt;convert(uenc-&gt;userData, p);</span>
+<span class="lineNum">    1278 </span><span class="lineNoCov">          0 :   return (c &amp; ~0xFFFF) || checkCharRefNumber(c) &lt; 0;</span>
+<span class="lineNum">    1279 </span>            : }
+<a name="1280"><span class="lineNum">    1280 </span>            : </a>
+<span class="lineNum">    1281 </span>            : static void PTRCALL
+<span class="lineNum">    1282 </span><span class="lineNoCov">          0 : unknown_toUtf8(const ENCODING *enc,</span>
+<span class="lineNum">    1283 </span>            :                const char **fromP, const char *fromLim,
+<span class="lineNum">    1284 </span>            :                char **toP, const char *toLim)
+<span class="lineNum">    1285 </span>            : {
+<span class="lineNum">    1286 </span><span class="lineNoCov">          0 :   const struct unknown_encoding *uenc = AS_UNKNOWN_ENCODING(enc);</span>
+<span class="lineNum">    1287 </span>            :   char buf[XML_UTF8_ENCODE_MAX];
+<span class="lineNum">    1288 </span><span class="lineNoCov">          0 :   for (;;) {</span>
+<span class="lineNum">    1289 </span>            :     const char *utf8;
+<span class="lineNum">    1290 </span>            :     int n;
+<span class="lineNum">    1291 </span><span class="lineNoCov">          0 :     if (*fromP == fromLim)</span>
+<span class="lineNum">    1292 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">    1293 </span><span class="lineNoCov">          0 :     utf8 = uenc-&gt;utf8[(unsigned char)**fromP];</span>
+<span class="lineNum">    1294 </span><span class="lineNoCov">          0 :     n = *utf8++;</span>
+<span class="lineNum">    1295 </span><span class="lineNoCov">          0 :     if (n == 0) {</span>
+<span class="lineNum">    1296 </span><span class="lineNoCov">          0 :       int c = uenc-&gt;convert(uenc-&gt;userData, *fromP);</span>
+<span class="lineNum">    1297 </span><span class="lineNoCov">          0 :       n = XmlUtf8Encode(c, buf);</span>
+<span class="lineNum">    1298 </span><span class="lineNoCov">          0 :       if (n &gt; toLim - *toP)</span>
+<span class="lineNum">    1299 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">    1300 </span><span class="lineNoCov">          0 :       utf8 = buf;</span>
+<span class="lineNum">    1301 </span><span class="lineNoCov">          0 :       *fromP += (AS_NORMAL_ENCODING(enc)-&gt;type[(unsigned char)**fromP]</span>
+<span class="lineNum">    1302 </span>            :                  - (BT_LEAD2 - 2));
+<span class="lineNum">    1303 </span>            :     }
+<span class="lineNum">    1304 </span>            :     else {
+<span class="lineNum">    1305 </span><span class="lineNoCov">          0 :       if (n &gt; toLim - *toP)</span>
+<span class="lineNum">    1306 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">    1307 </span><span class="lineNoCov">          0 :       (*fromP)++;</span>
+<span class="lineNum">    1308 </span>            :     }
+<span class="lineNum">    1309 </span>            :     do {
+<span class="lineNum">    1310 </span><span class="lineNoCov">          0 :       *(*toP)++ = *utf8++;</span>
+<span class="lineNum">    1311 </span><span class="lineNoCov">          0 :     } while (--n != 0);</span>
+<span class="lineNum">    1312 </span>            :   }
+<span class="lineNum">    1313 </span><span class="lineNoCov">          0 : }</span>
+<a name="1314"><span class="lineNum">    1314 </span>            : </a>
+<span class="lineNum">    1315 </span>            : static void PTRCALL
+<span class="lineNum">    1316 </span><span class="lineNoCov">          0 : unknown_toUtf16(const ENCODING *enc,</span>
+<span class="lineNum">    1317 </span>            :                 const char **fromP, const char *fromLim,
+<span class="lineNum">    1318 </span>            :                 unsigned short **toP, const unsigned short *toLim)
+<span class="lineNum">    1319 </span>            : {
+<span class="lineNum">    1320 </span><span class="lineNoCov">          0 :   const struct unknown_encoding *uenc = AS_UNKNOWN_ENCODING(enc);</span>
+<span class="lineNum">    1321 </span><span class="lineNoCov">          0 :   while (*fromP != fromLim &amp;&amp; *toP != toLim) {</span>
+<span class="lineNum">    1322 </span><span class="lineNoCov">          0 :     unsigned short c = uenc-&gt;utf16[(unsigned char)**fromP];</span>
+<span class="lineNum">    1323 </span><span class="lineNoCov">          0 :     if (c == 0) {</span>
+<span class="lineNum">    1324 </span><span class="lineNoCov">          0 :       c = (unsigned short)</span>
+<span class="lineNum">    1325 </span><span class="lineNoCov">          0 :           uenc-&gt;convert(uenc-&gt;userData, *fromP);</span>
+<span class="lineNum">    1326 </span><span class="lineNoCov">          0 :       *fromP += (AS_NORMAL_ENCODING(enc)-&gt;type[(unsigned char)**fromP]</span>
+<span class="lineNum">    1327 </span>            :                  - (BT_LEAD2 - 2));
+<span class="lineNum">    1328 </span>            :     }
+<span class="lineNum">    1329 </span>            :     else
+<span class="lineNum">    1330 </span><span class="lineNoCov">          0 :       (*fromP)++;</span>
+<span class="lineNum">    1331 </span><span class="lineNoCov">          0 :     *(*toP)++ = c;</span>
+<span class="lineNum">    1332 </span>            :   }
+<span class="lineNum">    1333 </span><span class="lineNoCov">          0 : }</span>
+<a name="1334"><span class="lineNum">    1334 </span>            : </a>
+<span class="lineNum">    1335 </span>            : ENCODING *
+<span class="lineNum">    1336 </span><span class="lineNoCov">          0 : XmlInitUnknownEncoding(void *mem,</span>
+<span class="lineNum">    1337 </span>            :                        int *table,
+<span class="lineNum">    1338 </span>            :                        CONVERTER convert,
+<span class="lineNum">    1339 </span>            :                        void *userData)
+<span class="lineNum">    1340 </span>            : {
+<span class="lineNum">    1341 </span>            :   int i;
+<span class="lineNum">    1342 </span><span class="lineNoCov">          0 :   struct unknown_encoding *e = (struct unknown_encoding *)mem;</span>
+<span class="lineNum">    1343 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; (int)sizeof(struct normal_encoding); i++)</span>
+<span class="lineNum">    1344 </span><span class="lineNoCov">          0 :     ((char *)mem)[i] = ((char *)&amp;latin1_encoding)[i];</span>
+<span class="lineNum">    1345 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; 128; i++)</span>
+<span class="lineNum">    1346 </span><span class="lineNoCov">          0 :     if (latin1_encoding.type[i] != BT_OTHER</span>
+<span class="lineNum">    1347 </span><span class="lineNoCov">          0 :         &amp;&amp; latin1_encoding.type[i] != BT_NONXML</span>
+<span class="lineNum">    1348 </span><span class="lineNoCov">          0 :         &amp;&amp; table[i] != i)</span>
+<span class="lineNum">    1349 </span><span class="lineNoCov">          0 :       return 0;</span>
+<span class="lineNum">    1350 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; 256; i++) {</span>
+<span class="lineNum">    1351 </span><span class="lineNoCov">          0 :     int c = table[i];</span>
+<span class="lineNum">    1352 </span><span class="lineNoCov">          0 :     if (c == -1) {</span>
+<span class="lineNum">    1353 </span><span class="lineNoCov">          0 :       e-&gt;normal.type[i] = BT_MALFORM;</span>
+<span class="lineNum">    1354 </span>            :       /* This shouldn't really get used. */
+<span class="lineNum">    1355 </span><span class="lineNoCov">          0 :       e-&gt;utf16[i] = 0xFFFF;</span>
+<span class="lineNum">    1356 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][0] = 1;</span>
+<span class="lineNum">    1357 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][1] = 0;</span>
+<span class="lineNum">    1358 </span>            :     }
+<span class="lineNum">    1359 </span><span class="lineNoCov">          0 :     else if (c &lt; 0) {</span>
+<span class="lineNum">    1360 </span><span class="lineNoCov">          0 :       if (c &lt; -4)</span>
+<span class="lineNum">    1361 </span><span class="lineNoCov">          0 :         return 0;</span>
+<span class="lineNum">    1362 </span><span class="lineNoCov">          0 :       e-&gt;normal.type[i] = (unsigned char)(BT_LEAD2 - (c + 2));</span>
+<span class="lineNum">    1363 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][0] = 0;</span>
+<span class="lineNum">    1364 </span><span class="lineNoCov">          0 :       e-&gt;utf16[i] = 0;</span>
+<span class="lineNum">    1365 </span>            :     }
+<span class="lineNum">    1366 </span><span class="lineNoCov">          0 :     else if (c &lt; 0x80) {</span>
+<span class="lineNum">    1367 </span><span class="lineNoCov">          0 :       if (latin1_encoding.type[c] != BT_OTHER</span>
+<span class="lineNum">    1368 </span><span class="lineNoCov">          0 :           &amp;&amp; latin1_encoding.type[c] != BT_NONXML</span>
+<span class="lineNum">    1369 </span><span class="lineNoCov">          0 :           &amp;&amp; c != i)</span>
+<span class="lineNum">    1370 </span><span class="lineNoCov">          0 :         return 0;</span>
+<span class="lineNum">    1371 </span><span class="lineNoCov">          0 :       e-&gt;normal.type[i] = latin1_encoding.type[c];</span>
+<span class="lineNum">    1372 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][0] = 1;</span>
+<span class="lineNum">    1373 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][1] = (char)c;</span>
+<span class="lineNum">    1374 </span><span class="lineNoCov">          0 :       e-&gt;utf16[i] = (unsigned short)(c == 0 ? 0xFFFF : c);</span>
+<span class="lineNum">    1375 </span>            :     }
+<span class="lineNum">    1376 </span><span class="lineNoCov">          0 :     else if (checkCharRefNumber(c) &lt; 0) {</span>
+<span class="lineNum">    1377 </span><span class="lineNoCov">          0 :       e-&gt;normal.type[i] = BT_NONXML;</span>
+<span class="lineNum">    1378 </span>            :       /* This shouldn't really get used. */
+<span class="lineNum">    1379 </span><span class="lineNoCov">          0 :       e-&gt;utf16[i] = 0xFFFF;</span>
+<span class="lineNum">    1380 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][0] = 1;</span>
+<span class="lineNum">    1381 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][1] = 0;</span>
+<span class="lineNum">    1382 </span>            :     }
+<span class="lineNum">    1383 </span>            :     else {
+<span class="lineNum">    1384 </span><span class="lineNoCov">          0 :       if (c &gt; 0xFFFF)</span>
+<span class="lineNum">    1385 </span><span class="lineNoCov">          0 :         return 0;</span>
+<span class="lineNum">    1386 </span><span class="lineNoCov">          0 :       if (UCS2_GET_NAMING(nmstrtPages, c &gt;&gt; 8, c &amp; 0xff))</span>
+<span class="lineNum">    1387 </span><span class="lineNoCov">          0 :         e-&gt;normal.type[i] = BT_NMSTRT;</span>
+<span class="lineNum">    1388 </span><span class="lineNoCov">          0 :       else if (UCS2_GET_NAMING(namePages, c &gt;&gt; 8, c &amp; 0xff))</span>
+<span class="lineNum">    1389 </span><span class="lineNoCov">          0 :         e-&gt;normal.type[i] = BT_NAME;</span>
+<span class="lineNum">    1390 </span>            :       else
+<span class="lineNum">    1391 </span><span class="lineNoCov">          0 :         e-&gt;normal.type[i] = BT_OTHER;</span>
+<span class="lineNum">    1392 </span><span class="lineNoCov">          0 :       e-&gt;utf8[i][0] = (char)XmlUtf8Encode(c, e-&gt;utf8[i] + 1);</span>
+<span class="lineNum">    1393 </span><span class="lineNoCov">          0 :       e-&gt;utf16[i] = (unsigned short)c;</span>
+<span class="lineNum">    1394 </span>            :     }
+<span class="lineNum">    1395 </span>            :   }
+<span class="lineNum">    1396 </span><span class="lineNoCov">          0 :   e-&gt;userData = userData;</span>
+<span class="lineNum">    1397 </span><span class="lineNoCov">          0 :   e-&gt;convert = convert;</span>
+<span class="lineNum">    1398 </span><span class="lineNoCov">          0 :   if (convert) {</span>
+<span class="lineNum">    1399 </span><span class="lineNoCov">          0 :     e-&gt;normal.isName2 = unknown_isName;</span>
+<span class="lineNum">    1400 </span><span class="lineNoCov">          0 :     e-&gt;normal.isName3 = unknown_isName;</span>
+<span class="lineNum">    1401 </span><span class="lineNoCov">          0 :     e-&gt;normal.isName4 = unknown_isName;</span>
+<span class="lineNum">    1402 </span><span class="lineNoCov">          0 :     e-&gt;normal.isNmstrt2 = unknown_isNmstrt;</span>
+<span class="lineNum">    1403 </span><span class="lineNoCov">          0 :     e-&gt;normal.isNmstrt3 = unknown_isNmstrt;</span>
+<span class="lineNum">    1404 </span><span class="lineNoCov">          0 :     e-&gt;normal.isNmstrt4 = unknown_isNmstrt;</span>
+<span class="lineNum">    1405 </span><span class="lineNoCov">          0 :     e-&gt;normal.isInvalid2 = unknown_isInvalid;</span>
+<span class="lineNum">    1406 </span><span class="lineNoCov">          0 :     e-&gt;normal.isInvalid3 = unknown_isInvalid;</span>
+<span class="lineNum">    1407 </span><span class="lineNoCov">          0 :     e-&gt;normal.isInvalid4 = unknown_isInvalid;</span>
+<span class="lineNum">    1408 </span>            :   }
+<span class="lineNum">    1409 </span><span class="lineNoCov">          0 :   e-&gt;normal.enc.utf8Convert = unknown_toUtf8;</span>
+<span class="lineNum">    1410 </span><span class="lineNoCov">          0 :   e-&gt;normal.enc.utf16Convert = unknown_toUtf16;</span>
+<span class="lineNum">    1411 </span><span class="lineNoCov">          0 :   return &amp;(e-&gt;normal.enc);</span>
+<span class="lineNum">    1412 </span>            : }
+<span class="lineNum">    1413 </span>            : 
+<span class="lineNum">    1414 </span>            : /* If this enumeration is changed, getEncodingIndex and encodings
+<span class="lineNum">    1415 </span>            : must also be changed. */
+<span class="lineNum">    1416 </span>            : enum {
+<span class="lineNum">    1417 </span>            :   UNKNOWN_ENC = -1,
+<span class="lineNum">    1418 </span>            :   ISO_8859_1_ENC = 0,
+<span class="lineNum">    1419 </span>            :   US_ASCII_ENC,
+<span class="lineNum">    1420 </span>            :   UTF_8_ENC,
+<span class="lineNum">    1421 </span>            :   UTF_16_ENC,
+<span class="lineNum">    1422 </span>            :   UTF_16BE_ENC,
+<span class="lineNum">    1423 </span>            :   UTF_16LE_ENC,
+<span class="lineNum">    1424 </span>            :   /* must match encodingNames up to here */
+<span class="lineNum">    1425 </span>            :   NO_ENC
+<span class="lineNum">    1426 </span>            : };
+<span class="lineNum">    1427 </span>            : 
+<span class="lineNum">    1428 </span>            : static const char KW_ISO_8859_1[] = {
+<span class="lineNum">    1429 </span>            :   ASCII_I, ASCII_S, ASCII_O, ASCII_MINUS, ASCII_8, ASCII_8, ASCII_5, ASCII_9,
+<span class="lineNum">    1430 </span>            :   ASCII_MINUS, ASCII_1, '\0'
+<span class="lineNum">    1431 </span>            : };
+<span class="lineNum">    1432 </span>            : static const char KW_US_ASCII[] = {
+<span class="lineNum">    1433 </span>            :   ASCII_U, ASCII_S, ASCII_MINUS, ASCII_A, ASCII_S, ASCII_C, ASCII_I, ASCII_I,
+<span class="lineNum">    1434 </span>            :   '\0'
+<span class="lineNum">    1435 </span>            : };
+<span class="lineNum">    1436 </span>            : static const char KW_UTF_8[] =  {
+<span class="lineNum">    1437 </span>            :   ASCII_U, ASCII_T, ASCII_F, ASCII_MINUS, ASCII_8, '\0'
+<span class="lineNum">    1438 </span>            : };
+<span class="lineNum">    1439 </span>            : static const char KW_UTF_16[] = {
+<span class="lineNum">    1440 </span>            :   ASCII_U, ASCII_T, ASCII_F, ASCII_MINUS, ASCII_1, ASCII_6, '\0'
+<span class="lineNum">    1441 </span>            : };
+<span class="lineNum">    1442 </span>            : static const char KW_UTF_16BE[] = {
+<span class="lineNum">    1443 </span>            :   ASCII_U, ASCII_T, ASCII_F, ASCII_MINUS, ASCII_1, ASCII_6, ASCII_B, ASCII_E,
+<span class="lineNum">    1444 </span>            :   '\0'
+<span class="lineNum">    1445 </span>            : };
+<span class="lineNum">    1446 </span>            : static const char KW_UTF_16LE[] = {
+<span class="lineNum">    1447 </span>            :   ASCII_U, ASCII_T, ASCII_F, ASCII_MINUS, ASCII_1, ASCII_6, ASCII_L, ASCII_E,
+<span class="lineNum">    1448 </span>            :   '\0'
+<span class="lineNum">    1449 </span>            : };
+<a name="1450"><span class="lineNum">    1450 </span>            : </a>
+<span class="lineNum">    1451 </span>            : static int FASTCALL
+<span class="lineNum">    1452 </span><span class="lineNoCov">          0 : getEncodingIndex(const char *name)</span>
+<span class="lineNum">    1453 </span>            : {
+<span class="lineNum">    1454 </span>            :   static const char *encodingNames[] = {
+<span class="lineNum">    1455 </span>            :     KW_ISO_8859_1,
+<span class="lineNum">    1456 </span>            :     KW_US_ASCII,
+<span class="lineNum">    1457 </span>            :     KW_UTF_8,
+<span class="lineNum">    1458 </span>            :     KW_UTF_16,
+<span class="lineNum">    1459 </span>            :     KW_UTF_16BE,
+<span class="lineNum">    1460 </span>            :     KW_UTF_16LE,
+<span class="lineNum">    1461 </span>            :   };
+<span class="lineNum">    1462 </span>            :   int i;
+<span class="lineNum">    1463 </span><span class="lineNoCov">          0 :   if (name == NULL)</span>
+<span class="lineNum">    1464 </span><span class="lineNoCov">          0 :     return NO_ENC;</span>
+<span class="lineNum">    1465 </span><span class="lineNoCov">          0 :   for (i = 0; i &lt; (int)(sizeof(encodingNames)/sizeof(encodingNames[0])); i++)</span>
+<span class="lineNum">    1466 </span><span class="lineNoCov">          0 :     if (streqci(name, encodingNames[i]))</span>
+<span class="lineNum">    1467 </span><span class="lineNoCov">          0 :       return i;</span>
+<span class="lineNum">    1468 </span><span class="lineNoCov">          0 :   return UNKNOWN_ENC;</span>
+<span class="lineNum">    1469 </span>            : }
+<span class="lineNum">    1470 </span>            : 
+<span class="lineNum">    1471 </span>            : /* For binary compatibility, we store the index of the encoding
+<span class="lineNum">    1472 </span>            :    specified at initialization in the isUtf16 member.
+<span class="lineNum">    1473 </span>            : */
+<span class="lineNum">    1474 </span>            : 
+<span class="lineNum">    1475 </span>            : #define INIT_ENC_INDEX(enc) ((int)(enc)-&gt;initEnc.isUtf16)
+<span class="lineNum">    1476 </span>            : #define SET_INIT_ENC_INDEX(enc, i) ((enc)-&gt;initEnc.isUtf16 = (char)i)
+<span class="lineNum">    1477 </span>            : 
+<span class="lineNum">    1478 </span>            : /* This is what detects the encoding.  encodingTable maps from
+<span class="lineNum">    1479 </span>            :    encoding indices to encodings; INIT_ENC_INDEX(enc) is the index of
+<span class="lineNum">    1480 </span>            :    the external (protocol) specified encoding; state is
+<span class="lineNum">    1481 </span>            :    XML_CONTENT_STATE if we're parsing an external text entity, and
+<span class="lineNum">    1482 </span>            :    XML_PROLOG_STATE otherwise.
+<span class="lineNum">    1483 </span>            : */
+<span class="lineNum">    1484 </span>            : 
+<a name="1485"><span class="lineNum">    1485 </span>            : </a>
+<span class="lineNum">    1486 </span>            : static int
+<span class="lineNum">    1487 </span><span class="lineNoCov">          0 : initScan(const ENCODING **encodingTable,</span>
+<span class="lineNum">    1488 </span>            :          const INIT_ENCODING *enc,
+<span class="lineNum">    1489 </span>            :          int state,
+<span class="lineNum">    1490 </span>            :          const char *ptr,
+<span class="lineNum">    1491 </span>            :          const char *end,
+<span class="lineNum">    1492 </span>            :          const char **nextTokPtr)
+<span class="lineNum">    1493 </span>            : {
+<span class="lineNum">    1494 </span>            :   const ENCODING **encPtr;
+<span class="lineNum">    1495 </span>            : 
+<span class="lineNum">    1496 </span><span class="lineNoCov">          0 :   if (ptr == end)</span>
+<span class="lineNum">    1497 </span><span class="lineNoCov">          0 :     return XML_TOK_NONE;</span>
+<span class="lineNum">    1498 </span><span class="lineNoCov">          0 :   encPtr = enc-&gt;encPtr;</span>
+<span class="lineNum">    1499 </span><span class="lineNoCov">          0 :   if (ptr + 1 == end) {</span>
+<span class="lineNum">    1500 </span>            :     /* only a single byte available for auto-detection */
+<span class="lineNum">    1501 </span>            : #ifndef XML_DTD /* FIXME */
+<span class="lineNum">    1502 </span>            :     /* a well-formed document entity must have more than one byte */
+<span class="lineNum">    1503 </span>            :     if (state != XML_CONTENT_STATE)
+<span class="lineNum">    1504 </span>            :       return XML_TOK_PARTIAL;
+<span class="lineNum">    1505 </span>            : #endif
+<span class="lineNum">    1506 </span>            :     /* so we're parsing an external text entity... */
+<span class="lineNum">    1507 </span>            :     /* if UTF-16 was externally specified, then we need at least 2 bytes */
+<span class="lineNum">    1508 </span><span class="lineNoCov">          0 :     switch (INIT_ENC_INDEX(enc)) {</span>
+<span class="lineNum">    1509 </span><span class="lineNoCov">          0 :     case UTF_16_ENC:</span>
+<span class="lineNum">    1510 </span>            :     case UTF_16LE_ENC:
+<span class="lineNum">    1511 </span>            :     case UTF_16BE_ENC:
+<span class="lineNum">    1512 </span><span class="lineNoCov">          0 :       return XML_TOK_PARTIAL;</span>
+<span class="lineNum">    1513 </span>            :     }
+<span class="lineNum">    1514 </span><span class="lineNoCov">          0 :     switch ((unsigned char)*ptr) {</span>
+<span class="lineNum">    1515 </span><span class="lineNoCov">          0 :     case 0xFE:</span>
+<span class="lineNum">    1516 </span>            :     case 0xFF:
+<span class="lineNum">    1517 </span>            :     case 0xEF: /* possibly first byte of UTF-8 BOM */
+<span class="lineNum">    1518 </span><span class="lineNoCov">          0 :       if (INIT_ENC_INDEX(enc) == ISO_8859_1_ENC</span>
+<span class="lineNum">    1519 </span><span class="lineNoCov">          0 :           &amp;&amp; state == XML_CONTENT_STATE)</span>
+<span class="lineNum">    1520 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">    1521 </span>            :       /* fall through */
+<span class="lineNum">    1522 </span>            :     case 0x00:
+<span class="lineNum">    1523 </span>            :     case 0x3C:
+<span class="lineNum">    1524 </span><span class="lineNoCov">          0 :       return XML_TOK_PARTIAL;</span>
+<span class="lineNum">    1525 </span>            :     }
+<span class="lineNum">    1526 </span>            :   }
+<span class="lineNum">    1527 </span>            :   else {
+<span class="lineNum">    1528 </span><span class="lineNoCov">          0 :     switch (((unsigned char)ptr[0] &lt;&lt; 8) | (unsigned char)ptr[1]) {</span>
+<span class="lineNum">    1529 </span><span class="lineNoCov">          0 :     case 0xFEFF:</span>
+<span class="lineNum">    1530 </span><span class="lineNoCov">          0 :       if (INIT_ENC_INDEX(enc) == ISO_8859_1_ENC</span>
+<span class="lineNum">    1531 </span><span class="lineNoCov">          0 :           &amp;&amp; state == XML_CONTENT_STATE)</span>
+<span class="lineNum">    1532 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">    1533 </span><span class="lineNoCov">          0 :       *nextTokPtr = ptr + 2;</span>
+<span class="lineNum">    1534 </span><span class="lineNoCov">          0 :       *encPtr = encodingTable[UTF_16BE_ENC];</span>
+<span class="lineNum">    1535 </span><span class="lineNoCov">          0 :       return XML_TOK_BOM;</span>
+<span class="lineNum">    1536 </span>            :     /* 00 3C is handled in the default case */
+<span class="lineNum">    1537 </span><span class="lineNoCov">          0 :     case 0x3C00:</span>
+<span class="lineNum">    1538 </span><span class="lineNoCov">          0 :       if ((INIT_ENC_INDEX(enc) == UTF_16BE_ENC</span>
+<span class="lineNum">    1539 </span><span class="lineNoCov">          0 :            || INIT_ENC_INDEX(enc) == UTF_16_ENC)</span>
+<span class="lineNum">    1540 </span><span class="lineNoCov">          0 :           &amp;&amp; state == XML_CONTENT_STATE)</span>
+<span class="lineNum">    1541 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">    1542 </span><span class="lineNoCov">          0 :       *encPtr = encodingTable[UTF_16LE_ENC];</span>
+<span class="lineNum">    1543 </span><span class="lineNoCov">          0 :       return XmlTok(*encPtr, state, ptr, end, nextTokPtr);</span>
+<span class="lineNum">    1544 </span><span class="lineNoCov">          0 :     case 0xFFFE:</span>
+<span class="lineNum">    1545 </span><span class="lineNoCov">          0 :       if (INIT_ENC_INDEX(enc) == ISO_8859_1_ENC</span>
+<span class="lineNum">    1546 </span><span class="lineNoCov">          0 :           &amp;&amp; state == XML_CONTENT_STATE)</span>
+<span class="lineNum">    1547 </span><span class="lineNoCov">          0 :         break;</span>
+<span class="lineNum">    1548 </span><span class="lineNoCov">          0 :       *nextTokPtr = ptr + 2;</span>
+<span class="lineNum">    1549 </span><span class="lineNoCov">          0 :       *encPtr = encodingTable[UTF_16LE_ENC];</span>
+<span class="lineNum">    1550 </span><span class="lineNoCov">          0 :       return XML_TOK_BOM;</span>
+<span class="lineNum">    1551 </span><span class="lineNoCov">          0 :     case 0xEFBB:</span>
+<span class="lineNum">    1552 </span>            :       /* Maybe a UTF-8 BOM (EF BB BF) */
+<span class="lineNum">    1553 </span>            :       /* If there's an explicitly specified (external) encoding
+<span class="lineNum">    1554 </span>            :          of ISO-8859-1 or some flavour of UTF-16
+<span class="lineNum">    1555 </span>            :          and this is an external text entity,
+<span class="lineNum">    1556 </span>            :          don't look for the BOM,
+<span class="lineNum">    1557 </span>            :          because it might be a legal data.
+<span class="lineNum">    1558 </span>            :       */
+<span class="lineNum">    1559 </span><span class="lineNoCov">          0 :       if (state == XML_CONTENT_STATE) {</span>
+<span class="lineNum">    1560 </span><span class="lineNoCov">          0 :         int e = INIT_ENC_INDEX(enc);</span>
+<span class="lineNum">    1561 </span><span class="lineNoCov">          0 :         if (e == ISO_8859_1_ENC || e == UTF_16BE_ENC</span>
+<span class="lineNum">    1562 </span><span class="lineNoCov">          0 :             || e == UTF_16LE_ENC || e == UTF_16_ENC)</span>
+<span class="lineNum">    1563 </span>            :           break;
+<span class="lineNum">    1564 </span>            :       }
+<span class="lineNum">    1565 </span><span class="lineNoCov">          0 :       if (ptr + 2 == end)</span>
+<span class="lineNum">    1566 </span><span class="lineNoCov">          0 :         return XML_TOK_PARTIAL;</span>
+<span class="lineNum">    1567 </span><span class="lineNoCov">          0 :       if ((unsigned char)ptr[2] == 0xBF) {</span>
+<span class="lineNum">    1568 </span><span class="lineNoCov">          0 :         *nextTokPtr = ptr + 3;</span>
+<span class="lineNum">    1569 </span><span class="lineNoCov">          0 :         *encPtr = encodingTable[UTF_8_ENC];</span>
+<span class="lineNum">    1570 </span><span class="lineNoCov">          0 :         return XML_TOK_BOM;</span>
+<span class="lineNum">    1571 </span>            :       }
+<span class="lineNum">    1572 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">    1573 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">    1574 </span><span class="lineNoCov">          0 :       if (ptr[0] == '\0') {</span>
+<span class="lineNum">    1575 </span>            :         /* 0 isn't a legal data character. Furthermore a document
+<span class="lineNum">    1576 </span>            :            entity can only start with ASCII characters.  So the only
+<span class="lineNum">    1577 </span>            :            way this can fail to be big-endian UTF-16 if it it's an
+<span class="lineNum">    1578 </span>            :            external parsed general entity that's labelled as
+<span class="lineNum">    1579 </span>            :            UTF-16LE.
+<span class="lineNum">    1580 </span>            :         */
+<span class="lineNum">    1581 </span><span class="lineNoCov">          0 :         if (state == XML_CONTENT_STATE &amp;&amp; INIT_ENC_INDEX(enc) == UTF_16LE_ENC)</span>
+<span class="lineNum">    1582 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">    1583 </span><span class="lineNoCov">          0 :         *encPtr = encodingTable[UTF_16BE_ENC];</span>
+<span class="lineNum">    1584 </span><span class="lineNoCov">          0 :         return XmlTok(*encPtr, state, ptr, end, nextTokPtr);</span>
+<span class="lineNum">    1585 </span>            :       }
+<span class="lineNum">    1586 </span><span class="lineNoCov">          0 :       else if (ptr[1] == '\0') {</span>
+<span class="lineNum">    1587 </span>            :         /* We could recover here in the case:
+<span class="lineNum">    1588 </span>            :             - parsing an external entity
+<span class="lineNum">    1589 </span>            :             - second byte is 0
+<span class="lineNum">    1590 </span>            :             - no externally specified encoding
+<span class="lineNum">    1591 </span>            :             - no encoding declaration
+<span class="lineNum">    1592 </span>            :            by assuming UTF-16LE.  But we don't, because this would mean when
+<span class="lineNum">    1593 </span>            :            presented just with a single byte, we couldn't reliably determine
+<span class="lineNum">    1594 </span>            :            whether we needed further bytes.
+<span class="lineNum">    1595 </span>            :         */
+<span class="lineNum">    1596 </span><span class="lineNoCov">          0 :         if (state == XML_CONTENT_STATE)</span>
+<span class="lineNum">    1597 </span><span class="lineNoCov">          0 :           break;</span>
+<span class="lineNum">    1598 </span><span class="lineNoCov">          0 :         *encPtr = encodingTable[UTF_16LE_ENC];</span>
+<span class="lineNum">    1599 </span><span class="lineNoCov">          0 :         return XmlTok(*encPtr, state, ptr, end, nextTokPtr);</span>
+<span class="lineNum">    1600 </span>            :       }
+<span class="lineNum">    1601 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">    1602 </span>            :     }
+<span class="lineNum">    1603 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">    1604 </span><span class="lineNoCov">          0 :   *encPtr = encodingTable[INIT_ENC_INDEX(enc)];</span>
+<span class="lineNum">    1605 </span><span class="lineNoCov">          0 :   return XmlTok(*encPtr, state, ptr, end, nextTokPtr);</span>
+<span class="lineNum">    1606 </span>            : }
+<span class="lineNum">    1607 </span>            : 
+<span class="lineNum">    1608 </span>            : 
+<span class="lineNum">    1609 </span>            : #define NS(x) x
+<span class="lineNum">    1610 </span>            : #define ns(x) x
+<span class="lineNum">    1611 </span>            : #include &quot;xmltok_ns.c&quot;
+<span class="lineNum">    1612 </span>            : #undef NS
+<span class="lineNum">    1613 </span>            : #undef ns
+<span class="lineNum">    1614 </span>            : 
+<span class="lineNum">    1615 </span>            : #ifdef XML_NS
+<span class="lineNum">    1616 </span>            : 
+<span class="lineNum">    1617 </span>            : #define NS(x) x ## NS
+<span class="lineNum">    1618 </span>            : #define ns(x) x ## _ns
+<span class="lineNum">    1619 </span>            : 
+<span class="lineNum">    1620 </span>            : #include &quot;xmltok_ns.c&quot;
+<span class="lineNum">    1621 </span>            : 
+<span class="lineNum">    1622 </span>            : #undef NS
+<span class="lineNum">    1623 </span>            : #undef ns
+<a name="1624"><span class="lineNum">    1624 </span>            : </a>
+<span class="lineNum">    1625 </span>            : ENCODING *
+<span class="lineNum">    1626 </span><span class="lineNoCov">          0 : XmlInitUnknownEncodingNS(void *mem,</span>
+<span class="lineNum">    1627 </span>            :                          int *table,
+<span class="lineNum">    1628 </span>            :                          CONVERTER convert,
+<span class="lineNum">    1629 </span>            :                          void *userData)
+<span class="lineNum">    1630 </span>            : {
+<span class="lineNum">    1631 </span><span class="lineNoCov">          0 :   ENCODING *enc = XmlInitUnknownEncoding(mem, table, convert, userData);</span>
+<span class="lineNum">    1632 </span><span class="lineNoCov">          0 :   if (enc)</span>
+<span class="lineNum">    1633 </span><span class="lineNoCov">          0 :     ((struct normal_encoding *)enc)-&gt;type[ASCII_COLON] = BT_COLON;</span>
+<span class="lineNum">    1634 </span><span class="lineNoCov">          0 :   return enc;</span>
+<span class="lineNum">    1635 </span>            : }
+<span class="lineNum">    1636 </span>            : 
+<span class="lineNum">    1637 </span>            : #endif /* XML_NS */
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

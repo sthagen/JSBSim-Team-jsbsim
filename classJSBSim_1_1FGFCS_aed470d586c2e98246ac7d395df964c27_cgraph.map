@@ -1,0 +1,4 @@
+<map id="SetWingFoldPos" name="SetWingFoldPos">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGFCS.html#aa8cd228f48a6ad8e29b366c66a26ad14" title="Sets the actual prop pitch setting for the specified engine. " alt="" coords="173,5,293,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGFCS.html#a486a172e5852b3c1c8c7bfcb60adc000" title="Sets the actual prop feather setting for the specified engine. " alt="" coords="177,56,290,83"/>
+</map>

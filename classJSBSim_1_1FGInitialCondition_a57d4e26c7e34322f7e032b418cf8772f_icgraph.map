@@ -1,0 +1,8 @@
+<map id="SetCrossWindKtsIC" name="SetCrossWindKtsIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="408,31,459,57"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#aae17f88a86799403d5a50d5a3a981c60" title="Sets the initial body axis yaw rate. " alt="" coords="195,81,299,108"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a4824f36ca8f38ef52be1bcaa785c404f" title="Gets the target normal load factor set from IC. " alt="" coords="629,5,740,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInput.html#a8204557b6f2865b7e6e29b3a3a9d524d" title="Adds a new input instance to the Input Manager. " alt="" coords="568,56,801,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="585,107,785,133"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="347,81,520,108"/>
+</map>

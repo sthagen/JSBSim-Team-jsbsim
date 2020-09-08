@@ -1,0 +1,3 @@
+<map id="GetTemperatureRatio" name="GetTemperatureRatio">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAtmosphere.html#af90cc0e0a48a2b251498780a103b2c44" title="Returns the actual, modeled temperature at the current altitude in degrees Rankine. " alt="" coords="200,5,316,32"/>
+</map>

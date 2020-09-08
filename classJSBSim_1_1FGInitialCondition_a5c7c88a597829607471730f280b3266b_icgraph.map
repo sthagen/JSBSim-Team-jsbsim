@@ -1,0 +1,10 @@
+<map id="SetLongitudeRadIC" name="SetLongitudeRadIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#af4c905db84f046ff017aaa3cb86a3541" title="Loads the initial conditions. " alt="" coords="595,54,645,81"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGInitialCondition.html#a6fe6c08828d7c74e174ba1ad7f61101e" title="Sets the initial longitude. " alt="" coords="189,29,325,55"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGInitialCondition.html#a0ab5b13bb7a8589f9c565ceb3dd96202" title="Sets the initial heading angle. " alt="" coords="208,105,307,131"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a4824f36ca8f38ef52be1bcaa785c404f" title="Gets the target normal load factor set from IC. " alt="" coords="755,29,865,55"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGInput.html#a8204557b6f2865b7e6e29b3a3a9d524d" title="Adds a new input instance to the Input Manager. " alt="" coords="693,79,927,106"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGScript.html#affd5971385d780aef57a6f7a9645f9f7" title="Loads a script to drive JSBSim (usually in standalone mode). " alt="" coords="710,130,910,157"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1FGInitialCondition.html#aa7cac15ce4c6ca22c645fe0012bd0797" title="Sets the heading angle initial condition in degrees. " alt="" coords="411,130,509,157"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1FGTrim.html#a6a5e26b6c78ad99b63d075c6acc70679" title="Execute the trim. " alt="" coords="373,181,547,207"/>
+</map>

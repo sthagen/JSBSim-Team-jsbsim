@@ -1,0 +1,6 @@
+<map id="SqrMagnitude" name="SqrMagnitude">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGQuaternion.html#a231f7602591a267c2669a2af9b9c8749" title="Normalize. " alt="" coords="156,56,237,83"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGQuaternion.html#a4b994a872678de3097f1c86723ce92c9" title="Length of the vector. " alt="" coords="325,5,408,32"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1FGMatrix33.html#a07067602e11a88f2a5d341128499fff3" title="Transposes this matrix. " alt="" coords="285,56,448,83"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGMatrix33.html#aed3e63a9693712e447930a68dedd1cc4" title="Returns the Euler angle column vector associated with this matrix. " alt="" coords="293,107,440,149"/>
+</map>

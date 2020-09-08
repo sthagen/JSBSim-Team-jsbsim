@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/models/flight_control/FGPID.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">src/models/flight_control</a> - FGPID.h<span style="font-size: 80%;"> (source / <a href="FGPID.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            :  Header:       FGPID.h
+<span class="lineNum">       4 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       5 </span>            :  Date started: 6/17/2006
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 2006 by Jon S. Berndt, jon@jsbsim.org -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : Initial Code 6/17/2006 JSB
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      31 </span>            : SENTRY
+<span class="lineNum">      32 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : #ifndef FGPID_H
+<span class="lineNum">      35 </span>            : #define FGPID_H
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      38 </span>            : INCLUDES
+<span class="lineNum">      39 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #include &quot;FGFCSComponent.h&quot;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      44 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      45 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : namespace JSBSim {
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            : class FGFCS;
+<span class="lineNum">      50 </span>            : class Element;
+<span class="lineNum">      51 </span>            : class FGParameter;
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      54 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      55 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : /** Encapsulates a PID control component for the flight control system.
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : &lt;h3&gt;Configuration Format:&lt;/h3&gt;
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : @code
+<span class="lineNum">      62 </span>            : &lt;pid name=&quot;{string}&quot; [type=&quot;standard&quot;]&gt;
+<span class="lineNum">      63 </span>            :   &lt;input&gt; {[-]property} &lt;/input&gt;
+<span class="lineNum">      64 </span>            :   &lt;kp&gt; {number|[-]property} &lt;/kp&gt;
+<span class="lineNum">      65 </span>            :   &lt;ki type=&quot;rect|trap|ab2|ab3&quot;&gt; {number|[-]property} &lt;/ki&gt;
+<span class="lineNum">      66 </span>            :   &lt;kd&gt; {number|[-]property} &lt;/kd&gt;
+<span class="lineNum">      67 </span>            :   &lt;trigger&gt; {property} &lt;/trigger&gt;
+<span class="lineNum">      68 </span>            :   &lt;pvdot&gt; {property} &lt;/pvdot&gt;
+<span class="lineNum">      69 </span>            : &lt;/pid&gt;
+<span class="lineNum">      70 </span>            : @endcode
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span>            : For the integration constant element, one can also supply the type attribute for
+<span class="lineNum">      73 </span>            : what kind of integrator to be used, one of:
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            : - rect, for a rectangular integrator
+<span class="lineNum">      76 </span>            : - trap, for a trapezoidal integrator
+<span class="lineNum">      77 </span>            : - ab2, for a second order Adams Bashforth integrator
+<span class="lineNum">      78 </span>            : - ab3, for a third order Adams Bashforth integrator
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            : For example,
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            : @code
+<span class="lineNum">      83 </span>            : &lt;pid name=&quot;fcs/heading-control&quot;&gt;
+<span class="lineNum">      84 </span>            :   &lt;input&gt; fcs/heading-error &lt;/input&gt;
+<span class="lineNum">      85 </span>            :   &lt;kp&gt; 3 &lt;/kp&gt;
+<span class="lineNum">      86 </span>            :   &lt;ki type=&quot;ab3&quot;&gt; 1 &lt;/ki&gt;
+<span class="lineNum">      87 </span>            :   &lt;kd&gt; 1 &lt;/kd&gt;
+<span class="lineNum">      88 </span>            : &lt;/pid&gt;
+<span class="lineNum">      89 </span>            : @endcode
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            : &lt;h3&gt;Configuration Parameters:&lt;/h3&gt;
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            :   The values of kp, ki, and kd have slightly different interpretations depending
+<span class="lineNum">      94 </span>            :   on whether the PID controller is a standard one, or an ideal/parallel one -
+<span class="lineNum">      95 </span>            :   with the latter being the default.
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            :   By default, the PID controller computes the derivative as being the slope of
+<span class="lineNum">      98 </span>            :   the line joining the value of the previous input to the value of the current
+<span class="lineNum">      99 </span>            :   input. However if a better estimation can be determined for the derivative,
+<span class="lineNum">     100 </span>            :   you can provide its value to the PID controller via the property supplied in
+<span class="lineNum">     101 </span>            :   pvdot.
+<span class="lineNum">     102 </span>            :   
+<span class="lineNum">     103 </span>            :   kp      - Proportional constant, default value 0.
+<span class="lineNum">     104 </span>            :   ki      - Integrative constant, default value 0.
+<span class="lineNum">     105 </span>            :   kd      - Derivative constant, default value 0.
+<span class="lineNum">     106 </span>            :   trigger - Property which is used to sense wind-up, optional. Most often, the
+<span class="lineNum">     107 </span>            :             trigger will be driven by the &quot;saturated&quot; property of a particular
+<span class="lineNum">     108 </span>            :             actuator. When the relevant actuator has reached it's limits (if
+<span class="lineNum">     109 </span>            :             there are any, specified by the &lt;clipto&gt; element) the automatically
+<span class="lineNum">     110 </span>            :             generated saturated property will be greater than zero (true). If
+<span class="lineNum">     111 </span>            :             this property is used as the trigger for the integrator, the
+<span class="lineNum">     112 </span>            :             integrator will not continue to integrate while the property is
+<span class="lineNum">     113 </span>            :             still true (&gt; 1), preventing wind-up.
+<span class="lineNum">     114 </span>            :             The integrator can also be reset to 0.0 if the property is set to a
+<span class="lineNum">     115 </span>            :             negative value.
+<span class="lineNum">     116 </span>            :   pvdot   - The property to be used as the process variable time derivative.
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span>            :     @author Jon S. Berndt
+<span class="lineNum">     119 </span>            : */
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     122 </span>            : CLASS DECLARATION
+<span class="lineNum">     123 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            : class FGPID  : public FGFCSComponent
+<span class="lineNum">     126 </span>            : {
+<span class="lineNum">     127 </span>            : public:
+<span class="lineNum">     128 </span>            :   FGPID(FGFCS* fcs, Element* element);
+<span class="lineNum">     129 </span>            :   ~FGPID();
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            :   bool Run (void) override;
+<span class="lineNum">     132 </span>            :   void ResetPastStates(void) override;
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :     /// These define the indices use to select the various integrators.
+<span class="lineNum">     135 </span>            :   enum eIntegrateType {eNone = 0, eRectEuler, eTrapezoidal, eAdamsBashforth2,
+<a name="136"><span class="lineNum">     136 </span>            :                        eAdamsBashforth3};</a>
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :   void SetInitialOutput(double val) {</span>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :     I_out_total = val;</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :     Output = val;</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            : private:
+<span class="lineNum">     144 </span>            :   double I_out_total;
+<span class="lineNum">     145 </span>            :   double Input_prev, Input_prev2;
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            :   bool IsStandard;
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span>            :   eIntegrateType IntType;
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            :   FGParameter *Kp, *Ki, *Kd, *Trigger, *ProcessVariableDot;
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :   void bind(Element* el) override;
+<span class="lineNum">     154 </span>            :   void Debug(int from) override;
+<span class="lineNum">     155 </span>            : };
+<span class="lineNum">     156 </span>            : }
+<span class="lineNum">     157 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

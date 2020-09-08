@@ -1,0 +1,18 @@
+<map id="FGFunction" name="FGFunction">
+<area shape="rect" id="node2" href="$classJSBSim_1_1Element.html#a4fd4cb4d88046523b2cf729bf847e0e2" title="Retrieves an attribute. " alt="" coords="400,153,604,194"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1Element.html#a947c5ac935ae1435154c6198c46fbb55" title="Return a string that contains a description of the location where the current XML element was read fr..." alt="" coords="150,48,345,75"/>
+<area shape="rect" id="node4" href="$classJSBSim_1_1Element.html#aeed93f7828bb444f583f7940e4f0f8ad" title="Retrieves the element name. " alt="" coords="152,99,343,125"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1Element.html#a66c9f019215d9c6b3f85cdab75d6d429" title="Gets a line of data belonging to an element. " alt="" coords="399,88,605,115"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1Element.html#a3e316013e56ca6a0794dea925889d302" title="Returns a pointer to the element requested by index. " alt="" coords="146,200,349,227"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1Element.html#ac5c2e3334b384afca061f0bf965dc864" title="Determines if an element has the supplied attribute. " alt="" coords="144,251,351,277"/>
+<area shape="rect" id="node10" href="$classJSBSim_1_1Element.html#ac4d4a2672f9ed7d1da87e393c185d1f2" title="Converts the element data to a number. " alt="" coords="156,302,339,343"/>
+<area shape="rect" id="node11" href="$classJSBSim_1_1FGFunction.html#a20153bedb4fc19a8b698f34dada67e5f" title="Retrieves the value of the function object. " alt="" coords="653,481,729,508"/>
+<area shape="rect" id="node12" href="$classJSBSim_1_1FGQuaternion.html#a4c650fa69b797cb5d122b7b19c70d380" title="Transformation matrix. " alt="" coords="168,419,327,461"/>
+<area shape="rect" id="node13" href="$classJSBSim_1_1FGMatrix33.html#a07067602e11a88f2a5d341128499fff3" title="Transposes this matrix. " alt="" coords="166,485,329,512"/>
+<area shape="rect" id="node14" href="$classJSBSim_1_1FGFunction.html#a23a8ff3382453c209996391574e42b66" title="Does the function always return the same result (i.e. " alt="" coords="459,501,545,528"/>
+<area shape="rect" id="node15" href="$classJSBSim_1_1FGFunction.html#a2842714eb53693f6a053610d97a0bac9" title="Retrieves the name of the function. " alt="" coords="208,368,287,395"/>
+<area shape="rect" id="node17" href="$classJSBSim_1_1Element.html#ae7a0029049e0ee746bb347bf6682075a" title="Returns a pointer to the next element in the list. " alt="" coords="156,638,339,679"/>
+<area shape="rect" id="node8" href="$classJSBSim_1_1Element.html#a18dbe776038e11c6d5fcdee8457e5c06" title="Modifies an attribute. " alt="" coords="401,302,603,343"/>
+<area shape="rect" id="node9" href="$classJSBSim_1_1Element.html#a30a269bd930d31646341ba15787281e3" title="Retrieves an attribute value as a double precision real number. " alt="" coords="400,237,604,278"/>
+<area shape="rect" id="node16" href="$classJSBSim_1_1FGFunction.html#a23ddcda982a7bae0faf51a548f0aafeb" title="Specifies whether to cache the value of the function, so it is calculated only once per frame..." alt="" coords="457,396,547,423"/>
+</map>

@@ -1,0 +1,745 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - JSBSim unit tests - src/FGFDMExec.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - FGFDMExec.h<span style="font-size: 80%;"> (source / <a href="FGFDMExec.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">JSBSim unit tests</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">76</td>
+            <td class="headerCovTableEntryLo">21.1 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-09-08 08:53:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntryLo">25.9 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a>
+<span class="lineNum">       2 </span>            :  Header:       FGFDMExec.h
+<span class="lineNum">       3 </span>            :  Author:       Jon Berndt
+<span class="lineNum">       4 </span>            :  Date started: 11/17/98
+<span class="lineNum">       5 </span>            :  file The header file for the JSBSim executive.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :  ------------- Copyright (C) 1999  Jon S. Berndt (jon@jsbsim.org) -------------
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :  This program is free software; you can redistribute it and/or modify it under
+<span class="lineNum">      10 </span>            :  the terms of the GNU Lesser General Public License as published by the Free
+<span class="lineNum">      11 </span>            :  Software Foundation; either version 2 of the License, or (at your option) any
+<span class="lineNum">      12 </span>            :  later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :  This program is distributed in the hope that it will be useful, but WITHOUT
+<span class="lineNum">      15 </span>            :  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+<span class="lineNum">      16 </span>            :  FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+<span class="lineNum">      17 </span>            :  details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :  You should have received a copy of the GNU Lesser General Public License along
+<span class="lineNum">      20 </span>            :  with this program; if not, write to the Free Software Foundation, Inc., 59
+<span class="lineNum">      21 </span>            :  Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :  Further information about the GNU Lesser General Public License can also be
+<span class="lineNum">      24 </span>            :  found on the world wide web at http://www.gnu.org.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : HISTORY
+<span class="lineNum">      27 </span>            : --------------------------------------------------------------------------------
+<span class="lineNum">      28 </span>            : 11/17/98   JSB   Created
+<span class="lineNum">      29 </span>            : 7/31/99     TP   Added RunIC function that runs the sim so that every frame
+<span class="lineNum">      30 </span>            :                  begins with the IC values from the given FGInitialCondition
+<span class="lineNum">      31 </span>            :                  object and dt=0.
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      34 </span>            : SENTRY
+<span class="lineNum">      35 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : #ifndef FGFDMEXEC_HEADER_H
+<span class="lineNum">      38 </span>            : #define FGFDMEXEC_HEADER_H
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      41 </span>            : INCLUDES
+<span class="lineNum">      42 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : #include &lt;memory&gt;
+<span class="lineNum">      45 </span>            : #include &lt;random&gt;
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : #include &quot;models/FGPropagate.h&quot;
+<span class="lineNum">      48 </span>            : #include &quot;models/FGOutput.h&quot;
+<span class="lineNum">      49 </span>            : #include &quot;math/FGTemplateFunc.h&quot;
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      52 </span>            : FORWARD DECLARATIONS
+<span class="lineNum">      53 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            : namespace JSBSim {
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : class FGScript;
+<span class="lineNum">      58 </span>            : class FGTrim;
+<span class="lineNum">      59 </span>            : class FGAerodynamics;
+<span class="lineNum">      60 </span>            : class FGAircraft;
+<span class="lineNum">      61 </span>            : class FGAtmosphere;
+<span class="lineNum">      62 </span>            : class FGAccelerations;
+<span class="lineNum">      63 </span>            : class FGWinds;
+<span class="lineNum">      64 </span>            : class FGAuxiliary;
+<span class="lineNum">      65 </span>            : class FGBuoyantForces;
+<span class="lineNum">      66 </span>            : class FGExternalReactions;
+<span class="lineNum">      67 </span>            : class FGGroundReactions;
+<span class="lineNum">      68 </span>            : class FGFCS;
+<span class="lineNum">      69 </span>            : class FGInertial;
+<span class="lineNum">      70 </span>            : class FGInput;
+<span class="lineNum">      71 </span>            : class FGPropulsion;
+<span class="lineNum">      72 </span>            : class FGMassBalance;
+<span class="lineNum">      73 </span>            : class FGTrim;
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">      76 </span>            : CLASS DOCUMENTATION
+<span class="lineNum">      77 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            : /** Encapsulates the JSBSim simulation executive.
+<span class="lineNum">      80 </span>            :     This class is the executive class through which all other simulation classes
+<span class="lineNum">      81 </span>            :     are instantiated, initialized, and run. When integrated with FlightGear (or
+<span class="lineNum">      82 </span>            :     other flight simulator) this class is typically instantiated by an interface
+<span class="lineNum">      83 </span>            :     class on the simulator side.
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :     At the time of simulation initialization, the interface
+<span class="lineNum">      86 </span>            :     class creates an instance of this executive class. The
+<span class="lineNum">      87 </span>            :     executive is subsequently directed to load the chosen aircraft specification
+<span class="lineNum">      88 </span>            :     file:
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            :     @code{.cpp}
+<span class="lineNum">      91 </span>            :     fdmex = new FGFDMExec( ... );
+<span class="lineNum">      92 </span>            :     result = fdmex-&gt;LoadModel( ... );
+<span class="lineNum">      93 </span>            :     @endcode
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :     When an aircraft model is loaded, the config file is parsed and for each of
+<span class="lineNum">      96 </span>            :     the sections of the config file (propulsion, flight control, etc.) the
+<span class="lineNum">      97 </span>            :     corresponding Load() method is called (e.g. FGFCS::Load()).
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span>            :     Subsequent to the creation of the executive and loading of the model,
+<span class="lineNum">     100 </span>            :     initialization is performed. Initialization involves copying control inputs
+<span class="lineNum">     101 </span>            :     into the appropriate JSBSim data storage locations, configuring it for the
+<span class="lineNum">     102 </span>            :     set of user supplied initial conditions, and then copying state variables
+<span class="lineNum">     103 </span>            :     from JSBSim. The state variables are used to drive the instrument displays
+<span class="lineNum">     104 </span>            :     and to place the vehicle model in world space for visual rendering:
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :     @code{.cpp}
+<span class="lineNum">     107 </span>            :     copy_to_JSBsim(); // copy control inputs to JSBSim
+<span class="lineNum">     108 </span>            :     fdmex-&gt;RunIC(); // loop JSBSim once w/o integrating
+<span class="lineNum">     109 </span>            :     copy_from_JSBsim(); // update the bus
+<span class="lineNum">     110 </span>            :     @endcode
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span>            :     Once initialization is complete, cyclic execution proceeds:
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :     @code{.cpp}
+<span class="lineNum">     115 </span>            :     copy_to_JSBsim(); // copy control inputs to JSBSim
+<span class="lineNum">     116 </span>            :     fdmex-&gt;Run(); // execute JSBSim
+<span class="lineNum">     117 </span>            :     copy_from_JSBsim(); // update the bus
+<span class="lineNum">     118 </span>            :     @endcode
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :     JSBSim can be used in a standalone mode by creating a compact stub program
+<span class="lineNum">     121 </span>            :     that effectively performs the same progression of steps as outlined above
+<span class="lineNum">     122 </span>            :     for the integrated version, but with two exceptions. First, the
+<span class="lineNum">     123 </span>            :     copy_to_JSBSim() and copy_from_JSBSim() functions are not used because the
+<span class="lineNum">     124 </span>            :     control inputs are handled directly by the scripting facilities and outputs
+<span class="lineNum">     125 </span>            :     are handled by the output (data logging) class. Second, the name of a script
+<span class="lineNum">     126 </span>            :     file can be supplied to the stub program. Scripting (see FGScript) provides
+<span class="lineNum">     127 </span>            :     a way to supply command inputs to the simulation:
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span>            :     @code{.cpp}
+<span class="lineNum">     130 </span>            :     FDMExec = new JSBSim::FGFDMExec();
+<span class="lineNum">     131 </span>            :     FDMExec-&gt;LoadScript( ScriptName ); // the script loads the aircraft and ICs
+<span class="lineNum">     132 </span>            :     result = FDMExec-&gt;Run();
+<span class="lineNum">     133 </span>            :     while (result) { // cyclic execution
+<span class="lineNum">     134 </span>            :       result = FDMExec-&gt;Run(); // execute JSBSim
+<span class="lineNum">     135 </span>            :     }
+<span class="lineNum">     136 </span>            :     @endcode
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            :     The standalone mode has been useful for verifying changes before committing
+<span class="lineNum">     139 </span>            :     updates to the source code repository. It is also useful for running sets of
+<span class="lineNum">     140 </span>            :     tests that reveal some aspects of simulated aircraft performance, such as
+<span class="lineNum">     141 </span>            :     range, time-to-climb, takeoff distance, etc.
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            :     &lt;h3&gt;JSBSim Debugging Directives&lt;/h3&gt;
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            :     This describes to any interested entity the debug level
+<span class="lineNum">     146 </span>            :     requested by setting the JSBSIM_DEBUG environment variable.
+<span class="lineNum">     147 </span>            :     The bitmasked value choices are as follows:
+<span class="lineNum">     148 </span>            :     - &lt;b&gt;unset&lt;/b&gt;: In this case (the default) JSBSim would only print
+<span class="lineNum">     149 </span>            :        out the normally expected messages, essentially echoing
+<span class="lineNum">     150 </span>            :        the config files as they are read. If the environment
+<span class="lineNum">     151 </span>            :        variable is not set, debug_lvl is set to 1 internally
+<span class="lineNum">     152 </span>            :     - &lt;b&gt;0&lt;/b&gt;: This requests JSBSim not to output any messages
+<span class="lineNum">     153 </span>            :        whatsoever
+<span class="lineNum">     154 </span>            :     - &lt;b&gt;1&lt;/b&gt;: This value explicity requests the normal JSBSim
+<span class="lineNum">     155 </span>            :        startup messages
+<span class="lineNum">     156 </span>            :     - &lt;b&gt;2&lt;/b&gt;: This value asks for a message to be printed out when
+<span class="lineNum">     157 </span>            :        a class is instantiated
+<span class="lineNum">     158 </span>            :     - &lt;b&gt;4&lt;/b&gt;: When this value is set, a message is displayed when a
+<span class="lineNum">     159 </span>            :        FGModel object executes its Run() method
+<span class="lineNum">     160 </span>            :     - &lt;b&gt;8&lt;/b&gt;: When this value is set, various runtime state variables
+<span class="lineNum">     161 </span>            :        are printed out periodically
+<span class="lineNum">     162 </span>            :     - &lt;b&gt;16&lt;/b&gt;: When set various parameters are sanity checked and
+<span class="lineNum">     163 </span>            :        a message is printed out when they go out of bounds
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span>            :     &lt;h3&gt;Properties&lt;/h3&gt;
+<span class="lineNum">     166 </span>            :     @property simulator/do_trim (write only) Can be set to the integer equivalent to one of
+<span class="lineNum">     167 </span>            :                                 tLongitudinal (0), tFull (1), tGround (2), tPullup (3),
+<span class="lineNum">     168 </span>            :                                 tCustom (4), tTurn (5). Setting this to a legal value
+<span class="lineNum">     169 </span>            :                                 (such as by a script) causes a trim to be performed. This
+<span class="lineNum">     170 </span>            :                                 property actually maps toa function call of DoTrim().
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :     @author Jon S. Berndt
+<span class="lineNum">     173 </span>            :     @version $Revision: 1.106 $
+<span class="lineNum">     174 </span>            : */
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            : /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     177 </span>            : CLASS DECLARATION
+<span class="lineNum">     178 </span>            : %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            : class FGFDMExec : public FGJSBBase
+<span class="lineNum">     181 </span>            : {
+<span class="lineNum">     182 </span>            :   struct childData {
+<span class="lineNum">     183 </span>            :     FGFDMExec* exec;
+<span class="lineNum">     184 </span>            :     std::string info;
+<span class="lineNum">     185 </span>            :     FGColumnVector3 Loc;
+<span class="lineNum">     186 </span>            :     FGColumnVector3 Orient;
+<span class="lineNum">     187 </span>            :     bool mated;
+<a name="188"><span class="lineNum">     188 </span>            :     bool internal;</a>
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     childData(void) {</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :       info = &quot;&quot;;</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :       Loc = FGColumnVector3(0,0,0);</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :       Orient = FGColumnVector3(0,0,0);</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :       mated = true;</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :       internal = false;</span>
+<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="197"><span class="lineNum">     197 </span>            :     </a>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :     void Run(void) {exec-&gt;Run();}</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :     void AssignState(FGPropagate* source_prop) {</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :       exec-&gt;GetPropagate()-&gt;SetVState(source_prop-&gt;GetVState());</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            :     ~childData(void) {
+<span class="lineNum">     204 </span>            :       delete exec;
+<span class="lineNum">     205 </span>            :     }
+<span class="lineNum">     206 </span>            :   };
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            : public:
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span>            :   /// Default constructor
+<span class="lineNum">     211 </span>            :   FGFDMExec(FGPropertyManager* root = 0, unsigned int* fdmctr = 0);
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span>            :   /// Default destructor
+<span class="lineNum">     214 </span>            :   ~FGFDMExec();
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span>            :   // This list of enums is very important! The order in which models are listed
+<span class="lineNum">     217 </span>            :   // here determines the order of execution of the models.
+<span class="lineNum">     218 </span>            :   //
+<span class="lineNum">     219 </span>            :   // There are some conditions that need to be met :
+<span class="lineNum">     220 </span>            :   // 1. FCS can request mass geometry changes via the inertia/pointmass-*
+<span class="lineNum">     221 </span>            :   //    properties so it must be executed before MassBalance
+<span class="lineNum">     222 </span>            :   // 2. MassBalance must be executed before Propulsion, Aerodynamics,
+<span class="lineNum">     223 </span>            :   //    GroundReactions, ExternalReactions and BuoyantForces to ensure that
+<span class="lineNum">     224 </span>            :   //    their moments are computed with the updated CG position.
+<span class="lineNum">     225 </span>            :   enum eModels { ePropagate=0,
+<span class="lineNum">     226 </span>            :                  eInput,
+<span class="lineNum">     227 </span>            :                  eInertial,
+<span class="lineNum">     228 </span>            :                  eAtmosphere,
+<span class="lineNum">     229 </span>            :                  eWinds,
+<span class="lineNum">     230 </span>            :                  eSystems,
+<span class="lineNum">     231 </span>            :                  eMassBalance,
+<span class="lineNum">     232 </span>            :                  eAuxiliary,
+<span class="lineNum">     233 </span>            :                  ePropulsion,
+<span class="lineNum">     234 </span>            :                  eAerodynamics,
+<span class="lineNum">     235 </span>            :                  eGroundReactions,
+<span class="lineNum">     236 </span>            :                  eExternalReactions,
+<span class="lineNum">     237 </span>            :                  eBuoyantForces,
+<span class="lineNum">     238 </span>            :                  eAircraft,
+<span class="lineNum">     239 </span>            :                  eAccelerations,
+<span class="lineNum">     240 </span>            :                  eOutput,
+<span class="lineNum">     241 </span>            :                  eNumStandardModels };
+<a name="242"><span class="lineNum">     242 </span>            : </a>
+<span class="lineNum">     243 </span>            :   /** Unbind all tied JSBSim properties. */
+<span class="lineNum">     244 </span><span class="lineCov">          8 :   void Unbind(void) {instance-&gt;Unbind();}</span>
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span>            :   /** This function executes each scheduled model in succession.
+<span class="lineNum">     247 </span>            :       @return true if successful, false if sim should be ended  */
+<span class="lineNum">     248 </span>            :   bool Run(void);
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span>            :   /** Initializes the sim from the initial condition object and executes
+<span class="lineNum">     251 </span>            :       each scheduled model without integrating i.e. dt=0.
+<span class="lineNum">     252 </span>            :       @return true if successful */
+<span class="lineNum">     253 </span>            :   bool RunIC(void);
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span>            :   /** Loads an aircraft model.
+<span class="lineNum">     256 </span>            :       @param AircraftPath path to the aircraft/ directory. For instance:
+<span class="lineNum">     257 </span>            :       &quot;aircraft&quot;. Under aircraft, then, would be directories for various
+<span class="lineNum">     258 </span>            :       modeled aircraft such as C172/, x15/, etc.
+<span class="lineNum">     259 </span>            :       @param EnginePath path to the directory under which engine config
+<span class="lineNum">     260 </span>            :       files are kept, for instance &quot;engine&quot;
+<span class="lineNum">     261 </span>            :       @param SystemsPath path to the directory under which systems config
+<span class="lineNum">     262 </span>            :       files are kept, for instance &quot;systems&quot;
+<span class="lineNum">     263 </span>            :       @param model the name of the aircraft model itself. This file will
+<span class="lineNum">     264 </span>            :       be looked for in the directory specified in the AircraftPath variable,
+<span class="lineNum">     265 </span>            :       and in turn under the directory with the same name as the model. For
+<span class="lineNum">     266 </span>            :       instance: &quot;aircraft/x15/x15.xml&quot;
+<span class="lineNum">     267 </span>            :       @param addModelToPath set to true to add the model name to the
+<span class="lineNum">     268 </span>            :       AircraftPath, defaults to true
+<span class="lineNum">     269 </span>            :       @return true if successful */
+<span class="lineNum">     270 </span>            :   bool LoadModel(const SGPath&amp; AircraftPath, const SGPath&amp; EnginePath,
+<span class="lineNum">     271 </span>            :                  const SGPath&amp; SystemsPath, const std::string&amp; model,
+<span class="lineNum">     272 </span>            :                  bool addModelToPath = true);
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :   /** Loads an aircraft model.  The paths to the aircraft and engine
+<span class="lineNum">     275 </span>            :       config file directories must be set prior to calling this.  See
+<span class="lineNum">     276 </span>            :       below.
+<span class="lineNum">     277 </span>            :       @param model the name of the aircraft model itself. This file will
+<span class="lineNum">     278 </span>            :       be looked for in the directory specified in the AircraftPath variable,
+<span class="lineNum">     279 </span>            :       and in turn under the directory with the same name as the model. For
+<span class="lineNum">     280 </span>            :       instance: &quot;aircraft/x15/x15.xml&quot;
+<span class="lineNum">     281 </span>            :       @param addModelToPath set to true to add the model name to the
+<span class="lineNum">     282 </span>            :       AircraftPath, defaults to true
+<span class="lineNum">     283 </span>            :       @return true if successful*/
+<span class="lineNum">     284 </span>            :   bool LoadModel(const std::string&amp; model, bool addModelToPath = true);
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            :   /** Loads a script
+<span class="lineNum">     287 </span>            :       @param Script The full path name and file name for the script to be loaded.
+<span class="lineNum">     288 </span>            :       @param deltaT The simulation integration step size, if given.  If no value is supplied
+<span class="lineNum">     289 </span>            :                     then 0.0 is used and the value is expected to be supplied in
+<span class="lineNum">     290 </span>            :                     the script file itself.
+<span class="lineNum">     291 </span>            :       @param initfile The initialization file that will override the initialization file
+<span class="lineNum">     292 </span>            :                       specified in the script file. If no file name is given on the command line,
+<span class="lineNum">     293 </span>            :                       the file specified in the script will be used. If an initialization file 
+<span class="lineNum">     294 </span>            :                       is not given in either place, an error will result.
+<span class="lineNum">     295 </span>            :       @return true if successfully loads; false otherwise. */
+<span class="lineNum">     296 </span>            :   bool LoadScript(const SGPath&amp; Script, double deltaT=0.0,
+<span class="lineNum">     297 </span>            :                   const SGPath&amp; initfile=SGPath());
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span>            :   /** Sets the path to the engine config file directories.
+<a name="300"><span class="lineNum">     300 </span>            :       @param path path to the directory under which engine config</a>
+<span class="lineNum">     301 </span>            :       files are kept, for instance &quot;engine&quot;  */
+<span class="lineNum">     302 </span><span class="lineNoCov">          0 :   bool SetEnginePath(const SGPath&amp; path) {</span>
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :     EnginePath = GetFullPath(path);</span>
+<span class="lineNum">     304 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     305 </span>            :   }
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span>            :   /** Sets the path to the aircraft config file directories.
+<span class="lineNum">     308 </span>            :       @param path path to the aircraft directory. For instance:
+<a name="309"><span class="lineNum">     309 </span>            :       &quot;aircraft&quot;. Under aircraft, then, would be directories for various</a>
+<span class="lineNum">     310 </span>            :       modeled aircraft such as C172/, x15/, etc.  */
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :   bool SetAircraftPath(const SGPath&amp; path) {</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :     AircraftPath = GetFullPath(path);</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     314 </span>            :   }
+<span class="lineNum">     315 </span>            :   
+<span class="lineNum">     316 </span>            :   /** Sets the path to the systems config file directories.
+<a name="317"><span class="lineNum">     317 </span>            :       @param path path to the directory under which systems config</a>
+<span class="lineNum">     318 </span>            :       files are kept, for instance &quot;systems&quot;  */
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :   bool SetSystemsPath(const SGPath&amp; path) {</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :     SystemsPath = GetFullPath(path);</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     322 </span>            :   }
+<span class="lineNum">     323 </span>            :   
+<span class="lineNum">     324 </span>            :   /// @name Top-level executive State and Model retrieval mechanism
+<a name="325"><span class="lineNum">     325 </span>            :   ///@{</a>
+<span class="lineNum">     326 </span>            :   /// Returns the FGAtmosphere pointer.
+<a name="327"><span class="lineNum">     327 </span><span class="lineCov">         14 :   FGAtmosphere* GetAtmosphere(void)    {return (FGAtmosphere*)Models[eAtmosphere];}</span></a>
+<span class="lineNum">     328 </span>            :   /// Returns the FGAccelerations pointer.
+<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 :   FGAccelerations* GetAccelerations(void)    {return (FGAccelerations*)Models[eAccelerations];}</span></a>
+<span class="lineNum">     330 </span>            :   /// Returns the FGWinds pointer.
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :   FGWinds* GetWinds(void)    {return (FGWinds*)Models[eWinds];}</span></a>
+<span class="lineNum">     332 </span>            :   /// Returns the FGFCS pointer.
+<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :   FGFCS* GetFCS(void)                  {return (FGFCS*)Models[eSystems];}</span></a>
+<span class="lineNum">     334 </span>            :   /// Returns the FGPropulsion pointer.
+<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :   FGPropulsion* GetPropulsion(void)    {return (FGPropulsion*)Models[ePropulsion];}</span></a>
+<span class="lineNum">     336 </span>            :   /// Returns the FGAircraft pointer.
+<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :   FGMassBalance* GetMassBalance(void)  {return (FGMassBalance*)Models[eMassBalance];}</span></a>
+<span class="lineNum">     338 </span>            :   /// Returns the FGAerodynamics pointer
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :   FGAerodynamics* GetAerodynamics(void){return (FGAerodynamics*)Models[eAerodynamics];}</span></a>
+<span class="lineNum">     340 </span>            :   /// Returns the FGInertial pointer.
+<a name="341"><span class="lineNum">     341 </span><span class="lineCov">    1129098 :   FGInertial* GetInertial(void)        {return (FGInertial*)Models[eInertial];}</span></a>
+<span class="lineNum">     342 </span>            :   /// Returns the FGGroundReactions pointer.
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">          8 :   FGGroundReactions* GetGroundReactions(void) {return (FGGroundReactions*)Models[eGroundReactions];}</span></a>
+<span class="lineNum">     344 </span>            :   /// Returns the FGExternalReactions pointer.
+<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :   FGExternalReactions* GetExternalReactions(void) {return (FGExternalReactions*)Models[eExternalReactions];}</span></a>
+<span class="lineNum">     346 </span>            :   /// Returns the FGBuoyantForces pointer.
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :   FGBuoyantForces* GetBuoyantForces(void) {return (FGBuoyantForces*)Models[eBuoyantForces];}</span></a>
+<span class="lineNum">     348 </span>            :   /// Returns the FGAircraft pointer.
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">         14 :   FGAircraft* GetAircraft(void)        {return (FGAircraft*)Models[eAircraft];}</span></a>
+<span class="lineNum">     350 </span>            :   /// Returns the FGPropagate pointer.
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">          8 :   FGPropagate* GetPropagate(void)      {return (FGPropagate*)Models[ePropagate];}</span></a>
+<span class="lineNum">     352 </span>            :   /// Returns the FGAuxiliary pointer.
+<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :   FGAuxiliary* GetAuxiliary(void)      {return (FGAuxiliary*)Models[eAuxiliary];}</span></a>
+<span class="lineNum">     354 </span>            :   /// Returns the FGInput pointer.
+<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :   FGInput* GetInput(void)              {return (FGInput*)Models[eInput];}</span></a>
+<span class="lineNum">     356 </span>            :   /// Returns the FGOutput pointer.
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :   FGOutput* GetOutput(void)            {return (FGOutput*)Models[eOutput];}</span>
+<span class="lineNum">     358 </span>            :   /// Retrieves the script object
+<a name="359"><span class="lineNum">     359 </span>            :   FGScript* GetScript(void) {return Script;}</a>
+<span class="lineNum">     360 </span>            :   /// Returns a pointer to the FGInitialCondition object
+<span class="lineNum">     361 </span><span class="lineCov">         24 :   FGInitialCondition* GetIC(void)      {return IC;}</span>
+<span class="lineNum">     362 </span>            :   /// Returns a pointer to the FGTrim object
+<span class="lineNum">     363 </span>            :   FGTrim* GetTrim(void);
+<span class="lineNum">     364 </span>            :   ///@}
+<a name="365"><span class="lineNum">     365 </span>            : </a>
+<span class="lineNum">     366 </span>            :   /// Retrieves the engine path.
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :   const SGPath&amp; GetEnginePath(void)    {return EnginePath;}</span>
+<span class="lineNum">     368 </span>            :   /// Retrieves the aircraft path.
+<a name="369"><span class="lineNum">     369 </span>            :   const SGPath&amp; GetAircraftPath(void)  {return AircraftPath;}</a>
+<span class="lineNum">     370 </span>            :   /// Retrieves the systems path.
+<a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :   const SGPath&amp; GetSystemsPath(void)   {return SystemsPath;}</span></a>
+<span class="lineNum">     372 </span>            :   /// Retrieves the full aircraft path name.
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :   const SGPath&amp; GetFullAircraftPath(void) {return FullAircraftPath;}</span>
+<span class="lineNum">     374 </span>            : 
+<span class="lineNum">     375 </span>            :   /** Retrieves the value of a property.
+<span class="lineNum">     376 </span>            :       @param property the name of the property
+<span class="lineNum">     377 </span>            :       @result the value of the specified property */
+<span class="lineNum">     378 </span>            :   inline double GetPropertyValue(const std::string&amp; property)
+<span class="lineNum">     379 </span>            :   { return instance-&gt;GetNode()-&gt;GetDouble(property); }
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            :   /** Sets a property value.
+<a name="382"><span class="lineNum">     382 </span>            :       @param property the property to be set</a>
+<span class="lineNum">     383 </span>            :       @param value the value to set the property to */
+<span class="lineNum">     384 </span><span class="lineCov">          2 :   inline void SetPropertyValue(const std::string&amp; property, double value) {</span>
+<span class="lineNum">     385 </span><span class="lineCov">          2 :     instance-&gt;GetNode()-&gt;SetDouble(property, value);</span>
+<span class="lineNum">     386 </span><span class="lineCov">          2 :   }</span>
+<span class="lineNum">     387 </span>            : 
+<span class="lineNum">     388 </span>            :   /// Returns the model name.
+<span class="lineNum">     389 </span>            :   const std::string&amp; GetModelName(void) const { return modelName; }
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span>            :   /// Returns a pointer to the property manager object.
+<span class="lineNum">     392 </span>            :   FGPropertyManager* GetPropertyManager(void);
+<span class="lineNum">     393 </span>            :   /// Returns a vector of strings representing the names of all loaded models (future)
+<a name="394"><span class="lineNum">     394 </span>            :   std::vector &lt;std::string&gt; EnumerateFDMs(void);</a>
+<span class="lineNum">     395 </span>            :   /// Gets the number of child FDMs.
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :   int GetFDMCount(void) const {return (int)ChildFDMList.size();}</span></a>
+<span class="lineNum">     397 </span>            :   /// Gets a particular child FDM.
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :   childData* GetChildFDM(int i) const {return ChildFDMList[i];}</span></a>
+<span class="lineNum">     399 </span>            :   /// Marks this instance of the Exec object as a &quot;child&quot; object.
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :   void SetChild(bool ch) {IsChild = ch;}</span>
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span>            :   /** Sets the output (logging) mechanism for this run.
+<span class="lineNum">     403 </span>            :       Calling this function passes the name of an output directives file to
+<span class="lineNum">     404 </span>            :       the FGOutput object associated with this run. The call to this function
+<span class="lineNum">     405 </span>            :       should be made prior to loading an aircraft model. This call results in an
+<span class="lineNum">     406 </span>            :       FGOutput object being built as the first Output object in the FDMExec-managed
+<span class="lineNum">     407 </span>            :       list of Output objects that may be created for an aircraft model. If this call
+<span class="lineNum">     408 </span>            :       is made after an aircraft model is loaded, there is no effect. Any Output
+<span class="lineNum">     409 </span>            :       objects added by the aircraft model itself (in an &amp;lt;output&gt; element) will be
+<span class="lineNum">     410 </span>            :       added after this one. Care should be taken not to refer to the same file
+<span class="lineNum">     411 </span>            :       name.
+<span class="lineNum">     412 </span>            :       An output directives file contains an &amp;lt;output&gt; &amp;lt;/output&gt; element, within
+<span class="lineNum">     413 </span>            :       which should be specified the parameters or parameter groups that should
+<span class="lineNum">     414 </span>            :       be logged.
+<span class="lineNum">     415 </span>            :       @param fname the filename of an output directives file.
+<span class="lineNum">     416 </span>            :     */
+<span class="lineNum">     417 </span>            :   bool SetOutputDirectives(const SGPath&amp; fname)
+<span class="lineNum">     418 </span>            :   { return Output-&gt;SetDirectivesFile(GetFullPath(fname)); }
+<span class="lineNum">     419 </span>            : 
+<span class="lineNum">     420 </span>            :   /** Forces the specified output object to print its items once */
+<span class="lineNum">     421 </span>            :   void ForceOutput(int idx=0) { Output-&gt;ForceOutput(idx); }
+<span class="lineNum">     422 </span>            : 
+<span class="lineNum">     423 </span>            :   /** Sets the logging rate in Hz for all output objects (if any). */
+<span class="lineNum">     424 </span>            :   void SetLoggingRate(double rate) { Output-&gt;SetRateHz(rate); }
+<span class="lineNum">     425 </span>            : 
+<span class="lineNum">     426 </span>            :   /** Sets (or overrides) the output filename
+<span class="lineNum">     427 </span>            :       @param n index of file
+<span class="lineNum">     428 </span>            :       @param fname the name of the file to output data to
+<span class="lineNum">     429 </span>            :       @return true if successful, false if there is no output specified for the flight model */
+<span class="lineNum">     430 </span>            :   bool SetOutputFileName(const int n, const std::string&amp; fname) { return Output-&gt;SetOutputName(n, fname); }
+<span class="lineNum">     431 </span>            : 
+<span class="lineNum">     432 </span>            :   /** Retrieves the current output filename.
+<span class="lineNum">     433 </span>            :       @param n index of file
+<span class="lineNum">     434 </span>            :       @return the name of the output file for the output specified by the flight model.
+<span class="lineNum">     435 </span>            :               If none is specified, the empty string is returned. */
+<span class="lineNum">     436 </span>            :   std::string GetOutputFileName(int n) const { return Output-&gt;GetOutputName(n); }
+<span class="lineNum">     437 </span>            : 
+<span class="lineNum">     438 </span>            :   /** Executes trimming in the selected mode.
+<span class="lineNum">     439 </span>            :   *   @param mode Specifies how to trim:
+<span class="lineNum">     440 </span>            :   * - tLongitudinal=0
+<span class="lineNum">     441 </span>            :   * - tFull
+<span class="lineNum">     442 </span>            :   * - tGround
+<span class="lineNum">     443 </span>            :   * - tPullup
+<span class="lineNum">     444 </span>            :   * - tCustom
+<span class="lineNum">     445 </span>            :   * - tTurn
+<span class="lineNum">     446 </span>            :   * - tNone  */
+<span class="lineNum">     447 </span>            :   void DoTrim(int mode);
+<span class="lineNum">     448 </span>            : 
+<span class="lineNum">     449 </span>            :   /// Disables data logging to all outputs.
+<span class="lineNum">     450 </span>            :   void DisableOutput(void) { Output-&gt;Disable(); }
+<span class="lineNum">     451 </span>            :   /// Enables data logging to all outputs.
+<a name="452"><span class="lineNum">     452 </span>            :   void EnableOutput(void) { Output-&gt;Enable(); }</a>
+<span class="lineNum">     453 </span>            :   /// Pauses execution by preventing time from incrementing.
+<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :   void Hold(void) {holding = true;}</span></a>
+<span class="lineNum">     455 </span>            :   /// Turn on hold after increment
+<span class="lineNum">     456 </span><span class="lineNoCov">          0 :   void EnableIncrementThenHold(int Timesteps) {TimeStepsUntilHold = Timesteps; IncrementThenHolding = true;}</span>
+<span class="lineNum">     457 </span>            :   /// Checks if required to hold afer increment
+<a name="458"><span class="lineNum">     458 </span>            :   void CheckIncrementalHold(void);</a>
+<span class="lineNum">     459 </span>            :   /// Resumes execution from a &quot;Hold&quot;.
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :   void Resume(void) {holding = false;}</span>
+<span class="lineNum">     461 </span>            :   /// Returns true if the simulation is Holding (i.e. simulation time is not moving).
+<span class="lineNum">     462 </span>            :   bool Holding(void) {return holding;}
+<span class="lineNum">     463 </span>            :   /** Resets the initial conditions object and prepares the simulation to run
+<span class="lineNum">     464 </span>            :       again. If mode is set to 1 the output instances will take special actions
+<span class="lineNum">     465 </span>            :       such as closing the current output file and open a new one with a
+<span class="lineNum">     466 </span>            :       different name.
+<span class="lineNum">     467 </span>            :       @param mode Sets the reset mode.*/
+<a name="468"><span class="lineNum">     468 </span>            :   void ResetToInitialConditions(int mode);</a>
+<span class="lineNum">     469 </span>            :   /// Sets the debug level.
+<a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :   void SetDebugLevel(int level) {debug_lvl = level;}</span></a>
+<span class="lineNum">     471 </span>            : 
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :   struct PropertyCatalogStructure {</span>
+<span class="lineNum">     473 </span>            :     /// Name of the property.
+<span class="lineNum">     474 </span>            :     std::string base_string;
+<span class="lineNum">     475 </span>            :     /// The node for the property.
+<span class="lineNum">     476 </span>            :     FGPropertyNode_ptr node;
+<span class="lineNum">     477 </span>            :   };
+<span class="lineNum">     478 </span>            : 
+<span class="lineNum">     479 </span>            :   /** Builds a catalog of properties.
+<span class="lineNum">     480 </span>            :   *   This function descends the property tree and creates a list (an STL vector)
+<span class="lineNum">     481 </span>            :   *   containing the name and node for all properties.
+<span class="lineNum">     482 </span>            :   *   @param pcs The &quot;root&quot; property catalog structure pointer.  */
+<span class="lineNum">     483 </span>            :   void BuildPropertyCatalog(struct PropertyCatalogStructure* pcs);
+<span class="lineNum">     484 </span>            : 
+<span class="lineNum">     485 </span>            :   /** Retrieves property or properties matching the supplied string.
+<span class="lineNum">     486 </span>            :   *   A string is returned that contains a carriage return delimited list of all
+<span class="lineNum">     487 </span>            :   *   strings in the property catalog that matches the supplied check string.
+<span class="lineNum">     488 </span>            :   *   @param check The string to search for in the property catalog.
+<span class="lineNum">     489 </span>            :   *   @return the carriage-return-delimited string containing all matching strings
+<span class="lineNum">     490 </span>            :   *               in the catalog.  */
+<span class="lineNum">     491 </span>            :   std::string QueryPropertyCatalog(const std::string&amp; check);
+<span class="lineNum">     492 </span>            : 
+<span class="lineNum">     493 </span>            :   // Print the contents of the property catalog for the loaded aircraft.
+<span class="lineNum">     494 </span>            :   void PrintPropertyCatalog(void);
+<span class="lineNum">     495 </span>            : 
+<span class="lineNum">     496 </span>            :   // Print the simulation configuration
+<span class="lineNum">     497 </span>            :   void PrintSimulationConfiguration(void) const;
+<span class="lineNum">     498 </span>            : 
+<a name="499"><span class="lineNum">     499 </span>            :   std::vector&lt;std::string&gt;&amp; GetPropertyCatalog(void) {return PropertyCatalog;}</a>
+<a name="500"><span class="lineNum">     500 </span>            : </a>
+<span class="lineNum">     501 </span><span class="lineNoCov">          0 :   void SetTrimStatus(bool status){ trim_status = status; }</span>
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :   bool GetTrimStatus(void) const { return trim_status; }</span>
+<span class="lineNum">     503 </span>            :   void SetTrimMode(int mode){ ta_mode = mode; }
+<span class="lineNum">     504 </span>            :   int GetTrimMode(void) const { return ta_mode; }
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span>            :   std::string GetPropulsionTankReport();
+<a name="507"><span class="lineNum">     507 </span>            : </a>
+<span class="lineNum">     508 </span>            :   /// Returns the cumulative simulation time in seconds.
+<span class="lineNum">     509 </span><span class="lineCov">          8 :   double GetSimTime(void) const { return sim_time; }</span>
+<a name="510"><span class="lineNum">     510 </span>            : </a>
+<span class="lineNum">     511 </span>            :   /// Returns the simulation delta T.
+<span class="lineNum">     512 </span><span class="lineCov">         16 :   double GetDeltaT(void) const {return dT;}</span>
+<a name="513"><span class="lineNum">     513 </span>            : </a>
+<span class="lineNum">     514 </span>            :   /// Suspends the simulation and sets the delta T to zero.
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :   void SuspendIntegration(void) {saved_dT = dT; dT = 0.0;}</span>
+<a name="516"><span class="lineNum">     516 </span>            : </a>
+<span class="lineNum">     517 </span>            :   /// Resumes the simulation by resetting delta T to the correct value.
+<span class="lineNum">     518 </span><span class="lineNoCov">          0 :   void ResumeIntegration(void)  {dT = saved_dT;}</span>
+<span class="lineNum">     519 </span>            : 
+<a name="520"><span class="lineNum">     520 </span>            :   /** Returns the simulation suspension state.</a>
+<span class="lineNum">     521 </span>            :       @return true if suspended, false if executing  */
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :   bool IntegrationSuspended(void) const {return dT == 0.0;}</span>
+<span class="lineNum">     523 </span>            : 
+<span class="lineNum">     524 </span>            :   /** Sets the current sim time.
+<span class="lineNum">     525 </span>            :       @param cur_time the current time
+<span class="lineNum">     526 </span>            :       @return the current simulation time.      */
+<span class="lineNum">     527 </span>            :   double Setsim_time(double cur_time);
+<span class="lineNum">     528 </span>            : 
+<a name="529"><span class="lineNum">     529 </span>            :   /** Sets the integration time step for the simulation executive.</a>
+<span class="lineNum">     530 </span>            :       @param delta_t the time step in seconds.     */
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :   void Setdt(double delta_t) { dT = delta_t; }</span>
+<span class="lineNum">     532 </span>            : 
+<span class="lineNum">     533 </span>            :   /** Sets the root directory where JSBSim starts looking for its system
+<span class="lineNum">     534 </span>            :       directories.
+<span class="lineNum">     535 </span>            :       @param rootDir the string containing the root directory. */
+<span class="lineNum">     536 </span>            :   void SetRootDir(const SGPath&amp; rootDir) {RootDir = rootDir;}
+<span class="lineNum">     537 </span>            : 
+<a name="538"><span class="lineNum">     538 </span>            :   /** Retrieves the Root Directory.</a>
+<span class="lineNum">     539 </span>            :       @return the string representing the root (base) JSBSim directory. */
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 :   const SGPath&amp; GetRootDir(void) const {return RootDir;}</span>
+<span class="lineNum">     541 </span>            : 
+<span class="lineNum">     542 </span>            :   /** Increments the simulation time if not in Holding mode. The Frame counter
+<span class="lineNum">     543 </span>            :       is also incremented.
+<span class="lineNum">     544 </span>            :       @return the new simulation time.     */
+<span class="lineNum">     545 </span>            :   double IncrTime(void);
+<span class="lineNum">     546 </span>            : 
+<span class="lineNum">     547 </span>            :   /** Retrieves the current frame count. */
+<span class="lineNum">     548 </span>            :   unsigned int GetFrame(void) const {return Frame;}
+<a name="549"><span class="lineNum">     549 </span>            : </a>
+<span class="lineNum">     550 </span>            :   /** Retrieves the current debug level setting. */
+<span class="lineNum">     551 </span><span class="lineCov">          8 :   int GetDebugLevel(void) const {return debug_lvl;};</span>
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span>            :   /** Initializes the simulation with initial conditions
+<span class="lineNum">     554 </span>            :       @param FGIC The initial conditions that will be passed to the simulation. */
+<span class="lineNum">     555 </span>            :   void Initialize(FGInitialCondition *FGIC);
+<span class="lineNum">     556 </span>            : 
+<span class="lineNum">     557 </span>            :   /** Sets the property forces/hold-down. This allows to do hard 'hold-down'
+<span class="lineNum">     558 </span>            :       such as for rockets on a launch pad with engines ignited.
+<span class="lineNum">     559 </span>            :       @param hd enables the 'hold-down' function if non-zero
+<span class="lineNum">     560 </span>            :   */
+<span class="lineNum">     561 </span>            :   void SetHoldDown(bool hd);
+<span class="lineNum">     562 </span>            : 
+<span class="lineNum">     563 </span>            :   /** Gets the value of the property forces/hold-down.
+<a name="564"><span class="lineNum">     564 </span>            :       @result zero if the 'hold-down' function is disabled, non-zero otherwise.</a>
+<span class="lineNum">     565 </span>            :   */
+<a name="566"><span class="lineNum">     566 </span><span class="lineCov">          8 :   bool GetHoldDown(void) const {return HoldDown;}</span></a>
+<span class="lineNum">     567 </span>            : 
+<span class="lineNum">     568 </span><span class="lineNoCov">          0 :   FGTemplateFunc* GetTemplateFunc(const std::string&amp; name) {</span>
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :     return TemplateFunctions.count(name) ? TemplateFunctions[name] : nullptr;</span>
+<a name="570"><span class="lineNum">     570 </span>            :   }</a>
+<span class="lineNum">     571 </span>            : 
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :   void AddTemplateFunc(const std::string&amp; name, Element* el) {</span>
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :     TemplateFunctions[name] = new FGTemplateFunc(this, el);</span>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :   }</span></a>
+<span class="lineNum">     575 </span>            : 
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :   const std::shared_ptr&lt;std::default_random_engine&gt;&amp; GetRandomEngine(void) const</span>
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :   { return RandomEngine; }</span>
+<span class="lineNum">     578 </span>            : 
+<span class="lineNum">     579 </span>            : private:
+<span class="lineNum">     580 </span>            :   unsigned int Frame;
+<span class="lineNum">     581 </span>            :   unsigned int IdFDM;
+<span class="lineNum">     582 </span>            :   int disperse;
+<span class="lineNum">     583 </span>            :   unsigned short Terminate;
+<span class="lineNum">     584 </span>            :   double dT;
+<span class="lineNum">     585 </span>            :   double saved_dT;
+<span class="lineNum">     586 </span>            :   double sim_time;
+<span class="lineNum">     587 </span>            :   bool holding;
+<span class="lineNum">     588 </span>            :   bool IncrementThenHolding;
+<span class="lineNum">     589 </span>            :   int TimeStepsUntilHold;
+<span class="lineNum">     590 </span>            :   bool Constructing;
+<span class="lineNum">     591 </span>            :   bool modelLoaded;
+<span class="lineNum">     592 </span>            :   bool IsChild;
+<span class="lineNum">     593 </span>            :   std::string modelName;
+<span class="lineNum">     594 </span>            :   SGPath AircraftPath;
+<span class="lineNum">     595 </span>            :   SGPath FullAircraftPath;
+<span class="lineNum">     596 </span>            :   SGPath EnginePath;
+<span class="lineNum">     597 </span>            :   SGPath SystemsPath;
+<span class="lineNum">     598 </span>            :   std::string CFGVersion;
+<span class="lineNum">     599 </span>            :   std::string Release;
+<span class="lineNum">     600 </span>            :   SGPath RootDir;
+<span class="lineNum">     601 </span>            : 
+<span class="lineNum">     602 </span>            :   // Standard Model pointers - shortcuts for internal executive use only.
+<span class="lineNum">     603 </span>            :   FGPropagate* Propagate;
+<span class="lineNum">     604 </span>            :   FGInertial* Inertial;
+<span class="lineNum">     605 </span>            :   FGAtmosphere* Atmosphere;
+<span class="lineNum">     606 </span>            :   FGWinds* Winds;
+<span class="lineNum">     607 </span>            :   FGAuxiliary* Auxiliary;
+<span class="lineNum">     608 </span>            :   FGFCS* FCS;
+<span class="lineNum">     609 </span>            :   FGPropulsion* Propulsion;
+<span class="lineNum">     610 </span>            :   FGAerodynamics* Aerodynamics;
+<span class="lineNum">     611 </span>            :   FGGroundReactions* GroundReactions;
+<span class="lineNum">     612 </span>            :   FGExternalReactions* ExternalReactions;
+<span class="lineNum">     613 </span>            :   FGBuoyantForces* BuoyantForces;
+<span class="lineNum">     614 </span>            :   FGMassBalance* MassBalance;
+<span class="lineNum">     615 </span>            :   FGAircraft* Aircraft;
+<span class="lineNum">     616 </span>            :   FGAccelerations* Accelerations;
+<span class="lineNum">     617 </span>            :   FGOutput* Output;
+<span class="lineNum">     618 </span>            : 
+<span class="lineNum">     619 </span>            :   bool trim_status;
+<span class="lineNum">     620 </span>            :   int ta_mode;
+<span class="lineNum">     621 </span>            :   unsigned int ResetMode;
+<span class="lineNum">     622 </span>            :   int trim_completed;
+<span class="lineNum">     623 </span>            : 
+<span class="lineNum">     624 </span>            :   FGScript*           Script;
+<span class="lineNum">     625 </span>            :   FGInitialCondition* IC;
+<span class="lineNum">     626 </span>            :   FGTrim*             Trim;
+<span class="lineNum">     627 </span>            : 
+<span class="lineNum">     628 </span>            :   FGPropertyManager* Root;
+<span class="lineNum">     629 </span>            :   bool StandAlone;
+<span class="lineNum">     630 </span>            :   FGPropertyManager* instance;
+<span class="lineNum">     631 </span>            : 
+<span class="lineNum">     632 </span>            :   bool HoldDown;
+<span class="lineNum">     633 </span>            : 
+<span class="lineNum">     634 </span>            :   int RandomSeed;
+<span class="lineNum">     635 </span>            :   std::shared_ptr&lt;std::default_random_engine&gt; RandomEngine;
+<span class="lineNum">     636 </span>            : 
+<span class="lineNum">     637 </span>            :   // The FDM counter is used to give each child FDM an unique ID. The root FDM
+<span class="lineNum">     638 </span>            :   // has the ID 0
+<span class="lineNum">     639 </span>            :   unsigned int*      FDMctr;
+<span class="lineNum">     640 </span>            : 
+<span class="lineNum">     641 </span>            :   std::vector &lt;std::string&gt; PropertyCatalog;
+<span class="lineNum">     642 </span>            :   std::vector &lt;childData*&gt; ChildFDMList;
+<span class="lineNum">     643 </span>            :   std::vector &lt;FGModel*&gt; Models;
+<span class="lineNum">     644 </span>            :   std::map&lt;std::string, FGTemplateFunc_ptr&gt; TemplateFunctions;
+<span class="lineNum">     645 </span>            : 
+<span class="lineNum">     646 </span>            :   bool ReadFileHeader(Element*);
+<span class="lineNum">     647 </span>            :   bool ReadChild(Element*);
+<a name="648"><span class="lineNum">     648 </span>            :   bool ReadPrologue(Element*);</a>
+<span class="lineNum">     649 </span>            :   void SRand(int sr);
+<span class="lineNum">     650 </span><span class="lineCov">          8 :   int  SRand(void) const {return RandomSeed;}</span>
+<span class="lineNum">     651 </span>            :   void LoadInputs(unsigned int idx);
+<span class="lineNum">     652 </span>            :   void LoadPlanetConstants(void);
+<span class="lineNum">     653 </span>            :   void LoadModelConstants(void);
+<span class="lineNum">     654 </span>            :   bool Allocate(void);
+<a name="655"><span class="lineNum">     655 </span>            :   bool DeAllocate(void);</a>
+<a name="656"><span class="lineNum">     656 </span>            :   void InitializeModels(void);</a>
+<span class="lineNum">     657 </span><span class="lineCov">          8 :   int GetDisperse(void) const {return disperse;}</span>
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :   SGPath GetFullPath(const SGPath&amp; name) {</span>
+<span class="lineNum">     659 </span><span class="lineNoCov">          0 :     if (name.isRelative())</span>
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :       return RootDir/name.utf8Str();</span>
+<span class="lineNum">     661 </span>            :     else
+<span class="lineNum">     662 </span><span class="lineNoCov">          0 :       return name;</span>
+<span class="lineNum">     663 </span>            :   }
+<span class="lineNum">     664 </span>            : 
+<span class="lineNum">     665 </span>            :   void Debug(int from);
+<span class="lineNum">     666 </span>            : };
+<span class="lineNum">     667 </span>            : }
+<span class="lineNum">     668 </span>            : //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<span class="lineNum">     669 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

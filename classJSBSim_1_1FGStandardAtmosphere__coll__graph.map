@@ -1,0 +1,8 @@
+<map id="FGStandardAtmosphere" name="FGStandardAtmosphere">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGAtmosphere.html" title="Models an empty, abstract base atmosphere class. " alt="" coords="75,95,186,121"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGModel.html" title="Base class for all scheduled JSBSim models. " alt="" coords="5,5,80,32"/>
+<area shape="rect" id="node4" href="$structJSBSim_1_1FGAtmosphere_1_1Inputs.html" title="Inputs" alt="" coords="104,5,163,32"/>
+<area shape="rect" id="node5" href="$classJSBSim_1_1FGTable.html" title="Lookup table class. " alt="" coords="211,95,283,121"/>
+<area shape="rect" id="node6" href="$classJSBSim_1_1FGParameter.html" title="Represents various types of parameters. " alt="" coords="193,5,293,32"/>
+<area shape="rect" id="node7" href="$classJSBSim_1_1FGJSBBase.html" title="JSBSim Base class. " alt="" coords="317,5,411,32"/>
+</map>

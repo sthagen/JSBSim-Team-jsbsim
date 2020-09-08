@@ -1,0 +1,4 @@
+<map id="GetFlightPathAngleDegIC" name="GetFlightPathAngleDegIC">
+<area shape="rect" id="node2" href="$classJSBSim_1_1FGInitialCondition.html#ac0bf8aa022e1bcef8ae8c00bd1ff4e11" title="Gets the initial flight path angle. " alt="" coords="227,5,400,32"/>
+<area shape="rect" id="node3" href="$classJSBSim_1_1FGInitialCondition.html#a7514fac30dce365377a9875bc494cb62" title="Gets the initial climb rate. " alt="" coords="448,5,589,32"/>
+</map>
