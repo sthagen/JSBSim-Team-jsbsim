@@ -107,6 +107,12 @@ bool FGInertial::Load(Element* el)
 
   GroundCallback->SetEllipse(a, b);
 
+  // Messages to warn the user about possible inconsistencies.
+  if (a != b && J2 == 0.0)
+    cout << "Gravitational constant J2 is null for a non-spherical planet." << endl;
+  if (a == b && J2 != 0.0)
+    cout << "Gravitational constant J2 is non-zero for a spherical planet." << endl;
+
   Debug(2);
 
   return true;
@@ -138,10 +144,9 @@ bool FGInertial::Run(bool Holding)
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-FGMatrix33 FGInertial::GetTl2ec(FGLocation& location) const
+FGMatrix33 FGInertial::GetTl2ec(const FGLocation& location) const
 {
-  FGColumnVector3 North, Down, East{-location.GetSinLongitude(),
-                                    location.GetCosLongitude(), 0.};
+  FGColumnVector3 North, Down, East{-location(eY), location(eX), 0.};
 
   switch (gravType) {
   case gtStandard:
@@ -151,9 +156,15 @@ FGMatrix33 FGInertial::GetTl2ec(FGLocation& location) const
     }
     break;
   case gtWGS84:
-    Down = GetGravityJ2(location);
-  }
+    {
+      FGLocation sea_level = location;
+      sea_level.SetPositionGeodetic(location.GetLongitude(),
+                                    location.GetGeodLatitudeRad(), 0.0);
+      Down = GetGravityJ2(location);
+      Down -= vOmegaPlanet*(vOmegaPlanet*sea_level);}
+    }
   Down.Normalize();
+  East.Normalize();
   North = East*Down;
 
   return FGMatrix33{North(eX), East(eX), Down(eX),
@@ -181,7 +192,7 @@ FGColumnVector3 FGInertial::GetGravityJ2(const FGLocation& position) const
 
   // Gravitation accel
   double r = position.GetRadius();
-  double sinLat = position.GetSinLatitude();
+  double sinLat = sin(position.GetLatitude());
 
   double adivr = a/r;
   double preCommon = 1.5*J2*adivr*adivr;
@@ -212,11 +223,31 @@ void FGInertial::SetAltitudeAGL(FGLocation& location, double altitudeAGL)
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+void FGInertial::SetGravityType(int gt)
+{
+  // Messages to warn the user about possible inconsistencies.
+  switch (gt)
+  {
+  case eGravType::gtStandard: 
+    if (a != b)
+      cout << "Warning: Standard gravity model has been set for a non-spherical planet" << endl;
+    break;
+  case eGravType::gtWGS84:
+    if (J2 == 0.0)
+      cout << "Warning: WGS84 gravity model has been set without specifying the J2 gravitational constant." << endl;
+  }
+
+  gravType = gt;
+}
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 void FGInertial::bind(void)
 {
   PropertyManager->Tie("inertial/sea-level-radius_ft", &in.Position,
                        &FGLocation::GetSeaLevelRadius);
-  PropertyManager->Tie("simulation/gravity-model", &gravType);
+  PropertyManager->Tie("simulation/gravity-model", this, &FGInertial::GetGravityType,
+                       &FGInertial::SetGravityType);
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1185,7 +1185,7 @@ bool FGInitialCondition::Load_v1(Element* document)
   double radInv = 1.0 / position.GetRadius();
   FGColumnVector3 vOmegaLocal = {radInv*vUVW_NED(eEast),
                                  -radInv*vUVW_NED(eNorth),
-                                 -radInv*vUVW_NED(eEast)*position.GetTanLatitude()};
+                                 -radInv*vUVW_NED(eEast)*tan(position.GetLatitude())};
 
   vPQR_body = Tl2b * vOmegaLocal;
 
@@ -1236,7 +1236,6 @@ bool FGInitialCondition::Load_v2(Element* document)
       position = Ti2ec * position_el->FindElementTripletConvertTo("FT");
     } else if (frame == "ecef") {
       if (!position_el->FindElement("x") && !position_el->FindElement("y") && !position_el->FindElement("z")) {
-        double longitude = 0.0;
         if (position_el->FindElement("longitude")) {
           SetLongitudeRadIC(position_el->FindElementValueAsNumberConvertTo("longitude", "RAD"));
         }
@@ -1408,7 +1407,7 @@ bool FGInitialCondition::Load_v2(Element* document)
   double radInv = 1.0 / position.GetRadius();
   FGColumnVector3 vOmegaLocal = { radInv*vUVW_NED(eEast),
                                   -radInv*vUVW_NED(eNorth),
-                                  -radInv*vUVW_NED(eEast)*position.GetTanLatitude()};
+                                  -radInv*vUVW_NED(eEast)*tan(position.GetLatitude())};
 
   if (attrate_el) {
 
