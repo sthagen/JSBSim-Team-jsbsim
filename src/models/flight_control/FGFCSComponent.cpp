@@ -57,7 +57,7 @@ FGFCSComponent::FGFCSComponent(FGFCS* _fcs, Element* element) : fcs(_fcs)
   clip = cyclic_clip = false;
   dt = fcs->GetChannelDeltaT();
 
-  PropertyManager = fcs->GetPropertyManager();
+  auto PropertyManager = fcs->GetPropertyManager();
   if        (element->GetName() == string("lag_filter")) {
     Type = "LAG_FILTER";
   } else if (element->GetName() == string("lead_lag_filter")) {
@@ -245,10 +245,10 @@ void FGFCSComponent::Clip(void)
     double range = vmax - vmin;
 
     if (range < 0.0) {
-      cerr << "Trying to clip with a max value " << ClipMax->GetName()
-           << " lower than the min value " << ClipMin->GetName()
-           << endl;
-      throw("JSBSim aborts");
+      cerr << "Trying to clip with a max value (" << vmax << ") from "
+           << ClipMax->GetName() << " lower than the min value (" << vmin
+           << ") from " << ClipMin->GetName() << "." << endl
+           << "Clipping is ignored." << endl;
       return;
     }
 
@@ -272,7 +272,7 @@ void FGFCSComponent::Clip(void)
 // properties in the FCS component name attribute. The old way is supported in
 // code at this time, but deprecated.
 
-void FGFCSComponent::bind(Element* el)
+void FGFCSComponent::bind(Element* el, FGPropertyManager* PropertyManager)
 {
   string tmp;
   if (Name.find("/") == string::npos)

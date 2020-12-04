@@ -50,17 +50,12 @@ namespace JSBSim {
 CLASS IMPLEMENTATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-// This class currently makes certain assumptions when calculating torque and
-// p-factor. That is, that the axis of rotation is the X axis of the aircraft -
-// not just the X-axis of the engine/propeller. This may or may not work for a
-// helicopter.
-
 FGPropeller::FGPropeller(FGFDMExec* exec, Element* prop_element, int num)
                        : FGThruster(exec, prop_element, num)
 {
   Element *table_element, *local_element;
   string name="";
-  FGPropertyManager* PropertyManager = exec->GetPropertyManager();
+  auto PropertyManager = exec->GetPropertyManager();
 
   MaxPitch = MinPitch = P_Factor = Pitch = Advance = MinRPM = MaxRPM = 0.0;
   Sense = 1; // default clockwise rotation
