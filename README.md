@@ -30,7 +30,7 @@ In 2015, [the NASA performed some verification check cases on 7 flight dynamics 
 ## Applications and Usages
 JSBSim is used in a range of projects among which:
 
-* Flight simulation: [FlightGear](http://www.flightgear.org), [OutTerra](https://www.outerra.com/wfeatures.html)
+* Flight simulation: [FlightGear](http://www.flightgear.org), [OutTerra](https://www.outerra.com/wfeatures.html), [Skybolt Engine](https://github.com/Piraxus/Skybolt)
 * SITL (Software In The Loop) Drone Autopilot testing : [ArduPilot](https://ardupilot.org/dev/docs/sitl-with-jsbsim.html), [PX4 Autopilot](https://dev.px4.io/master/en/simulation/jsbsim.html), [Paparazzi](https://wiki.paparazziuav.org/wiki/Simulation)
 * Machine Learning Aircraft control: [gym-jsbsim](https://github.com/galleon/gym-jsbsim)
 * [DARPA Virtual Air Combat Competition](https://www.darpa.mil/news-events/2019-10-21) where one of the AI went undefeated in five rounds of mock air combat against an Air Force fighter (see the [video on YouTube](https://www.youtube.com/watch?v=IOJhgC1ksNU)).
@@ -45,18 +45,18 @@ JSBSim is also used in academic and industry research ([more than 600 citations 
 ---
 ## Installation
 ### Windows
-A Windows installer is available in the [release section](https://github.com/JSBSim-Team/jsbsim/releases). It installs the 2 executables along with aircraft data and some example scripts:
+A Windows installer `JSBSim-1.1.3-setup.exe` is available in the [release section](https://github.com/JSBSim-Team/jsbsim/releases/tag/v1.1.3). It installs the 2 executables along with aircraft data and some example scripts:
 * `JSBSim.exe` which runs FDM simulations.
 * `aeromatic.exe` which builds aircraft definitions from Question/Answer interface
 
 Both executables are console line command.
 ### Ubuntu Linux
-Debian packages for Ubuntu Linux "Xenial" 16.04 LTS, "Bionic" 18.04 LTS and "Focal" 20.04 LTS for 64 bits platform are also available in the [JSBSim project release section](https://github.com/JSBSim-Team/jsbsim/releases). There are 3 packages:
-* `JSBSim_1.0.0-xxx.amd64.deb` which installs the executables `JSBSim` and `aeromatic`
-* `JSBSim-devel_1.0.0-xxx.amd64.deb` which installs the development resources (headers and libraries)
-* `python3-JSBSim_1.0.0-xxx.amd64.deb` which installs the Python 3.6 module of JSBSim
+Debian packages for Ubuntu Linux "Xenial" 16.04 LTS, "Bionic" 18.04 LTS and "Focal" 20.04 LTS for 64 bits platform are also available in the [JSBSim project release section](https://github.com/JSBSim-Team/jsbsim/releases/tag/v1.1.3). There are 3 packages:
+* `JSBSim_1.1.3-246.amd64.deb` which installs the executables `JSBSim` and `aeromatic`
+* `JSBSim-devel_1.1.3-246.amd64.deb` which installs the development resources (headers and libraries)
+* `python3-JSBSim_1.1.3-246.amd64.deb` which installs the Python 3.6 module of JSBSim
 ### Python module
-JSBSim provides binary packages (a.k.a. known as [wheel packages](https://www.python.org/dev/peps/pep-0427)) for its Python module on Windows, Mac OSX and Linux platforms for several Python versions (3.5, 3.6, 3.7 and 3.8).
+JSBSim provides binary packages (a.k.a. known as [wheel packages](https://www.python.org/dev/peps/pep-0427)) for its Python module on Windows, Mac OSX and Linux platforms for several Python versions (3.6, 3.7, 3.8 and 3.9).
 
 The module is installed using the `pip` command line (check the [pip documentation](https://packaging.python.org/tutorials/installing-packages) for more details):
 ```bash
@@ -66,7 +66,7 @@ Note that wheel packages for Linux meet the [ManyLinux packages requirements](ht
 ### Other platforms
 At the moment, JSBSim do not provide binaries for platforms other than Windows 64 bits and Ubuntu 64 bits. If you fall in this category you should follow the instructions in the [developer docs](doc/DevelopersDocs.md) to build JSBSim on your platform.
 ### Aircraft data and example scripts
-You can get aircraft data and example scripts by downloading either the [zip package](https://github.com/JSBSim-Team/jsbsim/archive/v1.1.0.zip) or the [tar.gz package](https://github.com/JSBSim-Team/jsbsim/archive/v1.1.0.tar.gz).
+You can get aircraft data and example scripts by downloading either the [zip package](https://github.com/JSBSim-Team/jsbsim/archive/v1.1.3.zip) or the [tar.gz package](https://github.com/JSBSim-Team/jsbsim/archive/v1.1.3.tar.gz).
 ## Quick start
 Once you have downloaded (or built) the binaries and unzipped the [aircraft data](#aircraft-data-and-example-scripts). Go to the root of the data package and make sure the executable is accessible from there.
 
@@ -93,7 +93,7 @@ JSBSim can be interfaced or integrated to your application via a C++ API. The  f
 int main(int argc, char **argv)
 {
   JSBSim::FGFDMExec FDMExec;
-  FDMExec.LoadScript(argv[1]);
+  FDMExec.LoadScript(SGPath(argv[1]));
   FDMExec.RunIC();
   bool result = true;
   while (result) result = FDMExec.Run();

@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.8)
+cmake_minimum_required (VERSION 3.1)
 
 ################################################################################
 # Project description                                                          #
@@ -15,7 +15,6 @@ set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT
 set(LIBRARY_VERSION ${PROJECT_VERSION})
 set(LIBRARY_SOVERSION ${PROJECT_VERSION_MAJOR})
 
-option(BUILD_DOCS "Set to ON to build JSBSim documentation" ON)
 option(SYSTEM_EXPAT "Set to ON to build JSBSim using the system libExpat" OFF)
 if (SYSTEM_EXPAT)
   find_package(EXPAT)
@@ -43,12 +42,17 @@ get_target_property(libJSBSim_LINK_LIBRARIES libJSBSim LINK_LIBRARIES)
 # Documentation                                                                #
 ################################################################################
 
+option(BUILD_DOCS "Set to ON to build JSBSim documentation" ON)
 if(BUILD_DOCS)
   find_package(Doxygen)
   if(DOXYGEN_FOUND)
     execute_process(COMMAND date "+%d %b %Y" OUTPUT_VARIABLE TODAY OUTPUT_STRIP_TRAILING_WHITESPACE)
     configure_file(${CMAKE_SOURCE_DIR}/doc/JSBSim.dox.in
       ${CMAKE_BINARY_DIR}/Doxyfile @ONLY)
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/documentation/xml)
+      execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif()
     add_custom_target(doc
       ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -79,6 +83,17 @@ if (BUILD_PYTHON_MODULE)
     message(WARNING "JSBSim Python module and test suite will not be built")
   endif(CYTHON_FOUND)
 endif(BUILD_PYTHON_MODULE)
+
+################################################################################
+# Build the Julia package                                                      #
+################################################################################
+
+option(BUILD_JULIA_PACKAGE "Set to ON to build the Julia package for JSBSim" ON)
+
+if(BUILD_JULIA_PACKAGE)
+  enable_testing()
+  add_subdirectory(julia)
+endif(BUILD_JULIA_PACKAGE)
 
 ################################################################################
 # Build the unit tests (needs CxxTest)                                         #
@@ -113,9 +128,9 @@ if (UNIX)
   if (NOT DEFINED LSB_RELEASE_EXECUTABLE)
     find_program(LSB_RELEASE_EXECUTABLE lsb_release)
     if(LSB_RELEASE_EXECUTABLE STREQUAL "LSB_RELEASE_EXECUTABLE-NOTFOUND")
-      message("-- Could NOT find LSB_Release (missing: LSB_RELEASE_EXECUTABLE)")
+      message(WARNING "-- Could NOT find LSB_Release (missing: LSB_RELEASE_EXECUTABLE)")
     else()
-      message("-- Found LSB_Release: ${LSB_RELEASE_EXECUTABLE}")
+      message(STATUS "-- Found LSB_Release: ${LSB_RELEASE_EXECUTABLE}")
     endif()
   endif()
 

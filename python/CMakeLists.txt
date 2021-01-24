@@ -12,10 +12,6 @@ set_source_files_properties(${JSBSIM_PYX} PROPERTIES CYTHON_IS_CXX TRUE
 if(DOXYGEN_FOUND AND BUILD_DOCS)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxy2PyDocStrings.py
     doxy2pydocs.py)
-  if(NOT EXISTS ${CMAKE_BINARY_DIR}/documentation/xml)
-    execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-  endif()
   execute_process(COMMAND ${PYTHON_EXECUTABLE} python/doxy2pydocs.py
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
@@ -82,8 +78,8 @@ foreach(OBJECT ${libJSBSim_SOURCE_FILES})
 endforeach(OBJECT)
 
 foreach(_FILE ${SOURCE_FILES})
-  get_tail(${_FILE} FILE_EXTENSION ".")
-  if((NOT ${FILE_EXTENSION} STREQUAL "h") AND (NOT ${FILE_EXTENSION} STREQUAL "hxx"))
+  get_filename_component(FILE_EXTENSION ${_FILE} EXT)
+  if((NOT ${FILE_EXTENSION} STREQUAL ".h") AND (NOT ${FILE_EXTENSION} STREQUAL ".hxx") AND (NOT ${FILE_EXTENSION} STREQUAL ".hpp"))
     string(APPEND JSBSIM_SOURCE_FILES "'${_FILE}',")
   endif()
 endforeach(_FILE)
