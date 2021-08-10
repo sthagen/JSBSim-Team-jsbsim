@@ -226,6 +226,19 @@ combustion_efficiency = Lookup_Combustion_Efficiency->GetValue(equivalence_ratio
 @author Jon S. Berndt
 */
 
+/** Exception convenience class.
+  */
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+DECLARATION: TableException
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
+class TableException : public std::runtime_error
+{
+public:
+  TableException(const std::string& msg) : std::runtime_error{msg} { }
+};
+
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 CLASS DECLARATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -295,6 +308,7 @@ private:
   enum type {tt1D, tt2D, tt3D} Type;
   enum axis {eRow=0, eColumn, eTable};
   bool internal;
+  std::shared_ptr<FGPropertyManager> PropertyManager; // Property root used to do late binding.
   FGPropertyValue_ptr lookupProperty[3];
   double** Data;
   std::vector <FGTable*> Tables;
@@ -302,11 +316,10 @@ private:
   int colCounter, rowCounter, tableCounter;
   mutable int lastRowIndex, lastColumnIndex, lastTableIndex;
   double** Allocate(void);
-  std::string Prefix;
   std::string Name;
-  void bind(Element*, FGPropertyManager*);
+  void bind(Element* el, const std::string& Prefix);
 
-  unsigned int FindNumColumns(const std::string&);
+  std::string mkPropertyName(Element* el, const std::string& Prefix);
   void Debug(int from);
 };
 }

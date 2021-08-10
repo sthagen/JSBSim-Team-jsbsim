@@ -1,7 +1,22 @@
+#include <sstream>
+#include <limits>
+
 #include <cxxtest/TestSuite.h>
 #include <math/FGTable.h>
+#include <input_output/FGXMLParse.h>
+
+const double epsilon = 100. * std::numeric_limits<double>::epsilon();
 
 using namespace JSBSim;
+
+
+Element_ptr readFromXML(const std::string& XML) {
+  std::istringstream data(XML);
+  FGXMLParse parser;
+  readXML(data, parser);
+  return parser.GetDocument();
+}
+
 
 class FGTable1DTest : public CxxTest::TestSuite
 {
@@ -106,6 +121,139 @@ public:
     TS_ASSERT_EQUALS(t.GetValue(),  1.5);
     node->setDoubleValue(2.47);
     TS_ASSERT_EQUALS(t.GetValue(),  1.5);
+  }
+
+  void testLoadInternalFromXML() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test\" type=\"internal\">"
+                                  "    <tableData>"
+                                  "      1.0 -1.0\n"
+                                  "      2.0  1.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x1(pm, el_table);
+    TS_ASSERT_EQUALS(t_2x1.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x1.GetName(), std::string("test"));
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,0), 1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,1), 1.5);
+  }
+
+  void testLoadIndepVarFromXML() {
+    auto pm = make_shared<FGPropertyManager>();
+    auto x = pm->GetNode("x", true);
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar>x</independentVar>"
+                                  "    <tableData>"
+                                  "      1.0 -1.0\n"
+                                  "      2.0  1.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x1(pm, el_table);
+    TS_ASSERT_EQUALS(t_2x1.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x1.GetName(), std::string("test2"));
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,0), 1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,1), 1.5);
+    // Check that the property "test2" is now bound to the property manager
+    TS_ASSERT(pm->HasNode("test2"));
+
+    auto output = pm->GetNode("test2");
+    // Check that modifying the "x" property results in the table issuing
+    // consistent results; including setting its bound property "test2".
+    x->setDoubleValue(0.3);
+    TS_ASSERT_EQUALS(t_2x1.GetValue(), -1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.0);
+    x->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetValue(), -1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.0);
+    x->setDoubleValue(1.5);
+    TS_ASSERT_EQUALS(t_2x1.GetValue(), 0.25);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.25);
+    x->setDoubleValue(2.0);
+    TS_ASSERT_EQUALS(t_2x1.GetValue(),  1.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 1.5);
+    x->setDoubleValue(2.47);
+    TS_ASSERT_EQUALS(t_2x1.GetValue(),  1.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 1.5);
+  }
+
+  void testLoadWithNumericPrefix() {
+    auto pm = make_shared<FGPropertyManager>();
+    auto x = pm->GetNode("x2", true);
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test#\">"
+                                  "    <independentVar>x#</independentVar>"
+                                  "    <tableData>"
+                                  "      1.0 -1.0\n"
+                                  "      2.0  1.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x1(pm, el_table, "2");
+    TS_ASSERT_EQUALS(t_2x1.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x1.GetName(), std::string("test2"));
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,0), 1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,1), 1.5);
+    // Check that the property "test2" is now bound to the property manager
+    TS_ASSERT(pm->HasNode("test2"));
+
+    auto output = pm->GetNode("test2");
+    x->setDoubleValue(1.5);
+    TS_ASSERT_EQUALS(t_2x1.GetValue(), 0.25);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.25);
+}
+
+  void testLoadWithStringPrefix() {
+    auto pm = make_shared<FGPropertyManager>();
+    auto x = pm->GetNode("x", true);
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test\">"
+                                  "    <independentVar>x</independentVar>"
+                                  "    <tableData>"
+                                  "      1.0 -1.0\n"
+                                  "      2.0  1.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x1(pm, el_table, "tables");
+    TS_ASSERT_EQUALS(t_2x1.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x1.GetName(), std::string("tables/test"));
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,0), 1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(1,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x1.GetElement(2,1), 1.5);
+    // Check that the property "test2" is now bound to the property manager
+    TS_ASSERT(pm->HasNode("tables/test"));
+
+    auto output = pm->GetNode("tables/test");
+    x->setDoubleValue(1.5);
+    TS_ASSERT_EQUALS(t_2x1.GetValue(), 0.25);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.25);
   }
 };
 
@@ -368,5 +516,540 @@ public:
     TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
     row->setDoubleValue(5.0);
     TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
+  }
+
+  void testLoadInternalFromXML() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test\" type=\"internal\">"
+                                  "    <tableData>"
+                                  "            0.0  1.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x2(pm, el_table);
+    TS_ASSERT_EQUALS(t_2x2.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x2.GetName(), std::string("test"));
+    TS_ASSERT_EQUALS(t_2x2(0,1), 0.0);
+    TS_ASSERT_EQUALS(t_2x2(0,2), 1.0);
+    TS_ASSERT_EQUALS(t_2x2(1,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x2(1,1), 3.0);
+    TS_ASSERT_EQUALS(t_2x2(1,2), -2.0);
+    TS_ASSERT_EQUALS(t_2x2(2,0), 4.0);
+    TS_ASSERT_EQUALS(t_2x2(2,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x2(2,2), 0.5);
+  }
+
+  void testLoadIndepVarFromXML() {
+    auto pm = make_shared<FGPropertyManager>();
+    auto row = pm->GetNode("x", true);
+    auto column = pm->GetNode("y", true);
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar lookup=\"row\">x</independentVar>"
+                                  "    <independentVar lookup=\"column\">y</independentVar>"
+                                  "    <tableData>"
+                                  "            0.0  1.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x2(pm, el_table);
+    TS_ASSERT_EQUALS(t_2x2.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x2.GetName(), std::string("test2"));
+    TS_ASSERT_EQUALS(t_2x2(0,1), 0.0);
+    TS_ASSERT_EQUALS(t_2x2(0,2), 1.0);
+    TS_ASSERT_EQUALS(t_2x2(1,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x2(1,1), 3.0);
+    TS_ASSERT_EQUALS(t_2x2(1,2), -2.0);
+    TS_ASSERT_EQUALS(t_2x2(2,0), 4.0);
+    TS_ASSERT_EQUALS(t_2x2(2,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x2(2,2), 0.5);
+    // Check that the property "test2" is now bound to the property manager
+    TS_ASSERT(pm->HasNode("test2"));
+
+    auto output = pm->GetNode("test2");
+    // Check that modifying the "x" and "y" properties results in the table
+    // issuing consistent results; including setting its bound property "test2".
+
+    column->setDoubleValue(-1.0);
+    row->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 3.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 3.0);
+    row->setDoubleValue(2.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 3.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 3.0);
+    row->setDoubleValue(3.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 1.0);
+    row->setDoubleValue(4.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.0);
+    row->setDoubleValue(5.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.0);
+
+    column->setDoubleValue(0.0);
+    row->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 3.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 3.0);
+    row->setDoubleValue(2.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 3.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 3.0);
+    row->setDoubleValue(3.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 1.0);
+    row->setDoubleValue(4.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.0);
+    row->setDoubleValue(5.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -1.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.0);
+
+    column->setDoubleValue(0.5);
+    row->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+    row->setDoubleValue(2.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+    row->setDoubleValue(3.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.125);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.125);
+    row->setDoubleValue(4.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -0.25);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.25);
+    row->setDoubleValue(5.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -0.25);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.25);
+
+    column->setDoubleValue(1.0);
+    row->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -2.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -2.0);
+    row->setDoubleValue(2.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -2.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -2.0);
+    row->setDoubleValue(3.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -0.75);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.75);
+    row->setDoubleValue(4.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+    row->setDoubleValue(5.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+
+    column->setDoubleValue(2.0);
+    row->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -2.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -2.0);
+    row->setDoubleValue(2.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -2.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -2.0);
+    row->setDoubleValue(3.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), -0.75);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.75);
+    row->setDoubleValue(4.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+    row->setDoubleValue(5.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+  }
+
+  void testLoadWithNumericPrefix() {
+    auto pm = make_shared<FGPropertyManager>();
+    auto row = pm->GetNode("x", true);
+    auto column = pm->GetNode("y2", true);
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test#\">"
+                                  "    <independentVar lookup=\"row\">x</independentVar>"
+                                  "    <independentVar lookup=\"column\">y#</independentVar>"
+                                  "    <tableData>"
+                                  "            0.0  1.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x2(pm, el_table, "2");
+    TS_ASSERT_EQUALS(t_2x2.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x2.GetName(), std::string("test2"));
+    TS_ASSERT_EQUALS(t_2x2(0,1), 0.0);
+    TS_ASSERT_EQUALS(t_2x2(0,2), 1.0);
+    TS_ASSERT_EQUALS(t_2x2(1,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x2(1,1), 3.0);
+    TS_ASSERT_EQUALS(t_2x2(1,2), -2.0);
+    TS_ASSERT_EQUALS(t_2x2(2,0), 4.0);
+    TS_ASSERT_EQUALS(t_2x2(2,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x2(2,2), 0.5);
+    // Check that the property "test2" is now bound to the property manager
+    TS_ASSERT(pm->HasNode("test2"));
+
+    auto output = pm->GetNode("test2");
+    column->setDoubleValue(0.5);
+    row->setDoubleValue(3.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.125);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.125);
+  }
+
+  void testLoadWithStringPrefix() {
+    auto pm = make_shared<FGPropertyManager>();
+    auto row = pm->GetNode("x", true);
+    auto column = pm->GetNode("y", true);
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test\">"
+                                  "    <independentVar lookup=\"row\">x</independentVar>"
+                                  "    <independentVar lookup=\"column\">y</independentVar>"
+                                  "    <tableData>"
+                                  "            0.0  1.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x2(pm, el_table, "tables");
+    TS_ASSERT_EQUALS(t_2x2.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x2.GetName(), std::string("tables/test"));
+    TS_ASSERT_EQUALS(t_2x2(0,1), 0.0);
+    TS_ASSERT_EQUALS(t_2x2(0,2), 1.0);
+    TS_ASSERT_EQUALS(t_2x2(1,0), 2.0);
+    TS_ASSERT_EQUALS(t_2x2(1,1), 3.0);
+    TS_ASSERT_EQUALS(t_2x2(1,2), -2.0);
+    TS_ASSERT_EQUALS(t_2x2(2,0), 4.0);
+    TS_ASSERT_EQUALS(t_2x2(2,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x2(2,2), 0.5);
+    // Check that the property "test2" is now bound to the property manager
+    TS_ASSERT(pm->HasNode("tables/test"));
+
+    auto output = pm->GetNode("tables/test");
+    column->setDoubleValue(0.5);
+    row->setDoubleValue(3.0);
+    TS_ASSERT_EQUALS(t_2x2.GetValue(), 0.125);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.125);
+  }
+};
+
+class FGTable3DTest : public CxxTest::TestSuite
+{
+public:
+  void testLoadIndepVarFromXML() {
+    auto pm = make_shared<FGPropertyManager>();
+    auto row = pm->GetNode("x", true);
+    auto column = pm->GetNode("y", true);
+    auto table = pm->GetNode("z", true);
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar lookup=\"row\">x</independentVar>"
+                                  "    <independentVar lookup=\"column\">y</independentVar>"
+                                  "    <independentVar lookup=\"table\">z</independentVar>"
+                                  "    <tableData breakPoint=\"-1.0\">"
+                                  "            0.0  1.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "    <tableData breakPoint=\"0.5\">"
+                                  "            0.5  1.5\n"
+                                  "      2.5   3.5 -2.5\n"
+                                  "      4.5  -1.5  1.0\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    FGTable t_2x2x2(pm, el_table);
+    TS_ASSERT_EQUALS(t_2x2x2.GetNumRows(), 2);
+    TS_ASSERT_EQUALS(t_2x2x2.GetName(), std::string("test2"));
+    // Check breakpoints value
+    TS_ASSERT_EQUALS(t_2x2x2(1,1), -1.0);
+    TS_ASSERT_EQUALS(t_2x2x2(2,1), 0.5);
+
+    // Check the table values.
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(2.0, 0.0, -1.0), 3.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(4.0, 0.0, -1.0), -1.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(2.0, 1.0, -1.0), -2.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(4.0, 1.0, -1.0), 0.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(2.5, 0.5, 0.5), 3.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(4.5, 0.5, 0.5), -1.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(2.5, 1.5, 0.5), -2.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(4.5, 1.5, 0.5), 1.0);
+    // Check that the property "test2" is now bound to the property manager
+    TS_ASSERT(pm->HasNode("test2"));
+    auto output = pm->GetNode("test2");
+
+    table->setDoubleValue(0.5);
+    row->setDoubleValue(2.0);
+    column->setDoubleValue(0.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), 3.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 3.5);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), 3.1);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 3.1);
+
+    table->setDoubleValue(0.5);
+    row->setDoubleValue(4.0);
+    column->setDoubleValue(0.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -0.25);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.25);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -0.85);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.85);
+
+    table->setDoubleValue(0.5);
+    row->setDoubleValue(2.0);
+    column->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -1.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.5);
+
+    table->setDoubleValue(0.5);
+    row->setDoubleValue(4.0);
+    column->setDoubleValue(1.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -0.0625);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.0625);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_DELTA(t_2x2x2.GetValue(), 0.3875, epsilon);
+    TS_ASSERT_DELTA(output->getDoubleValue(), 0.3875, epsilon);
+
+    table->setDoubleValue(-1.0);
+    row->setDoubleValue(2.5);
+    column->setDoubleValue(0.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), 0.3125);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.3125);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_DELTA(t_2x2x2.GetValue(), 0.95, epsilon);
+    TS_ASSERT_DELTA(output->getDoubleValue(), 0.95, epsilon);
+
+    table->setDoubleValue(-1.0);
+    row->setDoubleValue(4.5);
+    column->setDoubleValue(0.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -0.25);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.25);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -0.5);
+
+    table->setDoubleValue(-1.0);
+    row->setDoubleValue(2.5);
+    column->setDoubleValue(1.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -1.375);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.375);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -1.6);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.6);
+
+    table->setDoubleValue(-1.0);
+    row->setDoubleValue(4.5);
+    column->setDoubleValue(1.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), 0.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.5);
+
+    table->setDoubleValue(-0.7);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), 0.6);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), 0.6);
+
+    table->setDoubleValue(-1.5);
+    row->setDoubleValue(1.0);
+    column->setDoubleValue(2.0);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -2.0);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -2.0);
+
+    table->setDoubleValue(1.0);
+    row->setDoubleValue(5.0);
+    column->setDoubleValue(-0.5);
+    TS_ASSERT_EQUALS(t_2x2x2.GetValue(), -1.5);
+    TS_ASSERT_EQUALS(output->getDoubleValue(), -1.5);
+  }
+};
+
+
+class FGTableErrorsTest : public CxxTest::TestSuite
+{
+public:
+  void testTypeError() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test\" type=\"wrong\">"
+                                  "    <tableData>"
+                                  "      1.0 -1.0\n"
+                                  "      2.0  1.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x1(pm, el_table), TableException&);
+  }
+
+  void testLookupError() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar>x</independentVar>"
+                                  "    <independentVar lookup=\"wrong\">y</independentVar>"
+                                  "    <tableData>"
+                                  "            0.0  1.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x2(pm, el_table), TableException&);
+  }
+
+  void testIncompleteDefinition() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test\">"
+                                  "    <tableData>"
+                                  "      1.0 -1.0\n"
+                                  "      2.0  1.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x1(pm, el_table), TableException&);
+  }
+
+  void testNotEnoughColumns() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar>x</independentVar>"
+                                  "    <independentVar lookup=\"wrong\">y</independentVar>"
+                                  "    <tableData>"
+                                  "            0.0\n"
+                                  "      2.0   3.0\n"
+                                  "      4.0  -1.0\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x2(pm, el_table), TableException&);
+  }
+
+  void testNotEnoughRows() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar>x</independentVar>"
+                                  "    <independentVar lookup=\"wrong\">y</independentVar>"
+                                  "    <tableData>"
+                                  "            0.0 1.0\n"
+                                  "      2.0   3.0 4.0\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x2(pm, el_table), TableException&);
+  }
+
+  void testRowsNotIncreasing() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test\">"
+                                  "    <tableData>"
+                                  "      2.0 -1.0\n"
+                                  "      1.0  1.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x1(pm, el_table), TableException&);
+  }
+
+  void testColumnsNotIncreasing() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar>x</independentVar>"
+                                  "    <independentVar lookup=\"wrong\">y</independentVar>"
+                                  "    <tableData>"
+                                  "            1.0  0.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x2(pm, el_table), TableException&);
+  }
+
+  void testBreakpointsNotIncreasing() {
+    auto pm = make_shared<FGPropertyManager>();
+    // FGTable expects <table> to be the child of another XML element, hence the
+    // <dummy> element.
+    Element_ptr elm = readFromXML("<dummy>"
+                                  "  <table name=\"test2\">"
+                                  "    <independentVar lookup=\"row\">x</independentVar>"
+                                  "    <independentVar lookup=\"column\">y</independentVar>"
+                                  "    <independentVar lookup=\"table\">z</independentVar>"
+                                  "    <tableData breakPoint=\"1.0\">"
+                                  "            0.0  1.0\n"
+                                  "      2.0   3.0 -2.0\n"
+                                  "      4.0  -1.0  0.5\n"
+                                  "    </tableData>"
+                                  "    <tableData breakPoint=\"0.5\">"
+                                  "            0.5  1.5\n"
+                                  "      2.5   3.5 -2.5\n"
+                                  "      4.5  -1.5  1.0\n"
+                                  "    </tableData>"
+                                  "  </table>"
+                                  "</dummy>");
+    Element* el_table = elm->FindElement("table");
+
+    TS_ASSERT_THROWS(FGTable t_2x2x2(pm, el_table), TableException&);
   }
 };
