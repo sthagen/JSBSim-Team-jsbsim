@@ -23,11 +23,13 @@
 import os, math, shutil
 import xml.etree.ElementTree as et
 import pandas as pd
-from JSBSim_utils import append_xml, ExecuteUntil, JSBSimTestCase, RunTest
+from JSBSim_utils import append_xml, ExecuteUntil, JSBSimTestCase, RunTest, CopyAircraftDef
+
+import fpectl
 
 # Values copied from FGJSBBase.cpp and FGXMLElement.cpp
 convtoft = {'FT': 1.0, 'M': 3.2808399, 'IN': 1.0/12.0}
-convtofps = {'FT/SEC': 1.0, 'KTS': 1.68781}
+convtofps = {'FT/SEC': 1.0, 'KTS': 1.68781, 'M/S': 3.2808399}
 convtodeg = {'DEG': 1.0, 'RAD': 57.295779513082320876798154814105}
 convtokts = {'KTS': 1.0, 'FT/SEC': 1.0/1.68781, 'M/S': 3.2808399/1.68781}
 
@@ -45,7 +47,7 @@ class TestInitialConditions(JSBSimTestCase):
         IC_file = append_xml(use_tag.attrib['initialize'])
         IC_tree = et.parse(os.path.join(path_to_jsbsim_aircrafts, IC_file))
 
-        return (tree, IC_tree)
+        return tree, IC_tree, IC_file
 
     def test_initial_conditions_v1(self):
         prop_output_to_CSV = ['velocities/vc-kts']
@@ -107,7 +109,7 @@ class TestInitialConditions(JSBSimTestCase):
 
         for s in self.script_list(('ZLT-NT-moored-1.xml',
                                    '737_cruise_steady_turn_simplex.xml')):
-            (tree, IC_tree) = self.getElementTrees(s)
+            tree, IC_tree, _ = self.getElementTrees(s)
             IC_root = IC_tree.getroot()
 
             # Only testing version 1.0 of init files
@@ -160,6 +162,15 @@ class TestInitialConditions(JSBSimTestCase):
             if var_tag is None:
                 var['value'] = 0.0
                 continue
+            elif var_tag.tag == 'latitude':
+                if 'type' in var_tag.attrib and var_tag.attrib['type'] in ('geod', 'geodetic'):
+                    var['ic_prop'] = 'ic/lat-geod-deg'
+                    var['prop'] = 'position/lat-geod-deg'
+                    var['CSV_header'] = 'Latitude Geodetic (deg)'
+                else:
+                    var['ic_prop'] = 'ic/lat-gc-deg'
+                    var['prop'] = 'position/lat-gc-deg'
+                    var['CSV_header'] = 'Latitude (deg)'
 
             var['value'] = float(var_tag.text)
             if 'unit' in var_tag.attrib:
@@ -228,8 +239,8 @@ class TestInitialConditions(JSBSimTestCase):
             self.assertAlmostEqual(value, csv_value, delta=1E-7,
                                    msg="In {}: {} should be {} but found {}".format(f, var['tag'], value, csv_value))
 
-    def GetVariables(self, lat_tag):
-        vars = [{'tag': 'longitude', 'unit': convtodeg, 'default_unit': 'RAD',
+    def GetVariables(self):
+        return [{'tag': 'longitude', 'unit': convtodeg, 'default_unit': 'RAD',
                  'ic_prop': 'ic/long-gc-deg', 'prop': 'position/long-gc-deg',
                  'CSV_header': 'Longitude (deg)'},
                 {'tag': 'altitudeAGL', 'unit': convtoft, 'default_unit': 'FT',
@@ -237,27 +248,16 @@ class TestInitialConditions(JSBSimTestCase):
                  'CSV_header': 'Altitude AGL (ft)'},
                 {'tag': 'altitudeMSL', 'unit': convtoft, 'default_unit': 'FT',
                  'ic_prop': 'ic/h-sl-ft', 'prop': 'position/h-sl-ft',
-                 'CSV_header': 'Altitude ASL (ft)'}]
-
-        if lat_tag is None:
-            lat_vars = []
-        elif 'type' not in lat_tag.attrib or lat_tag.attrib['type'][:4] != "geod":
-            lat_vars = [{'tag': 'latitude', 'unit': convtodeg,
-                         'default_unit': 'RAD', 'ic_prop': 'ic/lat-gc-deg',
-                         'prop': 'position/lat-gc-deg',
-                         'CSV_header': 'Latitude (deg)'}]
-        else:
-            lat_vars = [{'tag': 'latitude', 'unit': convtodeg,
-                         'default_unit': 'RAD', 'ic_prop': 'ic/lat-geod-deg',
-                         'prop': 'position/lat-geod-deg',
-                         'CSV_header': 'Latitude Geodetic (deg)'}]
-
-        return lat_vars+vars
+                 'CSV_header': 'Altitude ASL (ft)'},
+                {'tag': 'latitude', 'unit': convtodeg,
+                  'default_unit': 'RAD', 'ic_prop': 'ic/lat-geod-deg',
+                  'prop': 'position/lat-geod-deg',
+                  'CSV_header': 'Latitude Geodetic (deg)'}]
 
     def test_geod_position_from_init_file_v2(self):
         for s in self.script_list(('ZLT-NT-moored-1.xml',
                                    '737_cruise_steady_turn_simplex.xml')):
-            (tree, IC_tree) = self.getElementTrees(s)
+            tree, IC_tree, _ = self.getElementTrees(s)
             IC_root = IC_tree.getroot()
 
             # Only testing version 2.0 of init files
@@ -265,10 +265,9 @@ class TestInitialConditions(JSBSimTestCase):
                 continue
 
             position_tag = IC_root.find('position')
-            lat_tag = position_tag.find('latitude')
 
             f, fdm = self.LoadScript(tree, s)
-            self.CheckICValues(self.GetVariables(lat_tag), 'script %s' % (f,),
+            self.CheckICValues(self.GetVariables(), 'script %s' % (f,),
                                fdm, position_tag)
 
     def test_initial_latitude(self):
@@ -317,7 +316,7 @@ class TestInitialConditions(JSBSimTestCase):
                     fdm.load_ic('IC.xml', False)
                     fdm.run_ic()
 
-                    self.CheckICValues(self.GetVariables(latitude_tag),
+                    self.CheckICValues(self.GetVariables(),
                                        'IC%d' % (i,), fdm, position_tag)
 
     def test_set_initial_geodetic_latitude(self):
@@ -351,5 +350,93 @@ class TestInitialConditions(JSBSimTestCase):
             [x for x in vars if x['tag'] == 'theta' and abs(x['value'] - 90.0) <= 1E-8]):
             return True
         return False
+
+    # Regression test for the bug reported by @fernandafenelon and fixed by
+    # Sean McLeod in #545.
+    def testClimbRateSetting(self):
+        fdm = self.create_fdm()
+        self.load_script('c1722.xml')
+        fdm['ic/gamma-deg'] = 4
+        self.assertAlmostEqual(fdm['ic/gamma-deg'], 4)
+
+    # Regression test for the bug reported in issue #553
+    # Improper usage of the local frame rotation rate leads to FPEs.
+    def testNorthPoleInitialization(self):
+        script_path = self.sandbox.path_to_jsbsim_file('scripts/ball.xml')
+        tree, aircraft_name, _ = CopyAircraftDef(script_path, self.sandbox)
+        tree.write(self.sandbox('aircraft', aircraft_name, aircraft_name+'.xml'))
+        # Alter the initial conditions XML file to force the initial latitude
+        # to 90 degrees.
+        _, IC_tree, IC_file = self.getElementTrees(script_path)
+        IC_root = IC_tree.getroot()
+        lat_tag = IC_root.find('latitude')
+        lat_tag.text = '90.0'
+        IC_tree.write(os.path.join('aircraft', aircraft_name, IC_file))
+
+        fdm = self.create_fdm()
+        fdm.set_aircraft_path('aircraft')
+
+        fpectl.turnon_sigfpe()
+        self.load_script('ball.xml')
+        fdm.run_ic()
+        self.assertAlmostEqual(fdm['ic/lat-gc-deg'], 90.)
+
+        while fdm['simulation/sim-time-sec'] < 1.:
+            fdm.run()
+        fpectl.turnoff_sigfpe()
+
+    # Another regression test for issue #553
+    #
+    # This tests verifies that, for a given polar orbit, the initial values for
+    # the vehicle rotational rates P, Q, R do not depend on the position at
+    # which the vehicle was initialized.
+    # First reference : close to the North Pole heading East
+    # Second reference : above the Equator heading North
+    def testIndependenceOfInitialLocation(self):
+        script_path = self.sandbox.path_to_jsbsim_file('scripts/ball.xml')
+        tree, aircraft_name, _ = CopyAircraftDef(script_path, self.sandbox)
+        tree.write(self.sandbox('aircraft', aircraft_name, aircraft_name+'.xml'))
+        # Alter the initial conditions XML file to force the initial latitude
+        # to 90 degrees.
+        _, IC_tree, IC_file = self.getElementTrees(script_path)
+        IC_root = IC_tree.getroot()
+        lat_tag = IC_root.find('latitude')
+        psi_tag = IC_root.find('psi')
+        alt_tag = IC_root.find('altitude')
+        psi_tag.text = '90.0'  # Heading East
+        lat_tag.text = '89.9'  # Above the North Pole
+        h0 = float(alt_tag.text)
+        IC_tree.write(os.path.join('aircraft', aircraft_name, IC_file))
+
+        fdm = self.create_fdm()
+        fdm.set_aircraft_path('aircraft')
+        self.load_script('ball.xml')
+        fdm.run_ic()
+
+        p = fdm['ic/p-rad_sec']
+        q = fdm['ic/q-rad_sec']
+        r = fdm['ic/r-rad_sec']
+
+        self.delete_fdm()
+
+        # Since the equatorial radius is 70159 ft larger than the polar radius
+        # we need to decrease the altitude by the same amount in order to
+        # initialize the vehicle at the same radius.
+        alt_tag.text = str(h0-70159)
+        psi_tag.text = '0.0'  # Heading North
+        lat_tag.text = '0.0'  # Above equator
+        # Longitude at which the polar orbit tested above would cross the equator
+        lon_tag = IC_root.find('longitude')
+        lon_tag.text = '90.0'
+        IC_tree.write(os.path.join('aircraft', aircraft_name, IC_file))
+
+        fdm = self.create_fdm()
+        fdm.set_aircraft_path('aircraft')
+        self.load_script('ball.xml')
+        fdm.run_ic()
+
+        self.assertAlmostEqual(fdm['ic/p-rad_sec'], p)
+        self.assertAlmostEqual(fdm['ic/q-rad_sec'], q)
+        self.assertAlmostEqual(fdm['ic/r-rad_sec'], r)
 
 RunTest(TestInitialConditions)

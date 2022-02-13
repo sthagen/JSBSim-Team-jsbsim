@@ -226,19 +226,6 @@ combustion_efficiency = Lookup_Combustion_Efficiency->GetValue(equivalence_ratio
 @author Jon S. Berndt
 */
 
-/** Exception convenience class.
-  */
-
-/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-DECLARATION: TableException
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-
-class TableException : public std::runtime_error
-{
-public:
-  TableException(const std::string& msg) : std::runtime_error{msg} { }
-};
-
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 CLASS DECLARATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -286,7 +273,6 @@ public:
 
   void operator<<(std::istream&);
   FGTable& operator<<(const double n);
-  FGTable& operator<<(const int n);
 
   inline double GetElement(int r, int c) const {return Data[r][c];}
 
@@ -312,14 +298,12 @@ private:
   FGPropertyValue_ptr lookupProperty[3];
   double** Data;
   std::vector <FGTable*> Tables;
-  unsigned int nRows, nCols, nTables, dimension;
-  int colCounter, rowCounter, tableCounter;
-  mutable int lastRowIndex, lastColumnIndex, lastTableIndex;
+  unsigned int nRows, nCols;
+  int colCounter, rowCounter;
+  mutable int lastRowIndex, lastColumnIndex;
   double** Allocate(void);
   std::string Name;
   void bind(Element* el, const std::string& Prefix);
-
-  std::string mkPropertyName(Element* el, const std::string& Prefix);
   void Debug(int from);
 };
 }

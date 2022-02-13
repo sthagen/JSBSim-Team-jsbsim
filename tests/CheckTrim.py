@@ -21,6 +21,7 @@
 import xml.etree.ElementTree as et
 
 from JSBSim_utils import JSBSimTestCase, RunTest, CopyAircraftDef
+from jsbsim import TrimFailureError
 
 
 class CheckTrim(JSBSimTestCase):
@@ -42,13 +43,10 @@ class CheckTrim(JSBSimTestCase):
         self.assertEqual(fdm['propulsion/engine[0]/thrust-lbs'], 0.0)
         self.assertEqual(fdm['propulsion/engine[1]/thrust-lbs'], 0.0)
 
-        try:
+        # Trigger the trimming and check that it fails (i.e. it raises an
+        # exception TrimFailureError)
+        with self.assertRaises(TrimFailureError):
             fdm['simulation/do_simple_trim'] = 1
-        except RuntimeError as e:
-            # The trim cannot succeed. Just make sure that the raised exception
-            # is due to the trim failure otherwise rethrow.
-            if e.args[0] != 'Trim Failed':
-                raise
 
         # Check that the trim did not ignite the SRBs
         self.assertEqual(fdm['propulsion/engine[0]/thrust-lbs'], 0.0)

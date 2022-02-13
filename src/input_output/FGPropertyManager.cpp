@@ -28,6 +28,7 @@
 INCLUDES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
+#include <assert.h>
 #include "FGPropertyManager.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -110,16 +111,9 @@ bool FGPropertyNode::HasNode (const string &path)
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-string FGPropertyNode::GetName( void ) const
-{
-  return string( getName() );
-}
-
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 string FGPropertyNode::GetPrintableName( void ) const
 {
-  string temp_string(getName());
+  string temp_string(getNameString());
   size_t initial_location=0;
   size_t found_location;
 
@@ -301,7 +295,7 @@ void FGPropertyNode::SetWritable (const string &name, bool state )
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-void FGPropertyManager::Untie (const string &name)
+void FGPropertyManager::Untie(const string &name)
 {
   SGPropertyNode* property = root->getNode(name.c_str());
   if (!property) {
@@ -309,8 +303,18 @@ void FGPropertyManager::Untie (const string &name)
     return;
   }
 
-  vector <SGPropertyNode_ptr>::iterator it;
-  for (it = tied_properties.begin(); it != tied_properties.end(); ++it) {
+  Untie(property);
+}
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+void FGPropertyManager::Untie(SGPropertyNode *property)
+{
+  const string& name = property->getNameString();
+
+  assert(property->isTied());
+
+  for (auto it = tied_properties.begin(); it != tied_properties.end(); ++it) {
     if (*it == property) {
       property->untie();
       tied_properties.erase(it);

@@ -20,6 +20,7 @@
 
 import os
 from JSBSim_utils import JSBSimTestCase, CreateFDM, RunTest
+from jsbsim import TrimFailureError
 
 
 class TestChannelRate(JSBSimTestCase):
@@ -46,13 +47,10 @@ class TestChannelRate(JSBSimTestCase):
         self.assertEqual(fdm['simulation/dt'], fdm['tests/rate-1-dt'])
         self.assertEqual(fdm['simulation/dt']*4, fdm['tests/rate-4-dt'])
 
-        try:
+        # Trigger the trimming and check that it fails (i.e. it raises an
+        # exception TrimFailureError)
+        with self.assertRaises(TrimFailureError):
             fdm['simulation/do_simple_trim'] = 1
-        except RuntimeError as e:
-            # The trim cannot succeed. Just make sure that the raised exception
-            # is due to the trim failure otherwise rethrow.
-            if e.args[0] != 'Trim Failed':
-                raise
 
         while fdm['simulation/sim-time-sec'] < 40:
             self.assertEqual(fdm['simulation/frame'], fdm['tests/rate-1'])

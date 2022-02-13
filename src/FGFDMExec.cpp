@@ -140,9 +140,14 @@ FGFDMExec::FGFDMExec(FGPropertyManager* root, std::shared_ptr<unsigned int> fdmc
   // this is to catch errors in binding member functions to the property tree.
   try {
     Allocate();
-  } catch (const string& msg ) {
-    cout << "Caught error: " << msg << endl;
-    exit(1);
+  }
+  catch (const string& msg) {
+    cerr << endl << "Caught error: " << msg << endl;
+    throw;
+  }
+  catch (const BaseException& e) {
+    cout << endl << "Caught error: " << e.what() << endl;
+    throw;
   }
 
   trim_status = false;
@@ -993,7 +998,7 @@ void FGFDMExec::BuildPropertyCatalog(struct PropertyCatalogStructure* pcs)
 
   for (int i=0; i<pcs->node->nChildren(); i++) {
     string access="";
-    pcsNew->base_string = pcs->base_string + "/" + pcs->node->getChild(i)->getName();
+    pcsNew->base_string = pcs->base_string + "/" + pcs->node->getChild(i)->getNameString();
     int node_idx = pcs->node->getChild(i)->getIndex();
     if (node_idx != 0) {
       pcsNew->base_string = CreateIndexedPropertyName(pcsNew->base_string, node_idx);
@@ -1163,8 +1168,10 @@ bool FGFDMExec::ReadChild(Element* el)
   if (location) {
     child->Loc = location->FindElementTripletConvertTo("IN");
   } else {
-    cerr << endl << highint << fgred << "  No location was found for this child object!" << reset << endl;
-    exit(-1);
+    const string s("  No location was found for this child object!");
+    cerr << location->ReadFrom() << endl << highint << fgred
+         << s << reset << endl;
+    throw BaseException(s);
   }
 
   Element* orientation = el->FindElement("orient");
@@ -1227,7 +1234,7 @@ void FGFDMExec::DoTrim(int mode)
     trim.Report();
 
   if (!success)
-    throw("Trim Failed");
+    throw TrimFailureException("Trim Failed");
 
   trim_completed = 1;
 }

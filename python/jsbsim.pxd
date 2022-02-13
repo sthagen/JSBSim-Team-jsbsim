@@ -22,8 +22,12 @@ from libcpp cimport bool
 from libcpp.string cimport string
 from libcpp.memory cimport shared_ptr
 from libcpp.vector cimport vector
+from cpython.ref cimport PyObject
 
 cdef extern from "ExceptionManagement.h":
+    cdef PyObject* base_error
+    cdef PyObject* trimfailure_error
+    cdef PyObject* geographic_error
     cdef void convertJSBSimToPyExc()
 
 cdef extern from "initialization/FGInitialCondition.h" namespace "JSBSim":
@@ -34,7 +38,7 @@ cdef extern from "initialization/FGInitialCondition.h" namespace "JSBSim":
 cdef extern from "initialization/FGLinearization.h" namespace "JSBSim":
     cdef cppclass c_FGLinearization "JSBSim::FGLinearization":
         c_FGLinearization(c_FGFDMExec* fdme)
-        
+
         void WriteScicoslab() const
         void WriteScicoslab(string& path) const
 
@@ -167,7 +171,7 @@ cdef extern from "FGJSBBase.h" namespace "JSBSim":
 cdef extern from "FGFDMExec.h" namespace "JSBSim":
     cdef cppclass c_FGFDMExec "JSBSim::FGFDMExec" (c_FGJSBBase):
         c_FGFDMExec(c_FGPropertyManager* root, unsigned int* fdmctr)
-        void Unbind()
+        void Unbind() except +convertJSBSimToPyExc
         bool Run() except +convertJSBSimToPyExc
         bool RunIC() except +convertJSBSimToPyExc
         bool LoadModel(string model,
@@ -182,21 +186,23 @@ cdef extern from "FGFDMExec.h" namespace "JSBSim":
         bool SetEnginePath(const c_SGPath& path)
         bool SetAircraftPath(const c_SGPath& path)
         bool SetSystemsPath(const c_SGPath& path)
+        bool SetOutputPath(const c_SGPath& path)
         void SetRootDir(const c_SGPath& path)
         const c_SGPath& GetEnginePath()
         const c_SGPath& GetAircraftPath()
         const c_SGPath& GetSystemsPath()
+        const c_SGPath& GetOutputPath()
         const c_SGPath& GetRootDir()
         const c_SGPath& GetFullAircraftPath()
         double GetPropertyValue(string property) except +convertJSBSimToPyExc
         void SetPropertyValue(string property, double value) except +convertJSBSimToPyExc
         string GetModelName()
-        bool SetOutputDirectives(const c_SGPath& fname) except +
+        bool SetOutputDirectives(const c_SGPath& fname) except +convertJSBSimToPyExc
         #void ForceOutput(int idx=0)
         void SetLoggingRate(double rate)
         bool SetOutputFileName(int n, string fname)
         string GetOutputFileName(int n)
-        void DoTrim(int mode) except +
+        void DoTrim(int mode) except +convertJSBSimToPyExc
         void DisableOutput()
         void EnableOutput()
         void Hold()
