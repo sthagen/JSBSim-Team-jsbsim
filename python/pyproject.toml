@@ -1,0 +1,4 @@
+[build-system]
+# Exclude Cython version 0.29.26 as it fails building for PyPy38
+requires = ["setuptools", "cython!=0.29.26"]
+build-backend = "setuptools.build_meta"
