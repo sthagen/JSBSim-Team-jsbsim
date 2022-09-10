@@ -118,7 +118,7 @@ jobs:
 
     # On failure, upload logs
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: Linux-${{ matrix.os }}-system_expat_${{ matrix.expat }}-shared_libs_${{ matrix.shared_libs }}.logs
@@ -131,7 +131,7 @@ jobs:
         run: valgrind-ci valgrind_Short_S23_3.xml --number-of-errors --summary --source=.
 
       - name: Upload Files for Release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: env.release == 'true' && env.static_link == 'true'
         with:
           name: Linux-${{ matrix.os }}.binaries
@@ -142,14 +142,14 @@ jobs:
     needs: [ Linux, MacOSX, Windows-MSVC ]
     strategy:
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ macos-latest, ubuntu-22.04, windows-latest ]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout JSBSim
         uses: actions/checkout@v3
       - name: Set up Matlab
-        uses: matlab-actions/setup-matlab@v1.1.0
+        uses: matlab-actions/setup-matlab@v1.2.0
         with:
           release: R2022a
       - name: Configure JSBSim
@@ -188,13 +188,13 @@ jobs:
 
       - name: Upload Files for Release (Linux & MacOSX)
         if: steps.tests-unix.outcome == 'success'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Matlab-SFunction-${{ runner.os }}.binaries
           path: build/matlab/JSBSim_SFunction.mex*
       - name: Upload Files for Release (Windows)
         if: steps.tests-windows.outcome == 'success'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Matlab-SFunction-${{ runner.os }}.binaries
           path: |
@@ -239,7 +239,7 @@ jobs:
 
     # Upload files
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: Windows_MinGW32.logs
@@ -327,7 +327,7 @@ jobs:
 
     # On failure, upload logs
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: Windows_MSVC.logs
@@ -336,7 +336,7 @@ jobs:
             build/tests/*-build.log
 
       - name: Upload Files for Release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: env.release == 'true' && matrix.shared_libs == 'OFF'
         with:
           name: ${{ runner.os }}.binaries
@@ -404,7 +404,7 @@ jobs:
           # Compile the installer with Inno Setup
           iscc JSBSim.iss
       - name: Upload the installer for Release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Windows-installer.binaries
           path: |
@@ -480,7 +480,7 @@ jobs:
 
     # On failure, upload logs
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: MacOSX.logs
@@ -489,7 +489,7 @@ jobs:
             build/tests/*-build.log
 
       - name: Upload Files for Release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: env.release == 'true' && matrix.arch == 'x86_64'
         with:
           name: ${{ runner.os }}.binaries
@@ -584,7 +584,7 @@ jobs:
           cmake ..
           cmake --build . --target libJSBSim --config RelWithDebInfo
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.8.1
+        uses: pypa/cibuildwheel@v2.9.0
         env:
           CIBW_BEFORE_ALL_LINUX: |
             cd build
