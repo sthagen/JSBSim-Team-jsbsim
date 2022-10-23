@@ -149,7 +149,7 @@ jobs:
       - name: Checkout JSBSim
         uses: actions/checkout@v3
       - name: Set up Matlab
-        uses: matlab-actions/setup-matlab@v1.2.0
+        uses: matlab-actions/setup-matlab@v1.2.1
         with:
           release: R2022a
       - name: Configure JSBSim
@@ -572,7 +572,7 @@ jobs:
           cmake ..
           cmake --build . --target libJSBSim --config RelWithDebInfo
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.10.2
+        uses: pypa/cibuildwheel@v2.11.1
         env:
           CIBW_BEFORE_ALL_LINUX: |
             cd build
