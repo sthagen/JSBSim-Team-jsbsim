@@ -11,7 +11,6 @@ env:
 
 jobs:
   XML-validation:
-    if: ${{ !startsWith(github.event.head_commit.message, '[skip ci]') || github.event_name == 'pull_request' }}
     name: XML validation
     runs-on: ubuntu-latest
     steps:
@@ -99,7 +98,7 @@ jobs:
             build/Testing/Temporary/CTestCostData.txt
           key: ${{ runner.os }}-3.9-${{ hashFiles('tests/CMakeLists.txt', 'python/requirements.txt') }}
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
       - name: Install Python packages
@@ -243,7 +242,7 @@ jobs:
         shared_libs: [ON, OFF]
     steps:
       - name: Set up Python 3.10
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.10'
       - name: Checkout JSBSim
@@ -305,7 +304,7 @@ jobs:
             build\Testing\Temporary\CTestCostData.txt
           key: ${{ runner.os }}-3.9-${{ hashFiles('tests\CMakeLists.txt', 'python\requirements.txt') }}
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
       - name: Install Python packages
@@ -383,12 +382,12 @@ jobs:
           repository: JSBSim-Team/jsbsim-logo
           path: jsbsim-logo
       - name: Download binary file for JSBSim.iss
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: Matlab-SFunction-Windows.binaries
           path: build
       - name: Download JSBSim library and executable
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: Windows.binaries
       - name: Update the version of JSBSim in matlab/README.md
@@ -457,7 +456,7 @@ jobs:
             build/Testing/Temporary/CTestCostData.txt
           key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('tests/CMakeLists.txt', 'python/requirements.txt') }}
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Python packages
@@ -551,13 +550,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
       - name: Install Python packages
         run: pip install -U cython 'numpy>=1.20' mypy
       - name: Download source package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: macOS.binaries
       - name: Build Python module from sources (Linux & MacOSX)
@@ -597,7 +596,7 @@ jobs:
       - name: Checkout JSBSim
         uses: actions/checkout@v5
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
       - name: Install Python packages
@@ -620,7 +619,7 @@ jobs:
           perl -i -pe 's/^(GENERATE_HTML\s*=\s*)YES/\1NO/g' doc/JSBSim.dox.in
           perl -i -pe 's/^(HAVE_DOT\s*=\s*)YES/\1NO/g' doc/JSBSim.dox.in
       - name: Download source package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: macOS.binaries
       - name: Configure JSBSim (BSD/Unix)
@@ -721,40 +720,6 @@ jobs:
           name: ${{ matrix.os }}-Wheels.binaries
           path: ./wheelhouse/*.whl
 
-  Codecov:
-    name: Code coverage
-    needs: Linux
-    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Ubuntu packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install cxxtest lcov
-      - name: Checkout JSBSim
-        uses: actions/checkout@v5
-      - name: Configure JSBSim
-        run: |
-          mkdir build && cd build
-          cmake -DENABLE_COVERAGE=ON -DBUILD_PYTHON_MODULE=OFF -DBUILD_DOCS=OFF ..
-      - name: Build JSBSim
-        working-directory: build
-        run: make --jobs=$(nproc)
-      - name: Run JSBSim tests
-        working-directory: build
-        run: ctest -R Test1 --output-on-failure
-      - name: Generate coverage report
-        working-directory: build
-        run: make lcov
-      - name: Upload to Codecov
-        uses: codecov/codecov-action@v5
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        with:
-          files: ./build/lcov/data/capture/all_targets.info
-          disable_search: true
-          fail_ci_if_error: true
-
   Rolling-Release:
     needs: [Test-Build-PyPackage-From-Source, Windows-MinGW, Windows-installer]
     name: Deploy Rolling Release
@@ -762,7 +727,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Download files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
       - name: Prepare files
         run: |
           mkdir dist
@@ -796,7 +761,7 @@ jobs:
       id-token: write  # Mandatory for PyPI trusted publishing
     steps:
       - name: Download files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
       - name: Prepare files for deployment
         run: |
           find . -type f -name MSVC_version.txt -exec cp {} . \;
@@ -809,7 +774,7 @@ jobs:
 
       # PyPI deployment
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
       - name: PyPI deployment
@@ -924,7 +889,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install doxygen graphviz
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.9'
       - name: Install Python packages
@@ -936,7 +901,7 @@ jobs:
           mkdir build && cd build
           cmake ..
       - name: Download Python wheels
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ubuntu-latest-Wheels.binaries
           path: build
@@ -949,7 +914,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # upload entire directory
           path: 'build/documentation/html'
