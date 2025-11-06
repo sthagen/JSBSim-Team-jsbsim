@@ -157,7 +157,7 @@ jobs:
 
     # On failure, upload logs
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: Linux-${{ matrix.os }}-system_expat_${{ matrix.expat }}-shared_libs_${{ matrix.shared_libs }}.logs
@@ -170,7 +170,7 @@ jobs:
         run: valgrind-ci valgrind_Short_S23_3.xml --number-of-errors --summary --source=.
 
       - name: Upload Files for Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: env.release == 'true' && env.static_link == 'true'
         with:
           name: Linux-${{ matrix.os }}.binaries
@@ -228,13 +228,13 @@ jobs:
 
       - name: Upload Files for Release (Linux & MacOSX)
         if: steps.tests-unix.outcome == 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Matlab-SFunction-${{ runner.os }}.binaries
           path: build/matlab/JSBSim_SFunction.mex*
       - name: Upload Files for Release (Windows)
         if: steps.tests-windows.outcome == 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Matlab-SFunction-${{ runner.os }}.binaries
           path: |
@@ -287,7 +287,7 @@ jobs:
 
     # Upload files
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: Windows_MinGW.logs
@@ -358,7 +358,7 @@ jobs:
 
     # On failure, upload logs
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: Windows_MSVC.logs
@@ -367,7 +367,7 @@ jobs:
             build/tests/*-build.log
 
       - name: Upload Files for Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: env.release == 'true' && matrix.shared_libs == 'OFF'
         with:
           name: ${{ runner.os }}.binaries
@@ -392,12 +392,12 @@ jobs:
           repository: JSBSim-Team/jsbsim-logo
           path: jsbsim-logo
       - name: Download binary file for JSBSim.iss
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: Matlab-SFunction-Windows.binaries
           path: build
       - name: Download JSBSim library and executable
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: Windows.binaries
       - name: Update the version of JSBSim in matlab/README.md
@@ -435,7 +435,7 @@ jobs:
           # Compile the installer with Inno Setup
           iscc JSBSim.iss
       - name: Upload the installer for Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Windows-installer.binaries
           path: |
@@ -531,7 +531,7 @@ jobs:
 
     # On failure, upload logs
       - name: On failure - Upload logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: MacOSX.logs
@@ -540,7 +540,7 @@ jobs:
             build/tests/*-build.log
 
       - name: Upload Files for Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: env.release == 'true' && matrix.os == 'macos-13'
         with:
           name: ${{ runner.os }}.binaries
@@ -566,7 +566,7 @@ jobs:
       - name: Install Python packages
         run: pip install -U cython 'numpy>=1.20' mypy
       - name: Download source package
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: macOS.binaries
       - name: Build Python module from sources (Linux & MacOSX)
@@ -629,7 +629,7 @@ jobs:
           perl -i -pe 's/^(GENERATE_HTML\s*=\s*)YES/\1NO/g' doc/JSBSim.dox.in
           perl -i -pe 's/^(HAVE_DOT\s*=\s*)YES/\1NO/g' doc/JSBSim.dox.in
       - name: Download source package
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: macOS.binaries
       - name: Configure JSBSim (BSD/Unix)
@@ -725,7 +725,7 @@ jobs:
           pip uninstall jsbsim -y
           deactivate
       - name: Upload Files for Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.os }}-Wheels.binaries
           path: ./wheelhouse/*.whl
@@ -737,7 +737,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Download files
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
       - name: Prepare files
         run: |
           mkdir dist
@@ -771,7 +771,7 @@ jobs:
       id-token: write  # Mandatory for PyPI trusted publishing
     steps:
       - name: Download files
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
       - name: Prepare files for deployment
         run: |
           find . -type f -name MSVC_version.txt -exec cp {} . \;
@@ -911,7 +911,7 @@ jobs:
           mkdir build && cd build
           cmake ..
       - name: Download Python wheels
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: ubuntu-latest-Wheels.binaries
           path: build
