@@ -105,8 +105,6 @@ FGFDMExec::FGFDMExec(FGPropertyManager* root, std::shared_ptr<unsigned int> fdmc
 
   if (const char* num = getenv("JSBSIM_DEBUG"); num != nullptr)
     debug_lvl = strtol(num, nullptr, 0);
-  else
-    debug_lvl = 1;
 
   if (!FDMctr) {
     FDMctr = std::make_shared<unsigned int>(); // Create and initialize the child FDM counter
@@ -1150,6 +1148,8 @@ void FGFDMExec::PrintSimulationConfiguration(void) const
 
 bool FGFDMExec::ReadFileHeader(Element* el)
 {
+  if (debug_lvl == 0) return true;
+
   FGLogging log(LogLevel::DEBUG);
 
   if (IsChild) {
