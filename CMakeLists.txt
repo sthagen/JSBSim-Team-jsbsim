@@ -7,7 +7,7 @@ project(JSBSim)
 
 set(PROJECT_VERSION_MAJOR "1")
 set(PROJECT_VERSION_MINOR "3")
-set(PROJECT_VERSION_PATCH "2.dev1")
+set(PROJECT_VERSION_PATCH "3.dev1")
 set(PROJECT_CONTACT_EMAIL "jsbsim-devel@lists.sourceforge.net")
 set(PROJECT_CONTACT_VENDOR "The JSBSim team")
 
@@ -136,12 +136,9 @@ if (PkgConfig_FOUND)
     get_target_property(libJSBSim_LINK_LIBRARIES libJSBSim LINK_LIBRARIES)
     foreach(_LIB ${libJSBSim_LINK_LIBRARIES})
 
-      # Ensure this library is not a CMake object library or interface library
-      if (TARGET ${_LIB}) # Non-CMake libraries are ok (specifically libm)
-        get_target_property(LINK_LIB_TYPE ${_LIB} TYPE)
-        if (NOT ((${LINK_LIB_TYPE} STREQUAL "STATIC_LIBRARY") OR (${LINK_LIB_TYPE} STREQUAL "SHARED_LIBRARY")))
-          continue()
-        endif()
+      # Ignore build-only entries ($<BUILD_INTERFACE:...> i.e. the object libraries)
+      if (_LIB MATCHES "^\\$<BUILD_INTERFACE")
+        continue()
       endif()
 
       set(JSBSIM_PKG_CONFIG_LINK_LIBRARIES "${JSBSIM_PKG_CONFIG_LINK_LIBRARIES} -l${_LIB}")
